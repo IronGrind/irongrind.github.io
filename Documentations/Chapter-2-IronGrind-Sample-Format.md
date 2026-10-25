@@ -31,3 +31,17 @@ The reviewed literature and systems show that gym administration connects member
 These sources support the development of IronGrind as a web-based system that organizes the operational functions specified for Iron Grind Fitness Gym. The system connects profiles, members, applications, membership history, attendance, products, sales, and sale items in a Supabase database. It provides online registration and renewal submissions for staff review, staff-scanned QR attendance, member access to selected account and attendance information, product management with separate units for supplements and merchandise, in-person sales records, and administrative reports. The relationship between these features and the objectives in Chapter 1 keeps the proposed system focused on the needs identified in the study.
 
 The reviewed commercial platforms offer broader capabilities than IronGrind, such as payment integrations, access-control hardware, or dedicated mobile applications. Those functions are not assumed to be part of this project. IronGrind is limited to the workflows described in Chapter 1: it does not provide an online payment gateway, online product checkout, member-operated attendance entry, automated fitness coaching, or a native mobile application. The need addressed by the study is a system tailored to the gym's stated membership and operations tasks, rather than a reproduction of a comprehensive commercial platform. Any claims that the system improves efficiency, accuracy, or user satisfaction must be supported by the evaluation conducted for the study.
+
+## References
+
+DeLone, W. H., & McLean, E. R. (2003). The DeLone and McLean model of information systems success: A ten-year update. *Journal of Management Information Systems, 19*(4), 9-30. https://doi.org/10.1080/07421222.2003.11045748
+
+GYMMANAGER. (n.d.). *Modern gym and fitness management software*. Retrieved October 25, 2026, from https://gymmanager.io/
+
+GymMaster. (n.d.). *About us*. Retrieved October 25, 2026, from https://www.gymmaster.com/about-us/
+
+National Privacy Commission. (2012). *Republic Act No. 10173: Data Privacy Act of 2012*. https://privacy.gov.ph/data-privacy-act/
+
+PostgreSQL Global Development Group. (n.d.). *Row security policies*. In *PostgreSQL 18 documentation*. Retrieved October 25, 2026, from https://www.postgresql.org/docs/current/ddl-rowsecurity.html
+
+Supabase. (n.d.). *Row Level Security*. Retrieved October 25, 2026, from https://supabase.com/docs/guides/database/postgres/row-level-security
