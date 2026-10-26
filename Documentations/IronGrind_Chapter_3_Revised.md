@@ -20,6 +20,10 @@ Requirements planning begins with gathering information about the gym's workflow
 
 For each iteration, the relevant user workflows, page layouts, forms, reports, data relationships, and role permissions are designed or refined. The design distinguishes pending applications from approved member records, keeps attendance as a separate operational record, and stores sales with their itemized lines. The architecture, use-case, and data-flow figures in this chapter summarize the system design.
 
+### System Prototype
+
+The system prototype is an interactive, browser-based version of the proposed gym workflows rather than a set of static screen mockups. Applicants can use the sign-in and registration pages to enter the application workflow. Members use the member portal to review membership information, display their QR code, view attendance history, and submit an eligible renewal request. Administrators use the dashboard to review applications and manage membership, staff-scanned attendance, products, sales, receipts, and reports. The prototype uses Supabase Auth and the configured database services for supported operations. Its key pages are listed in the User Interface Modules section. It should be treated as a prototype until deployment and operational readiness have been verified.
+
 ### Construction
 
 Selected requirements are implemented in the HTML, CSS, and JavaScript client and the Supabase authentication and PostgreSQL services. Database policies and functions support authorization and operational transactions. Each increment is tested against its acceptance criteria. At the end of an iteration, issues and feedback are recorded, priorities are updated, and unfinished or revised work returns to the prioritized task list. Stakeholder reviews or user feedback should be reported as completed only when the team has records of those activities.
