@@ -1,163 +1,161 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1700" viewBox="0 0 1600 1700" role="img" aria-labelledby="title desc">
-  <title id="title">Iron Grind Data Flow Diagram</title>
-  <desc id="desc">A black-and-white data flow diagram showing member and admin interactions with the login page, Supabase Auth, database tables, and operational services.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1500" viewBox="0 0 1800 1500" role="img" aria-labelledby="title desc">
+  <title id="title">Iron Grind Fitness Gym System Data Flow Diagram</title>
+  <desc id="desc">A Level 1 data flow diagram showing member and administrator requests moving through authentication and operational processes to the Supabase PostgreSQL data stores. Email notifications are marked as planned work.</desc>
   <defs>
-    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
-      <path d="M0,0 L10,5 L0,10 z" fill="#111"/>
-    </marker>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#222"/></marker>
+    <marker id="futureArrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#a05a00"/></marker>
     <style>
-      .title { font: bold 26px 'Times New Roman', serif; fill: #111; }
-      .subtitle { font: bold 14px 'Times New Roman', serif; fill: #111; }
-      .label { font: 12px 'Times New Roman', serif; fill: #111; }
-      .small { font: 10px 'Times New Roman', serif; fill: #111; }
-      .box { fill: #fff; stroke: #111; stroke-width: 1.2; }
-      .thin { fill: none; stroke: #111; stroke-width: 1.2; marker-end: url(#arrow); }
-      .double { fill: none; stroke: #111; stroke-width: 1.2; marker-end: url(#arrow); }
-      .box-sm { fill: #f9f9f9; stroke: #111; stroke-width: 1.2; }
-      .caption { font: bold 18px 'Times New Roman', serif; fill: #111; }
+      text{font-family:Arial,sans-serif;fill:#161616}.title{font-size:25px;font-weight:700}.subtitle{font-size:16px;font-weight:700}.label{font-size:12px}.small{font-size:10px}.tiny{font-size:9px}
+      .actor{fill:#f2eafa;stroke:#44334e;stroke-width:1.5}.process{fill:#dff6fb;stroke:#16798b;stroke-width:1.6}.store{fill:#fff3b3;stroke:#8d7416;stroke-width:1.4}.service{fill:#f2f2f2;stroke:#666;stroke-width:1.2}
+      .flow{fill:none;stroke:#222;stroke-width:1.5;marker-end:url(#arrow)}.response{fill:none;stroke:#555;stroke-width:1.3;stroke-dasharray:7 5;marker-end:url(#arrow)}.exchange{fill:none;stroke:#222;stroke-width:1.35;marker-start:url(#arrow);marker-end:url(#arrow)}
+      .planned{fill:none;stroke:#a05a00;stroke-width:1.6;stroke-dasharray:8 6;marker-end:url(#futureArrow)}.separator{stroke:#bbb;stroke-width:1}
+      .futureBox{fill:#fffaf1;stroke:#a05a00;stroke-width:1.5;stroke-dasharray:7 5}
     </style>
   </defs>
+  <rect width="1800" height="1500" fill="#fff"/>
+  <text x="900" y="38" text-anchor="middle" class="title">IRON GRIND FITNESS GYM MEMBERSHIP &amp; OPERATIONS MANAGEMENT SYSTEM</text>
+  <text x="900" y="66" text-anchor="middle" class="subtitle">LEVEL 1 DATA FLOW DIAGRAM</text>
 
-  <rect width="1600" height="1700" fill="#fff"/>
+  <!-- External entities -->
+  <rect x="45" y="115" width="210" height="84" rx="4" class="actor"/>
+  <text x="150" y="148" text-anchor="middle" class="subtitle">Member / Applicant</text>
+  <text x="150" y="171" text-anchor="middle" class="small">Registration, login, portal, attendance</text>
+  <rect x="1545" y="115" width="210" height="84" rx="4" class="actor"/>
+  <text x="1650" y="148" text-anchor="middle" class="subtitle">Administrator</text>
+  <text x="1650" y="171" text-anchor="middle" class="small">Reviews and manages gym operations</text>
 
-  <!-- Top actors -->
-  <rect x="120" y="80" width="220" height="90" class="box"/>
-  <text x="230" y="120" text-anchor="middle" class="subtitle">Member / Applicant</text>
-  <text x="230" y="145" text-anchor="middle" class="small">Inputs personal info, login,</text>
-  <text x="230" y="160" text-anchor="middle" class="small">membership application</text>
+  <!-- Authentication service and profile store -->
+  <rect x="695" y="112" width="410" height="86" rx="18" class="process"/>
+  <text x="900" y="145" text-anchor="middle" class="subtitle">1.0 Authenticate User</text>
+  <text x="900" y="168" text-anchor="middle" class="small">Supabase Auth verifies credentials and issues a session</text>
+  <path d="M255 145H690" class="flow"/><text x="465" y="135" text-anchor="middle" class="small">email + password / sign-in request</text>
+  <path d="M1105 145H1540" class="response"/><text x="1320" y="135" text-anchor="middle" class="small">authentication result / session or error</text>
 
-  <rect x="1260" y="80" width="220" height="90" class="box"/>
-  <text x="1370" y="120" text-anchor="middle" class="subtitle">Admin / Staff</text>
-  <text x="1370" y="145" text-anchor="middle" class="small">Approves applications,</text>
-  <text x="1370" y="160" text-anchor="middle" class="small">monitors attendance &amp; sales</text>
+  <rect x="690" y="245" width="420" height="66" rx="8" class="service"/>
+  <text x="900" y="271" text-anchor="middle" class="subtitle">Load account profile and role</text>
+  <text x="900" y="292" text-anchor="middle" class="small">role determines member or administrator page access</text>
+  <path d="M900 198V240" class="flow"/><text x="912" y="225" class="tiny">valid Auth session</text>
 
-  <!-- Center system -->
-  <rect x="520" y="50" width="560" height="130" class="box"/>
-  <text x="800" y="88" text-anchor="middle" class="title">Iron Grind Membership &amp; Operations System</text>
-  <text x="800" y="116" text-anchor="middle" class="label">Web Client / Browser Interface</text>
-  <text x="800" y="138" text-anchor="middle" class="small">index.html, register.html, customer.html, admin.html</text>
+  <!-- Data stores: exact public table names -->
+  <text x="900" y="351" text-anchor="middle" class="subtitle">Supabase PostgreSQL data stores (protected by RLS)</text>
+  <g>
+    <rect x="35" y="369" width="190" height="78" class="store"/><text x="130" y="395" text-anchor="middle" class="subtitle">D1 · profiles</text><text x="130" y="419" text-anchor="middle" class="small">account role and profile</text>
+    <rect x="245" y="369" width="205" height="78" class="store"/><text x="347" y="395" text-anchor="middle" class="subtitle">D2 · membership_applications</text><text x="347" y="419" text-anchor="middle" class="small">registration and renewal requests</text>
+    <rect x="470" y="369" width="185" height="78" class="store"/><text x="562" y="395" text-anchor="middle" class="subtitle">D3 · members</text><text x="562" y="419" text-anchor="middle" class="small">approved member records</text>
+    <rect x="675" y="369" width="180" height="78" class="store"/><text x="765" y="395" text-anchor="middle" class="subtitle">D4 · attendance</text><text x="765" y="419" text-anchor="middle" class="small">check-in and check-out</text>
+    <rect x="875" y="369" width="180" height="78" class="store"/><text x="965" y="395" text-anchor="middle" class="subtitle">D5 · products</text><text x="965" y="419" text-anchor="middle" class="small">catalog and stock</text>
+    <rect x="1075" y="369" width="170" height="78" class="store"/><text x="1160" y="395" text-anchor="middle" class="subtitle">D6 · sales</text><text x="1160" y="419" text-anchor="middle" class="small">sale receipts</text>
+    <rect x="1265" y="369" width="180" height="78" class="store"/><text x="1355" y="395" text-anchor="middle" class="subtitle">D7 · sale_items</text><text x="1355" y="419" text-anchor="middle" class="small">receipt line items</text>
+    <rect x="1465" y="369" width="300" height="78" class="store"/><text x="1615" y="395" text-anchor="middle" class="subtitle">D8 · membership_history</text><text x="1615" y="419" text-anchor="middle" class="small">renewal, expiry, and plan changes</text>
+  </g>
+  <path d="M900 311V354H130V364" class="exchange"/><text x="485" y="345" text-anchor="middle" class="tiny">profile / role lookup; new Auth users receive a profile via database trigger</text>
 
-  <path d="M340 125 H520" class="thin"/>
-  <path d="M1080 125 H1260" class="thin"/>
+  <!-- Operational processes, kept in the same process-box DFD convention -->
+  <rect x="75" y="535" width="330" height="126" rx="20" class="process"/>
+  <text x="240" y="568" text-anchor="middle" class="subtitle">2.0 Process Membership Applications</text>
+  <text x="240" y="593" text-anchor="middle" class="small">Submit application; admin reviews and updates status</text>
+  <text x="240" y="615" text-anchor="middle" class="small">Approval creates/updates member and records membership sale</text>
+  <text x="240" y="639" text-anchor="middle" class="tiny">registration · renewal · approve / reject</text>
 
-  <!-- Login and auth -->
-  <rect x="520" y="220" width="560" height="110" class="box"/>
-  <text x="800" y="255" text-anchor="middle" class="subtitle">Login / Authentication Module</text>
-  <text x="800" y="278" text-anchor="middle" class="label">email, password, reset password, sign in / sign out</text>
-  <text x="800" y="298" text-anchor="middle" class="small">Supabase Auth + Auth session management</text>
+  <rect x="465" y="535" width="300" height="126" rx="20" class="process"/>
+  <text x="615" y="568" text-anchor="middle" class="subtitle">3.0 Manage Member Portal</text>
+  <text x="615" y="593" text-anchor="middle" class="small">View own membership, attendance, and active products</text>
+  <text x="615" y="615" text-anchor="middle" class="small">Submit renewal and personal-information requests</text>
+  <text x="615" y="639" text-anchor="middle" class="tiny">member-scoped requests checked by RLS / RPC</text>
 
-  <path d="M800 180 V220" class="thin"/>
+  <rect x="825" y="535" width="285" height="126" rx="20" class="process"/>
+  <text x="967" y="568" text-anchor="middle" class="subtitle">4.0 Record Attendance</text>
+  <text x="967" y="593" text-anchor="middle" class="small">Resolve member from QR / member record</text>
+  <text x="967" y="615" text-anchor="middle" class="small">Save check-in and update check-out</text>
+  <text x="967" y="639" text-anchor="middle" class="tiny">admin scan · member attendance history</text>
 
-  <!-- Supabase auth + database -->
-  <rect x="310" y="420" width="980" height="120" class="box"/>
-  <text x="800" y="455" text-anchor="middle" class="subtitle">Supabase Cloud Platform</text>
-  <text x="800" y="482" text-anchor="middle" class="label">Authentication, Data API, Realtime, Edge Functions</text>
-  <text x="800" y="503" text-anchor="middle" class="small">Auth session, RLS checks, scheduled updates, live changes</text>
+  <rect x="1170" y="535" width="285" height="126" rx="20" class="process"/>
+  <text x="1312" y="568" text-anchor="middle" class="subtitle">5.0 Manage Inventory</text>
+  <text x="1312" y="593" text-anchor="middle" class="small">Admin maintains product details and stock</text>
+  <text x="1312" y="615" text-anchor="middle" class="small">Member portal reads active product catalog</text>
+  <text x="1312" y="639" text-anchor="middle" class="tiny">products read / insert / update / delete</text>
 
-  <rect x="390" y="610" width="240" height="110" class="box-sm"/>
-  <text x="510" y="650" text-anchor="middle" class="subtitle">Profile &amp; Roles</text>
-  <text x="510" y="675" text-anchor="middle" class="label">profiles</text>
-  <text x="510" y="695" text-anchor="middle" class="small">user_id, email, username,</text>
-  <text x="510" y="710" text-anchor="middle" class="small">full_name, role</text>
+  <rect x="245" y="790" width="350" height="126" rx="20" class="process"/>
+  <text x="420" y="823" text-anchor="middle" class="subtitle">6.0 Process Walk-in Sales</text>
+  <text x="420" y="848" text-anchor="middle" class="small">record_walk_in_sale() validates and records the sale</text>
+  <text x="420" y="870" text-anchor="middle" class="small">Creates receipt and line items; updates merchandise stock</text>
+  <text x="420" y="894" text-anchor="middle" class="tiny">sale result returned to admin dashboard</text>
 
-  <rect x="680" y="610" width="240" height="110" class="box-sm"/>
-  <text x="800" y="650" text-anchor="middle" class="subtitle">Membership Applications</text>
-  <text x="800" y="675" text-anchor="middle" class="label">membership_applications</text>
-  <text x="800" y="695" text-anchor="middle" class="small">pending / approved / rejected</text>
-  <text x="800" y="710" text-anchor="middle" class="small">registration + renewal requests</text>
+  <rect x="690" y="790" width="390" height="126" rx="20" class="process"/>
+  <text x="885" y="823" text-anchor="middle" class="subtitle">7.0 Reports and Membership History</text>
+  <text x="885" y="848" text-anchor="middle" class="small">Admin queries membership, attendance, inventory, and sales</text>
+  <text x="885" y="870" text-anchor="middle" class="small">Membership changes are recorded in history where applicable</text>
+  <text x="885" y="894" text-anchor="middle" class="tiny">filtered results / exports returned to the dashboard</text>
 
-  <rect x="970" y="610" width="240" height="110" class="box-sm"/>
-  <text x="1090" y="650" text-anchor="middle" class="subtitle">Approved Members</text>
-  <text x="1090" y="675" text-anchor="middle" class="label">members</text>
-  <text x="1090" y="695" text-anchor="middle" class="small">membership data, contact,</text>
-  <text x="1090" y="710" text-anchor="middle" class="small">plan, expiry, status</text>
+  <rect x="1180" y="790" width="390" height="126" rx="20" class="futureBox"/>
+  <text x="1375" y="823" text-anchor="middle" class="subtitle">8.0 Email Notifications · Planned</text>
+  <text x="1375" y="848" text-anchor="middle" class="small">Approval and expiry-reminder emails are not yet implemented</text>
+  <text x="1375" y="870" text-anchor="middle" class="small">External email provider has not been selected</text>
+  <text x="1375" y="894" text-anchor="middle" class="tiny">shown as future work; not part of current live data flow</text>
 
-  <path d="M800 330 V420" class="thin"/>
-  <path d="M510 540 V610" class="thin"/>
-  <path d="M800 540 V610" class="thin"/>
-  <path d="M1090 540 V610" class="thin"/>
+  <!-- Actor flows and role-related paths -->
+  <path d="M150 199V500H240V530" class="flow"/><text x="158" y="482" class="small">registration / application requests</text>
+  <path d="M150 199V510H967V530" class="flow"/><text x="685" y="502" class="tiny">QR attendance request</text>
+  <path d="M150 199V520H615V530" class="flow"/><text x="490" y="515" class="tiny">member portal request</text>
+  <path d="M1650 199V500H240V530" class="flow"/><text x="1398" y="490" class="small">review decisions / admin operations</text>
+  <path d="M1650 199V508H1312V530" class="flow"/><text x="1495" y="520" class="tiny">product maintenance</text>
+  <path d="M1650 199V752H420V785" class="flow"/><text x="1270" y="744" class="small">sale details</text>
+  <path d="M1650 199V765H885V785" class="flow"/><text x="1110" y="757" class="small">report filters / date range</text>
+  <path d="M615 661V716H150V204" class="response"/><text x="335" y="706" text-anchor="middle" class="small">member data / request result</text>
+  <path d="M240 661V733H1650V204" class="response"/><text x="963" y="726" text-anchor="middle" class="small">application status / review result</text>
+  <path d="M967 661V740H1635V204" class="response"/><text x="1280" y="735" text-anchor="middle" class="small">attendance records / query result</text>
 
-  <!-- Registration and admin approval flow -->
-  <rect x="100" y="830" width="230" height="110" class="box"/>
-  <text x="215" y="868" text-anchor="middle" class="subtitle">Registration Form</text>
-  <text x="215" y="892" text-anchor="middle" class="label">register.html</text>
-  <text x="215" y="910" text-anchor="middle" class="small">Personal details, health info,</text>
-  <text x="215" y="925" text-anchor="middle" class="small">plan selection, signature</text>
+  <!-- Data flows between each process and the exact data stores it reads or writes.
+       Lines have short labels at the store edge to avoid confusing long crossings. -->
+  <path d="M240 661V681H347V452" class="flow"/><text x="351" y="482" class="tiny">application insert / status update</text>
+  <path d="M220 661V694H562V452" class="flow"/><text x="567" y="501" class="tiny">approved member record</text>
+  <path d="M258 661V707H1160V452" class="flow"/><text x="1000" y="699" class="tiny">membership sale receipt, when applicable</text>
+  <path d="M277 661V720H1615V452" class="flow"/><text x="1460" y="713" class="tiny">renewal / plan-change history, when recorded</text>
 
-  <rect x="420" y="830" width="250" height="110" class="box"/>
-  <text x="545" y="868" text-anchor="middle" class="subtitle">Create Auth Account</text>
-  <text x="545" y="892" text-anchor="middle" class="label">Supabase Auth signUp()</text>
-  <text x="545" y="910" text-anchor="middle" class="small">email, username, password</text>
-  <text x="545" y="925" text-anchor="middle" class="small">Auto-create profile row</text>
+  <path d="M615 661V749H130V452" class="exchange"/><text x="80" y="475" class="tiny">own profile lookup / result</text>
+  <path d="M590 661V758H347V452" class="flow"/><text x="280" y="749" class="tiny">own application / renewal request</text>
+  <path d="M615 661V768H562V452" class="exchange"/><text x="570" y="482" class="tiny">own membership lookup / update request</text>
+  <path d="M640 661V778H765V452" class="exchange"/><text x="770" y="488" class="tiny">own attendance history</text>
+  <path d="M665 661V786H965V452" class="exchange"/><text x="970" y="495" class="tiny">active products</text>
 
-  <rect x="760" y="830" width="260" height="110" class="box"/>
-  <text x="890" y="868" text-anchor="middle" class="subtitle">Pending Application</text>
-  <text x="890" y="892" text-anchor="middle" class="label">status = pending</text>
-  <text x="890" y="910" text-anchor="middle" class="small">Application waits for admin</text>
-  <text x="890" y="925" text-anchor="middle" class="small">review and approval</text>
+  <path d="M967 661V800H562V452" class="exchange"/><text x="570" y="529" class="tiny">member lookup / result</text>
+  <path d="M967 661V808H765V452" class="flow"/><text x="770" y="540" class="tiny">check-in insert / check-out update</text>
 
-  <rect x="1100" y="830" width="250" height="110" class="box"/>
-  <text x="1225" y="868" text-anchor="middle" class="subtitle">Admin Review</text>
-  <text x="1225" y="892" text-anchor="middle" class="label">Approve / Reject</text>
-  <text x="1225" y="910" text-anchor="middle" class="small">Update application status</text>
-  <text x="1225" y="925" text-anchor="middle" class="small">Create member record if approved</text>
+  <path d="M1312 661V817H965V452" class="exchange"/><text x="972" y="551" class="tiny">product and stock changes / catalog read</text>
 
-  <path d="M330 885 H420" class="thin"/>
-  <path d="M670 885 H760" class="thin"/>
-  <path d="M1020 885 H1100" class="thin"/>
+  <path d="M420 916V940H965V452" class="exchange"/><text x="820" y="934" class="tiny">validate product and update stock</text>
+  <path d="M420 916V950H1160V452" class="flow"/><text x="1010" y="945" class="tiny">receipt record</text>
+  <path d="M420 916V960H1355V452" class="flow"/><text x="1190" y="955" class="tiny">receipt line items</text>
 
-  <!-- Services and tables -->
-  <rect x="100" y="1060" width="220" height="100" class="box"/>
-  <text x="210" y="1098" text-anchor="middle" class="subtitle">Attendance</text>
-  <text x="210" y="1122" text-anchor="middle" class="label">attendance</text>
-  <text x="210" y="1138" text-anchor="middle" class="small">member_id, time_in, time_out</text>
+  <path d="M885 916V975H347V452" class="exchange"/><text x="350" y="970" class="tiny">application query</text>
+  <path d="M885 916V985H562V452" class="exchange"/><text x="565" y="980" class="tiny">member query</text>
+  <path d="M885 916V995H765V452" class="exchange"/><text x="770" y="990" class="tiny">attendance query</text>
+  <path d="M885 916V1005H965V452" class="exchange"/><text x="970" y="1000" class="tiny">inventory query</text>
+  <path d="M885 916V1015H1160V452" class="exchange"/><text x="1165" y="1010" class="tiny">sales query</text>
+  <path d="M885 916V1025H1355V452" class="exchange"/><text x="1360" y="1020" class="tiny">sale-items query</text>
+  <path d="M885 916V1035H1615V452" class="exchange"/><text x="1620" y="1030" class="tiny">history query / update</text>
 
-  <rect x="410" y="1060" width="220" height="100" class="box"/>
-  <text x="520" y="1098" text-anchor="middle" class="subtitle">Inventory</text>
-  <text x="520" y="1122" text-anchor="middle" class="label">products</text>
-  <text x="520" y="1138" text-anchor="middle" class="small">name, stock, price, category</text>
+  <!-- Realtime is enabled for these two publication tables; email remains future work. -->
+  <rect x="135" y="1090" width="1530" height="94" rx="14" class="service"/>
+  <text x="900" y="1123" text-anchor="middle" class="subtitle">Supabase Data API / RPC · Row-Level Security</text>
+  <text x="900" y="1148" text-anchor="middle" class="small">Authenticated browser requests are authorized by RLS; privileged account creation uses the admin-create-member Edge Function.</text>
+  <text x="900" y="1168" text-anchor="middle" class="small">Supabase Realtime currently publishes membership_applications and attendance changes to subscribed website views.</text>
+  <path d="M900 1184V1224" class="flow"/>
 
-  <rect x="720" y="1060" width="220" height="100" class="box"/>
-  <text x="830" y="1098" text-anchor="middle" class="subtitle">Sales</text>
-  <text x="830" y="1122" text-anchor="middle" class="label">sales + sale_items</text>
-  <text x="830" y="1138" text-anchor="middle" class="small">receipt, items, total, customer</text>
+  <!-- Planned email links are intentionally dashed and separate from current operations. -->
+  <path d="M240 661V1065H1375V785" class="planned"/><text x="1390" y="1060" class="tiny" fill="#8a4d00">future approval / expiry email trigger</text>
 
-  <rect x="1030" y="1060" width="220" height="100" class="box"/>
-  <text x="1140" y="1098" text-anchor="middle" class="subtitle">Membership History</text>
-  <text x="1140" y="1122" text-anchor="middle" class="label">membership_history</text>
-  <text x="1140" y="1138" text-anchor="middle" class="small">expired / renewed / plan changes</text>
+  <rect x="400" y="1235" width="1000" height="130" rx="18" fill="#222"/>
+  <text x="900" y="1274" text-anchor="middle" style="fill:#fff;font-size:20px;font-weight:700">SUPABASE POSTGRESQL</text>
+  <text x="900" y="1304" text-anchor="middle" style="fill:#fff;font-size:13px">profiles · members · membership_applications · attendance</text>
+  <text x="900" y="1328" text-anchor="middle" style="fill:#fff;font-size:13px">products · sales · sale_items · membership_history</text>
+  <text x="900" y="1350" text-anchor="middle" style="fill:#ddd;font-size:11px">Supabase Auth separately stores account credentials and sessions.</text>
 
-  <path d="M320 1110 H410" class="thin"/>
-  <path d="M630 1110 H720" class="thin"/>
-  <path d="M940 1110 H1030" class="thin"/>
-
-  <!-- bottom database -->
-  <rect x="440" y="1260" width="720" height="200" class="box"/>
-  <text x="800" y="1305" text-anchor="middle" class="subtitle">Central Database</text>
-  <text x="800" y="1338" text-anchor="middle" class="label">profiles → members → membership_applications → attendance</text>
-  <text x="800" y="1364" text-anchor="middle" class="label">→ products → sales → sale_items → membership_history</text>
-  <text x="800" y="1395" text-anchor="middle" class="small">All data is stored in PostgreSQL and protected by Row Level Security.</text>
-  <text x="800" y="1416" text-anchor="middle" class="small">The browser uses Supabase Auth and Data API to read and write only allowed records.</text>
-
-  <!-- connections from service area to database -->
-  <path d="M510 720 V1260" class="thin"/>
-  <path d="M800 720 V1260" class="thin"/>
-  <path d="M1090 720 V1260" class="thin"/>
-  <path d="M210 940 V1060" class="thin"/>
-  <path d="M520 940 V1060" class="thin"/>
-  <path d="M890 940 V1060" class="thin"/>
-  <path d="M1225 940 V1060" class="thin"/>
-
-  <!-- Labels around connections -->
-  <text x="540" y="760" text-anchor="middle" class="small">role check</text>
-  <text x="925" y="760" text-anchor="middle" class="small">application records</text>
-  <text x="1150" y="760" text-anchor="middle" class="small">member records</text>
-
-  <text x="350" y="1010" text-anchor="middle" class="small">QR check-in / check-out</text>
-  <text x="650" y="1010" text-anchor="middle" class="small">inventory queries</text>
-  <text x="950" y="1010" text-anchor="middle" class="small">sale entries</text>
-  <text x="1250" y="1010" text-anchor="middle" class="small">renewal history</text>
-
-  <!-- Bottom caption -->
-  <text x="800" y="1525" text-anchor="middle" class="caption">Figure 4. Data Flow Diagram</text>
+  <rect x="110" y="1400" width="1580" height="60" rx="10" fill="#f6f2f2" stroke="#555"/>
+  <text x="145" y="1425" class="small" font-weight="700">LINE KEY</text>
+  <path d="M260 1421H360" class="flow"/><text x="375" y="1425" class="small">request / data write</text>
+  <path d="M570 1421H670" class="response"/><text x="685" y="1425" class="small">response / query result</text>
+  <path d="M930 1421H1030" class="exchange"/><text x="1045" y="1425" class="small">lookup / returned data</text>
+  <path d="M1290 1421H1390" class="planned"/><text x="1405" y="1425" class="small">planned email flow only</text>
+  <text x="900" y="1485" text-anchor="middle" class="subtitle">Figure 4. Data Flow Diagram</text>
 </svg>
