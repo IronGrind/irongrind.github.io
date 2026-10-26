@@ -67,6 +67,25 @@ The deployed database distinguishes `admin` and `member` profile roles. Staff fu
 | Data handling | The application stores contact, emergency-contact, and health-related information. Access and retention practices should follow the gym's approved privacy procedures and applicable law. This description is not a certification of legal compliance. |
 | Availability | Users depend on the availability of the website host, internet connection, and Supabase services. Operational backup and recovery procedures must be defined for the deployed environment. |
 
+### Software Requirements
+
+| Software | Requirement or purpose |
+| --- | --- |
+| Web browser | Current browser with JavaScript enabled for applicant, member, and administrator workflows. |
+| Frontend | HTML, CSS, and JavaScript files served by a compatible web host. |
+| Backend services | Supabase Auth and PostgreSQL, with the project schema, Row Level Security policies, and required database functions configured. |
+| Edge Function | Supabase Edge Function runtime for administrator-authorized member account creation. |
+| Development environment | Node.js 20 or later to run the repository's local static-file server. This local server is for development, not the production database backend. |
+| QR scanning | Browser camera permission and a secure HTTPS origin for production QR scanning. |
+
+### Hardware Requirements
+
+| User or component | Requirement |
+| --- | --- |
+| Administrator or staff | Desktop computer, laptop, or compatible mobile device with a current browser and internet access. A camera-enabled device is needed when staff scan member QR codes. |
+| Applicant or member | Smartphone, tablet, laptop, or desktop computer with a current browser and internet access. |
+| Web hosting | Hosting capable of serving the static HTML, CSS, JavaScript, and image assets over HTTPS. Supabase provides the separate authentication and database services. |
+
 ### Inputs and Outputs
 
 | Category | Examples |
