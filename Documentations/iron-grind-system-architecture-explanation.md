@@ -12,9 +12,9 @@ On sign-in, the login page sends the supplied email and password to Supabase Aut
 
 ## 3. Registration and membership applications
 
-Online registration creates an account through Supabase Auth. A database trigger creates the corresponding profile, and the registration flow stores the application in `membership_applications` with a pending status. Staff review applications from the admin dashboard. Approval creates or updates a member record, records the membership payment through the registration-sale RPC, and updates the application status. Rejected applications remain recorded with their review status.
+Online registration creates an account through Supabase Auth. A database trigger creates the corresponding profile, and the registration flow stores the application in `membership_applications` with a pending status. The administrator reviews applications from the admin dashboard. Approval creates or updates a member record, records the membership payment through the registration-sale RPC, and updates the application status. Rejected applications remain recorded with their review status.
 
-Staff-created accounts use the `admin-create-member` Edge Function. It verifies the administrator before using privileged server-side operations to create the Auth account and record the member and related sale data.
+The administrator creates member accounts through the `admin-create-member` Edge Function. It verifies the administrator before using privileged server-side operations to create the Auth account and record the member and related sale data.
 
 ## 4. Operational modules
 
@@ -31,7 +31,7 @@ Each module sends the relevant database requests and receives query results or o
 
 ## 5. Supabase services and database security
 
-Direct browser table requests pass through the Supabase Data API with the signed-in user's Auth session. PostgreSQL Row Level Security (RLS) policies restrict which rows the user can access. Database RPC functions also perform their own authorization and validation checks. Privileged account creation is routed through the Edge Function, which verifies the admin role before it uses server credentials.
+Direct browser table requests pass through the Supabase Data API with the signed-in user's Auth session. PostgreSQL Row Level Security (RLS) policies restrict which rows the user can access. Database RPC functions also perform their own authorization and validation checks. Privileged member-account creation is routed through the Edge Function, which verifies the admin role before it uses server credentials.
 
 Supabase Realtime broadcasts changes for `membership_applications` and `attendance`, the tables included in the current `supabase_realtime` publication migration. The `members` table is not enabled in that publication, so member-table changes are not shown as an active Realtime flow in the diagram.
 

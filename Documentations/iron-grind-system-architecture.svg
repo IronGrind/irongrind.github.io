@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1430" viewBox="0 0 1700 1430" role="img" aria-labelledby="title desc">
 <title id="title">Iron Grind System Architecture Diagram</title>
-<desc id="desc">Role based login leads to six aligned Iron Grind system modules. Each module shows its service operations and data exchanged with Supabase Data API and PostgreSQL, with authentication, security, staff account creation, and Realtime scope.</desc>
+<desc id="desc">Role based login leads to six aligned Iron Grind system modules. Each module shows its service operations and data exchanged with Supabase Data API and PostgreSQL, with authentication, security, admin-created member accounts, and Realtime scope.</desc>
 <defs>
   <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#343a46"/></marker>
   <marker id="arrowMuted" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#7d8797"/></marker>
@@ -55,7 +55,7 @@
 <path d="M675 299H460V350" class="solid"/><text x="548" y="291" text-anchor="middle" class="tiny">role = member</text>
 <path d="M1025 299H1240V350" class="solid"/><text x="1157" y="291" text-anchor="middle" class="tiny">role = admin</text>
 <rect x="105" y="440" width="1490" height="55" rx="8" class="soft"/>
-<text x="850" y="462" text-anchor="middle" class="head">Registration and staff account creation</text>
+<text x="850" y="462" text-anchor="middle" class="head">Registration &amp; Member Account Creation</text>
 <text x="850" y="482" text-anchor="middle" class="small">Online: register.html - Auth signUp() - profiles row via Auth trigger - pending membership_applications after confirmation. Staff-created: admin-create-member Edge Function - Auth Admin API - admin_create_member_and_sale RPC.</text>
 <!-- Role-authorized session bus -->
 <path d="M460 420V526H80M1240 420V526H1620M80 526H1620" class="plain"/>
@@ -174,7 +174,7 @@
 <text x="850" y="1031" text-anchor="middle" class="head">SUPABASE DATA API / RPC + ROW LEVEL SECURITY (RLS)</text>
 <text x="850" y="1054" text-anchor="middle" class="small">Browser table requests carry the signed-in user's Auth session; RLS policies restrict direct table access.</text>
 <text x="850" y="1074" text-anchor="middle" class="small">RPC functions enforce their own authorization and validation checks.</text>
-<text x="850" y="1094" text-anchor="middle" class="small">Staff accounts: Edge Function verifies admin - Auth Admin API - privileged member-creation RPC.</text>
+<text x="850" y="1094" text-anchor="middle" class="small">Admin verified → Auth account + member record</text>
 
 <!-- Realtime scope -->
 <rect x="1230" y="1133" width="435" height="65" rx="8" class="soft"/>
