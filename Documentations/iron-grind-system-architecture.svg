@@ -36,32 +36,32 @@
 <rect x="733" y="91" width="38" height="38" rx="5" fill="#fff" stroke="#46505e" stroke-width="1.5"/><rect x="738" y="96" width="28" height="5" rx="2" fill="#9d1010"/><path d="M739 106h26M739 112h20M739 118h24" stroke="#8791a0" stroke-width="2"/>
 <text x="867" y="105" text-anchor="middle" class="head">Login Page</text>
 <text x="867" y="126" text-anchor="middle" class="small">index.html</text>
-<path d="M225 111H690" class="solid"/><text x="470" y="101" text-anchor="middle" class="small">User input</text>
-<path d="M1485 111H1010" class="solid"/><text x="1245" y="101" text-anchor="middle" class="small">Admin input</text>
+<path d="M225 111H700" class="solid"/><text x="470" y="101" text-anchor="middle" class="small">User input</text>
+<path d="M1485 111H1000" class="solid"/><text x="1245" y="101" text-anchor="middle" class="small">Admin input</text>
 <rect x="700" y="177" width="300" height="62" rx="9" class="box"/>
 <path d="M839 194v-5a11 11 0 0 1 22 0v5" fill="none" stroke="#137bc1" stroke-width="4"/><rect x="835" y="194" width="30" height="23" rx="5" fill="#168bd2"/><circle cx="850" cy="204" r="3" fill="#fff"/><path d="M850 207v5" stroke="#fff" stroke-width="2"/>
 <text x="850" y="231" text-anchor="middle" class="small">Supabase Auth - credential verification and session</text>
-<path d="M850 145V169" class="solid"/><text x="864" y="162" class="tiny">credentials</text>
+<path d="M850 145V177" class="solid"/><text x="864" y="162" class="tiny">credentials</text>
 <path d="M720 177H670V111H690" class="response"/><text x="658" y="153" text-anchor="end" class="tiny">authentication result / error</text>
 <rect x="675" y="269" width="350" height="62" rx="9" class="soft"/>
 <rect x="704" y="282" width="38" height="26" rx="3" fill="#e8f8fd" stroke="#10a9c7" stroke-width="3"/><path d="M723 308v7m-11 0h22" stroke="#10a9c7" stroke-width="3" stroke-linecap="round"/>
 <text x="877" y="294" text-anchor="middle" class="head">Iron Grind System</text>
 <text x="877" y="314" text-anchor="middle" class="small">Successful login - load profiles.role by Auth user ID</text>
-<path d="M850 239V261" class="solid"/><text x="863" y="255" class="tiny">successful login</text>
+<path d="M850 239V269" class="solid"/><text x="863" y="255" class="tiny">successful login</text>
 <rect x="190" y="358" width="540" height="62" rx="9" class="box"/>
 <text x="460" y="383" text-anchor="middle" class="head">Member session</text>
 <text x="460" y="403" text-anchor="middle" class="small">role = member - match members.auth_user_id - member experience / application status</text>
 <rect x="970" y="358" width="540" height="62" rx="9" class="box"/>
 <text x="1240" y="383" text-anchor="middle" class="head">Administrator session</text>
 <text x="1240" y="403" text-anchor="middle" class="small">profile.role = admin - open admin.html operations dashboard</text>
-<path d="M675 299H460V350" class="solid"/><text x="548" y="291" text-anchor="middle" class="tiny">role = member</text>
-<path d="M1025 299H1240V350" class="solid"/><text x="1157" y="291" text-anchor="middle" class="tiny">role = admin</text>
+<path d="M675 299H460V358" class="solid"/><text x="548" y="291" text-anchor="middle" class="tiny">role = member</text>
+<path d="M1025 299H1240V358" class="solid"/><text x="1157" y="291" text-anchor="middle" class="tiny">role = admin</text>
 <!-- Applicant registration is a separate pre-login path -->
 <rect x="35" y="177" width="600" height="62" rx="9" class="soft"/>
 <text x="335" y="198" text-anchor="middle" class="head">Applicant Registration</text>
 <text x="335" y="219" text-anchor="middle" class="small">register.html - Auth signUp() - profile; confirmation / sign-in - Pending membership application</text>
-<path d="M198 145V169" class="route"/><text x="212" y="163" class="tiny">register</text>
-<path d="M635 207H695" class="solid"/><text x="665" y="198" text-anchor="middle" class="tiny">signUp()</text>
+<path d="M198 145V177" class="route"/><text x="212" y="163" class="tiny">register</text>
+<path d="M635 207H700" class="solid"/><text x="665" y="198" text-anchor="middle" class="tiny">signUp()</text>
 <path d="M700 224H635" class="response"/><text x="667" y="236" text-anchor="middle" class="tiny">Auth result</text>
 <path d="M35 239H15V666H25" class="solid"/><text x="24" y="470" transform="rotate(-90 24 470)" text-anchor="middle" class="tiny">pending application</text>
 <!-- Separate role routes from the two authenticated sessions -->
@@ -82,15 +82,15 @@
 <text x="155" y="690" text-anchor="middle" class="tiny">Admin account creation: verified Edge Function</text>
 <path d="M155 699V718" class="plain"/>
 <path d="M40 718H270" class="plain"/>
-<path d="M47 718V1005" class="solid"/>
+<path d="M47 718V1004" class="solid"/>
 <text x="35" y="970" transform="rotate(-90 35 970)" text-anchor="start" class="tiny">membership_applications INSERT pending</text>
-<path d="M99 718V1005" class="solid"/>
+<path d="M99 718V1004" class="solid"/>
 <text x="87" y="970" transform="rotate(-90 87 970)" text-anchor="start" class="tiny">members INSERT approved</text>
-<path d="M150 718V1005" class="solid"/>
+<path d="M150 718V1004" class="solid"/>
 <text x="138" y="970" transform="rotate(-90 138 970)" text-anchor="start" class="tiny">registration sale RPC</text>
-<path d="M201 718V1005" class="solid"/>
+<path d="M201 718V1004" class="solid"/>
 <text x="189" y="970" transform="rotate(-90 189 970)" text-anchor="start" class="tiny">application UPDATE approved</text>
-<path d="M253 718V1005" class="solid"/>
+<path d="M253 718V1004" class="solid"/>
 <text x="241" y="970" transform="rotate(-90 241 970)" text-anchor="start" class="tiny">profile role lookup</text>
 <path d="M295 1005V718" class="response"/>
 <path d="M445 497V553" class="route"/><path d="M425 522V553" class="route"/>
@@ -103,13 +103,13 @@
 <text x="435" y="672" text-anchor="middle" class="section">ATTENDANCE SERVICE</text>
 <path d="M435 699V718" class="plain"/>
 <path d="M320 718H550" class="plain"/>
-<path d="M327 718V1005" class="solid"/>
+<path d="M327 718V1004" class="solid"/>
 <text x="315" y="970" transform="rotate(-90 315 970)" text-anchor="start" class="tiny">QR member lookup</text>
-<path d="M396 718V1005" class="solid"/>
+<path d="M396 718V1004" class="solid"/>
 <text x="384" y="970" transform="rotate(-90 384 970)" text-anchor="start" class="tiny">attendance INSERT time-in</text>
-<path d="M464 718V1005" class="solid"/>
+<path d="M464 718V1004" class="solid"/>
 <text x="452" y="970" transform="rotate(-90 452 970)" text-anchor="start" class="tiny">attendance UPDATE time-out</text>
-<path d="M533 718V1005" class="solid"/>
+<path d="M533 718V1004" class="solid"/>
 <text x="521" y="970" transform="rotate(-90 521 970)" text-anchor="start" class="tiny">attendance SELECT history</text>
 <path d="M575 1005V718" class="response"/>
 <path d="M725 497V553" class="route"/><path d="M705 522V553" class="route"/>
@@ -122,11 +122,11 @@
 <text x="715" y="672" text-anchor="middle" class="section">INVENTORY SERVICE</text>
 <path d="M715 699V718" class="plain"/>
 <path d="M600 718H830" class="plain"/>
-<path d="M607 718V1005" class="solid"/>
+<path d="M607 718V1004" class="solid"/>
 <text x="595" y="970" transform="rotate(-90 595 970)" text-anchor="start" class="tiny">products SELECT lookup</text>
-<path d="M710 718V1005" class="solid"/>
+<path d="M710 718V1004" class="solid"/>
 <text x="698" y="970" transform="rotate(-90 698 970)" text-anchor="start" class="tiny">products INSERT / UPDATE</text>
-<path d="M813 718V1005" class="solid"/>
+<path d="M813 718V1004" class="solid"/>
 <text x="801" y="970" transform="rotate(-90 801 970)" text-anchor="start" class="tiny">active catalog SELECT</text>
 <path d="M855 1005V718" class="response"/>
 <path d="M995 522V553" class="route"/>
@@ -139,13 +139,13 @@
 <text x="995" y="672" text-anchor="middle" class="section">SALES SERVICE - RPC</text>
 <path d="M995 699V718" class="plain"/>
 <path d="M880 718H1110" class="plain"/>
-<path d="M887 718V1005" class="solid"/>
+<path d="M887 718V1004" class="solid"/>
 <text x="875" y="970" transform="rotate(-90 875 970)" text-anchor="start" class="tiny">product validation / stock</text>
-<path d="M956 718V1005" class="solid"/>
+<path d="M956 718V1004" class="solid"/>
 <text x="944" y="970" transform="rotate(-90 944 970)" text-anchor="start" class="tiny">sales INSERT receipt</text>
-<path d="M1024 718V1005" class="solid"/>
+<path d="M1024 718V1004" class="solid"/>
 <text x="1012" y="970" transform="rotate(-90 1012 970)" text-anchor="start" class="tiny">sale_items INSERT lines</text>
-<path d="M1093 718V1005" class="solid"/>
+<path d="M1093 718V1004" class="solid"/>
 <text x="1081" y="970" transform="rotate(-90 1081 970)" text-anchor="start" class="tiny">products UPDATE merchandise stock</text>
 <path d="M1135 1005V718" class="response"/>
 <path d="M1275 497V553" class="route"/>
@@ -158,15 +158,15 @@
 <text x="1275" y="672" text-anchor="middle" class="section">MEMBER DATA SERVICE</text>
 <path d="M1275 699V718" class="plain"/>
 <path d="M1160 718H1390" class="plain"/>
-<path d="M1167 718V1005" class="solid"/>
+<path d="M1167 718V1004" class="solid"/>
 <text x="1155" y="970" transform="rotate(-90 1155 970)" text-anchor="start" class="tiny">own member SELECT</text>
-<path d="M1219 718V1005" class="solid"/>
+<path d="M1219 718V1004" class="solid"/>
 <text x="1207" y="970" transform="rotate(-90 1207 970)" text-anchor="start" class="tiny">own attendance SELECT</text>
-<path d="M1270 718V1005" class="solid"/>
+<path d="M1270 718V1004" class="solid"/>
 <text x="1258" y="970" transform="rotate(-90 1258 970)" text-anchor="start" class="tiny">active products SELECT</text>
-<path d="M1321 718V1005" class="solid"/>
+<path d="M1321 718V1004" class="solid"/>
 <text x="1309" y="970" transform="rotate(-90 1309 970)" text-anchor="start" class="tiny">renewal application INSERT</text>
-<path d="M1373 718V1005" class="solid"/>
+<path d="M1373 718V1004" class="solid"/>
 <text x="1361" y="970" transform="rotate(-90 1361 970)" text-anchor="start" class="tiny">personal info RPC</text>
 <path d="M1415 1005V718" class="response"/>
 <path d="M1555 522V553" class="route"/>
@@ -179,15 +179,15 @@
 <text x="1555" y="672" text-anchor="middle" class="section">REPORT QUERY SERVICE</text>
 <path d="M1555 699V718" class="plain"/>
 <path d="M1440 718H1670" class="plain"/>
-<path d="M1447 718V1005" class="solid"/>
+<path d="M1447 718V1004" class="solid"/>
 <text x="1435" y="970" transform="rotate(-90 1435 970)" text-anchor="start" class="tiny">member / application query</text>
-<path d="M1499 718V1005" class="solid"/>
+<path d="M1499 718V1004" class="solid"/>
 <text x="1487" y="970" transform="rotate(-90 1487 970)" text-anchor="start" class="tiny">attendance date query</text>
-<path d="M1550 718V1005" class="solid"/>
+<path d="M1550 718V1004" class="solid"/>
 <text x="1538" y="970" transform="rotate(-90 1538 970)" text-anchor="start" class="tiny">inventory query</text>
-<path d="M1601 718V1005" class="solid"/>
+<path d="M1601 718V1004" class="solid"/>
 <text x="1589" y="970" transform="rotate(-90 1589 970)" text-anchor="start" class="tiny">sales / sale_items query</text>
-<path d="M1653 718V1005" class="solid"/>
+<path d="M1653 718V1004" class="solid"/>
 <text x="1641" y="970" transform="rotate(-90 1641 970)" text-anchor="start" class="tiny">history query / export</text>
 <path d="M1687 1005V718" class="response"/>
 <!-- Security and server-side operations -->
@@ -218,11 +218,11 @@
 <text x="1447" y="1328" text-anchor="middle" class="tiny">Delivers messages to member / administrator inboxes.</text>
 
 <!-- Shared database -->
-<path d="M850 1117V1190" class="solid"/>
+
 <ellipse cx="850" cy="1212" rx="330" ry="32" fill="#121820"/>
 <path d="M520 1212V1332C520 1350 668 1368 850 1368S1180 1350 1180 1332V1212" fill="#121820"/>
 <ellipse cx="850" cy="1332" rx="330" ry="32" fill="#121820"/>
-<text x="850" y="1208" text-anchor="middle" style="fill:#fff;font-size:19px;font-weight:700">SUPABASE POSTGRESQL</text>
+<path d="M850 1117V1180" class="solid"/><text x="850" y="1208" text-anchor="middle" style="fill:#fff;font-size:19px;font-weight:700">SUPABASE POSTGRESQL</text>
 <text x="850" y="1248" text-anchor="middle" style="fill:#fff;font-size:12px">Shared system database</text>
 <text x="850" y="1271" text-anchor="middle" style="fill:#fff;font-size:11px">profiles, members, membership_applications, attendance</text>
 <text x="850" y="1294" text-anchor="middle" style="fill:#fff;font-size:11px">products, sales, sale_items, membership_history</text>
