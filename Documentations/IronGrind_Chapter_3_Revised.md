@@ -122,11 +122,37 @@ The use-case model summarizes the actions available to applicants, members, and 
 
 ### Data-Flow Model
 
-Registration information is submitted to the application workflow and remains pending until staff review it. Approval connects the application to a member record and records the associated membership transaction. Renewal submissions follow the same staff-review principle. During a gym visit, staff scan the member QR code and record attendance. Staff maintain product records and enter in-person sales; each sale is stored with its line items. Authorized staff request operational views and reports from the records maintained by the system.
+The Level 1 data-process model shows how information moves between external actors, system processes, and Supabase data stores. The external actors are the member/applicant and the administrator. The numbered processes cover authentication, membership applications, the member portal, attendance, inventory, sales, and reporting. Email notification is included as a planned process only; it is not yet implemented and has no selected provider. Solid arrows represent requests or data writes, while dashed response arrows represent returned results.
 
-![Figure 4. IronGrind data-flow diagram](iron-grind-data-flow.svg)
+![Figure 4. Level 1 data-process model for IronGrind](iron-grind-data-flow.svg)
 
-**Figure 4.** Data-flow diagram of IronGrind.
+**Figure 4.** Level 1 data-process model for IronGrind.
+
+### Data Processes
+
+| Process | Input | Data stores or services used | Output |
+| --- | --- | --- | --- |
+| 1.0 Authenticate User | Member/applicant or administrator credentials | Supabase Auth; D1 `profiles` for role lookup | Authenticated session and role-based routing, or an authentication error. |
+| 2.0 Process Membership Applications | Registration or renewal details; administrator approval or rejection | D2 `membership_applications`; D3 `members`; D8 `membership_history`; D6 `sales` when a membership transaction is recorded | Updated application status, member record and related transaction result. |
+| 3.0 Manage Member Portal | Member requests, supported profile updates, renewal submissions | D1 `profiles`; D2 `membership_applications`; D3 `members`; D4 `attendance`; D5 `products` | Member's permitted membership, attendance, and active product information; renewal or update result. |
+| 4.0 Record Attendance | Staff QR scan and check-in/check-out action | D3 `members` for member lookup; D4 `attendance` for attendance records | Saved attendance event and confirmation; attendance history for permitted member access. |
+| 5.0 Manage Inventory | Administrator product, price, category, or stock changes | D5 `products` | Updated product and inventory records; active catalog data for members. |
+| 6.0 Process Walk-in Sale | Staff-entered customer and sale-item details | D5 `products` for validation and stock; D6 `sales`; D7 `sale_items` | Validated sale, receipt details, and applicable merchandise stock update. |
+| 7.0 Query Reports and History | Administrator report type and filters, including date range | D2 `membership_applications`; D3 `members`; D4 `attendance`; D5 `products`; D6 `sales`; D7 `sale_items`; D8 `membership_history` | Dashboard summaries, filtered report data, and available exports. |
+| 8.0 Email Notifications (planned) | Future approval or expiry events | No live notification store or external provider configured | No email output is currently produced; this process remains planned. |
+
+### Data Stores
+
+| ID | Data store | Contents |
+| --- | --- | --- |
+| D1 | `profiles` | Authenticated user's application profile and role. |
+| D2 | `membership_applications` | Registration and renewal submissions, review status, and decision information. |
+| D3 | `members` | Approved member and membership records. |
+| D4 | `attendance` | Staff-recorded member check-in and check-out events. |
+| D5 | `products` | Product catalog, categories, prices, units, and merchandise stock. |
+| D6 | `sales` | Transaction headers and receipt details, including membership sales where recorded. |
+| D7 | `sale_items` | Itemized transaction lines. |
+| D8 | `membership_history` | Expiration, renewal, and plan-change events. |
 
 ## Database Design
 

@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1120" viewBox="0 0 1700 1120" role="img" aria-labelledby="title desc">
+<title id="title">Iron Grind Context Diagram</title>
+<desc id="desc">Context-level data flow diagram showing Member / Applicant and Administrator exchanging information with the Iron Grind Fitness Gym Membership and Operations Management System. A planned email provider connection is marked in development.</desc>
+<defs>
+  <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#273342"/></marker>
+  <marker id="plannedArrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#a66a00"/></marker>
+  <style>
+    text{font-family:Arial,Helvetica,sans-serif;fill:#17212b}
+    .title{font-size:26px;font-weight:700}
+    .entity{fill:#fff;stroke:#273342;stroke-width:2.5}
+    .process{fill:#f8fafc;stroke:#273342;stroke-width:3}
+    .rule{stroke:#273342;stroke-width:2}
+    .entityTitle{font-size:22px;font-weight:700}
+    .processNum{font-size:18px;font-weight:700}
+    .processTitle{font-size:23px;font-weight:700}
+    .flowTitle{font-size:15px;font-weight:700;fill:#344054}
+    .flow{font-size:14px;fill:#344054}
+    .note{font-size:13px;fill:#667085}
+    .dataflow{fill:none;stroke:#273342;stroke-width:2.2;marker-end:url(#arrow)}
+    .planned{fill:none;stroke:#a66a00;stroke-width:2.2;stroke-dasharray:9 7;marker-end:url(#plannedArrow)}
+  </style>
+</defs>
+<rect width="1700" height="1120" fill="#fff"/>
+<text x="850" y="52" text-anchor="middle" class="title">IRON GRIND FITNESS GYM MEMBERSHIP &amp; OPERATIONS MANAGEMENT SYSTEM</text>
+<text x="850" y="82" text-anchor="middle" class="flowTitle">CONTEXT DIAGRAM</text>
+
+<!-- External entities -->
+<rect x="55" y="420" width="250" height="150" class="entity"/>
+<text x="180" y="495" text-anchor="middle" class="entityTitle">Member /</text>
+<text x="180" y="525" text-anchor="middle" class="entityTitle">Applicant</text>
+<rect x="1395" y="420" width="250" height="150" class="entity"/>
+<text x="1520" y="510" text-anchor="middle" class="entityTitle">Administrator</text>
+
+<!-- Central context process -->
+<rect x="600" y="145" width="500" height="665" rx="42" class="process"/>
+<path d="M600 215H1100" class="rule"/>
+<text x="850" y="190" text-anchor="middle" class="processNum">0</text>
+<text x="850" y="380" text-anchor="middle" class="processTitle">Iron Grind Fitness Gym</text>
+<text x="850" y="418" text-anchor="middle" class="processTitle">Membership &amp; Operations</text>
+<text x="850" y="456" text-anchor="middle" class="processTitle">Management System</text>
+<text x="850" y="520" text-anchor="middle" class="flow">Handles authentication, membership, attendance,</text>
+<text x="850" y="545" text-anchor="middle" class="flow">inventory, sales, member services, and reporting</text>
+
+<!-- Member / Applicant data flows -->
+<path d="M305 340H600" class="dataflow"/>
+<text x="452" y="190" text-anchor="middle" class="flowTitle">MEMBER / APPLICANT TO SYSTEM</text>
+<text x="452" y="220" text-anchor="middle" class="flow">Sign-in credentials</text>
+<text x="452" y="245" text-anchor="middle" class="flow">Registration details and membership application</text>
+<text x="452" y="270" text-anchor="middle" class="flow">Renewal requests and profile updates</text>
+<text x="452" y="295" text-anchor="middle" class="flow">Member requests</text>
+
+<path d="M600 650H305" class="dataflow"/>
+<text x="452" y="605" text-anchor="middle" class="flowTitle">SYSTEM TO MEMBER / APPLICANT</text>
+<text x="452" y="680" text-anchor="middle" class="flow">Authentication result and application status</text>
+<text x="452" y="705" text-anchor="middle" class="flow">Membership details and attendance history</text>
+<text x="452" y="730" text-anchor="middle" class="flow">Active product catalog and account information</text>
+
+<!-- Administrator data flows -->
+<path d="M1395 340H1100" class="dataflow"/>
+<text x="1247" y="190" text-anchor="middle" class="flowTitle">ADMINISTRATOR TO SYSTEM</text>
+<text x="1247" y="220" text-anchor="middle" class="flow">Sign-in credentials</text>
+<text x="1247" y="245" text-anchor="middle" class="flow">Application review decisions</text>
+<text x="1247" y="270" text-anchor="middle" class="flow">Member, attendance, and inventory updates</text>
+<text x="1247" y="295" text-anchor="middle" class="flow">Walk-in sale entries and report requests</text>
+
+<path d="M1100 650H1395" class="dataflow"/>
+<text x="1247" y="605" text-anchor="middle" class="flowTitle">SYSTEM TO ADMINISTRATOR</text>
+<text x="1247" y="680" text-anchor="middle" class="flow">Authentication result and dashboard data</text>
+<text x="1247" y="705" text-anchor="middle" class="flow">Application, member, and attendance records</text>
+<text x="1247" y="730" text-anchor="middle" class="flow">Inventory and sales records; receipts</text>
+<text x="1247" y="755" text-anchor="middle" class="flow">Generated reports and exports</text>
+
+<!-- Planned external notification service -->
+<path d="M850 810V900" class="planned"/>
+<text x="875" y="858" class="flow">Notification request / message content</text>
+<rect x="650" y="920" width="400" height="100" rx="12" fill="#fff8e8" stroke="#a66a00" stroke-width="2.2" stroke-dasharray="9 7"/>
+<text x="850" y="960" text-anchor="middle" class="entityTitle" style="font-size:18px;fill:#875500">External Email Provider</text>
+<text x="850" y="988" text-anchor="middle" class="flow" style="fill:#875500">Planned — provider not selected</text>
+<text x="850" y="1055" text-anchor="middle" class="note">Dashed line and outline: planned email notification integration (in development).</text>
+</svg>

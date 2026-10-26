@@ -177,7 +177,7 @@
   <path d="M650 1945H750" class="request"/><path d="M750 1955H650" class="response"/><text x="765" y="1955" class="small">read request / returned result</text>
   <path d="M1120 1950H1220" class="response"/><text x="1235" y="1955" class="small">response to user / administrator</text>
   <path d="M1520 1950H1580" class="planned"/><text x="1590" y="1955" class="small">planned</text>
-  <text x="900" y="2020" text-anchor="middle" class="subtitle">Figure 4. Data Flow Diagram</text>
+  <text x="900" y="2020" text-anchor="middle" class="subtitle">Figure 4. Level 1 Data Process Model</text>
 </svg>
 
 
