@@ -73,11 +73,11 @@
 <!-- Six system modules with individually labeled database request arrows -->
 <path d="M165 497V548" class="route"/><path d="M145 522V548" class="route"/>
 <rect x="25" y="553" width="260" height="70" rx="8" class="module"/>
-<text x="155" y="575" text-anchor="middle" font-size="24">📝</text>
+<text x="155" y="575" text-anchor="middle" font-size="24">&#128221;</text>
 <text x="155" y="598" text-anchor="middle" class="head">Applications &amp; Membership</text>
 <text x="155" y="617" text-anchor="middle" class="small">Registration / application review / member approval</text>
 <rect x="25" y="634" width="260" height="65" rx="8" class="service"/>
-<text x="155" y="651" text-anchor="middle" font-size="20">⚙️</text>
+<text x="155" y="651" text-anchor="middle" font-size="20">&#9881;</text>
 <text x="155" y="672" text-anchor="middle" class="section">APPLICATIONS &amp; ACCOUNT SERVICE</text>
 <text x="155" y="690" text-anchor="middle" class="tiny">Admin account creation: verified Edge Function</text>
 <path d="M155 699V718" class="plain"/>
@@ -95,11 +95,11 @@
 <path d="M295 1005V718" class="response"/>
 <path d="M445 497V548" class="route"/><path d="M425 522V548" class="route"/>
 <rect x="305" y="553" width="260" height="70" rx="8" class="module"/>
-<text x="435" y="575" text-anchor="middle" font-size="24">📱</text>
+<text x="435" y="575" text-anchor="middle" font-size="24">&#128246;</text>
 <text x="435" y="598" text-anchor="middle" class="head">Attendance / QR</text>
 <text x="435" y="617" text-anchor="middle" class="small">admin.html - customer.html</text>
 <rect x="305" y="634" width="260" height="65" rx="8" class="service"/>
-<text x="435" y="651" text-anchor="middle" font-size="20">📷</text>
+<text x="435" y="651" text-anchor="middle" font-size="20">&#128247;</text>
 <text x="435" y="672" text-anchor="middle" class="section">ATTENDANCE SERVICE</text>
 <path d="M435 699V718" class="plain"/>
 <path d="M320 718H550" class="plain"/>
@@ -114,11 +114,11 @@
 <path d="M575 1005V718" class="response"/>
 <path d="M725 497V548" class="route"/><path d="M705 522V548" class="route"/>
 <rect x="585" y="553" width="260" height="70" rx="8" class="module"/>
-<text x="715" y="575" text-anchor="middle" font-size="24">📦</text>
+<text x="715" y="575" text-anchor="middle" font-size="24">&#128230;</text>
 <text x="715" y="598" text-anchor="middle" class="head">Inventory &amp; Products</text>
 <text x="715" y="617" text-anchor="middle" class="small">admin.html - member read-only catalog</text>
 <rect x="585" y="634" width="260" height="65" rx="8" class="service"/>
-<text x="715" y="651" text-anchor="middle" font-size="20">⚙️</text>
+<text x="715" y="651" text-anchor="middle" font-size="20">&#9881;</text>
 <text x="715" y="672" text-anchor="middle" class="section">INVENTORY SERVICE</text>
 <path d="M715 699V718" class="plain"/>
 <path d="M600 718H830" class="plain"/>
@@ -131,11 +131,11 @@
 <path d="M855 1005V718" class="response"/>
 <path d="M995 522V548" class="route"/>
 <rect x="865" y="553" width="260" height="70" rx="8" class="module"/>
-<text x="995" y="575" text-anchor="middle" font-size="24">🧾</text>
+<text x="995" y="575" text-anchor="middle" font-size="24">&#129534;</text>
 <text x="995" y="598" text-anchor="middle" class="head">Walk-in POS / Receipts</text>
 <text x="995" y="617" text-anchor="middle" class="small">Admin-entered product sale</text>
 <rect x="865" y="634" width="260" height="65" rx="8" class="service"/>
-<text x="995" y="651" text-anchor="middle" font-size="20">💳</text>
+<text x="995" y="651" text-anchor="middle" font-size="20">&#128179;</text>
 <text x="995" y="672" text-anchor="middle" class="section">SALES SERVICE - RPC</text>
 <path d="M995 699V718" class="plain"/>
 <path d="M880 718H1110" class="plain"/>
@@ -150,11 +150,11 @@
 <path d="M1135 1005V718" class="response"/>
 <path d="M1275 497V548" class="route"/>
 <rect x="1145" y="553" width="260" height="70" rx="8" class="module"/>
-<text x="1275" y="575" text-anchor="middle" font-size="24">👤</text>
+<text x="1275" y="575" text-anchor="middle" font-size="24">&#128100;</text>
 <text x="1275" y="598" text-anchor="middle" class="head">Member Portal</text>
 <text x="1275" y="617" text-anchor="middle" class="small">customer.html</text>
 <rect x="1145" y="634" width="260" height="65" rx="8" class="service"/>
-<text x="1275" y="651" text-anchor="middle" font-size="20">🔄</text>
+<text x="1275" y="651" text-anchor="middle" font-size="20">&#128260;</text>
 <text x="1275" y="672" text-anchor="middle" class="section">MEMBER DATA SERVICE</text>
 <path d="M1275 699V718" class="plain"/>
 <path d="M1160 718H1390" class="plain"/>
@@ -171,11 +171,11 @@
 <path d="M1415 1005V718" class="response"/>
 <path d="M1555 522V548" class="route"/>
 <rect x="1425" y="553" width="260" height="70" rx="8" class="module"/>
-<text x="1555" y="575" text-anchor="middle" font-size="24">📊</text>
+<text x="1555" y="575" text-anchor="middle" font-size="24">&#128202;</text>
 <text x="1555" y="598" text-anchor="middle" class="head">Reports &amp; Exports</text>
 <text x="1555" y="617" text-anchor="middle" class="small">admin.html</text>
 <rect x="1425" y="634" width="260" height="65" rx="8" class="service"/>
-<text x="1555" y="651" text-anchor="middle" font-size="20">🔎</text>
+<text x="1555" y="651" text-anchor="middle" font-size="20">&#128269;</text>
 <text x="1555" y="672" text-anchor="middle" class="section">REPORT QUERY SERVICE</text>
 <path d="M1555 699V718" class="plain"/>
 <path d="M1440 718H1670" class="plain"/>
@@ -195,14 +195,14 @@
 <text x="850" y="1031" text-anchor="middle" class="head">SUPABASE DATA API / RPC + ROW LEVEL SECURITY (RLS)</text>
 <text x="850" y="1054" text-anchor="middle" class="small">Browser table requests carry the signed-in user's Auth session; RLS policies restrict direct table access.</text>
 <text x="850" y="1074" text-anchor="middle" class="small">RPC functions enforce their own authorization and validation checks.</text>
-<text x="850" y="1094" text-anchor="middle" class="small">Admin verified → Auth account + member record</text>
+<text x="850" y="1094" text-anchor="middle" class="small">admin-create-member Edge Function verifies admin and creates Auth account + member record</text>
 
 <!-- Realtime scope -->
 <rect x="35" y="1127" width="450" height="100" rx="8" class="soft"/>
 <text x="55" y="1145" class="small" style="font-weight:700">LINE KEY</text>
 <path d="M55 1158H100" class="solid"/><text x="115" y="1161" class="tiny">Request / data write</text>
 <path d="M55 1177H100" class="response"/><text x="115" y="1180" class="tiny">Response / query result</text>
-<path d="M55 1196H100" class="plain"/><text x="115" y="1199" class="tiny">Session / page routing</text>
+<path d="M55 1196H100" class="route"/><text x="115" y="1199" class="tiny">Role / page routing</text>
 <path d="M55 1215H100" class="planned"/><text x="115" y="1218" class="tiny">Planned email notification flow</text>
 <rect x="1230" y="1133" width="435" height="65" rx="8" class="soft"/>
 <text x="1447" y="1153" text-anchor="middle" class="small">SUPABASE REALTIME</text>
