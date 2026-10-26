@@ -29,7 +29,7 @@
 
 <!-- Actors, login, authentication, and system role routing -->
 <g transform="translate(180 77)"><circle cx="18" cy="15" r="13" fill="#111820"/><path d="M0 62c1-19 7-29 18-29s17 10 18 29z" fill="#111820"/><text x="18" y="83" text-anchor="middle" class="small">Member / Applicant</text></g>
-<g transform="translate(1485 77)"><circle cx="18" cy="15" r="13" fill="#111820"/><path d="M0 62c1-19 7-29 18-29s17 10 18 29z" fill="#111820"/><rect x="23" y="44" width="30" height="23" rx="3" fill="#fff" stroke="#111820" stroke-width="3"/><path d="M31 44v-6h14v6" fill="none" stroke="#111820" stroke-width="3"/><text x="27" y="83" text-anchor="middle" class="small">Administrator / Staff</text></g>
+<g transform="translate(1485 77)"><circle cx="18" cy="15" r="13" fill="#111820"/><path d="M0 62c1-19 7-29 18-29s17 10 18 29z" fill="#111820"/><rect x="23" y="44" width="30" height="23" rx="3" fill="#fff" stroke="#111820" stroke-width="3"/><path d="M31 44v-6h14v6" fill="none" stroke="#111820" stroke-width="3"/><text x="27" y="83" text-anchor="middle" class="small">Administrator</text></g>
 <rect x="700" y="77" width="300" height="68" rx="9" class="soft"/>
 <rect x="733" y="91" width="38" height="38" rx="5" fill="#fff" stroke="#46505e" stroke-width="1.5"/><rect x="738" y="96" width="28" height="5" rx="2" fill="#9d1010"/><path d="M739 106h26M739 112h20M739 118h24" stroke="#8791a0" stroke-width="2"/>
 <text x="867" y="105" text-anchor="middle" class="head">Login Page</text>
@@ -54,9 +54,17 @@
 <text x="1240" y="403" text-anchor="middle" class="small">profile.role = admin - open admin.html operations dashboard</text>
 <path d="M675 299H460V350" class="solid"/><text x="548" y="291" text-anchor="middle" class="tiny">role = member</text>
 <path d="M1025 299H1240V350" class="solid"/><text x="1157" y="291" text-anchor="middle" class="tiny">role = admin</text>
-<rect x="105" y="440" width="1490" height="55" rx="8" class="soft"/>
-<text x="850" y="462" text-anchor="middle" class="head">Registration &amp; Member Account Creation</text>
-<text x="850" y="482" text-anchor="middle" class="small">Online: register.html - Auth signUp() - profiles row via Auth trigger - pending membership_applications after confirmation. Staff-created: admin-create-member Edge Function - Auth Admin API - admin_create_member_and_sale RPC.</text>
+<rect x="105" y="435" width="720" height="80" rx="8" class="soft"/>
+<text x="465" y="456" text-anchor="middle" class="head">Applicant Registration</text>
+<text x="465" y="477" text-anchor="middle" class="small">register.html → Supabase Auth signUp() → profile created</text>
+<text x="465" y="497" text-anchor="middle" class="small">Success / confirmation → membership application saved as Pending</text>
+<rect x="875" y="440" width="720" height="55" rx="8" class="soft"/>
+<text x="1235" y="462" text-anchor="middle" class="head">Admin Creates Member Account</text>
+<text x="1235" y="482" text-anchor="middle" class="small">After admin login: Edge Function → Auth account + member record</text>
+<path d="M198 145H15V430H465V435" class="solid"/><text x="320" y="425" text-anchor="middle" class="tiny">register</text>
+<path d="M1240 420V435" class="solid"/>
+<path d="M1000 208H1640V430H825V435" class="response"/><text x="1370" y="422" text-anchor="middle" class="tiny">Auth success / error response</text>
+<path d="M105 475H15V540H155V548" class="solid"/>
 <!-- Role-authorized session bus -->
 <path d="M460 420V526H80M1240 420V526H1620M80 526H1620" class="plain"/>
 <text x="850" y="518" text-anchor="middle" class="small">Role-authorized sessions connect users to the modules below.</text>
