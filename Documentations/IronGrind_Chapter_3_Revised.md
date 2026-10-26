@@ -14,7 +14,7 @@ Agile is an iterative system-development approach in which requirements are prio
 
 ### Requirements Planning
 
-The project requirements are identified from the gym's stated processes and the system scope in Chapters 1 and 2. The work is prioritized in a backlog, beginning with account access and membership applications, followed by staff review, member access, attendance, inventory, sales, and reporting. Each selected requirement is given acceptance criteria. Privacy and authorization requirements apply throughout development because the system handles personal and health-related information.
+The project requirements are identified from the gym's stated processes and the system scope in Chapters 1 and 2. The work is organized in a prioritized task list, beginning with account access and membership applications, followed by staff review, member access, attendance, inventory, sales, and reporting. Each selected requirement is given acceptance criteria. Privacy and authorization requirements apply throughout development because the system handles personal and health-related information.
 
 ### User Design
 
@@ -22,7 +22,7 @@ For each iteration, the relevant user workflows, page layouts, forms, reports, d
 
 ### Construction
 
-Selected requirements are implemented in the HTML, CSS, and JavaScript client and the Supabase authentication and PostgreSQL services. Database policies and functions support authorization and operational transactions. Each increment is tested against its acceptance criteria. At the end of an iteration, issues and feedback are recorded, priorities are updated, and unfinished or revised work returns to the backlog. Stakeholder reviews or user feedback should be reported as completed only when the team has records of those activities.
+Selected requirements are implemented in the HTML, CSS, and JavaScript client and the Supabase authentication and PostgreSQL services. Database policies and functions support authorization and operational transactions. Each increment is tested against its acceptance criteria. At the end of an iteration, issues and feedback are recorded, priorities are updated, and unfinished or revised work returns to the prioritized task list. Stakeholder reviews or user feedback should be reported as completed only when the team has records of those activities.
 
 ### Implementation
 
@@ -176,10 +176,10 @@ The Agile schedule below describes recurring iteration work and release activiti
 
 | Agile activity | Activities | Deliverable |
 | --- | --- | --- |
-| Backlog preparation | Confirm scope, user roles, workflows, data needs, privacy requirements, priorities, and acceptance criteria. | Prioritized product backlog. |
-| Iteration planning and design | Select backlog items for the iteration and refine the relevant page flows, data relationships, and permissions. | Iteration goal and design notes. |
+| Prioritized task list preparation | Confirm scope, user roles, workflows, data needs, privacy requirements, priorities, and acceptance criteria. | Prioritized task list. |
+| Iteration planning and design | Select tasks from the prioritized task list and refine the relevant page flows, data relationships, and permissions. | Iteration goal and design notes. |
 | Incremental implementation | Build and integrate the selected browser workflows, Supabase schema, access policies, and database functions. | Working software increment. |
-| Iteration testing and review | Test the increment against its acceptance criteria, record defects, and review the result with intended stakeholders where arranged. | Test records, review feedback, and updated backlog. |
+| Iteration testing and review | Test the increment against its acceptance criteria, record defects, and review the result with intended stakeholders where arranged. | Test records, review feedback, and updated task list. |
 | Repeat and refine | Prioritize remaining work and repeat planning, design, implementation, testing, and review until the agreed scope is complete. | Successive verified increments. |
 | Release and transition | Configure the intended environment, verify access, prepare approved records, and orient users. | Deployment and transition records. |
 | Evaluation | Administer the approved user-evaluation instrument and analyze the collected data. | Evaluation dataset, analysis, and findings. |
