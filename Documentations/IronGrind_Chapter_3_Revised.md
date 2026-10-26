@@ -2,25 +2,31 @@
 
 # RESEARCH METHODOLOGY
 
-This chapter presents the research and development approach, system requirements, design, data organization, and evaluation procedures for **IronGrind: A Web-Based Fitness Gym Membership and Operations Management System for Iron Grind Fitness Gym in Purok Mangga, Sulongon, Dapitan City, Zamboanga del Norte**. The chapter is aligned with the operational concerns in Chapter 1 and the related literature and system boundaries discussed in Chapter 2. System descriptions below are based on the project files and implemented workflows. Proposed evaluation activities are distinguished from results that have not yet been collected.
-
-## Research and Development Design
-
-The study follows a system-development approach: it defines the gym's operational requirements, translates them into browser-based workflows and database records, and verifies that those workflows produce the expected results. The project addresses the stated need to organize membership applications and records, membership periods and renewals, staff-recorded attendance, products, sales, and reports. It does not test a claim that the system improves business performance; such a claim would require a separate evaluation and evidence.
+This chapter discusses the methodology used to develop **IronGrind: A Web-Based Fitness Gym Membership and Operations Management System for Iron Grind Fitness Gym in Purok Mangga, Sulongon, Dapitan City, Zamboanga del Norte**. It describes the development process, system requirements, design, data organization, and evaluation procedures. The system is intended to organize membership applications and records, membership periods and renewals, staff-recorded attendance, products, sales, and reports. Its development is organized using Agile, with work planned and delivered incrementally. Proposed evaluation activities are distinguished from results that have not yet been collected.
 
 ### System Development Methodology
 
-The project uses Agile as its organizing development approach. Work is planned and delivered in short iterations, with requirements prioritized according to the gym's workflows. Each iteration moves through planning, design, implementation, and testing, and its results are reviewed before the next set of work is selected. This supports incremental delivery of the membership, attendance, inventory, sales, and reporting functions. The research team should confirm that Agile is the methodology approved in the study proposal and describe the actual iteration length and review process used by the team.
+Agile is an iterative system-development approach in which requirements are prioritized, selected work is developed and tested in increments, and the results inform the next iteration. For IronGrind, this approach organizes development around the gym's applicant/member and administrator workflows. The iteration cycle is summarized in Figure 3.1. The project does not assume a specific Agile framework such as Scrum; the research team should document the actual iteration length and review practices used and confirm that Agile is the methodology approved in the study proposal.
 
-**Product backlog and prioritization.** Requirements are recorded as user needs and prioritized by operational importance, beginning with account access and membership applications, followed by staff review, member access, attendance, inventory, sales, and reports. Privacy and authorization requirements apply throughout the backlog rather than being postponed to a final phase.
+![Figure 3.1. Agile development cycle for IronGrind](iron-grind-agile-methodology.svg)
 
-**Iteration planning and design.** At the start of each iteration, the team selects a manageable set of requirements and defines acceptance criteria. The relevant page flows, data relationships, and role permissions are designed or refined for those requirements. The architecture, use-case, and data-flow figures in this chapter summarize the resulting system design.
+**Figure 3.1.** Agile development cycle for IronGrind.
 
-**Incremental implementation and testing.** Selected requirements are implemented in the HTML, CSS, and JavaScript client and the Supabase authentication and PostgreSQL services. Database policies and functions support authorization and operational transactions. Each increment is tested against its acceptance criteria and the functional scenarios in this chapter before it is treated as complete.
+### Requirements Planning
 
-**Review and refinement.** At the end of an iteration, the increment is reviewed against the selected requirements. Issues and feedback are recorded, priorities are updated, and unfinished or revised work returns to the backlog. Do not report stakeholder reviews or user feedback as completed unless the team has records of those activities.
+The project requirements are identified from the gym's stated processes and the system scope in Chapters 1 and 2. The work is prioritized in a backlog, beginning with account access and membership applications, followed by staff review, member access, attendance, inventory, sales, and reporting. Each selected requirement is given acceptance criteria. Privacy and authorization requirements apply throughout development because the system handles personal and health-related information.
 
-**Release and transition.** After the required increments pass verification, the website and Supabase project can be configured for the intended environment. Deployment must use the correct project settings, access policies, and authorized administrator accounts. Staff should verify the workflows and receive appropriate orientation. This chapter does not claim a production deployment, completed training, or user acceptance unless those activities are documented separately.
+### User Design
+
+For each iteration, the relevant user workflows, page layouts, forms, reports, data relationships, and role permissions are designed or refined. The design distinguishes pending applications from approved member records, keeps attendance as a separate operational record, and stores sales with their itemized lines. The architecture, use-case, and data-flow figures in this chapter summarize the system design.
+
+### Construction
+
+Selected requirements are implemented in the HTML, CSS, and JavaScript client and the Supabase authentication and PostgreSQL services. Database policies and functions support authorization and operational transactions. Each increment is tested against its acceptance criteria. At the end of an iteration, issues and feedback are recorded, priorities are updated, and unfinished or revised work returns to the backlog. Stakeholder reviews or user feedback should be reported as completed only when the team has records of those activities.
+
+### Implementation
+
+After the required increments pass verification, the website and Supabase project can be configured for the intended environment. Deployment must use the correct project settings, access policies, and authorized administrator accounts. Staff should verify the workflows and receive appropriate orientation. This chapter does not claim a production deployment, completed training, or user acceptance unless those activities are documented separately.
 
 ## Study Setting and Intended Users
 
@@ -79,25 +85,25 @@ The deployed database distinguishes `admin` and `member` profile roles. Staff fu
 
 The browser presents the applicant/member pages and administrator dashboard. Client-side JavaScript sends authentication and data requests to Supabase. Supabase Auth manages user identity and sessions; the PostgreSQL database stores the operational records. Row Level Security policies and database functions restrict and validate database operations. Privileged account creation uses a server-side Edge Function that verifies administrator authorization. The Node.js server in the repository is a local static-file development server; it is not the production database backend.
 
-![Figure 3.1. IronGrind system architecture](iron-grind-system-architecture.svg)
+![Figure 3.2. IronGrind system architecture](iron-grind-system-architecture.svg)
 
-**Figure 3.1.** System architecture of IronGrind.
+**Figure 3.2.** System architecture of IronGrind.
 
 ### Use-Case Model
 
 The use-case model summarizes the actions available to applicants, members, and authorized staff. Applicants submit registration information; members review their own membership and attendance information and may request renewal; staff handle approvals and the gym's operational records. Walk-in sales are entered by staff rather than through a separate customer portal.
 
-![Figure 3.2. IronGrind use-case diagram](iron-grind-use-case.svg)
+![Figure 3.3. IronGrind use-case diagram](iron-grind-use-case.svg)
 
-**Figure 3.2.** Use-case diagram of IronGrind.
+**Figure 3.3.** Use-case diagram of IronGrind.
 
 ### Data-Flow Model
 
 Registration information is submitted to the application workflow and remains pending until staff review it. Approval connects the application to a member record and records the associated membership transaction. Renewal submissions follow the same staff-review principle. During a gym visit, staff scan the member QR code and record attendance. Staff maintain product records and enter in-person sales; each sale is stored with its line items. Authorized staff request operational views and reports from the records maintained by the system.
 
-![Figure 3.3. IronGrind data-flow diagram](iron-grind-data-flow.svg)
+![Figure 3.4. IronGrind data-flow diagram](iron-grind-data-flow.svg)
 
-**Figure 3.3.** Data-flow diagram of IronGrind.
+**Figure 3.4.** Data-flow diagram of IronGrind.
 
 ## Database Design
 
