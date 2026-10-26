@@ -1,190 +1,202 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1750" height="1600" viewBox="0 0 1750 1600" role="img" aria-labelledby="title desc">
-<title id="title">IronGrind System Architecture Diagram</title>
-<desc id="desc">A detailed, reference-style architecture diagram showing login and authentication, application pages, operational service icons, labeled Supabase data flows, and their connection to the PostgreSQL database tables.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1430" viewBox="0 0 1700 1430" role="img" aria-labelledby="title desc">
+<title id="title">Iron Grind System Architecture Diagram</title>
+<desc id="desc">Role based login leads to six aligned Iron Grind system modules. Each module shows its service operations and data exchanged with Supabase Data API and PostgreSQL, with authentication, security, staff account creation, and Realtime scope.</desc>
 <defs>
-<marker id="a" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7Z" fill="#333"/></marker>
-<marker id="b" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto"><path d="M0 0L7 3.5L0 7Z" fill="#777"/></marker>
-<style>
-text{font-family:"Times New Roman",serif;fill:#111}.title{font-size:24px;font-weight:bold}.hdr{font-size:13px;font-weight:bold}.lbl{font-size:11px}.sm{font-size:9px}.xs{font-size:8px}
-.box{fill:#fff;stroke:#444;stroke-width:1.2}.soft{fill:#f7f7f7;stroke:#555;stroke-width:1.2}
-.wire{fill:none;stroke:#444;stroke-width:1.05;marker-end:url(#a)}.back{fill:none;stroke:#888;stroke-width:1;stroke-dasharray:4 3;marker-end:url(#b)}
-.line{fill:none;stroke:#444;stroke-width:1}
-</style></defs>
-<rect width="1750" height="1600" fill="#fff"/>
-<text x="875" y="32" text-anchor="middle" class="title">IRON GRIND FITNESS GYM MEMBERSHIP &amp; OPERATIONS MANAGEMENT SYSTEM</text>
+  <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#343a46"/></marker>
+  <marker id="arrowMuted" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#7d8797"/></marker>
+  <style>
+    text{font-family:Arial,Helvetica,sans-serif;fill:#17202b}
+    .title{font-size:23px;font-weight:700;letter-spacing:.35px}
+    .section{font-size:13px;font-weight:700;letter-spacing:.5px}
+    .head{font-size:14px;font-weight:700}
+    .body{font-size:11px}
+    .small{font-size:10px}
+    .tiny{font-size:9px}
+    .box{fill:#fff;stroke:#46505e;stroke-width:1.5}
+    .soft{fill:#f2f4f7;stroke:#697383;stroke-width:1.3}
+    .module{fill:#fff;stroke:#46505e;stroke-width:1.3}
+    .service{fill:#f7f8fa;stroke:#929baa;stroke-width:1.2}
+    .api{fill:#edf1f5;stroke:#384250;stroke-width:1.6}
+    .solid{fill:none;stroke:#343a46;stroke-width:1.5;marker-end:url(#arrow)}
+    .response{fill:none;stroke:#7d8797;stroke-width:1.35;stroke-dasharray:5 4;marker-end:url(#arrowMuted)}
+    .plain{fill:none;stroke:#687281;stroke-width:1.3}
+    .red{fill:#9d1010}
+  </style>
+</defs>
+<rect width="1700" height="1430" fill="#fff"/>
+<text x="850" y="34" text-anchor="middle" class="title">IRON GRIND FITNESS GYM MEMBERSHIP &amp; OPERATIONS MANAGEMENT SYSTEM</text>
+<text x="850" y="57" text-anchor="middle" class="section">SYSTEM ARCHITECTURE</text>
 
-<!-- Actors, login, authentication, application -->
-<g transform="translate(385 53)"><circle cx="17" cy="11" r="9" fill="#111"/><path d="M1 45c1-14 6-21 16-21s15 7 16 21z" fill="#111"/><text x="17" y="59" text-anchor="middle" class="sm">Member / Applicant</text></g>
-<g transform="translate(1328 53)"><circle cx="17" cy="11" r="9" fill="#111"/><path d="M1 45c1-14 6-21 16-21s15 7 16 21z" fill="#111"/><text x="17" y="59" text-anchor="middle" class="sm">Administrator / Staff</text></g>
-<rect x="760" y="54" width="230" height="54" class="box"/><text x="875" y="76" text-anchor="middle" class="hdr">🔑 Login Page</text><text x="875" y="94" text-anchor="middle" class="xs">index.html</text>
-<path d="M420 82H755" class="wire"/><text x="585" y="73" text-anchor="middle" class="xs">User input: email + password</text>
-<path d="M1328 82H995" class="wire"/><text x="1160" y="73" text-anchor="middle" class="xs">Admin input: email + password</text>
-<path d="M875 108V138" class="wire"/><text x="886" y="127" class="xs">signInWithPassword()</text>
-<rect x="760" y="143" width="230" height="58" class="soft"/><text x="875" y="166" text-anchor="middle" class="hdr">🔐 Supabase Auth</text><text x="875" y="185" text-anchor="middle" class="xs">Credential verification + session</text>
-<path d="M760 173H735V81H755" class="back"/><text x="726" y="142" text-anchor="end" class="xs">Authentication result / error</text>
-<path d="M875 201V226" class="wire"/><text x="886" y="219" class="xs">successful login</text>
-<rect x="705" y="231" width="340" height="55" class="box"/><text x="875" y="253" text-anchor="middle" class="hdr">Load profiles.role by Auth user ID</text><text x="875" y="272" text-anchor="middle" class="xs">Admin role → admin.html · member role → membership lookup</text>
-<path d="M705 258H655V303H565" class="wire"/><text x="623" y="296" text-anchor="middle" class="xs">role = member</text>
-<rect x="375" y="305" width="190" height="50" class="box"/><text x="470" y="326" text-anchor="middle" class="hdr">Member lookup</text><text x="470" y="344" text-anchor="middle" class="xs">members.auth_user_id = user.id</text>
-<path d="M375 330H325" class="wire"/><rect x="160" y="305" width="165" height="50" class="soft"/><text x="242" y="326" text-anchor="middle" class="hdr">customer.html</text><text x="242" y="344" text-anchor="middle" class="xs">or show application status</text>
-<path d="M470 355V368H255V360" class="back"/>
-<path d="M1045 258H1095V303H1185" class="wire"/><text x="1110" y="296" text-anchor="middle" class="xs">role = admin</text>
-<rect x="1185" y="305" width="190" height="50" class="box"/><text x="1280" y="326" text-anchor="middle" class="hdr">Admin session</text><text x="1280" y="344" text-anchor="middle" class="xs">profile.role = admin</text>
-<path d="M1375 330H1425" class="wire"/><rect x="1425" y="305" width="165" height="50" class="soft"/><text x="1507" y="326" text-anchor="middle" class="hdr">admin.html</text><text x="1507" y="344" text-anchor="middle" class="xs">operations dashboard</text>
-<rect x="230" y="387" width="1290" height="50" class="soft"/>
-<text x="875" y="408" text-anchor="middle" class="hdr">📝 Registration path: register.html → Supabase Auth signUp() → profiles row via Auth trigger → membership_applications row (pending)</text>
-<text x="875" y="426" text-anchor="middle" class="xs">After email confirmation / session; staff-created accounts also use admin-create-member Edge Function → Auth Admin API → admin_create_member_and_sale RPC</text>
+<!-- Actors and authentication -->
+<rect x="55" y="83" width="280" height="56" rx="8" class="box"/>
+<text x="195" y="107" text-anchor="middle" class="head">Member / Applicant</text>
+<text x="195" y="126" text-anchor="middle" class="small">Email and password · registration details</text>
+<rect x="1365" y="83" width="280" height="56" rx="8" class="box"/>
+<text x="1505" y="107" text-anchor="middle" class="head">Administrator / Staff</text>
+<text x="1505" y="126" text-anchor="middle" class="small">Email and password · gym operations</text>
+<rect x="700" y="77" width="300" height="68" rx="9" class="soft"/>
+<text x="850" y="105" text-anchor="middle" class="head">Login Page · index.html</text>
+<text x="850" y="126" text-anchor="middle" class="small">Supabase signInWithPassword()</text>
+<path d="M335 111H690" class="solid"/><text x="510" y="101" text-anchor="middle" class="small">User input</text>
+<path d="M1365 111H1010" class="solid"/><text x="1187" y="101" text-anchor="middle" class="small">Admin input</text>
+<rect x="700" y="177" width="300" height="62" rx="9" class="box"/>
+<text x="850" y="202" text-anchor="middle" class="head">Supabase Auth</text>
+<text x="850" y="222" text-anchor="middle" class="small">Credential verification · session</text>
+<path d="M850 145V169" class="solid"/><text x="862" y="163" class="tiny">credentials</text>
+<path d="M720 177H670V110H690" class="response"/><text x="658" y="153" text-anchor="end" class="tiny">authentication result / error</text>
+<rect x="675" y="269" width="350" height="62" rx="9" class="soft"/>
+<text x="850" y="294" text-anchor="middle" class="head">Resolve account role</text>
+<text x="850" y="314" text-anchor="middle" class="small">Read profiles.role using the Auth user ID</text>
+<path d="M850 239V261" class="solid"/><text x="862" y="255" class="tiny">successful login</text>
+<rect x="190" y="358" width="540" height="62" rx="9" class="box"/>
+<text x="460" y="383" text-anchor="middle" class="head">Member session</text>
+<text x="460" y="403" text-anchor="middle" class="small">Match members.auth_user_id · open member experience or show application status</text>
+<rect x="970" y="358" width="540" height="62" rx="9" class="box"/>
+<text x="1240" y="383" text-anchor="middle" class="head">Administrator session</text>
+<text x="1240" y="403" text-anchor="middle" class="small">profile.role = admin · open admin.html operations dashboard</text>
+<path d="M675 299H460V350" class="solid"/><text x="548" y="291" text-anchor="middle" class="tiny">role = member</text>
+<path d="M1025 299H1240V350" class="solid"/><text x="1157" y="291" text-anchor="middle" class="tiny">role = admin</text>
+<rect x="105" y="440" width="1490" height="55" rx="8" class="soft"/>
+<text x="850" y="462" text-anchor="middle" class="head">Registration and staff account creation</text>
+<text x="850" y="482" text-anchor="middle" class="small">Online: register.html → Auth signUp() → profiles row via Auth trigger → pending membership_applications after confirmation · Staff-created: admin-create-member Edge Function → Auth Admin API → admin_create_member_and_sale RPC</text>
 
-<!-- Session bus and pages -->
-<path d="M242 355V461H145M1507 355V461H1605M145 461H1605" class="line"/>
-<text x="875" y="455" text-anchor="middle" class="xs">Role-authorized user session</text>
-<path d="M145 461V482" class="wire"/>
-<rect x="37" y="487" width="216" height="76" class="box"/>
-<text x="145" y="510" text-anchor="middle" font-size="23">📝</text>
-<text x="145" y="530" text-anchor="middle" class="hdr">Applications &amp; Membership</text>
-<text x="145" y="549" text-anchor="middle" class="xs">register.html · admin.html</text>
-<path d="M145 563V603" class="wire"/>
-<text x="145" y="615" text-anchor="middle" font-size="22">📝</text>
-<text x="145" y="698" text-anchor="middle" class="hdr">Applications Service</text>
-<text x="145" y="716" text-anchor="middle" class="xs">Submit registration • review approval</text>
-<text x="145" y="733" text-anchor="middle" class="xs">Tables: applications | members | sales | sale_items</text>
-<path d="M437 461V482" class="wire"/>
-<rect x="329" y="487" width="216" height="76" class="box"/>
-<text x="437" y="510" text-anchor="middle" font-size="23">📅</text>
-<text x="437" y="530" text-anchor="middle" class="hdr">Attendance / QR</text>
-<text x="437" y="549" text-anchor="middle" class="xs">admin.html · customer.html</text>
-<path d="M437 563V603" class="wire"/>
-<text x="437" y="615" text-anchor="middle" font-size="22">📷</text>
-<text x="437" y="698" text-anchor="middle" class="hdr">Attendance Service</text>
-<text x="437" y="716" text-anchor="middle" class="xs">Resolve QR • check-in / check-out</text>
-<text x="437" y="733" text-anchor="middle" class="xs">Tables: members | attendance</text>
-<path d="M729 461V482" class="wire"/>
-<rect x="621" y="487" width="216" height="76" class="box"/>
-<text x="729" y="510" text-anchor="middle" font-size="23">📦</text>
-<text x="729" y="530" text-anchor="middle" class="hdr">Inventory &amp; Products</text>
-<text x="729" y="549" text-anchor="middle" class="xs">admin.html · read-only member view</text>
-<path d="M729 563V603" class="wire"/>
-<text x="729" y="615" text-anchor="middle" font-size="22">⚙️</text>
-<text x="729" y="698" text-anchor="middle" class="hdr">Inventory Service</text>
-<text x="729" y="716" text-anchor="middle" class="xs">Product CRUD • stock • active catalog</text>
-<text x="729" y="733" text-anchor="middle" class="xs">Tables: products</text>
-<path d="M1021 461V482" class="wire"/>
-<rect x="913" y="487" width="216" height="76" class="box"/>
-<text x="1021" y="510" text-anchor="middle" font-size="23">🧾</text>
-<text x="1021" y="530" text-anchor="middle" class="hdr">Walk-in POS / Receipts</text>
-<text x="1021" y="549" text-anchor="middle" class="xs">staff-entered sale</text>
-<path d="M1021 563V603" class="wire"/>
-<text x="1021" y="615" text-anchor="middle" font-size="22">💳</text>
-<text x="1021" y="698" text-anchor="middle" class="hdr">Sales Service (RPC)</text>
-<text x="1021" y="716" text-anchor="middle" class="xs">record_walk_in_sale()</text>
-<text x="1021" y="733" text-anchor="middle" class="xs">Tables: products | sales | sale_items</text>
-<path d="M1313 461V482" class="wire"/>
-<rect x="1205" y="487" width="216" height="76" class="box"/>
-<text x="1313" y="510" text-anchor="middle" font-size="23">👤</text>
-<text x="1313" y="530" text-anchor="middle" class="hdr">Member Portal</text>
-<text x="1313" y="549" text-anchor="middle" class="xs">customer.html</text>
-<path d="M1313 563V603" class="wire"/>
-<text x="1313" y="615" text-anchor="middle" font-size="22">🔄</text>
-<text x="1313" y="698" text-anchor="middle" class="hdr">Member Data Service</text>
-<text x="1313" y="716" text-anchor="middle" class="xs">Own membership • visits • catalog</text>
-<text x="1313" y="733" text-anchor="middle" class="xs">Tables: members | attendance | products | applications</text>
-<path d="M1605 461V482" class="wire"/>
-<rect x="1497" y="487" width="216" height="76" class="box"/>
-<text x="1605" y="510" text-anchor="middle" font-size="23">📊</text>
-<text x="1605" y="530" text-anchor="middle" class="hdr">Reports &amp; Exports</text>
-<text x="1605" y="549" text-anchor="middle" class="xs">admin.html</text>
-<path d="M1605 563V603" class="wire"/>
-<text x="1605" y="615" text-anchor="middle" font-size="22">🔎</text>
-<text x="1605" y="698" text-anchor="middle" class="hdr">Report Query Service</text>
-<text x="1605" y="716" text-anchor="middle" class="xs">Frontend filters / authorized SELECT</text>
-<text x="1605" y="733" text-anchor="middle" class="xs">Reads: members | attendance | inventory | sales | history</text>
-<!-- Detailed parallel database requests and result paths, grouped by workflow -->
-<path d="M145 741V855" class="line"/>
-<path d="M145 855H109V1155" class="wire"/>
-<text x="105" y="1000" transform="rotate(-90 105 1000)" class="xs">membership_applications INSERT pending</text>
-<path d="M145 855H127V1155" class="wire"/>
-<text x="123" y="1000" transform="rotate(-90 123 1000)" class="xs">members INSERT approved</text>
-<path d="M145 855H145V1155" class="wire"/>
-<text x="141" y="1000" transform="rotate(-90 141 1000)" class="xs">registration sale RPC</text>
-<path d="M145 855H163V1155" class="wire"/>
-<text x="159" y="1000" transform="rotate(-90 159 1000)" class="xs">application UPDATE approved</text>
-<path d="M145 855H181V1155" class="wire"/>
-<text x="177" y="1000" transform="rotate(-90 177 1000)" class="xs">member role lookup</text>
-<path d="M213 1155V855" class="back"/>
-<text x="217" y="1010" transform="rotate(-90 217 1010)" class="xs">query result / response</text>
-<path d="M437 741V855" class="line"/>
-<path d="M437 855H410V1155" class="wire"/>
-<text x="406" y="1000" transform="rotate(-90 406 1000)" class="xs">QR member lookup</text>
-<path d="M437 855H428V1155" class="wire"/>
-<text x="424" y="1000" transform="rotate(-90 424 1000)" class="xs">attendance INSERT time-in</text>
-<path d="M437 855H446V1155" class="wire"/>
-<text x="442" y="1000" transform="rotate(-90 442 1000)" class="xs">attendance UPDATE time-out</text>
-<path d="M437 855H464V1155" class="wire"/>
-<text x="460" y="1000" transform="rotate(-90 460 1000)" class="xs">attendance SELECT history</text>
-<path d="M505 1155V855" class="back"/>
-<text x="509" y="1010" transform="rotate(-90 509 1010)" class="xs">query result / response</text>
-<path d="M729 741V855" class="line"/>
-<path d="M729 855H711V1155" class="wire"/>
-<text x="707" y="1000" transform="rotate(-90 707 1000)" class="xs">products SELECT lookup</text>
-<path d="M729 855H729V1155" class="wire"/>
-<text x="725" y="1000" transform="rotate(-90 725 1000)" class="xs">products INSERT / UPDATE</text>
-<path d="M729 855H747V1155" class="wire"/>
-<text x="743" y="1000" transform="rotate(-90 743 1000)" class="xs">active catalog SELECT</text>
-<path d="M797 1155V855" class="back"/>
-<text x="801" y="1010" transform="rotate(-90 801 1010)" class="xs">query result / response</text>
-<path d="M1021 741V855" class="line"/>
-<path d="M1021 855H985V1155" class="wire"/>
-<text x="981" y="1000" transform="rotate(-90 981 1000)" class="xs">product validation / stock</text>
-<path d="M1021 855H1003V1155" class="wire"/>
-<text x="999" y="1000" transform="rotate(-90 999 1000)" class="xs">sales INSERT receipt</text>
-<path d="M1021 855H1021V1155" class="wire"/>
-<text x="1017" y="1000" transform="rotate(-90 1017 1000)" class="xs">sale_items INSERT lines</text>
-<path d="M1021 855H1039V1155" class="wire"/>
-<text x="1035" y="1000" transform="rotate(-90 1035 1000)" class="xs">products UPDATE merchandise stock</text>
-<path d="M1021 855H1057V1155" class="wire"/>
-<text x="1053" y="1000" transform="rotate(-90 1053 1000)" class="xs">receipt result</text>
-<path d="M1089 1155V855" class="back"/>
-<text x="1093" y="1010" transform="rotate(-90 1093 1010)" class="xs">query result / response</text>
-<path d="M1313 741V855" class="line"/>
-<path d="M1313 855H1277V1155" class="wire"/>
-<text x="1273" y="1000" transform="rotate(-90 1273 1000)" class="xs">own member SELECT</text>
-<path d="M1313 855H1295V1155" class="wire"/>
-<text x="1291" y="1000" transform="rotate(-90 1291 1000)" class="xs">own attendance SELECT</text>
-<path d="M1313 855H1313V1155" class="wire"/>
-<text x="1309" y="1000" transform="rotate(-90 1309 1000)" class="xs">active products SELECT</text>
-<path d="M1313 855H1331V1155" class="wire"/>
-<text x="1327" y="1000" transform="rotate(-90 1327 1000)" class="xs">renewal application INSERT</text>
-<path d="M1313 855H1349V1155" class="wire"/>
-<text x="1345" y="1000" transform="rotate(-90 1345 1000)" class="xs">personal info RPC</text>
-<path d="M1381 1155V855" class="back"/>
-<text x="1385" y="1010" transform="rotate(-90 1385 1010)" class="xs">query result / response</text>
-<path d="M1605 741V855" class="line"/>
-<path d="M1605 855H1569V1155" class="wire"/>
-<text x="1565" y="1000" transform="rotate(-90 1565 1000)" class="xs">member / application query</text>
-<path d="M1605 855H1587V1155" class="wire"/>
-<text x="1583" y="1000" transform="rotate(-90 1583 1000)" class="xs">attendance date query</text>
-<path d="M1605 855H1605V1155" class="wire"/>
-<text x="1601" y="1000" transform="rotate(-90 1601 1000)" class="xs">inventory query</text>
-<path d="M1605 855H1623V1155" class="wire"/>
-<text x="1619" y="1000" transform="rotate(-90 1619 1000)" class="xs">sales / sale_items query</text>
-<path d="M1605 855H1641V1155" class="wire"/>
-<text x="1637" y="1000" transform="rotate(-90 1637 1000)" class="xs">history query / export</text>
-<path d="M1673 1155V855" class="back"/>
-<text x="1677" y="1010" transform="rotate(-90 1677 1010)" class="xs">query result / response</text>
-<rect x="40" y="1165" width="1670" height="98" class="soft"/>
-<text x="875" y="1190" text-anchor="middle" class="hdr">Supabase Data API / RPC + Row-Level Security (RLS)</text>
-<text x="875" y="1211" text-anchor="middle" class="xs">Direct table requests use RLS; RPC functions enforce their own authorization and validation checks.</text>
-<text x="875" y="1230" text-anchor="middle" class="xs">Staff-created accounts use admin-create-member Edge Function; it verifies the admin before service-role database operations.</text>
-<text x="875" y="1249" text-anchor="middle" class="xs">Realtime publication includes membership_applications and attendance; members is not enabled for Realtime.</text>
-<path d="M875 1263V1300" class="wire"/>
-<ellipse cx="875" cy="1325" rx="165" ry="30" fill="#111"/>
-<path d="M710 1325V1455C710 1472 784 1485 875 1485S1040 1472 1040 1455V1325" fill="#111"/>
-<ellipse cx="875" cy="1455" rx="165" ry="30" fill="#111"/>
-<text x="875" y="1322" text-anchor="middle" style="fill:#fff;font-size:18px;font-weight:bold">SUPABASE POSTGRESQL</text>
-<text x="875" y="1352" text-anchor="middle" style="fill:#fff;font-size:11px">Shared system database</text>
-<text x="875" y="1373" text-anchor="middle" style="fill:#fff;font-size:10px">profiles · members · membership_applications</text>
-<text x="875" y="1393" text-anchor="middle" style="fill:#fff;font-size:10px">attendance · products · sales · sale_items</text>
-<text x="875" y="1413" text-anchor="middle" style="fill:#fff;font-size:10px">membership_history</text>
-<text x="875" y="1525" text-anchor="middle" class="title">Figure 3. System Architecture Diagram</text>
-<text x="875" y="1550" text-anchor="middle" class="xs">Solid arrows: requests / records saved · dashed arrows: authentication result / response · browser is the client; Supabase hosts Auth, Edge Functions, and PostgreSQL</text>
+<!-- Role-authorized session bus -->
+<path d="M460 420V526H80M1240 420V526H1620M80 526H1620" class="plain"/>
+<text x="850" y="518" text-anchor="middle" class="small">Role-authorized session · pages below show the six main system modules</text>
+
+<!-- Module 1 -->
+<path d="M155 526V548" class="solid"/>
+<rect x="25" y="553" width="260" height="70" rx="8" class="module"/>
+<text x="155" y="580" text-anchor="middle" class="head">Applications &amp; Membership</text>
+<text x="155" y="602" text-anchor="middle" class="small">register.html · admin.html</text>
+<rect x="25" y="634" width="260" height="299" rx="8" class="service"/>
+<text x="155" y="659" text-anchor="middle" class="section">APPLICATIONS SERVICE</text>
+<text x="42" y="687" class="body">• Submit registration application</text>
+<text x="42" y="710" class="body">• Review, approve, or reject</text>
+<text x="42" y="733" class="body">• Create / update member record</text>
+<text x="42" y="756" class="body">• Record registration sale</text>
+<text x="42" y="791" class="small">DATA REQUESTS</text>
+<text x="42" y="812" class="small">membership_applications INSERT</text>
+<text x="42" y="831" class="small">members INSERT / UPDATE</text>
+<text x="42" y="850" class="small">sales + sale_items via RPC</text>
+<text x="42" y="869" class="small">membership_applications UPDATE</text>
+<text x="42" y="902" class="tiny">Returns application / member result</text>
+
+<!-- Module 2 -->
+<path d="M435 526V548" class="solid"/>
+<rect x="305" y="553" width="260" height="70" rx="8" class="module"/>
+<text x="435" y="580" text-anchor="middle" class="head">Attendance / QR</text>
+<text x="435" y="602" text-anchor="middle" class="small">admin.html · customer.html</text>
+<rect x="305" y="634" width="260" height="299" rx="8" class="service"/>
+<text x="435" y="659" text-anchor="middle" class="section">ATTENDANCE SERVICE</text>
+<text x="322" y="687" class="body">• Resolve QR / member lookup</text>
+<text x="322" y="710" class="body">• Record time-in check-in</text>
+<text x="322" y="733" class="body">• Record time-out check-out</text>
+<text x="322" y="756" class="body">• Read attendance history</text>
+<text x="322" y="791" class="small">DATA REQUESTS</text>
+<text x="322" y="812" class="small">members SELECT</text>
+<text x="322" y="831" class="small">attendance INSERT (time-in)</text>
+<text x="322" y="850" class="small">attendance UPDATE (time-out)</text>
+<text x="322" y="869" class="small">attendance SELECT</text>
+<text x="322" y="902" class="tiny">Returns check-in / history result</text>
+
+<!-- Module 3 -->
+<path d="M715 526V548" class="solid"/>
+<rect x="585" y="553" width="260" height="70" rx="8" class="module"/>
+<text x="715" y="580" text-anchor="middle" class="head">Inventory &amp; Products</text>
+<text x="715" y="602" text-anchor="middle" class="small">admin.html · read-only member catalog</text>
+<rect x="585" y="634" width="260" height="299" rx="8" class="service"/>
+<text x="715" y="659" text-anchor="middle" class="section">INVENTORY SERVICE</text>
+<text x="602" y="687" class="body">• Create / edit product details</text>
+<text x="602" y="710" class="body">• Manage product stock</text>
+<text x="602" y="733" class="body">• Read active member catalog</text>
+<text x="602" y="791" class="small">DATA REQUESTS</text>
+<text x="602" y="812" class="small">products SELECT (lookup)</text>
+<text x="602" y="831" class="small">products INSERT / UPDATE</text>
+<text x="602" y="850" class="small">products SELECT (active catalog)</text>
+<text x="602" y="902" class="tiny">Returns product / stock result</text>
+
+<!-- Module 4 -->
+<path d="M995 526V548" class="solid"/>
+<rect x="865" y="553" width="260" height="70" rx="8" class="module"/>
+<text x="995" y="580" text-anchor="middle" class="head">Walk-in POS / Receipts</text>
+<text x="995" y="602" text-anchor="middle" class="small">Staff-entered product sale</text>
+<rect x="865" y="634" width="260" height="299" rx="8" class="service"/>
+<text x="995" y="659" text-anchor="middle" class="section">SALES SERVICE · RPC</text>
+<text x="882" y="687" class="body">• Call record_walk_in_sale()</text>
+<text x="882" y="710" class="body">• Validate product and stock</text>
+<text x="882" y="733" class="body">• Save receipt and sale lines</text>
+<text x="882" y="756" class="body">• Decrement merchandise stock</text>
+<text x="882" y="791" class="small">DATA REQUESTS</text>
+<text x="882" y="812" class="small">products SELECT / UPDATE</text>
+<text x="882" y="831" class="small">sales INSERT receipt</text>
+<text x="882" y="850" class="small">sale_items INSERT lines</text>
+<text x="882" y="902" class="tiny">Returns receipt result</text>
+
+<!-- Module 5 -->
+<path d="M1275 526V548" class="solid"/>
+<rect x="1145" y="553" width="260" height="70" rx="8" class="module"/>
+<text x="1275" y="580" text-anchor="middle" class="head">Member Portal</text>
+<text x="1275" y="602" text-anchor="middle" class="small">customer.html</text>
+<rect x="1145" y="634" width="260" height="299" rx="8" class="service"/>
+<text x="1275" y="659" text-anchor="middle" class="section">MEMBER DATA SERVICE</text>
+<text x="1162" y="687" class="body">• View own membership / visits</text>
+<text x="1162" y="710" class="body">• View active product catalog</text>
+<text x="1162" y="733" class="body">• Submit renewal application</text>
+<text x="1162" y="756" class="body">• Update personal information</text>
+<text x="1162" y="791" class="small">DATA REQUESTS</text>
+<text x="1162" y="812" class="small">own members / attendance SELECT</text>
+<text x="1162" y="831" class="small">active products SELECT</text>
+<text x="1162" y="850" class="small">membership_applications INSERT</text>
+<text x="1162" y="869" class="small">personal information RPC</text>
+<text x="1162" y="902" class="tiny">Returns member / portal result</text>
+
+<!-- Module 6 -->
+<path d="M1555 526V548" class="solid"/>
+<rect x="1425" y="553" width="260" height="70" rx="8" class="module"/>
+<text x="1555" y="580" text-anchor="middle" class="head">Reports &amp; Exports</text>
+<text x="1555" y="602" text-anchor="middle" class="small">admin.html · authorized queries</text>
+<rect x="1425" y="634" width="260" height="299" rx="8" class="service"/>
+<text x="1555" y="659" text-anchor="middle" class="section">REPORT QUERY SERVICE</text>
+<text x="1442" y="687" class="body">• Apply frontend date / filters</text>
+<text x="1442" y="710" class="body">• Build dashboard summaries</text>
+<text x="1442" y="733" class="body">• Generate report / export output</text>
+<text x="1442" y="791" class="small">DATA REQUESTS</text>
+<text x="1442" y="812" class="small">members / applications SELECT</text>
+<text x="1442" y="831" class="small">attendance date SELECT</text>
+<text x="1442" y="850" class="small">products / sales / sale_items SELECT</text>
+<text x="1442" y="869" class="small">membership_history SELECT</text>
+<text x="1442" y="902" class="tiny">Returns query / report results</text>
+
+<!-- Requests and responses share six aligned lanes -->
+<path d="M139 933V1000" class="solid"/><path d="M161 1000V933" class="response"/>
+<path d="M419 933V1000" class="solid"/><path d="M441 1000V933" class="response"/>
+<path d="M699 933V1000" class="solid"/><path d="M721 1000V933" class="response"/>
+<path d="M979 933V1000" class="solid"/><path d="M1001 1000V933" class="response"/>
+<path d="M1259 933V1000" class="solid"/><path d="M1281 1000V933" class="response"/>
+<path d="M1539 933V1000" class="solid"/><path d="M1561 1000V933" class="response"/>
+<text x="850" y="985" text-anchor="middle" class="tiny">Solid arrows: requests / records saved · Dashed arrows: query results / responses</text>
+
+<!-- Security and server-side operations -->
+<rect x="35" y="1005" width="1630" height="112" rx="9" class="api"/>
+<text x="850" y="1031" text-anchor="middle" class="head">SUPABASE DATA API / RPC · ROW LEVEL SECURITY (RLS)</text>
+<text x="850" y="1054" text-anchor="middle" class="small">Browser table requests carry the signed-in user's Auth session; RLS policies restrict direct table access.</text>
+<text x="850" y="1074" text-anchor="middle" class="small">RPC functions enforce their own authorization and validation checks.</text>
+<text x="850" y="1094" text-anchor="middle" class="small">Staff account creation uses admin-create-member Edge Function: verify admin → Auth Admin API → privileged member-creation RPC.</text>
+
+<!-- Realtime scope -->
+<rect x="1230" y="1133" width="435" height="65" rx="8" class="soft"/>
+<text x="1447" y="1157" text-anchor="middle" class="small">SUPABASE REALTIME</text>
+<text x="1447" y="1175" text-anchor="middle" class="tiny">Publication: applications + attendance; not members.</text>
+
+<!-- Shared database -->
+<path d="M850 1117V1190" class="solid"/>
+<ellipse cx="850" cy="1212" rx="330" ry="32" fill="#121820"/>
+<path d="M520 1212V1332C520 1350 668 1368 850 1368S1180 1350 1180 1332V1212" fill="#121820"/>
+<ellipse cx="850" cy="1332" rx="330" ry="32" fill="#121820"/>
+<text x="850" y="1208" text-anchor="middle" style="fill:#fff;font-size:19px;font-weight:700">SUPABASE POSTGRESQL</text>
+<text x="850" y="1248" text-anchor="middle" style="fill:#fff;font-size:12px">Shared system database</text>
+<text x="850" y="1271" text-anchor="middle" style="fill:#fff;font-size:11px">profiles · members · membership_applications · attendance</text>
+<text x="850" y="1294" text-anchor="middle" style="fill:#fff;font-size:11px">products · sales · sale_items · membership_history</text>
+<text x="850" y="1402" text-anchor="middle" class="title">Figure 3. System Architecture Diagram</text>
 </svg>
