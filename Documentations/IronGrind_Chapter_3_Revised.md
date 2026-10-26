@@ -20,7 +20,6 @@ Requirements planning begins with gathering information about the gym's workflow
 
 For each iteration, the relevant user workflows, page layouts, forms, reports, data relationships, and role permissions are designed or refined. The design distinguishes pending applications from approved member records, keeps attendance as a separate operational record, and stores sales with their itemized lines. The architecture, use-case, and data-flow figures in this chapter summarize the system design.
 
-### System Prototype
 ### Prototypes
 
 The system prototype is an interactive, browser-based version of the proposed gym workflows rather than a set of static screen mockups. Applicants can use the sign-in and registration pages to enter the application workflow. Members use the member portal to review membership information, display their QR code, view attendance history, and submit an eligible renewal request. Administrators use the dashboard to review applications and manage membership, staff-scanned attendance, products, sales, receipts, and reports. The prototype uses Supabase Auth and the configured database services for supported operations. Its key pages are listed in the User Interface Modules section. It should be treated as a prototype until deployment and operational readiness have been verified.
@@ -84,7 +83,6 @@ The system is intended for Iron Grind Fitness Gym in Purok Mangga, Sulongon, Dap
 | Applicant or member | Smartphone, tablet, laptop, or desktop computer with a current browser and internet access. |
 | Web hosting | Hosting capable of serving the static HTML, CSS, JavaScript, and image assets over HTTPS. Supabase provides the separate authentication and database services. |
 
-### Inputs and Outputs
 
 ### Input Requirements
 
@@ -131,6 +129,10 @@ The context diagram treats IronGrind as one system and shows the information exc
 **Figure 3.** System context diagram of IronGrind.
 
 #### Data Flow Diagram
+The Level 1 data-process model shows how information moves between the member/applicant, administrator, system processes, and Supabase data stores. It covers authentication, membership applications, the member portal, staff-recorded attendance, inventory, walk-in sales, and reports. Email notifications are included as planned only; no provider has been selected. Solid arrows show requests or data writes, and dashed arrows show returned responses.
+
+![Figure 4. Level 1 data-process model for IronGrind](iron-grind-data-flow.svg)
+
 **Figure 4.** Level 1 data-process model for IronGrind.
 
 #### Use-Case Diagram
@@ -148,12 +150,6 @@ The entity relationship diagram (ERD) summarizes the principal relationships in 
 ![Figure 6. IronGrind entity relationship diagram](iron-grind-erd.svg)
 
 **Figure 6.** Entity relationship diagram of IronGrind.
-
-The Level 1 data-process model shows how information moves between external actors, system processes, and Supabase data stores. The external actors are the member/applicant and the administrator. The numbered processes cover authentication, membership applications, the member portal, attendance, inventory, sales, and reporting. Email notification is included as a planned process only; it is not yet implemented and has no selected provider. Solid arrows represent requests or data writes, while dashed response arrows represent returned results.
-
-![Figure 4. Level 1 data-process model for IronGrind](iron-grind-data-flow.svg)
-
-**Figure 4.** Level 1 data-process model for IronGrind.
 
 ### Data Processes
 
