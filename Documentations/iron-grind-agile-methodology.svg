@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="420" viewBox="0 0 1100 420" role="img" aria-labelledby="title description">
+  <title id="title">Agile development cycle for IronGrind</title>
+  <desc id="description">A four-step iterative workflow: prioritize the backlog, plan and design an iteration, build and test an increment, and review and refine. Review feedback returns to the backlog. Verified increments proceed to release and transition.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#344054" />
+    </marker>
+    <marker id="arrow-red" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L10,5 L0,10 z" fill="#c7352b" />
+    </marker>
+  </defs>
+  <rect width="1100" height="420" fill="#ffffff" />
+  <text x="550" y="42" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#1d2939">Agile Development Cycle for IronGrind</text>
+  <g fill="#f8fafc" stroke="#344054" stroke-width="2">
+    <rect x="45" y="112" width="210" height="104" rx="8" />
+    <rect x="315" y="112" width="210" height="104" rx="8" />
+    <rect x="585" y="112" width="210" height="104" rx="8" />
+    <rect x="855" y="112" width="210" height="104" rx="8" />
+  </g>
+  <g fill="#c7352b">
+    <circle cx="72" cy="139" r="15" />
+    <circle cx="342" cy="139" r="15" />
+    <circle cx="612" cy="139" r="15" />
+    <circle cx="882" cy="139" r="15" />
+  </g>
+  <g font-family="Arial, sans-serif" text-anchor="middle" fill="#1d2939">
+    <text x="72" y="144" font-size="14" font-weight="700" fill="#ffffff">1</text>
+    <text x="342" y="144" font-size="14" font-weight="700" fill="#ffffff">2</text>
+    <text x="612" y="144" font-size="14" font-weight="700" fill="#ffffff">3</text>
+    <text x="882" y="144" font-size="14" font-weight="700" fill="#ffffff">4</text>
+    <text x="150" y="168" font-size="18" font-weight="700">Prioritize backlog</text>
+    <text x="150" y="192" font-size="14">Select needs and criteria</text>
+    <text x="420" y="168" font-size="18" font-weight="700">Plan and design</text>
+    <text x="420" y="192" font-size="14">Define the iteration work</text>
+    <text x="690" y="168" font-size="18" font-weight="700">Build and test</text>
+    <text x="690" y="192" font-size="14">Deliver a working increment</text>
+    <text x="960" y="168" font-size="18" font-weight="700">Review and refine</text>
+    <text x="960" y="192" font-size="14">Record issues and feedback</text>
+  </g>
+  <g fill="none" stroke="#344054" stroke-width="3" marker-end="url(#arrow)">
+    <path d="M255 164 H303" />
+    <path d="M525 164 H573" />
+    <path d="M795 164 H843" />
+  </g>
+  <path d="M960 216 V284 H150 V228" fill="none" stroke="#c7352b" stroke-width="3" marker-end="url(#arrow-red)" />
+  <rect x="425" y="264" width="260" height="38" rx="19" fill="#ffffff" />
+  <text x="555" y="289" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#c7352b">Feedback updates the backlog</text>
+  <path d="M960 216 V328" fill="none" stroke="#344054" stroke-width="3" marker-end="url(#arrow)" />
+  <rect x="760" y="330" width="305" height="54" rx="8" fill="#eef2f6" stroke="#344054" stroke-width="2" />
+  <text x="912" y="353" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#1d2939">Verified increments</text>
+  <text x="912" y="373" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#344054">Release and transition when scope is complete</text>
+</svg>
