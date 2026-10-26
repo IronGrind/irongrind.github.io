@@ -215,7 +215,7 @@
 
 <rect x="1230" y="1208" width="435" height="55" rx="8" class="soft"/>
 <text x="1447" y="1230" text-anchor="middle" class="small">SUBSCRIBED WEBSITE VIEWS</text>
-<text x="1447" y="1248" text-anchor="middle" class="tiny">Application review and attendance pages receive live updates.</text>
+<text x="1447" y="1248" text-anchor="middle" class="tiny">Admin application queue + member/admin attendance views.</text>
 
 <rect x="1230" y="1280" width="435" height="65" rx="8" class="soft"/>
 <text x="1447" y="1303" text-anchor="middle" class="small">EMAIL NOTIFICATION SERVICE - IN DEVELOPMENT</text>
