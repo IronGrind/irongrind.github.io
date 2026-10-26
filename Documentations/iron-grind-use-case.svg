@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2100" height="1510" viewBox="0 0 2100 1510" role="img" aria-labelledby="title desc">
 <title id="title">Iron Grind Detailed Use Case Diagram</title>
-<desc id="desc">UML use case diagram for Iron Grind, with Member / Applicant and Administrator as external actors. Individual solid actor associations connect each actor to the current authentication, registration, portal, membership, attendance, inventory, point-of-sale, and reporting functions. Email notifications are omitted because they are still in development.</desc>
+<desc id="desc">UML use case diagram for Iron Grind, with Member / Applicant and Administrator as external actors. Individual solid actor associations connect each actor to the current authentication, registration, portal, membership, attendance, inventory, point-of-sale, and reporting functions. Email notification use cases are included and visibly marked as in development.</desc>
 <defs>
   <style>
     text{font-family:Arial,Helvetica,sans-serif;fill:#111820}
@@ -12,7 +12,7 @@
     .caseDetail{font-size:10.5px;fill:#4b5564}
     .small{font-size:11px;fill:#4b5564}
     .boundary{fill:#fbfcfd;stroke:#273342;stroke-width:2.3}
-    .usecase{fill:#fff;stroke:#273342;stroke-width:2}
+    .usecase{fill:#fff;stroke:#273342;stroke-width:2}\n    .planned{fill:#fff8e8;stroke:#9a6a12;stroke-width:2;stroke-dasharray:7 5}
     .association{fill:none;stroke:#434d5b;stroke-width:1.55}
     .actor{fill:#111820;stroke:#111820;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
   </style>
@@ -65,7 +65,7 @@
 <text x="740" y="1105" text-anchor="middle" class="caseTitle">Submit membership renewal request</text>
 <text x="740" y="1124" text-anchor="middle" class="caseDetail">Send renewal application for staff review</text>
 
-<!-- Administrator / Staff functions -->
+<!-- Administrator functions -->
 <text x="1435" y="220" text-anchor="middle" class="group">ADMINISTRATOR FUNCTIONS</text>
 <ellipse cx="1435" cy="300" rx="225" ry="46" class="usecase"/>
 <text x="1435" y="295" text-anchor="middle" class="caseTitle">Review membership applications</text>
@@ -92,7 +92,17 @@
 <text x="1435" y="1240" text-anchor="middle" class="caseTitle">Export reports</text>
 <text x="1435" y="1259" text-anchor="middle" class="caseDetail">Create monthly PDF reports and attendance CSV</text>
 
-<text x="1050" y="1390" text-anchor="middle" class="small">Email notifications are omitted because this feature is still in development.</text>
+<text x="1050" y="1310" text-anchor="middle" class="group">EMAIL NOTIFICATIONS — IN DEVELOPMENT</text>
+<ellipse cx="620" cy="1360" rx="190" ry="38" class="planned"/>
+<text x="620" y="1356" text-anchor="middle" class="caseTitle">Send application decision notification</text>
+<text x="620" y="1374" text-anchor="middle" class="caseDetail">Approval or rejection update to applicant</text>
+<ellipse cx="1050" cy="1360" rx="190" ry="38" class="planned"/>
+<text x="1050" y="1356" text-anchor="middle" class="caseTitle">Send renewal decision notification</text>
+<text x="1050" y="1374" text-anchor="middle" class="caseDetail">Renewal approval or rejection update</text>
+<ellipse cx="1480" cy="1360" rx="190" ry="38" class="planned"/>
+<text x="1480" y="1356" text-anchor="middle" class="caseTitle">Send membership expiry reminder</text>
+<text x="1480" y="1374" text-anchor="middle" class="caseDetail">Reminder before membership expiry</text>
+<text x="1050" y="1420" text-anchor="middle" class="small">Dashed outlines identify planned email notification features.</text>
 
 <!-- Actors -->
 <g transform="translate(110 620)"><circle cx="35" cy="18" r="17" class="actor"/><path d="M5 99c2-34 12-52 30-52s28 18 30 52M35 49v47M13 70l22 13 22-13" fill="none" class="actor"/></g>
