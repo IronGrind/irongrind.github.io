@@ -14,7 +14,7 @@ Agile is an iterative system-development approach in which requirements are prio
 
 ### Requirements Planning
 
-The project requirements are identified from the gym's stated processes and the system scope in Chapters 1 and 2. The work is organized in a prioritized task list, beginning with account access and membership applications, followed by staff review, member access, attendance, inventory, sales, and reporting. Each selected requirement is given acceptance criteria. Privacy and authorization requirements apply throughout development because the system handles personal and health-related information.
+Requirements planning begins with gathering information about the gym's workflows and needs from the owner and authorized staff and reviewing the project scope in Chapters 1 and 2. The information is translated into system requirements and organized in a prioritized task list, beginning with account access and membership applications, followed by staff review, member access, attendance, inventory, sales, and reporting. Each selected requirement is given acceptance criteria. The final study should identify the data-gathering techniques and participants actually used. Privacy and authorization requirements apply throughout development because the system handles personal and health-related information.
 
 ### User Design
 
@@ -176,7 +176,7 @@ The Agile schedule below describes recurring iteration work and release activiti
 
 | Agile activity | Activities | Deliverable |
 | --- | --- | --- |
-| Prioritized task list preparation | Confirm scope, user roles, workflows, data needs, privacy requirements, priorities, and acceptance criteria. | Prioritized task list. |
+| Data gathering and task prioritization | Gather information about scope, user roles, workflows, data needs, and privacy requirements; identify priorities and acceptance criteria. | Confirmed needs and prioritized task list. |
 | Iteration planning and design | Select tasks from the prioritized task list and refine the relevant page flows, data relationships, and permissions. | Iteration goal and design notes. |
 | Incremental implementation | Build and integrate the selected browser workflows, Supabase schema, access policies, and database functions. | Working software increment. |
 | Iteration testing and review | Test the increment against its acceptance criteria, record defects, and review the result with intended stakeholders where arranged. | Test records, review feedback, and updated task list. |
