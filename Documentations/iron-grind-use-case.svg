@@ -14,6 +14,7 @@
     .boundary{fill:#fbfcfd;stroke:#273342;stroke-width:2.3}
     .usecase{fill:#fff;stroke:#273342;stroke-width:2}
     .association{fill:none;stroke:#434d5b;stroke-width:1.55}
+    .include{fill:none;stroke:#434d5b;stroke-width:1.35;stroke-dasharray:7 5}
     .actor{fill:#111820;stroke:#111820;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
   </style>
 </defs>
@@ -82,6 +83,23 @@
 <ellipse cx="1435" cy="1245" rx="225" ry="46" class="usecase"/>
 <text x="1435" y="1240" text-anchor="middle" class="caseTitle">Export reports</text>
 <text x="1435" y="1259" text-anchor="middle" class="caseDetail">Create monthly PDF reports and attendance CSV</text>
+
+<!-- Email notifications -->
+<text x="1050" y="1290" text-anchor="middle" class="group">EMAIL NOTIFICATIONS</text>
+<ellipse cx="650" cy="1355" rx="235" ry="46" class="usecase"/>
+<text x="650" y="1350" text-anchor="middle" class="caseTitle">Notify membership approval</text>
+<text x="650" y="1369" text-anchor="middle" class="caseDetail">Email applicant that membership was approved</text>
+<ellipse cx="1050" cy="1355" rx="235" ry="46" class="usecase"/>
+<text x="1050" y="1350" text-anchor="middle" class="caseTitle">Notify renewal approval</text>
+<text x="1050" y="1369" text-anchor="middle" class="caseDetail">Email member that renewal was approved</text>
+<ellipse cx="1450" cy="1355" rx="235" ry="46" class="usecase"/>
+<text x="1450" y="1350" text-anchor="middle" class="caseTitle">Notify membership expiration</text>
+<text x="1450" y="1369" text-anchor="middle" class="caseDetail">Email member when membership expires</text>
+
+<!-- Notification relationships -->
+<path d="M1435 346 L650 1309" class="include"/>
+<path d="M1435 616 L1050 1309" class="include"/>
+<path d="M1435 616 L1450 1309" class="include"/>
 
 <!-- Actors -->
 <g transform="translate(110 620)"><circle cx="35" cy="18" r="17" class="actor"/><path d="M5 99c2-34 12-52 30-52s28 18 30 52M35 49v47M13 70l22 13 22-13" fill="none" class="actor"/></g>
