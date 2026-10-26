@@ -27,39 +27,36 @@
 <text x="850" y="34" text-anchor="middle" class="title">IRON GRIND FITNESS GYM MEMBERSHIP &amp; OPERATIONS MANAGEMENT SYSTEM</text>
 <text x="850" y="57" text-anchor="middle" class="section">SYSTEM ARCHITECTURE</text>
 
-<!-- Actors and authentication -->
-<rect x="55" y="83" width="280" height="56" rx="8" class="box"/>
-<text x="195" y="107" text-anchor="middle" class="head">Member / Applicant</text>
-<text x="195" y="126" text-anchor="middle" class="small">Email and password · registration details</text>
-<rect x="1365" y="83" width="280" height="56" rx="8" class="box"/>
-<text x="1505" y="107" text-anchor="middle" class="head">Administrator / Staff</text>
-<text x="1505" y="126" text-anchor="middle" class="small">Email and password · gym operations</text>
+<!-- Actors, login, authentication, and system role routing -->
+<g transform="translate(180 77)"><circle cx="18" cy="15" r="13" fill="#111820"/><path d="M0 62c1-19 7-29 18-29s17 10 18 29z" fill="#111820"/><text x="18" y="83" text-anchor="middle" class="small">Member / Applicant</text></g>
+<g transform="translate(1485 77)"><circle cx="18" cy="15" r="13" fill="#111820"/><path d="M0 62c1-19 7-29 18-29s17 10 18 29z" fill="#111820"/><rect x="23" y="44" width="30" height="23" rx="3" fill="#fff" stroke="#111820" stroke-width="3"/><path d="M31 44v-6h14v6" fill="none" stroke="#111820" stroke-width="3"/><text x="27" y="83" text-anchor="middle" class="small">Administrator / Staff</text></g>
 <rect x="700" y="77" width="300" height="68" rx="9" class="soft"/>
-<text x="850" y="105" text-anchor="middle" class="head">Login Page · index.html</text>
-<text x="850" y="126" text-anchor="middle" class="small">Supabase signInWithPassword()</text>
-<path d="M335 111H690" class="solid"/><text x="510" y="101" text-anchor="middle" class="small">User input</text>
-<path d="M1365 111H1010" class="solid"/><text x="1187" y="101" text-anchor="middle" class="small">Admin input</text>
+<rect x="733" y="91" width="38" height="38" rx="5" fill="#fff" stroke="#46505e" stroke-width="1.5"/><rect x="738" y="96" width="28" height="5" rx="2" fill="#9d1010"/><path d="M739 106h26M739 112h20M739 118h24" stroke="#8791a0" stroke-width="2"/>
+<text x="867" y="105" text-anchor="middle" class="head">Login Page</text>
+<text x="867" y="126" text-anchor="middle" class="small">index.html</text>
+<path d="M225 111H690" class="solid"/><text x="470" y="101" text-anchor="middle" class="small">User input</text>
+<path d="M1485 111H1010" class="solid"/><text x="1245" y="101" text-anchor="middle" class="small">Admin input</text>
 <rect x="700" y="177" width="300" height="62" rx="9" class="box"/>
-<text x="850" y="202" text-anchor="middle" class="head">Supabase Auth</text>
-<text x="850" y="222" text-anchor="middle" class="small">Credential verification · session</text>
-<path d="M850 145V169" class="solid"/><text x="862" y="163" class="tiny">credentials</text>
-<path d="M720 177H670V110H690" class="response"/><text x="658" y="153" text-anchor="end" class="tiny">authentication result / error</text>
+<path d="M839 194v-5a11 11 0 0 1 22 0v5" fill="none" stroke="#137bc1" stroke-width="4"/><rect x="835" y="194" width="30" height="23" rx="5" fill="#168bd2"/><circle cx="850" cy="204" r="3" fill="#fff"/><path d="M850 207v5" stroke="#fff" stroke-width="2"/>
+<text x="850" y="231" text-anchor="middle" class="small">Supabase Auth - credential verification and session</text>
+<path d="M850 145V169" class="solid"/><text x="864" y="162" class="tiny">credentials</text>
+<path d="M720 177H670V111H690" class="response"/><text x="658" y="153" text-anchor="end" class="tiny">authentication result / error</text>
 <rect x="675" y="269" width="350" height="62" rx="9" class="soft"/>
-<text x="850" y="294" text-anchor="middle" class="head">Resolve account role</text>
-<text x="850" y="314" text-anchor="middle" class="small">Read profiles.role using the Auth user ID</text>
-<path d="M850 239V261" class="solid"/><text x="862" y="255" class="tiny">successful login</text>
+<rect x="704" y="282" width="38" height="26" rx="3" fill="#e8f8fd" stroke="#10a9c7" stroke-width="3"/><path d="M723 308v7m-11 0h22" stroke="#10a9c7" stroke-width="3" stroke-linecap="round"/>
+<text x="877" y="294" text-anchor="middle" class="head">Iron Grind System</text>
+<text x="877" y="314" text-anchor="middle" class="small">Successful login - load profiles.role by Auth user ID</text>
+<path d="M850 239V261" class="solid"/><text x="863" y="255" class="tiny">successful login</text>
 <rect x="190" y="358" width="540" height="62" rx="9" class="box"/>
 <text x="460" y="383" text-anchor="middle" class="head">Member session</text>
-<text x="460" y="403" text-anchor="middle" class="small">Match members.auth_user_id · open member experience or show application status</text>
+<text x="460" y="403" text-anchor="middle" class="small">role = member - match members.auth_user_id - member experience / application status</text>
 <rect x="970" y="358" width="540" height="62" rx="9" class="box"/>
 <text x="1240" y="383" text-anchor="middle" class="head">Administrator session</text>
-<text x="1240" y="403" text-anchor="middle" class="small">profile.role = admin · open admin.html operations dashboard</text>
+<text x="1240" y="403" text-anchor="middle" class="small">profile.role = admin - open admin.html operations dashboard</text>
 <path d="M675 299H460V350" class="solid"/><text x="548" y="291" text-anchor="middle" class="tiny">role = member</text>
 <path d="M1025 299H1240V350" class="solid"/><text x="1157" y="291" text-anchor="middle" class="tiny">role = admin</text>
 <rect x="105" y="440" width="1490" height="55" rx="8" class="soft"/>
 <text x="850" y="462" text-anchor="middle" class="head">Registration and staff account creation</text>
-<text x="850" y="482" text-anchor="middle" class="small">Online: register.html → Auth signUp() → profiles row via Auth trigger → pending membership_applications after confirmation · Staff-created: admin-create-member Edge Function → Auth Admin API → admin_create_member_and_sale RPC</text>
-
+<text x="850" y="482" text-anchor="middle" class="small">Online: register.html - Auth signUp() - profiles row via Auth trigger - pending membership_applications after confirmation. Staff-created: admin-create-member Edge Function - Auth Admin API - admin_create_member_and_sale RPC.</text>
 <!-- Role-authorized session bus -->
 <path d="M460 420V526H80M1240 420V526H1620M80 526H1620" class="plain"/>
 <text x="850" y="518" text-anchor="middle" class="small">Role-authorized session · pages below show the six main system modules</text>
