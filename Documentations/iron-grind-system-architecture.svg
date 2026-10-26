@@ -18,6 +18,7 @@
     .service{fill:none;stroke:none}
     .api{fill:#edf1f5;stroke:#384250;stroke-width:1.6}
     .solid{fill:none;stroke:#343a46;stroke-width:1.5;marker-end:url(#arrow)}
+    .route{fill:none;stroke:#778392;stroke-width:1.35;marker-end:url(#arrowMuted)}
     .response{fill:none;stroke:#2879a8;stroke-width:1.45;stroke-dasharray:5 4;marker-end:url(#arrowMuted)}
     .plain{fill:none;stroke:#9aa3ad;stroke-width:1.2}
     .planned{fill:none;stroke:#a56a16;stroke-width:1.6;stroke-dasharray:2 4;marker-end:url(#arrow)}
@@ -55,30 +56,30 @@
 <text x="1240" y="403" text-anchor="middle" class="small">profile.role = admin - open admin.html operations dashboard</text>
 <path d="M675 299H460V350" class="solid"/><text x="548" y="291" text-anchor="middle" class="tiny">role = member</text>
 <path d="M1025 299H1240V350" class="solid"/><text x="1157" y="291" text-anchor="middle" class="tiny">role = admin</text>
-<rect x="105" y="435" width="720" height="80" rx="8" class="soft"/>
-<text x="465" y="456" text-anchor="middle" class="head">Applicant Registration</text>
-<text x="465" y="477" text-anchor="middle" class="small">register.html → Supabase Auth signUp() → profile created</text>
-<text x="465" y="497" text-anchor="middle" class="small">Success / confirmation → membership application saved as Pending</text>
-<rect x="875" y="440" width="720" height="55" rx="8" class="soft"/>
-<text x="1235" y="462" text-anchor="middle" class="head">Admin Creates Member Account</text>
-<text x="1235" y="482" text-anchor="middle" class="small">After admin login: Edge Function → Auth account + member record</text>
-<path d="M198 145H15V430H465V435" class="solid"/><text x="320" y="425" text-anchor="middle" class="tiny">register</text>
-<path d="M1240 420V435" class="solid"/>
-<path d="M1000 208H1640V430H825V435" class="response"/><text x="1370" y="422" text-anchor="middle" class="tiny">Auth success / error response</text>
-<path d="M105 475H15V540H155V548" class="solid"/>
-<!-- Role-authorized session bus -->
-<path d="M460 420H80V526M1240 420H1620V526M80 526H1620" class="plain"/>
-<text x="850" y="512" text-anchor="middle" class="small">Role-authorized sessions connect to the modules below.</text>
-
+<!-- Applicant registration is a separate pre-login path -->
+<rect x="35" y="177" width="600" height="62" rx="9" class="soft"/>
+<text x="335" y="198" text-anchor="middle" class="head">Applicant Registration</text>
+<text x="335" y="219" text-anchor="middle" class="small">register.html - Auth signUp() - profile; confirmation / sign-in - Pending membership application</text>
+<path d="M198 145V169" class="route"/><text x="212" y="163" class="tiny">register</text>
+<path d="M635 207H695" class="solid"/><text x="665" y="198" text-anchor="middle" class="tiny">signUp()</text>
+<path d="M700 224H635" class="response"/><text x="667" y="236" text-anchor="middle" class="tiny">Auth result</text>
+<path d="M35 239H15V666H25" class="solid"/><text x="11" y="470" transform="rotate(-90 11 470)" text-anchor="middle" class="tiny">pending application</text>
+<!-- Separate role routes from the two authenticated sessions -->
+<path d="M460 420V497H1405" class="plain"/>
+<path d="M1240 420H1685V522H140" class="plain"/>
+<text x="70" y="493" text-anchor="start" class="tiny">MEMBER</text>
+<text x="70" y="519" text-anchor="start" class="tiny">ADMIN</text>
+<!-- Admin-created accounts use the verified Edge Function in Applications service. -->
 <!-- Six system modules with individually labeled database request arrows -->
-<path d="M155 526V548" class="solid"/>
+<path d="M165 497V548" class="route"/><path d="M145 522V548" class="route"/>
 <rect x="25" y="553" width="260" height="70" rx="8" class="module"/>
 <text x="155" y="575" text-anchor="middle" font-size="24">📝</text>
 <text x="155" y="598" text-anchor="middle" class="head">Applications &amp; Membership</text>
-<text x="155" y="617" text-anchor="middle" class="small">register.html - admin.html</text>
+<text x="155" y="617" text-anchor="middle" class="small">Registration / application review / member approval</text>
 <rect x="25" y="634" width="260" height="65" rx="8" class="service"/>
 <text x="155" y="651" text-anchor="middle" font-size="20">⚙️</text>
-<text x="155" y="672" text-anchor="middle" class="section">APPLICATIONS SERVICE</text>
+<text x="155" y="672" text-anchor="middle" class="section">APPLICATIONS &amp; ACCOUNT SERVICE</text>
+<text x="155" y="690" text-anchor="middle" class="tiny">Admin account creation: verified Edge Function</text>
 <path d="M155 699V718" class="plain"/>
 <path d="M40 718H270" class="plain"/>
 <path d="M47 718V1000" class="solid"/>
@@ -92,7 +93,7 @@
 <path d="M253 718V1000" class="solid"/>
 <text x="241" y="970" transform="rotate(-90 241 970)" text-anchor="start" class="tiny">profile role lookup</text>
 <path d="M295 1005V718" class="response"/>
-<path d="M435 526V548" class="solid"/>
+<path d="M445 497V548" class="route"/><path d="M425 522V548" class="route"/>
 <rect x="305" y="553" width="260" height="70" rx="8" class="module"/>
 <text x="435" y="575" text-anchor="middle" font-size="24">📱</text>
 <text x="435" y="598" text-anchor="middle" class="head">Attendance / QR</text>
@@ -111,7 +112,7 @@
 <path d="M533 718V1000" class="solid"/>
 <text x="521" y="970" transform="rotate(-90 521 970)" text-anchor="start" class="tiny">attendance SELECT history</text>
 <path d="M575 1005V718" class="response"/>
-<path d="M715 526V548" class="solid"/>
+<path d="M725 497V548" class="route"/><path d="M705 522V548" class="route"/>
 <rect x="585" y="553" width="260" height="70" rx="8" class="module"/>
 <text x="715" y="575" text-anchor="middle" font-size="24">📦</text>
 <text x="715" y="598" text-anchor="middle" class="head">Inventory &amp; Products</text>
@@ -128,7 +129,7 @@
 <path d="M813 718V1000" class="solid"/>
 <text x="801" y="970" transform="rotate(-90 801 970)" text-anchor="start" class="tiny">active catalog SELECT</text>
 <path d="M855 1005V718" class="response"/>
-<path d="M995 526V548" class="solid"/>
+<path d="M995 522V548" class="route"/>
 <rect x="865" y="553" width="260" height="70" rx="8" class="module"/>
 <text x="995" y="575" text-anchor="middle" font-size="24">🧾</text>
 <text x="995" y="598" text-anchor="middle" class="head">Walk-in POS / Receipts</text>
@@ -147,7 +148,7 @@
 <path d="M1093 718V1000" class="solid"/>
 <text x="1081" y="970" transform="rotate(-90 1081 970)" text-anchor="start" class="tiny">products UPDATE merchandise stock</text>
 <path d="M1135 1005V718" class="response"/>
-<path d="M1275 526V548" class="solid"/>
+<path d="M1275 497V548" class="route"/>
 <rect x="1145" y="553" width="260" height="70" rx="8" class="module"/>
 <text x="1275" y="575" text-anchor="middle" font-size="24">👤</text>
 <text x="1275" y="598" text-anchor="middle" class="head">Member Portal</text>
@@ -168,7 +169,7 @@
 <path d="M1373 718V1000" class="solid"/>
 <text x="1361" y="970" transform="rotate(-90 1361 970)" text-anchor="start" class="tiny">personal info RPC</text>
 <path d="M1415 1005V718" class="response"/>
-<path d="M1555 526V548" class="solid"/>
+<path d="M1555 522V548" class="route"/>
 <rect x="1425" y="553" width="260" height="70" rx="8" class="module"/>
 <text x="1555" y="575" text-anchor="middle" font-size="24">📊</text>
 <text x="1555" y="598" text-anchor="middle" class="head">Reports &amp; Exports</text>
