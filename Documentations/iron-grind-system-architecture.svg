@@ -18,8 +18,8 @@
     .service{fill:none;stroke:none}
     .api{fill:#edf1f5;stroke:#384250;stroke-width:1.6}
     .solid{fill:none;stroke:#343a46;stroke-width:1.5;marker-end:url(#arrow)}
-    .response{fill:none;stroke:#7d8797;stroke-width:1.35;stroke-dasharray:5 4;marker-end:url(#arrowMuted)}
-    .plain{fill:none;stroke:#687281;stroke-width:1.3}
+    .response{fill:none;stroke:#2879a8;stroke-width:1.45;stroke-dasharray:5 4;marker-end:url(#arrowMuted)}
+    .plain{fill:none;stroke:#9aa3ad;stroke-width:1.2}
     .red{fill:#9d1010}
   </style>
 </defs>
@@ -188,7 +188,6 @@
 <path d="M1653 718V1000" class="solid"/>
 <text x="1641" y="970" transform="rotate(-90 1641 970)" text-anchor="start" class="tiny">history query / export</text>
 <path d="M1695 1005V718" class="response"/>
-<text x="850" y="985" text-anchor="middle" class="tiny">Solid arrows carry the labeled request to Supabase; dashed arrows return query / operation results to the service.</text>
 <!-- Security and server-side operations -->
 <rect x="35" y="1005" width="1630" height="112" rx="9" class="api"/>
 <text x="850" y="1031" text-anchor="middle" class="head">SUPABASE DATA API / RPC + ROW LEVEL SECURITY (RLS)</text>
@@ -197,6 +196,11 @@
 <text x="850" y="1094" text-anchor="middle" class="small">Admin verified → Auth account + member record</text>
 
 <!-- Realtime scope -->
+<rect x="35" y="1127" width="450" height="82" rx="8" class="soft"/>
+<text x="55" y="1145" class="small" style="font-weight:700">LINE KEY</text>
+<path d="M55 1158H100" class="solid"/><text x="115" y="1161" class="tiny">Request / data write</text>
+<path d="M55 1177H100" class="response"/><text x="115" y="1180" class="tiny">Response / query result</text>
+<path d="M55 1196H100" class="plain"/><text x="115" y="1199" class="tiny">Session / page routing</text>
 <rect x="1230" y="1133" width="435" height="65" rx="8" class="soft"/>
 <text x="1447" y="1153" text-anchor="middle" class="small">SUPABASE REALTIME</text>
 <text x="1447" y="1171" text-anchor="middle" class="tiny">Publication: membership_applications + attendance.</text>
