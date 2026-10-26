@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="2100" height="1510" viewBox="0 0 2100 1510" role="img" aria-labelledby="title desc">
 <title id="title">Iron Grind Detailed Use Case Diagram</title>
-<desc id="desc">Detailed UML use case diagram for Iron Grind, with Applicant/Member as one lifecycle actor and Administrator/Staff as a separate actor. It shows authentication, registration, member portal functions, application and membership management, attendance, inventory, point of sale, and reports.</desc>
+<desc id="desc">UML use case diagram for Iron Grind, with Member / Applicant and Administrator as external actors. Individual solid actor associations connect each actor to the current authentication, registration, portal, membership, attendance, inventory, point-of-sale, and reporting functions. Email notifications are omitted because they are still in development.</desc>
 <defs>
   <style>
     text{font-family:Arial,Helvetica,sans-serif;fill:#111820}
@@ -14,7 +14,6 @@
     .boundary{fill:#fbfcfd;stroke:#273342;stroke-width:2.3}
     .usecase{fill:#fff;stroke:#273342;stroke-width:2}
     .association{fill:none;stroke:#434d5b;stroke-width:1.55}
-    .include{fill:none;stroke:#434d5b;stroke-width:1.35;stroke-dasharray:7 5}
     .actor{fill:#111820;stroke:#111820;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
   </style>
 </defs>
@@ -23,9 +22,18 @@
 <rect x="340" y="78" width="1420" height="1370" rx="8" class="boundary"/>
 <text x="1050" y="111" text-anchor="middle" class="boundaryTitle">Iron Grind System</text>
 
-<!-- Actor association connectors, placed behind use cases -->
-<path d="M180 680H285M285 165V1160M285 165H830M285 300H520M285 435H520M285 590H520M285 720H520M285 850H520M285 980H520M285 1110H520" class="association"/>
-<path d="M1920 680H1815M1815 165V1245M1815 165H1270M1815 300H1660M1815 435H1660M1815 570H1660M1815 705H1660M1815 840H1660M1815 975H1660M1815 1110H1660M1815 1245H1660" class="association"/>
+<!-- Each solid line is a direct UML association, with no arrowhead. -->
+<g class="association">
+  <!-- Member / Applicant associations -->
+  <path d="M128 638H90V165H830"/>
+  <path d="M175 680L520 300"/><path d="M175 680L520 435"/><path d="M175 680L520 590"/>
+  <path d="M175 680L520 720"/><path d="M175 680L520 850"/><path d="M175 680L520 980"/><path d="M175 680L520 1110"/>
+  <!-- Administrator associations -->
+  <path d="M1937 638H2010V165H1270"/>
+  <path d="M1890 680L1660 300"/><path d="M1890 680L1660 435"/><path d="M1890 680L1660 570"/>
+  <path d="M1890 680L1660 705"/><path d="M1890 680L1660 840"/><path d="M1890 680L1660 975"/>
+  <path d="M1890 680L1660 1110"/><path d="M1890 680L1660 1245"/>
+</g>
 
 <!-- Shared account access -->
 <ellipse cx="1050" cy="165" rx="220" ry="42" class="usecase"/>
@@ -39,8 +47,8 @@
 <text x="740" y="294" text-anchor="middle" class="caseTitle">Register and submit membership application</text>
 <text x="740" y="314" text-anchor="middle" class="caseDetail">Enter personal, emergency, health, and plan details; provide signature</text>
 <ellipse cx="740" cy="435" rx="220" ry="46" class="usecase"/>
-<text x="740" y="430" text-anchor="middle" class="caseTitle">Check application status</text>
-<text x="740" y="449" text-anchor="middle" class="caseDetail">View pending, approved, or rejected status</text>
+<text x="740" y="430" text-anchor="middle" class="caseTitle">View application status at login</text>
+<text x="740" y="449" text-anchor="middle" class="caseDetail">Pending or rejected applicants see their status when signing in</text>
 <ellipse cx="740" cy="590" rx="220" ry="46" class="usecase"/>
 <text x="740" y="585" text-anchor="middle" class="caseTitle">View membership dashboard</text>
 <text x="740" y="604" text-anchor="middle" class="caseDetail">Plan, dates, status, progress, and visit summary</text>
@@ -58,13 +66,13 @@
 <text x="740" y="1124" text-anchor="middle" class="caseDetail">Send renewal application for staff review</text>
 
 <!-- Administrator / Staff functions -->
-<text x="1435" y="220" text-anchor="middle" class="group">ADMINISTRATOR AND STAFF FUNCTIONS</text>
+<text x="1435" y="220" text-anchor="middle" class="group">ADMINISTRATOR FUNCTIONS</text>
 <ellipse cx="1435" cy="300" rx="225" ry="46" class="usecase"/>
 <text x="1435" y="295" text-anchor="middle" class="caseTitle">Review membership applications</text>
 <text x="1435" y="314" text-anchor="middle" class="caseDetail">Inspect details; approve or reject application</text>
 <ellipse cx="1435" cy="435" rx="225" ry="46" class="usecase"/>
-<text x="1435" y="430" text-anchor="middle" class="caseTitle">Create member account</text>
-<text x="1435" y="449" text-anchor="middle" class="caseDetail">Register walk-in member and record membership sale</text>
+<text x="1435" y="430" text-anchor="middle" class="caseTitle">Create walk-in member account</text>
+<text x="1435" y="449" text-anchor="middle" class="caseDetail">Create member login and record membership sale</text>
 <ellipse cx="1435" cy="570" rx="225" ry="46" class="usecase"/>
 <text x="1435" y="565" text-anchor="middle" class="caseTitle">Manage member and membership records</text>
 <text x="1435" y="584" text-anchor="middle" class="caseDetail">Update details, renew or change plan, view history</text>
@@ -84,27 +92,12 @@
 <text x="1435" y="1240" text-anchor="middle" class="caseTitle">Export reports</text>
 <text x="1435" y="1259" text-anchor="middle" class="caseDetail">Create monthly PDF reports and attendance CSV</text>
 
-<!-- Email notifications -->
-<text x="1050" y="1290" text-anchor="middle" class="group">EMAIL NOTIFICATIONS</text>
-<ellipse cx="650" cy="1355" rx="235" ry="46" class="usecase"/>
-<text x="650" y="1350" text-anchor="middle" class="caseTitle">Notify membership approval</text>
-<text x="650" y="1369" text-anchor="middle" class="caseDetail">Email applicant that membership was approved</text>
-<ellipse cx="1050" cy="1355" rx="235" ry="46" class="usecase"/>
-<text x="1050" y="1350" text-anchor="middle" class="caseTitle">Notify renewal approval</text>
-<text x="1050" y="1369" text-anchor="middle" class="caseDetail">Email member that renewal was approved</text>
-<ellipse cx="1450" cy="1355" rx="235" ry="46" class="usecase"/>
-<text x="1450" y="1350" text-anchor="middle" class="caseTitle">Notify membership expiration</text>
-<text x="1450" y="1369" text-anchor="middle" class="caseDetail">Email member when membership expires</text>
-
-<!-- Notification relationships -->
-<path d="M1435 346 L650 1309" class="include"/>
-<path d="M1435 616 L1050 1309" class="include"/>
-<path d="M1435 616 L1450 1309" class="include"/>
+<text x="1050" y="1390" text-anchor="middle" class="small">Email notifications are omitted because this feature is still in development.</text>
 
 <!-- Actors -->
 <g transform="translate(110 620)"><circle cx="35" cy="18" r="17" class="actor"/><path d="M5 99c2-34 12-52 30-52s28 18 30 52M35 49v47M13 70l22 13 22-13" fill="none" class="actor"/></g>
-<text x="145" y="745" text-anchor="middle" class="actorLabel">Applicant / Member</text>
+<text x="145" y="745" text-anchor="middle" class="actorLabel">Member / Applicant</text>
 <g transform="translate(1885 620)"><circle cx="35" cy="18" r="17" class="actor"/><path d="M5 99c2-34 12-52 30-52s28 18 30 52M35 49v47M13 70l22 13 22-13" fill="none" class="actor"/><rect x="48" y="63" width="36" height="28" rx="3" fill="#fff" stroke="#111820" stroke-width="3"/><path d="M57 63v-8h18v8" fill="none" stroke="#111820" stroke-width="3"/></g>
-<text x="1920" y="745" text-anchor="middle" class="actorLabel">Administrator / Staff</text>
+<text x="1920" y="745" text-anchor="middle" class="actorLabel">Administrator</text>
 <text x="1050" y="1480" text-anchor="middle" class="small">Solid lines show actor associations with system functions.</text>
 </svg>
