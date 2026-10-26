@@ -10,15 +10,17 @@ The study follows a system-development approach: it defines the gym's operationa
 
 ### System Development Methodology
 
-The project is organized using Rapid Application Development (RAD), an iterative approach that structures work into requirements planning, user design, construction, and implementation. Each phase is described below as the development framework for this system. The research team should confirm that RAD is the methodology approved in the study proposal before submission; if another methodology was approved, this section and its phase labels must be revised to match it.
+The project uses Agile as its organizing development approach. Work is planned and delivered in short iterations, with requirements prioritized according to the gym's workflows. Each iteration moves through planning, design, implementation, and testing, and its results are reviewed before the next set of work is selected. This supports incremental delivery of the membership, attendance, inventory, sales, and reporting functions. The research team should confirm that Agile is the methodology approved in the study proposal and describe the actual iteration length and review process used by the team.
 
-**Requirements planning.** The system scope and user roles are defined from the gym's stated processes and the functions implemented in the project. The principal requirements concern online membership applications, staff review, member access, staff-operated QR attendance, inventory, in-person sales, and operational reporting. Personal and health-related information is handled as restricted data.
+**Product backlog and prioritization.** Requirements are recorded as user needs and prioritized by operational importance, beginning with account access and membership applications, followed by staff review, member access, attendance, inventory, sales, and reports. Privacy and authorization requirements apply throughout the backlog rather than being postponed to a final phase.
 
-**User design.** The system's pages, navigation, forms, reports, and data relationships are organized around applicant/member and administrator workflows. The design separates applicant submissions from approved member records, stores attendance apart from membership data, and records sales with their line items. The architecture, use-case, and data-flow figures in this chapter summarize those interactions.
+**Iteration planning and design.** At the start of each iteration, the team selects a manageable set of requirements and defines acceptance criteria. The relevant page flows, data relationships, and role permissions are designed or refined for those requirements. The architecture, use-case, and data-flow figures in this chapter summarize the resulting system design.
 
-**Construction.** The client interface is built with HTML, CSS, and JavaScript. Supabase provides authentication and PostgreSQL database services. Database policies and functions support authorization and operational transactions. Features include registration and renewal requests, application review, membership administration, QR attendance, product and stock management, sales, and reports.
+**Incremental implementation and testing.** Selected requirements are implemented in the HTML, CSS, and JavaScript client and the Supabase authentication and PostgreSQL services. Database policies and functions support authorization and operational transactions. Each increment is tested against its acceptance criteria and the functional scenarios in this chapter before it is treated as complete.
 
-**Implementation and transition.** Before operational use, the website and Supabase project must be configured for the intended environment. The deployment must use the correct project settings, access policies, and authorized administrator accounts. Staff should verify the workflows and receive appropriate orientation. This chapter does not claim a production deployment, completed training, or user acceptance unless those activities are documented separately.
+**Review and refinement.** At the end of an iteration, the increment is reviewed against the selected requirements. Issues and feedback are recorded, priorities are updated, and unfinished or revised work returns to the backlog. Do not report stakeholder reviews or user feedback as completed unless the team has records of those activities.
+
+**Release and transition.** After the required increments pass verification, the website and Supabase project can be configured for the intended environment. Deployment must use the correct project settings, access policies, and authorized administrator accounts. Staff should verify the workflows and receive appropriate orientation. This chapter does not claim a production deployment, completed training, or user acceptance unless those activities are documented separately.
 
 ## Study Setting and Intended Users
 
@@ -164,20 +166,21 @@ The project does not provide online payment processing, online product checkout 
 
 ## Development Phase Schedule
 
-The phases below are a planning structure, not a record of dates or completed milestones. Add the actual schedule and deliverables required by the institution.
+The Agile schedule below describes recurring iteration work and release activities; it is not a record of dates or completed milestones. Add the actual iteration length, dates, completed increments, and deliverables required by the institution.
 
-| Phase | Activities | Deliverable |
+| Agile activity | Activities | Deliverable |
 | --- | --- | --- |
-| Requirements planning | Confirm scope, user roles, operational workflows, data needs, and privacy requirements. | Approved requirements and scope. |
-| User design | Review page flows, forms, reports, system models, and data relationships with the intended stakeholders. | Reviewed interface and system design. |
-| Construction | Implement and integrate the client workflows, Supabase schema, access policies, and database functions. | Integrated system build. |
-| Verification and refinement | Execute the functional and role-based scenarios; document defects and corrections. | Completed test records and refined build. |
-| Implementation and transition | Configure the production environment, verify access, prepare approved records, and orient users. | Deployment and transition records. |
+| Backlog preparation | Confirm scope, user roles, workflows, data needs, privacy requirements, priorities, and acceptance criteria. | Prioritized product backlog. |
+| Iteration planning and design | Select backlog items for the iteration and refine the relevant page flows, data relationships, and permissions. | Iteration goal and design notes. |
+| Incremental implementation | Build and integrate the selected browser workflows, Supabase schema, access policies, and database functions. | Working software increment. |
+| Iteration testing and review | Test the increment against its acceptance criteria, record defects, and review the result with intended stakeholders where arranged. | Test records, review feedback, and updated backlog. |
+| Repeat and refine | Prioritize remaining work and repeat planning, design, implementation, testing, and review until the agreed scope is complete. | Successive verified increments. |
+| Release and transition | Configure the intended environment, verify access, prepare approved records, and orient users. | Deployment and transition records. |
 | Evaluation | Administer the approved user-evaluation instrument and analyze the collected data. | Evaluation dataset, analysis, and findings. |
 
 ## Alignment Notes for Final Submission
 
-1. Confirm that Rapid Application Development is the methodology approved in the study proposal. The source files do not independently establish the approved methodology.
+1. Confirm that Agile is the methodology approved in the study proposal. State the actual iteration length, planning and review practices, and team responsibilities used; the source files do not independently establish those details.
 2. Add the actual respondents or participants, sampling method, instrument, statistical treatment, and evaluation results required by the institution. Do not infer or fabricate these details from the application code.
 3. Confirm the final renewal-window wording against the approved Chapter 1 and the deployed system configuration.
 4. Keep the stated system limitations and security claims consistent with the production configuration and the final scope approved for the study.
