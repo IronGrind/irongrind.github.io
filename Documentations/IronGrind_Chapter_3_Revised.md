@@ -34,6 +34,10 @@ Launch takes place after the required increments pass verification; it is not re
 
 ## Requirement Specifications
 
+### Study Setting and Intended Users
+
+The system is intended for Iron Grind Fitness Gym in Purok Mangga, Sulongon, Dapitan City, Zamboanga del Norte. Its intended users are applicants, members, authorized administrators, and walk-in customers served by staff. The database defines `admin` and `member` profile roles; it does not define a separate staff role.
+
 ### Functionality Requirements
 
 | ID | Requirement | Description |
@@ -81,15 +85,27 @@ Launch takes place after the required increments pass verification; it is not re
 
 ### Inputs and Outputs
 
-| Category | Examples |
+### Input Requirements
+
+| Input | Examples |
 | --- | --- |
-| Account | Sign-in and account information handled by Supabase Auth. |
-| Application and member record | Identity and contact information, selected plan, membership dates, emergency contact, fitness goals, and health declarations collected by the forms. |
-| Attendance | Member identity and staff-recorded check-in/check-out events. |
+| Account credentials | Email and password submitted to Supabase Auth. |
+| Registration or renewal application | Name, contact information, membership plan, emergency contact, fitness goals, health declarations, and signature where collected by the form. |
+| Attendance | Member QR identifier and staff check-in/check-out action. |
 | Product and inventory | Product name, category, price, unit, and merchandise stock quantity where applicable. |
-| Sale | Customer type and name, selected products or membership, quantities, prices, and transaction status. |
-| Member output | Membership status and progress, QR code, attendance history, and active catalog information. |
-| Staff output | Applications, member and attendance records, inventory, sale and receipt details, and operational reports. |
+| Sale | Customer type and name, selected products or membership, quantities, and transaction details entered by staff. |
+| Report request | Report type, filters, and date range selected by an administrator. |
+
+### Output Requirements
+
+| Output | Description |
+| --- | --- |
+| Authentication result | Authenticated session and role-based routing, or an error message. |
+| Application result | Application status and, after review, the recorded decision. |
+| Member portal information | Membership status and progress, QR code, personal attendance history, and active product catalog. |
+| Attendance result | Confirmation of staff-recorded check-in/check-out and permitted attendance history. |
+| Sale receipt | Receipt details, line items, quantities, prices, and totals. |
+| Administrative reports | Membership, member status, archives, payments, attendance, renewals, inventory, and sales information based on stored records. |
 
 ## System Design
 
