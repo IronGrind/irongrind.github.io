@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1900" height="1270" viewBox="0 0 1900 1270" role="img" aria-labelledby="title desc">
+<title id="title">Iron Grind Use Case Diagram</title>
+<desc id="desc">UML use case diagram for the Iron Grind system showing Applicant, Member, and Administrator/Staff actors with their role-specific functions.</desc>
+<defs><style>
+text{font-family:Arial,Helvetica,sans-serif;fill:#111820}.title{font-size:25px;font-weight:700}.boundary-title{font-size:16px;font-weight:700}.actor-label{font-size:14px;font-weight:700}.usecase{fill:#fff;stroke:#273342;stroke-width:2}.boundary{fill:#fbfcfd;stroke:#273342;stroke-width:2.4}.association{fill:none;stroke:#434d5b;stroke-width:1.6}.case-label{font-size:13px;font-weight:600}.small{font-size:11px;fill:#4b5564}.actor{fill:#111820;stroke:#111820;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}
+</style></defs>
+<rect width="1900" height="1270" fill="#fff"/>
+<text x="950" y="40" text-anchor="middle" class="title">IRON GRIND FITNESS GYM MEMBERSHIP &amp; OPERATIONS MANAGEMENT SYSTEM</text>
+<rect x="350" y="80" width="1200" height="1100" rx="8" class="boundary"/>
+<text x="950" y="112" text-anchor="middle" class="boundary-title">Iron Grind System</text>
+
+<!-- Actor association branches are drawn behind the use cases -->
+<path d="M170 275H270M270 150V430M270 150H730M270 300H410M270 430H410" class="association"/>
+<path d="M170 725H320M320 180V950M320 180H730M320 560H410M320 690H410M320 820H410M320 950H410" class="association"/>
+<path d="M1700 650H1620M1620 150V1080M1620 150H1170M1620 300H1490M1620 430H1490M1620 560H1490M1620 690H1490M1620 820H1490M1620 950H1490M1620 1080H1490" class="association"/>
+
+<!-- Authentication -->
+<ellipse cx="950" cy="150" rx="220" ry="42" class="usecase"/>
+<text x="950" y="145" text-anchor="middle" class="case-label">Authenticate account</text>
+<text x="950" y="163" text-anchor="middle" class="small">Sign in / sign out / password recovery</text>
+
+<!-- Applicant and member use cases -->
+<ellipse cx="650" cy="300" rx="240" ry="48" class="usecase"/>
+<text x="650" y="295" text-anchor="middle" class="case-label">Register account and submit</text>
+<text x="650" y="314" text-anchor="middle" class="case-label">membership application</text>
+<ellipse cx="650" cy="430" rx="240" ry="46" class="usecase"/>
+<text x="650" y="425" text-anchor="middle" class="case-label">Check application status</text>
+<text x="650" y="444" text-anchor="middle" class="small">Pending / approved / rejected</text>
+<ellipse cx="650" cy="560" rx="240" ry="46" class="usecase"/>
+<text x="650" y="555" text-anchor="middle" class="case-label">View membership and</text>
+<text x="650" y="574" text-anchor="middle" class="case-label">attendance history</text>
+<ellipse cx="650" cy="690" rx="240" ry="46" class="usecase"/>
+<text x="650" y="685" text-anchor="middle" class="case-label">Manage personal profile</text>
+<text x="650" y="704" text-anchor="middle" class="small">Personal information and settings</text>
+<ellipse cx="650" cy="820" rx="240" ry="46" class="usecase"/>
+<text x="650" y="815" text-anchor="middle" class="case-label">View active product catalog</text>
+<text x="650" y="834" text-anchor="middle" class="small">Read-only member access</text>
+<ellipse cx="650" cy="950" rx="240" ry="46" class="usecase"/>
+<text x="650" y="945" text-anchor="middle" class="case-label">Submit membership renewal</text>
+<text x="650" y="964" text-anchor="middle" class="small">Renewal request for staff review</text>
+
+<!-- Administrator and staff use cases -->
+<ellipse cx="1250" cy="300" rx="240" ry="46" class="usecase"/>
+<text x="1250" y="295" text-anchor="middle" class="case-label">Review membership applications</text>
+<text x="1250" y="314" text-anchor="middle" class="small">Approve or reject applications</text>
+<ellipse cx="1250" cy="430" rx="240" ry="46" class="usecase"/>
+<text x="1250" y="425" text-anchor="middle" class="case-label">Create member account</text>
+<text x="1250" y="444" text-anchor="middle" class="small">Record membership sale</text>
+<ellipse cx="1250" cy="560" rx="240" ry="46" class="usecase"/>
+<text x="1250" y="555" text-anchor="middle" class="case-label">Manage member records</text>
+<text x="1250" y="574" text-anchor="middle" class="small">Membership changes and history</text>
+<ellipse cx="1250" cy="690" rx="240" ry="46" class="usecase"/>
+<text x="1250" y="685" text-anchor="middle" class="case-label">Manage attendance</text>
+<text x="1250" y="704" text-anchor="middle" class="small">QR lookup, check-in, and check-out</text>
+<ellipse cx="1250" cy="820" rx="240" ry="46" class="usecase"/>
+<text x="1250" y="815" text-anchor="middle" class="case-label">Manage products and inventory</text>
+<text x="1250" y="834" text-anchor="middle" class="small">Product details and stock</text>
+<ellipse cx="1250" cy="950" rx="240" ry="46" class="usecase"/>
+<text x="1250" y="945" text-anchor="middle" class="case-label">Record walk-in sale</text>
+<text x="1250" y="964" text-anchor="middle" class="small">Issue receipt and update merchandise stock</text>
+<ellipse cx="1250" cy="1080" rx="240" ry="46" class="usecase"/>
+<text x="1250" y="1075" text-anchor="middle" class="case-label">View reports and export data</text>
+<text x="1250" y="1094" text-anchor="middle" class="small">Membership, attendance, inventory, and sales</text>
+
+<!-- Actors -->
+<g transform="translate(100 220)"><circle cx="35" cy="18" r="17" class="actor"/><path d="M5 99c2-34 12-52 30-52s28 18 30 52M35 49v47M13 70l22 13 22-13" fill="none" class="actor"/></g>
+<text x="135" y="350" text-anchor="middle" class="actor-label">Applicant</text>
+<g transform="translate(100 670)"><circle cx="35" cy="18" r="17" class="actor"/><path d="M5 99c2-34 12-52 30-52s28 18 30 52M35 49v47M13 70l22 13 22-13" fill="none" class="actor"/></g>
+<text x="135" y="800" text-anchor="middle" class="actor-label">Member</text>
+<g transform="translate(1695 595)"><circle cx="35" cy="18" r="17" class="actor"/><path d="M5 99c2-34 12-52 30-52s28 18 30 52M35 49v47M13 70l22 13 22-13" fill="none" class="actor"/><rect x="48" y="63" width="36" height="28" rx="3" fill="#fff" stroke="#111820" stroke-width="3"/><path d="M57 63v-8h18v8" fill="none" stroke="#111820" stroke-width="3"/></g>
+<text x="1730" y="720" text-anchor="middle" class="actor-label">Administrator / Staff</text>
+
+<text x="950" y="1215" text-anchor="middle" class="small">Solid lines show actor associations with system functions.</text>
+</svg>
