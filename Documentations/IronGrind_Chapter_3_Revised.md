@@ -6,11 +6,11 @@ This chapter discusses the methodology used to develop **IronGrind: A Web-Based 
 
 ### System Development Methodology
 
-Agile is an iterative system-development approach in which stakeholder needs are gathered and prioritized, selected work is developed and tested in increments, and the results inform the next iteration. For IronGrind, this approach organizes development around the gym's applicant/member and administrator workflows. The iteration cycle is summarized in Figure 3.1. The project does not assume a specific Agile framework such as Scrum; the research team should document the actual iteration length and review practices used and confirm that Agile is the methodology approved in the study proposal.
+Agile is an iterative system-development approach in which stakeholder needs are gathered and prioritized, selected work is developed and tested in increments, and the results inform the next iteration. For IronGrind, this approach organizes development around the gym's applicant/member and administrator workflows. The iteration cycle is summarized in Figure 1. The project does not assume a specific Agile framework such as Scrum; the research team should document the actual iteration length and review practices used and confirm that Agile is the methodology approved in the study proposal.
 
-![Figure 3.1. Agile development cycle for IronGrind](iron-grind-agile-methodology.svg)
+![Figure 1. Agile Methodology](iron-grind-agile-methodology.svg)
 
-**Figure 3.1.** Agile development cycle for IronGrind.
+**Figure 1.** Agile Methodology.
 
 ### Requirements Planning
 
@@ -85,25 +85,25 @@ The deployed database distinguishes `admin` and `member` profile roles. Staff fu
 
 The browser presents the applicant/member pages and administrator dashboard. Client-side JavaScript sends authentication and data requests to Supabase. Supabase Auth manages user identity and sessions; the PostgreSQL database stores the operational records. Row Level Security policies and database functions restrict and validate database operations. Privileged account creation uses a server-side Edge Function that verifies administrator authorization. The Node.js server in the repository is a local static-file development server; it is not the production database backend.
 
-![Figure 3.2. IronGrind system architecture](iron-grind-system-architecture.svg)
+![Figure 2. IronGrind system architecture](iron-grind-system-architecture.svg)
 
-**Figure 3.2.** System architecture of IronGrind.
+**Figure 2.** System architecture of IronGrind.
 
 ### Use-Case Model
 
 The use-case model summarizes the actions available to applicants, members, and authorized staff. Applicants submit registration information; members review their own membership and attendance information and may request renewal; staff handle approvals and the gym's operational records. Walk-in sales are entered by staff rather than through a separate customer portal.
 
-![Figure 3.3. IronGrind use-case diagram](iron-grind-use-case.svg)
+![Figure 3. IronGrind use-case diagram](iron-grind-use-case.svg)
 
-**Figure 3.3.** Use-case diagram of IronGrind.
+**Figure 3.** Use-case diagram of IronGrind.
 
 ### Data-Flow Model
 
 Registration information is submitted to the application workflow and remains pending until staff review it. Approval connects the application to a member record and records the associated membership transaction. Renewal submissions follow the same staff-review principle. During a gym visit, staff scan the member QR code and record attendance. Staff maintain product records and enter in-person sales; each sale is stored with its line items. Authorized staff request operational views and reports from the records maintained by the system.
 
-![Figure 3.4. IronGrind data-flow diagram](iron-grind-data-flow.svg)
+![Figure 4. IronGrind data-flow diagram](iron-grind-data-flow.svg)
 
-**Figure 3.4.** Data-flow diagram of IronGrind.
+**Figure 4.** Data-flow diagram of IronGrind.
 
 ## Database Design
 
