@@ -108,14 +108,13 @@ The system is intended for Iron Grind Fitness Gym in Purok Mangga, Sulongon, Dap
 | Sale receipt | Receipt details, line items, quantities, prices, and totals. |
 | Administrative reports | Membership, member status, archives, payments, attendance, renewals, inventory, and sales information based on stored records. |
 
-## System Design
 ## Data Process Modeling
 
 Data process modeling describes how information enters IronGrind, which processes handle it, where records are stored, and what results are returned to applicants, members, and administrators. The model is based on the current Supabase schema and implemented workflows. Email notification is shown only as a planned feature.
 
 ### Diagrams
 
-### System Architecture
+#### System Architecture
 
 Figure 2 shows applicants and members using the login, registration, and member pages, while administrators use the admin dashboard. Supabase Auth verifies credentials and creates the authenticated session; the application then routes users to the member or administrator experience based on profile role. The browser modules are organized as Applications and Membership, Attendance and QR, Inventory and Products, Walk-in POS and Receipts, Member Portal, and Reports and Exports. These modules send requests through the Supabase Data API or database RPC functions. PostgreSQL Row Level Security (RLS) and function-level checks govern access to the Supabase PostgreSQL database, which stores profiles, membership applications, members, attendance, products, sales, sale items, and membership history. The current Realtime configuration publishes changes from `membership_applications` and `attendance` to subscribed website views. The diagram also shows email notification delivery as in development, with no external email provider selected; it should not be described as an operational feature until it is implemented and configured. The Node.js server in the repository serves static files for local development and is not the production database backend.
 
@@ -123,12 +122,18 @@ Figure 2 shows applicants and members using the login, registration, and member 
 
 **Figure 2.** System architecture of IronGrind.
 
-### Use-Case Model
+#### Context Diagram
 
-### Data-Flow Model
+The context diagram treats IronGrind as one system and shows the information exchanged with external actors and backend services. Applicants and members submit credentials, registration or renewal details, and supported profile requests; they receive authentication results and permitted membership, attendance, and catalog information. Administrators submit review decisions, operational updates, sale entries, and report filters; they receive records, receipts, and reports. Walk-in purchase details are entered by staff. Supabase Auth and Supabase data services provide authentication and authorized data access. Email notification integration is planned, not operational.
+
+![Figure 3. IronGrind system context diagram](iron-grind-context-diagram.svg)
+
+**Figure 3.** System context diagram of IronGrind.
+
+#### Data Flow Diagram
 **Figure 4.** Level 1 data-process model for IronGrind.
 
-### Use-Case Diagram
+#### Use-Case Diagram
 
 The use-case diagram presents applicant/member and administrator interactions with IronGrind. Applicants and members use the account, application, portal, and attendance-history functions available to their roles. Administrators review applications and manage membership, attendance, products, sales, and reports. Walk-in transactions are entered by staff.
 
@@ -136,7 +141,7 @@ The use-case diagram presents applicant/member and administrator interactions wi
 
 **Figure 5.** Use-case diagram of IronGrind.
 
-### Entity Relationship Diagram
+#### Entity Relationship Diagram
 
 The entity relationship diagram (ERD) summarizes the principal relationships in the Supabase PostgreSQL schema. A member can have multiple applications, attendance events, membership-history records, and sales. Each sale can have multiple sale items; a sale item may reference a product. Supabase Auth manages account identities separately, with profile and member records linked to authenticated users where configured.
 
@@ -176,12 +181,11 @@ The Level 1 data-process model shows how information moves between external acto
 | D7 | `sale_items` | Itemized transaction lines. |
 | D8 | `membership_history` | Expiration, renewal, and plan-change events. |
 
-## Database Design
-### Overall Description
+## Overall Description
 
 IronGrind is a browser-based membership and operations system for applicants, members, and administrators. Users submit requests through the website; Supabase Auth manages authentication and sessions; authorized data requests pass through the Supabase Data API or database RPC functions; and PostgreSQL stores operational records. RLS and function-level checks restrict access. The system supports application review, member records, staff-recorded attendance, inventory, sales and receipts, and administrative reports. Realtime subscriptions currently cover membership applications and attendance. Email notifications remain planned and are not operational.
 
-### Data Dictionary
+## Data Dictionary
 
 This data dictionary summarizes the public-schema fields and relationships defined in the project SQL. Supabase Auth manages credentials separately from these application tables.
 
@@ -196,7 +200,7 @@ This data dictionary summarizes the public-schema fields and relationships defin
 | `sale_items` | `id` UUID (PK); `sale_id` UUID (FK); `product_id` UUID (nullable FK); `item_name`, `category`, `unit` TEXT; `quantity` NUMERIC; `unit_price`, `line_total` NUMERIC | Itemized sale lines. Product reference can be null; item name and price are stored on the sale line. |
 | `membership_history` | `id` UUID (PK); `member_id` UUID (FK); `event_type`, previous/new plan, `notes` TEXT; previous/new prices NUMERIC; previous/new dates DATE; `recorded_at` TIMESTAMPTZ; `recorded_by` UUID (Auth FK) | Expiration, renewal, and plan-change history for a member. |
 
-### Forms
+## Forms
 
 | Form or screen | User | Purpose and principal inputs |
 | --- | --- | --- |
@@ -210,11 +214,11 @@ This data dictionary summarizes the public-schema fields and relationships defin
 | Report filters | Administrator | Selects report type and available filters/date range; views or prints/saves results. |
 | Password recovery (`reset-password.html`) | Account holder | Supports the password-reset workflow. |
 
-### Prototype
+## Prototype
 
 The prototype consists of the interactive website pages and workflows described above. It includes login, registration, the member portal, administrator dashboard, attendance scanning, inventory, POS, receipts, and reports. The project files provide the implemented pages and interfaces; screenshots can be inserted here if required by the school template. Do not claim stakeholder testing or user feedback unless those activities were conducted and recorded.
 
-### Reports
+## Reports
 
 Available administrator reports cover membership, member status, archives, payments, attendance, renewals, inventory, and sales. Report data comes from the records stored by the corresponding system processes. Reports can be viewed and printed or saved where the interface provides that option. They summarize recorded data and do not by themselves demonstrate improved performance.
 
@@ -255,8 +259,6 @@ Before administering an evaluation, the researchers should identify the actual p
 IronGrind supports online membership applications and renewal requests for staff review; member access to selected membership and attendance information; staff-operated QR check-in and check-out; product and inventory records; in-person product and membership sales; receipts; and administrative operational reports. Its data model and workflows are tailored to the stated operations of Iron Grind Fitness Gym.
 
 The project does not provide online payment processing, online product checkout or reservations, member-operated attendance entry, automated gate access, AI fitness coaching, or a native mobile application. The member QR code identifies the member for staff scanning; it does not itself grant gym access. The system's reports reflect the records entered and do not independently establish business outcomes. Data protection depends on correct deployment, configured policies, appropriate user practices, and the gym's operational procedures.
-
-## Development Phase Schedule
 
 ## Gantt Chart
 
