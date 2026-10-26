@@ -1,9 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1430" viewBox="0 0 1700 1430" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1510" viewBox="0 0 1700 1510" role="img" aria-labelledby="title desc">
 <title id="title">Iron Grind System Architecture Diagram</title>
-<desc id="desc">Role based login leads to six aligned Iron Grind system modules. Each module shows its service operations and data exchanged with Supabase Data API and PostgreSQL, with authentication, security, admin-created member accounts, and Realtime scope.</desc>
+<desc id="desc">Role based login leads to six aligned Iron Grind system modules. The diagram shows service operations, requests and responses to Supabase PostgreSQL, Realtime updates to subscribed website views, and planned email notification delivery.</desc>
 <defs>
   <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#343a46"/></marker>
   <marker id="arrowMuted" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#7d8797"/></marker>
+<marker id="plannedArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#b13a20"/></marker>
+<marker id="realtimeArrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#167ead"/></marker>
   <style>
     text{font-family:Arial,Helvetica,sans-serif;fill:#17202b}
     .title{font-size:23px;font-weight:700;letter-spacing:.35px}
@@ -21,11 +23,12 @@
     .route{fill:none;stroke:#778392;stroke-width:1.35;marker-end:url(#arrowMuted)}
     .response{fill:none;stroke:#2879a8;stroke-width:1.45;stroke-dasharray:5 4;marker-end:url(#arrowMuted)}
     .plain{fill:none;stroke:#9aa3ad;stroke-width:1.2}
-    .planned{fill:none;stroke:#a56a16;stroke-width:1.6;stroke-dasharray:2 4;marker-end:url(#arrow)}
+    .planned{fill:none;stroke:#b13a20;stroke-width:1.6;stroke-dasharray:2 4;marker-end:url(#plannedArrow)}
+    .realtime{fill:none;stroke:#167ead;stroke-width:1.6;marker-end:url(#realtimeArrow)}
     .red{fill:#9d1010}
   </style>
 </defs>
-<rect width="1700" height="1430" fill="#fff"/>
+<rect width="1700" height="1510" fill="#fff"/>
 <text x="850" y="34" text-anchor="middle" class="title">IRON GRIND FITNESS GYM MEMBERSHIP &amp; OPERATIONS MANAGEMENT SYSTEM</text>
 <text x="850" y="57" text-anchor="middle" class="section">SYSTEM ARCHITECTURE</text>
 
@@ -154,7 +157,7 @@
 <text x="1275" y="598" text-anchor="middle" class="head">Member Portal</text>
 <text x="1275" y="617" text-anchor="middle" class="small">customer.html</text>
 <rect x="1145" y="634" width="260" height="65" rx="8" class="service"/>
-<text x="1275" y="651" text-anchor="middle" font-size="20">&#128260;</text>
+<circle cx="1275" cy="646" r="14" fill="#f26b00"/><circle cx="1275" cy="641" r="4.5" fill="#fff"/><path d="M1267 655c1-5 4-7 8-7s7 2 8 7" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
 <text x="1275" y="672" text-anchor="middle" class="section">MEMBER DATA SERVICE</text>
 <path d="M1275 699V718" class="plain"/>
 <path d="M1160 718H1390" class="plain"/>
@@ -198,33 +201,41 @@
 <text x="850" y="1094" text-anchor="middle" class="small">admin-create-member Edge Function verifies admin and creates Auth account + member record</text>
 
 <!-- Realtime scope -->
-<rect x="35" y="1127" width="450" height="100" rx="8" class="soft"/>
+<rect x="35" y="1127" width="450" height="130" rx="8" class="soft"/>
 <text x="55" y="1145" class="small" style="font-weight:700">LINE KEY</text>
 <path d="M55 1158H100" class="solid"/><text x="115" y="1161" class="tiny">Request / data write</text>
 <path d="M55 1177H100" class="response"/><text x="115" y="1180" class="tiny">Response / query result</text>
 <path d="M55 1196H100" class="route"/><text x="115" y="1199" class="tiny">Role / page routing</text>
 <path d="M55 1215H100" class="planned"/><text x="115" y="1218" class="tiny">Planned email notification flow</text>
+<path d="M55 1234H100" class="realtime"/><text x="115" y="1237" class="tiny">Realtime database update</text>
 <rect x="1230" y="1133" width="435" height="65" rx="8" class="soft"/>
 <text x="1447" y="1153" text-anchor="middle" class="small">SUPABASE REALTIME</text>
-<text x="1447" y="1171" text-anchor="middle" class="tiny">Live browser updates: applications + attendance.</text>
-<text x="1447" y="1187" text-anchor="middle" class="tiny">Shown in subscribed website views.</text>
-<path d="M1665 1093H1690V1242H1665" class="planned"/>
-<rect x="1230" y="1210" width="435" height="65" rx="8" class="soft"/>
-<text x="1447" y="1233" text-anchor="middle" class="small">EMAIL NOTIFICATION SERVICE - IN DEVELOPMENT</text>
-<text x="1447" y="1253" text-anchor="middle" class="tiny">Selected system events will trigger email messages.</text>
-<path d="M1447 1275V1285" class="planned"/>
-<rect x="1230" y="1285" width="435" height="65" rx="8" class="soft"/>
-<text x="1447" y="1308" text-anchor="middle" class="small">EXTERNAL EMAIL PROVIDER - NOT YET SELECTED</text>
-<text x="1447" y="1328" text-anchor="middle" class="tiny">Delivers messages to member / administrator inboxes.</text>
+<text x="1447" y="1171" text-anchor="middle" class="tiny">Receives database changes: applications + attendance.</text>
+<text x="1447" y="1187" text-anchor="middle" class="tiny">Publication: membership_applications, attendance.</text>
 
+<rect x="1230" y="1208" width="435" height="55" rx="8" class="soft"/>
+<text x="1447" y="1230" text-anchor="middle" class="small">SUBSCRIBED WEBSITE VIEWS</text>
+<text x="1447" y="1248" text-anchor="middle" class="tiny">Application review and attendance pages receive live updates.</text>
+
+<rect x="1230" y="1280" width="435" height="65" rx="8" class="soft"/>
+<text x="1447" y="1303" text-anchor="middle" class="small">EMAIL NOTIFICATION SERVICE - IN DEVELOPMENT</text>
+<text x="1447" y="1323" text-anchor="middle" class="tiny">Selected system events will trigger email messages.</text>
+
+<rect x="1230" y="1355" width="435" height="65" rx="8" class="soft"/>
+<text x="1447" y="1378" text-anchor="middle" class="small">EXTERNAL EMAIL PROVIDER - NOT YET SELECTED</text>
+<text x="1447" y="1398" text-anchor="middle" class="tiny">Delivers messages to member / administrator inboxes.</text>
+<path d="M1447 1198V1208" class="realtime"/>
+<path d="M1665 1093H1690V1312H1665" class="planned"/>
+<path d="M1447 1345V1355" class="planned"/>
 <!-- Shared database -->
 
 <ellipse cx="850" cy="1212" rx="330" ry="32" fill="#121820"/>
 <path d="M520 1212V1332C520 1350 668 1368 850 1368S1180 1350 1180 1332V1212" fill="#121820"/>
 <ellipse cx="850" cy="1332" rx="330" ry="32" fill="#121820"/>
+<path d="M1180 1230H1205V1165H1230" class="realtime"/>
 <path d="M850 1117V1180" class="solid"/><text x="850" y="1208" text-anchor="middle" style="fill:#fff;font-size:19px;font-weight:700">SUPABASE POSTGRESQL</text>
 <text x="850" y="1248" text-anchor="middle" style="fill:#fff;font-size:12px">Shared system database</text>
 <text x="850" y="1271" text-anchor="middle" style="fill:#fff;font-size:11px">profiles, members, membership_applications, attendance</text>
 <text x="850" y="1294" text-anchor="middle" style="fill:#fff;font-size:11px">products, sales, sale_items, membership_history</text>
-<text x="850" y="1402" text-anchor="middle" class="title">Figure 3. System Architecture Diagram</text>
+<text x="850" y="1480" text-anchor="middle" class="title">Figure 3. System Architecture Diagram</text>
 </svg>
