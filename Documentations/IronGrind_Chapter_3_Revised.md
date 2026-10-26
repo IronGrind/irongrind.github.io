@@ -21,6 +21,7 @@ Requirements planning begins with gathering information about the gym's workflow
 For each iteration, the relevant user workflows, page layouts, forms, reports, data relationships, and role permissions are designed or refined. The design distinguishes pending applications from approved member records, keeps attendance as a separate operational record, and stores sales with their itemized lines. The architecture, use-case, and data-flow figures in this chapter summarize the system design.
 
 ### System Prototype
+### Prototypes
 
 The system prototype is an interactive, browser-based version of the proposed gym workflows rather than a set of static screen mockups. Applicants can use the sign-in and registration pages to enter the application workflow. Members use the member portal to review membership information, display their QR code, view attendance history, and submit an eligible renewal request. Administrators use the dashboard to review applications and manage membership, staff-scanned attendance, products, sales, receipts, and reports. The prototype uses Supabase Auth and the configured database services for supported operations. Its key pages are listed in the User Interface Modules section. It should be treated as a prototype until deployment and operational readiness have been verified.
 
@@ -108,6 +109,11 @@ The system is intended for Iron Grind Fitness Gym in Purok Mangga, Sulongon, Dap
 | Administrative reports | Membership, member status, archives, payments, attendance, renewals, inventory, and sales information based on stored records. |
 
 ## System Design
+## Data Process Modeling
+
+Data process modeling describes how information enters IronGrind, which processes handle it, where records are stored, and what results are returned to applicants, members, and administrators. The model is based on the current Supabase schema and implemented workflows. Email notification is shown only as a planned feature.
+
+### Diagrams
 
 ### System Architecture
 
@@ -119,13 +125,24 @@ Figure 2 shows applicants and members using the login, registration, and member 
 
 ### Use-Case Model
 
-The use-case model summarizes the actions available to applicants, members, and authorized staff. Applicants submit registration information; members review their own membership and attendance information and may request renewal; staff handle approvals and the gym's operational records. Walk-in sales are entered by staff rather than through a separate customer portal.
-
-![Figure 3. IronGrind use-case diagram](iron-grind-use-case.svg)
-
-**Figure 3.** Use-case diagram of IronGrind.
-
 ### Data-Flow Model
+**Figure 4.** Level 1 data-process model for IronGrind.
+
+### Use-Case Diagram
+
+The use-case diagram presents applicant/member and administrator interactions with IronGrind. Applicants and members use the account, application, portal, and attendance-history functions available to their roles. Administrators review applications and manage membership, attendance, products, sales, and reports. Walk-in transactions are entered by staff.
+
+![Figure 5. IronGrind use-case diagram](iron-grind-use-case.svg)
+
+**Figure 5.** Use-case diagram of IronGrind.
+
+### Entity Relationship Diagram
+
+The entity relationship diagram (ERD) summarizes the principal relationships in the Supabase PostgreSQL schema. A member can have multiple applications, attendance events, membership-history records, and sales. Each sale can have multiple sale items; a sale item may reference a product. Supabase Auth manages account identities separately, with profile and member records linked to authenticated users where configured.
+
+![Figure 6. IronGrind entity relationship diagram](iron-grind-erd.svg)
+
+**Figure 6.** Entity relationship diagram of IronGrind.
 
 The Level 1 data-process model shows how information moves between external actors, system processes, and Supabase data stores. The external actors are the member/applicant and the administrator. The numbered processes cover authentication, membership applications, the member portal, attendance, inventory, sales, and reporting. Email notification is included as a planned process only; it is not yet implemented and has no selected provider. Solid arrows represent requests or data writes, while dashed response arrows represent returned results.
 
@@ -160,31 +177,46 @@ The Level 1 data-process model shows how information moves between external acto
 | D8 | `membership_history` | Expiration, renewal, and plan-change events. |
 
 ## Database Design
+### Overall Description
 
-The system uses Supabase PostgreSQL for application data. Supabase Auth manages account credentials and sessions separately from the business records. The public-schema tables in the project represent the following entities:
+IronGrind is a browser-based membership and operations system for applicants, members, and administrators. Users submit requests through the website; Supabase Auth manages authentication and sessions; authorized data requests pass through the Supabase Data API or database RPC functions; and PostgreSQL stores operational records. RLS and function-level checks restrict access. The system supports application review, member records, staff-recorded attendance, inventory, sales and receipts, and administrative reports. Realtime subscriptions currently cover membership applications and attendance. Email notifications remain planned and are not operational.
 
-| Entity | Purpose |
-| --- | --- |
-| `profiles` | Application profile and role associated with an authenticated user. |
-| `members` | Approved member record, including contact and membership details, status, plan dates, payment status, goals, emergency contact, and health-related fields. |
-| `membership_applications` | Registration and renewal submissions, requested information, review status, and decision metadata. |
-| `attendance` | Member check-in and check-out records, including the staff account that recorded the event where available. |
-| `products` | Product catalog and inventory details, including category and unit. Supplements use grams; merchandise uses item units. |
-| `sales` | Transaction header, receipt identifier, customer information, total, status, timestamp, and processing staff account. |
-| `sale_items` | Itemized sale details, including product description, quantity, unit, price, and line total. Membership transactions are represented as sale items. |
-| `membership_history` | Membership lifecycle events, such as expiration, renewal, and plan changes. |
+### Data Dictionary
 
-The principal relationships are one member to many attendance records, applications, and membership-history records; one sale to many sale items; and one product to many sale items where a product reference is retained. A sale may refer to a member or represent a walk-in customer. Payment-related reports are derived from recorded membership and sales information; the schema does not define a separate payments table.
+This data dictionary summarizes the public-schema fields and relationships defined in the project SQL. Supabase Auth manages credentials separately from these application tables.
 
-## User Interface Modules
+| Entity | Key fields and data types | Purpose and relationships |
+| --- | --- | --- |
+| `profiles` | `id` UUID (PK, Auth user); `email` TEXT; `username` TEXT; `full_name` TEXT; `role` TEXT; `created_at` TIMESTAMPTZ | User profile and role used by the application. |
+| `members` | `id` UUID (PK); `auth_user_id` UUID (unique, Auth FK); `full_name`, `email`, `username`, `mobile` TEXT; `date_of_birth` DATE; `age` SMALLINT; `height`, `weight_kg` NUMERIC; `height_unit`, `sex`, `plan`, `status`, `registration_source` TEXT; `emergency_contact` JSONB; `plan_price` NUMERIC; `start_date`, `expiry_date` DATE; `paid` BOOLEAN; `fitness_goals`, `health_conditions` TEXT[]; `other_medical_conditions`, `signature_path` TEXT; timestamps | Approved member and membership record. Referenced by applications, attendance, sales, sale items, and membership history. |
+| `membership_applications` | `id` UUID (PK); `auth_user_id` UUID (Auth FK); `member_id` UUID (nullable FK); `application_type`, `status`, applicant and plan details TEXT; demographic fields; `emergency_contact` JSONB; goals and conditions TEXT[]; `plan_price` NUMERIC; submission/review TIMESTAMPTZ fields; `reviewed_by` UUID (Auth FK) | Registration and renewal requests and their review state. `member_id` can be empty before approval. |
+| `attendance` | `id` UUID (PK); `member_id` UUID (FK); `time_in`, `time_out`, `created_at` TIMESTAMPTZ; `recorded_by` UUID (Auth FK) | Staff-recorded check-in and check-out. A member may have multiple attendance records. |
+| `products` | `id` UUID (PK); `name`, `category`, `unit`, `size`, `image_path` TEXT; `price_per_unit` NUMERIC; `stock` INTEGER; `is_active` BOOLEAN; timestamps | Product catalog and inventory. Supplements use gram units; merchandise uses item units and stock. |
+| `sales` | `id` UUID (PK); `receipt_number` TEXT (unique); `customer_type`, `customer_name`, `status` TEXT; `member_id` UUID (nullable FK); `total` NUMERIC; `sold_at` TIMESTAMPTZ; `processed_by` UUID (Auth FK) | Sale header and receipt information. A sale may be associated with a member or a walk-in customer. |
+| `sale_items` | `id` UUID (PK); `sale_id` UUID (FK); `product_id` UUID (nullable FK); `item_name`, `category`, `unit` TEXT; `quantity` NUMERIC; `unit_price`, `line_total` NUMERIC | Itemized sale lines. Product reference can be null; item name and price are stored on the sale line. |
+| `membership_history` | `id` UUID (PK); `member_id` UUID (FK); `event_type`, previous/new plan, `notes` TEXT; previous/new prices NUMERIC; previous/new dates DATE; `recorded_at` TIMESTAMPTZ; `recorded_by` UUID (Auth FK) | Expiration, renewal, and plan-change history for a member. |
 
-| Page or module | Purpose |
-| --- | --- |
-| Sign-in page (`index.html`) | Authenticates users and routes them to the appropriate application experience. |
-| Registration page (`register.html`) | Collects an online membership application for review. |
-| Administrator dashboard (`admin.html`) | Provides application review, membership administration, attendance, inventory, sales, receipts, and reports. |
-| Member portal (`customer.html`) | Provides member status and progress, QR display, attendance history, renewal request, supported personal settings, and the active catalog. |
-| Password recovery (`reset-password.html`) | Supports the account password-reset workflow. |
+### Forms
+
+| Form or screen | User | Purpose and principal inputs |
+| --- | --- | --- |
+| Sign-in (`index.html`) | Applicant, member, administrator | Collects credentials for Supabase Auth and role-based routing. |
+| Registration (`register.html`) | Applicant | Collects account and membership application details for administrator review. |
+| Application review | Administrator | Displays application details and records approval or rejection. |
+| Member portal (`customer.html`) | Member | Displays membership information, QR code, attendance history, active catalog, renewal request, and supported profile settings. |
+| Attendance scanner | Administrator or staff using an administrator account | Scans member QR code and records check-in/check-out. |
+| Product and inventory forms | Administrator | Creates or updates products, prices, units, active status, and merchandise stock. |
+| Walk-in POS and receipt | Administrator | Records walk-in customer and sale-item details; displays receipt information. |
+| Report filters | Administrator | Selects report type and available filters/date range; views or prints/saves results. |
+| Password recovery (`reset-password.html`) | Account holder | Supports the password-reset workflow. |
+
+### Prototype
+
+The prototype consists of the interactive website pages and workflows described above. It includes login, registration, the member portal, administrator dashboard, attendance scanning, inventory, POS, receipts, and reports. The project files provide the implemented pages and interfaces; screenshots can be inserted here if required by the school template. Do not claim stakeholder testing or user feedback unless those activities were conducted and recorded.
+
+### Reports
+
+Available administrator reports cover membership, member status, archives, payments, attendance, renewals, inventory, and sales. Report data comes from the records stored by the corresponding system processes. Reports can be viewed and printed or saved where the interface provides that option. They summarize recorded data and do not by themselves demonstrate improved performance.
 
 ## System Verification and Evaluation
 
@@ -226,21 +258,15 @@ The project does not provide online payment processing, online product checkout 
 
 ## Development Phase Schedule
 
-The Agile schedule below describes recurring iteration work and release activities; it is not a record of dates or completed milestones. Add the actual iteration length, dates, completed increments, and deliverables required by the institution.
+## Gantt Chart
 
-| Agile activity | Activities | Deliverable |
-| --- | --- | --- |
-| Data gathering and task prioritization | Gather information about scope, user roles, workflows, data needs, and privacy requirements; identify priorities and acceptance criteria. | Confirmed needs and prioritized task list. |
-| Iteration planning and design | Select tasks from the prioritized task list and refine the relevant page flows, data relationships, and permissions. | Iteration goal and design notes. |
-| Incremental implementation | Build and integrate the selected browser workflows, Supabase schema, access policies, and database functions. | Working software increment. |
-| Iteration testing and review | Test the increment against its acceptance criteria, record defects, and review the result with intended stakeholders where arranged. | Test records, review feedback, and updated task list. |
-| Repeat and refine | Prioritize remaining work and repeat planning, design, implementation, testing, and review until the agreed scope is complete. | Successive verified increments. |
-| Release and transition | Configure the intended environment, verify access, prepare approved records, and orient users. | Deployment and transition records. |
-| Evaluation | Administer the approved user-evaluation instrument and analyze the collected data. | Evaluation dataset, analysis, and findings. |
+The Gantt chart should show the actual schedule for requirements planning, user design and prototype refinement, construction iterations, verification, implementation, and evaluation. The project files do not establish approved calendar dates, so enter the actual dates and durations from the project records rather than estimating them.
 
-## Alignment Notes for Final Submission
-
-1. Confirm that Agile is the methodology approved in the study proposal. State the actual iteration length, planning and review practices, and team responsibilities used; the source files do not independently establish those details.
-2. Add the actual respondents or participants, sampling method, instrument, statistical treatment, and evaluation results required by the institution. Do not infer or fabricate these details from the application code.
-3. Confirm the final renewal-window wording against the approved Chapter 1 and the deployed system configuration.
-4. Keep the stated system limitations and security claims consistent with the production configuration and the final scope approved for the study.
+| Activity | Planned start | Planned end | Deliverable |
+| --- | --- | --- | --- |
+| Data gathering and requirements planning | To be completed from project records | To be completed from project records | Approved requirements specification. |
+| User design and prototype | To be completed from project records | To be completed from project records | Reviewed interface and diagrams. |
+| Construction iterations | To be completed from project records | To be completed from project records | Working feature increments. |
+| Verification and refinement | To be completed from project records | To be completed from project records | Test records and refined system. |
+| Implementation and transition | To be completed from project records | To be completed from project records | Deployment and user-orientation records. |
+| Evaluation | To be completed from project records | To be completed from project records | Evaluation data and findings. |
