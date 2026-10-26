@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="880" height="336" viewBox="0 0 1100 420" role="img" aria-labelledby="title description">
   <title id="title">Agile development cycle for IronGrind</title>
-  <desc id="description">A four-step iterative workflow: gather information about gym needs, plan and design an iteration, build and test an increment, and review and refine. Feedback informs the next cycle. Verified increments proceed to release and transition.</desc>
+  <desc id="description">A four-step iterative workflow: gather and prioritize requirements from gym stakeholders, plan and design an iteration, build and test an increment, and review and refine. Feedback informs the next cycle. Verified increments proceed to release and transition.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
       <path d="M0,0 L10,5 L0,10 z" fill="#344054" />
@@ -28,8 +28,8 @@
     <text x="342" y="144" font-size="14" font-weight="700" fill="#ffffff">2</text>
     <text x="612" y="144" font-size="14" font-weight="700" fill="#ffffff">3</text>
     <text x="882" y="144" font-size="14" font-weight="700" fill="#ffffff">4</text>
-    <text x="150" y="168" font-size="18" font-weight="700">Data gathering</text>
-    <text x="150" y="192" font-size="14">Owner/staff needs</text>
+    <text x="150" y="168" font-size="16" font-weight="700">Gather &amp; prioritize</text>
+    <text x="150" y="192" font-size="14">Owner/staff requirements</text>
     <text x="420" y="168" font-size="18" font-weight="700">Plan and design</text>
     <text x="420" y="192" font-size="14">Define the iteration work</text>
     <text x="690" y="168" font-size="18" font-weight="700">Build and test</text>

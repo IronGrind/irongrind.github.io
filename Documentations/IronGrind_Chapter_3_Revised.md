@@ -6,7 +6,7 @@ This chapter discusses the methodology used to develop **IronGrind: A Web-Based 
 
 ### System Development Methodology
 
-Agile is an iterative system-development approach in which requirements are prioritized, selected work is developed and tested in increments, and the results inform the next iteration. For IronGrind, this approach organizes development around the gym's applicant/member and administrator workflows. The iteration cycle is summarized in Figure 3.1. The project does not assume a specific Agile framework such as Scrum; the research team should document the actual iteration length and review practices used and confirm that Agile is the methodology approved in the study proposal.
+Agile is an iterative system-development approach in which stakeholder needs are gathered and prioritized, selected work is developed and tested in increments, and the results inform the next iteration. For IronGrind, this approach organizes development around the gym's applicant/member and administrator workflows. The iteration cycle is summarized in Figure 3.1. The project does not assume a specific Agile framework such as Scrum; the research team should document the actual iteration length and review practices used and confirm that Agile is the methodology approved in the study proposal.
 
 ![Figure 3.1. Agile development cycle for IronGrind](iron-grind-agile-methodology.svg)
 
