@@ -203,8 +203,8 @@
 <path d="M55 1196H100" class="plain"/><text x="115" y="1199" class="tiny">Session / page routing</text>
 <rect x="1230" y="1133" width="435" height="65" rx="8" class="soft"/>
 <text x="1447" y="1153" text-anchor="middle" class="small">SUPABASE REALTIME</text>
-<text x="1447" y="1171" text-anchor="middle" class="tiny">Publication: membership_applications + attendance.</text>
-<text x="1447" y="1187" text-anchor="middle" class="tiny">members is not enabled.</text>
+<text x="1447" y="1171" text-anchor="middle" class="tiny">Live browser updates: applications + attendance.</text>
+<text x="1447" y="1187" text-anchor="middle" class="tiny">Shown in subscribed website views.</text>
 
 <!-- Shared database -->
 <path d="M850 1117V1190" class="solid"/>

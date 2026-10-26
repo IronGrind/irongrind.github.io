@@ -1,53 +1,48 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="880" height="336" viewBox="0 0 1100 420" role="img" aria-labelledby="title description">
-  <title id="title">Agile development cycle for IronGrind</title>
-  <desc id="description">A four-step iterative workflow: gather and prioritize requirements from gym stakeholders, plan and design an iteration, build and test an increment, and review and refine. Feedback informs the next cycle. Verified increments proceed to release and transition.</desc>
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="648" viewBox="0 0 1000 720" role="img" aria-labelledby="title description">
+  <title id="title">Agile methodology for IronGrind</title>
+  <desc id="description">The project flow moves from gathering requirements to planning, design, and launch after verification. During development, the team repeats the Develop, Test, and Review cycle, using feedback to improve the next increment.</desc>
   <defs>
-    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L10,5 L0,10 z" fill="#344054" />
+    <marker id="arrow-develop" markerWidth="18" markerHeight="18" refX="14" refY="9" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L18,9 L0,18 z" fill="#4f78b8" />
     </marker>
-    <marker id="arrow-red" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
-      <path d="M0,0 L10,5 L0,10 z" fill="#c7352b" />
+    <marker id="arrow-test" markerWidth="18" markerHeight="18" refX="14" refY="9" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L18,9 L0,18 z" fill="#dda928" />
+    </marker>
+    <marker id="arrow-review" markerWidth="18" markerHeight="18" refX="14" refY="9" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M0,0 L18,9 L0,18 z" fill="#cf4034" />
     </marker>
   </defs>
-  <rect width="1100" height="420" fill="#ffffff" />
-  <text x="550" y="42" text-anchor="middle" font-family="Arial, sans-serif" font-size="24" font-weight="700" fill="#1d2939">Agile Development Cycle for IronGrind</text>
-  <g fill="#f8fafc" stroke="#344054" stroke-width="2">
-    <rect x="45" y="112" width="210" height="104" rx="8" />
-    <rect x="315" y="112" width="210" height="104" rx="8" />
-    <rect x="585" y="112" width="210" height="104" rx="8" />
-    <rect x="855" y="112" width="210" height="104" rx="8" />
+
+  <rect width="1000" height="720" fill="#f1f4f3" />
+  <text x="42" y="55" font-family="Georgia, serif" font-size="38" font-weight="700" fill="#20242b">AGILE</text>
+  <text x="42" y="98" font-family="Georgia, serif" font-size="38" font-weight="700" fill="#20242b">METHODOLOGY</text>
+
+  <circle cx="500" cy="330" r="150" fill="none" stroke="#e3e7e5" stroke-width="34" />
+  <path d="M526,182 A150,150 0 0 1 623,416" fill="none" stroke="#4f78b8" stroke-width="30" marker-end="url(#arrow-develop)" />
+  <path d="M596,445 A150,150 0 0 1 364,394" fill="none" stroke="#dda928" stroke-width="30" marker-end="url(#arrow-test)" />
+  <path d="M352,356 A150,150 0 0 1 487,181" fill="none" stroke="#cf4034" stroke-width="30" marker-end="url(#arrow-review)" />
+
+  <circle cx="500" cy="330" r="102" fill="#ffffff" stroke="#d9deda" stroke-width="2" />
+  <text x="500" y="315" text-anchor="middle" font-family="Georgia, serif" font-size="27" fill="#30343b">IronGrind</text>
+  <text x="500" y="349" text-anchor="middle" font-family="Georgia, serif" font-size="25" fill="#30343b">Agile Cycle</text>
+
+  <text x="700" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#365f9e">DEVELOP</text>
+  <text x="700" y="294" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#344054">Build an increment</text>
+  <text x="500" y="520" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#8e6810">TEST</text>
+  <text x="500" y="543" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#344054">Check it against requirements</text>
+  <text x="300" y="270" text-anchor="middle" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#b92f28">REVIEW</text>
+  <text x="300" y="294" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#344054">Use feedback to refine</text>
+
+  <text x="45" y="580" font-family="Arial, sans-serif" font-size="14" font-weight="700" letter-spacing="1" fill="#344054">PROJECT FLOW</text>
+  <path d="M40,598 H260 L288,630 L260,662 H40 Z" fill="#35a68c" />
+  <path d="M270,598 H490 L518,630 L490,662 H270 L298,630 Z" fill="#4f78b8" />
+  <path d="M500,598 H720 L748,630 L720,662 H500 L528,630 Z" fill="#357d88" />
+  <path d="M730,598 H950 L978,630 L950,662 H730 L758,630 Z" fill="#e0b02e" />
+  <g text-anchor="middle" font-family="Arial, sans-serif" font-size="17" font-weight="700">
+    <text x="155" y="636" fill="#ffffff">Data Gathering</text>
+    <text x="385" y="636" fill="#ffffff">Plan</text>
+    <text x="615" y="636" fill="#ffffff">Design</text>
+    <text x="845" y="636" fill="#20242b">Launch</text>
   </g>
-  <g fill="#c7352b">
-    <circle cx="72" cy="139" r="15" />
-    <circle cx="342" cy="139" r="15" />
-    <circle cx="612" cy="139" r="15" />
-    <circle cx="882" cy="139" r="15" />
-  </g>
-  <g font-family="Arial, sans-serif" text-anchor="middle" fill="#1d2939">
-    <text x="72" y="144" font-size="14" font-weight="700" fill="#ffffff">1</text>
-    <text x="342" y="144" font-size="14" font-weight="700" fill="#ffffff">2</text>
-    <text x="612" y="144" font-size="14" font-weight="700" fill="#ffffff">3</text>
-    <text x="882" y="144" font-size="14" font-weight="700" fill="#ffffff">4</text>
-    <text x="150" y="168" font-size="16" font-weight="700">Gather &amp; prioritize</text>
-    <text x="150" y="192" font-size="14">Owner/staff requirements</text>
-    <text x="420" y="168" font-size="18" font-weight="700">Plan and design</text>
-    <text x="420" y="192" font-size="14">Define the iteration work</text>
-    <text x="690" y="168" font-size="18" font-weight="700">Build and test</text>
-    <text x="690" y="192" font-size="14">Deliver a working increment</text>
-    <text x="960" y="168" font-size="18" font-weight="700">Review and refine</text>
-    <text x="960" y="192" font-size="14">Record issues and feedback</text>
-  </g>
-  <g fill="none" stroke="#344054" stroke-width="3" marker-end="url(#arrow)">
-    <path d="M255 164 H303" />
-    <path d="M525 164 H573" />
-    <path d="M795 164 H843" />
-  </g>
-  <path d="M960 216 V284 H150 V228" fill="none" stroke="#c7352b" stroke-width="3" marker-end="url(#arrow-red)" />
-  <rect x="425" y="264" width="260" height="38" rx="19" fill="#ffffff" />
-  <text x="555" y="289" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#c7352b">Feedback informs the next cycle</text>
-  <text x="550" y="322" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#344054">IronGrind increments: applications and renewals | staff QR attendance | inventory and sales | reports</text>
-  <path d="M960 216 V341" fill="none" stroke="#344054" stroke-width="3" marker-end="url(#arrow)" />
-  <rect x="760" y="343" width="305" height="54" rx="8" fill="#eef2f6" stroke="#344054" stroke-width="2" />
-  <text x="912" y="366" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#1d2939">Verified increments</text>
-  <text x="912" y="386" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#344054">Release and transition when scope is complete</text>
+  <text x="500" y="696" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#344054">IronGrind work: applications and renewals | staff QR attendance | inventory and sales | reports</text>
 </svg>
