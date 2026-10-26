@@ -6,7 +6,7 @@ This chapter discusses the methodology used to develop **IronGrind: A Web-Based 
 
 ### System Development Methodology
 
-Agile is an iterative system-development approach in which stakeholder needs are gathered and prioritized, selected work is developed and tested in increments, and the results inform the next iteration. For IronGrind, this approach organizes development around the gym's applicant/member and administrator workflows. The iteration cycle is summarized in Figure 1. The project does not assume a specific Agile framework such as Scrum; the research team should document the actual iteration length and review practices used and confirm that Agile is the methodology approved in the study proposal.
+Agile is an iterative system-development approach in which stakeholder needs are gathered and prioritized, selected work is developed and tested in increments, and review results inform the next iteration. Figure 1 presents two connected flows for IronGrind. The circular cycle represents the repeated Develop, Test, and Review activities; feedback from a review informs the next increment. The lower project flow shows Data Gathering, Plan, and Design, followed by Launch only after the completed increments have been verified. The system work is organized around the gym's applicant/member and administrator workflows. The project does not assume a specific Agile framework such as Scrum; the research team should document the actual iteration length and review practices used and confirm that Agile is the methodology approved in the study proposal.
 
 ![Figure 1. Agile Methodology](iron-grind-agile-methodology.svg)
 
@@ -26,7 +26,7 @@ Selected requirements are implemented in the HTML, CSS, and JavaScript client an
 
 ### Implementation
 
-After the required increments pass verification, the website and Supabase project can be configured for the intended environment. Deployment must use the correct project settings, access policies, and authorized administrator accounts. Staff should verify the workflows and receive appropriate orientation. This chapter does not claim a production deployment, completed training, or user acceptance unless those activities are documented separately.
+Launch takes place after the required increments pass verification; it is not repeated at the end of every iteration. The website and Supabase project can then be configured for the intended environment using the correct project settings, access policies, and authorized administrator accounts. Staff should verify the workflows and receive appropriate orientation. This chapter does not claim a production deployment, completed training, or user acceptance unless those activities are documented separately.
 
 ## Study Setting and Intended Users
 
