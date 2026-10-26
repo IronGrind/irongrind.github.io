@@ -32,20 +32,9 @@ Selected requirements are implemented in the HTML, CSS, and JavaScript client an
 
 Launch takes place after the required increments pass verification; it is not repeated at the end of every iteration. The website and Supabase project can then be configured for the intended environment using the correct project settings, access policies, and authorized administrator accounts. Staff should verify the workflows and receive appropriate orientation. This chapter does not claim a production deployment, completed training, or user acceptance unless those activities are documented separately.
 
-## Study Setting and Intended Users
+## Requirement Specifications
 
-The system is intended for Iron Grind Fitness Gym in Purok Mangga, Sulongon, Dapitan City, Zamboanga del Norte. Its primary users are:
-
-- **Administrator or authorized staff:** review applications, maintain member and membership records, record attendance, manage products and inventory, record sales, and view reports.
-- **Applicant:** create an account, submit a membership application, and view application status where supported by the account workflow.
-- **Member:** view membership status and period progress, display a QR code for staff scanning, view personal attendance history, update supported personal details, view the active product catalog, and submit an eligible renewal request.
-- **Walk-in customer:** purchase products or a membership through staff. A walk-in customer does not use a separate self-service system account for the transaction.
-
-The deployed database distinguishes `admin` and `member` profile roles. Staff functions are performed through an authorized administrator account; the system does not define a separate staff role in the database schema.
-
-## System Requirements
-
-### Functional Requirements
+### Functionality Requirements
 
 | ID | Requirement | Description |
 | --- | --- | --- |
