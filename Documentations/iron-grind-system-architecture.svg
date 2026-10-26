@@ -20,6 +20,7 @@
     .solid{fill:none;stroke:#343a46;stroke-width:1.5;marker-end:url(#arrow)}
     .response{fill:none;stroke:#2879a8;stroke-width:1.45;stroke-dasharray:5 4;marker-end:url(#arrowMuted)}
     .plain{fill:none;stroke:#9aa3ad;stroke-width:1.2}
+    .planned{fill:none;stroke:#a56a16;stroke-width:1.6;stroke-dasharray:2 4;marker-end:url(#arrow)}
     .red{fill:#9d1010}
   </style>
 </defs>
@@ -196,15 +197,24 @@
 <text x="850" y="1094" text-anchor="middle" class="small">Admin verified → Auth account + member record</text>
 
 <!-- Realtime scope -->
-<rect x="35" y="1127" width="450" height="82" rx="8" class="soft"/>
+<rect x="35" y="1127" width="450" height="100" rx="8" class="soft"/>
 <text x="55" y="1145" class="small" style="font-weight:700">LINE KEY</text>
 <path d="M55 1158H100" class="solid"/><text x="115" y="1161" class="tiny">Request / data write</text>
 <path d="M55 1177H100" class="response"/><text x="115" y="1180" class="tiny">Response / query result</text>
 <path d="M55 1196H100" class="plain"/><text x="115" y="1199" class="tiny">Session / page routing</text>
+<path d="M55 1215H100" class="planned"/><text x="115" y="1218" class="tiny">Planned email notification flow</text>
 <rect x="1230" y="1133" width="435" height="65" rx="8" class="soft"/>
 <text x="1447" y="1153" text-anchor="middle" class="small">SUPABASE REALTIME</text>
 <text x="1447" y="1171" text-anchor="middle" class="tiny">Live browser updates: applications + attendance.</text>
 <text x="1447" y="1187" text-anchor="middle" class="tiny">Shown in subscribed website views.</text>
+<path d="M1665 1093H1690V1242H1665" class="planned"/>
+<rect x="1230" y="1210" width="435" height="65" rx="8" class="soft"/>
+<text x="1447" y="1233" text-anchor="middle" class="small">EMAIL NOTIFICATION SERVICE - IN DEVELOPMENT</text>
+<text x="1447" y="1253" text-anchor="middle" class="tiny">Selected system events will trigger email messages.</text>
+<path d="M1447 1275V1285" class="planned"/>
+<rect x="1230" y="1285" width="435" height="65" rx="8" class="soft"/>
+<text x="1447" y="1308" text-anchor="middle" class="small">EXTERNAL EMAIL PROVIDER - NOT YET SELECTED</text>
+<text x="1447" y="1328" text-anchor="middle" class="tiny">Delivers messages to member / administrator inboxes.</text>
 
 <!-- Shared database -->
 <path d="M850 1117V1190" class="solid"/>
