@@ -158,10 +158,11 @@ erDiagram
     }
 
     AUTH_USERS ||--o| PROFILES : "profiles.id"
-    AUTH_USERS ||--o| MEMBERS : "auth_user_id"
-    AUTH_USERS ||--o| MEMBERS : "legacy user_id"
-    AUTH_USERS ||--o{ MEMBERSHIP_APPLICATIONS : "auth_user_id"
-    AUTH_USERS ||--o{ MEMBERSHIP_APPLICATIONS : "legacy user_id"
+    %% These account-reference columns are nullable and are not confirmed unique.
+    AUTH_USERS o|--o{ MEMBERS : "auth_user_id"
+    AUTH_USERS o|--o{ MEMBERS : "legacy user_id"
+    AUTH_USERS o|--o{ MEMBERSHIP_APPLICATIONS : "auth_user_id"
+    AUTH_USERS o|--o{ MEMBERSHIP_APPLICATIONS : "legacy user_id"
     AUTH_USERS o|--o{ ATTENDANCE : "recorded_by"
     AUTH_USERS o|--o{ SALES : "processed_by"
     AUTH_USERS o|--o{ MEMBERSHIP_HISTORY : "recorded_by"
