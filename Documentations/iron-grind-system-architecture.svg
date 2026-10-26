@@ -66,8 +66,8 @@
 <path d="M1000 208H1640V430H825V435" class="response"/><text x="1370" y="422" text-anchor="middle" class="tiny">Auth success / error response</text>
 <path d="M105 475H15V540H155V548" class="solid"/>
 <!-- Role-authorized session bus -->
-<path d="M460 420V526H80M1240 420V526H1620M80 526H1620" class="plain"/>
-<text x="850" y="518" text-anchor="middle" class="small">Role-authorized sessions connect users to the modules below.</text>
+<path d="M460 420H80V526M1240 420H1620V526M80 526H1620" class="plain"/>
+<text x="850" y="512" text-anchor="middle" class="small">Role-authorized sessions connect to the modules below.</text>
 
 <!-- Six system modules with individually labeled database request arrows -->
 <path d="M155 526V548" class="solid"/>
