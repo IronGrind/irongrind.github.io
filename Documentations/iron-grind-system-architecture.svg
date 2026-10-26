@@ -59,132 +59,128 @@
 <text x="850" y="482" text-anchor="middle" class="small">Online: register.html - Auth signUp() - profiles row via Auth trigger - pending membership_applications after confirmation. Staff-created: admin-create-member Edge Function - Auth Admin API - admin_create_member_and_sale RPC.</text>
 <!-- Role-authorized session bus -->
 <path d="M460 420V526H80M1240 420V526H1620M80 526H1620" class="plain"/>
-<text x="850" y="518" text-anchor="middle" class="small">Role-authorized session · pages below show the six main system modules</text>
+<text x="850" y="518" text-anchor="middle" class="small">Role-authorized sessions connect users to the modules below.</text>
 
-<!-- Module 1 -->
+<!-- Six system modules with individually labeled database request arrows -->
 <path d="M155 526V548" class="solid"/>
 <rect x="25" y="553" width="260" height="70" rx="8" class="module"/>
 <text x="155" y="580" text-anchor="middle" class="head">Applications &amp; Membership</text>
-<text x="155" y="602" text-anchor="middle" class="small">register.html · admin.html</text>
-<rect x="25" y="634" width="260" height="299" rx="8" class="service"/>
-<text x="155" y="659" text-anchor="middle" class="section">APPLICATIONS SERVICE</text>
-<text x="42" y="687" class="body">• Submit registration application</text>
-<text x="42" y="710" class="body">• Review, approve, or reject</text>
-<text x="42" y="733" class="body">• Create / update member record</text>
-<text x="42" y="756" class="body">• Record registration sale</text>
-<text x="42" y="791" class="small">DATA REQUESTS</text>
-<text x="42" y="812" class="small">membership_applications INSERT</text>
-<text x="42" y="831" class="small">members INSERT / UPDATE</text>
-<text x="42" y="850" class="small">sales + sale_items via RPC</text>
-<text x="42" y="869" class="small">membership_applications UPDATE</text>
-<text x="42" y="902" class="tiny">Returns application / member result</text>
-
-<!-- Module 2 -->
+<text x="155" y="602" text-anchor="middle" class="small">register.html - admin.html</text>
+<rect x="25" y="634" width="260" height="65" rx="8" class="service"/>
+<text x="155" y="672" text-anchor="middle" class="section">APPLICATIONS SERVICE</text>
+<path d="M155 699V718" class="plain"/>
+<path d="M40 718H270" class="plain"/>
+<path d="M47 718V1000" class="solid"/>
+<text x="35" y="970" transform="rotate(-90 35 970)" text-anchor="start" class="tiny">membership_applications INSERT pending</text>
+<path d="M99 718V1000" class="solid"/>
+<text x="87" y="970" transform="rotate(-90 87 970)" text-anchor="start" class="tiny">members INSERT approved</text>
+<path d="M150 718V1000" class="solid"/>
+<text x="138" y="970" transform="rotate(-90 138 970)" text-anchor="start" class="tiny">registration sale RPC</text>
+<path d="M201 718V1000" class="solid"/>
+<text x="189" y="970" transform="rotate(-90 189 970)" text-anchor="start" class="tiny">application UPDATE approved</text>
+<path d="M253 718V1000" class="solid"/>
+<text x="241" y="970" transform="rotate(-90 241 970)" text-anchor="start" class="tiny">profile role lookup</text>
+<path d="M295 1005V718" class="response"/>
 <path d="M435 526V548" class="solid"/>
 <rect x="305" y="553" width="260" height="70" rx="8" class="module"/>
 <text x="435" y="580" text-anchor="middle" class="head">Attendance / QR</text>
-<text x="435" y="602" text-anchor="middle" class="small">admin.html · customer.html</text>
-<rect x="305" y="634" width="260" height="299" rx="8" class="service"/>
-<text x="435" y="659" text-anchor="middle" class="section">ATTENDANCE SERVICE</text>
-<text x="322" y="687" class="body">• Resolve QR / member lookup</text>
-<text x="322" y="710" class="body">• Record time-in check-in</text>
-<text x="322" y="733" class="body">• Record time-out check-out</text>
-<text x="322" y="756" class="body">• Read attendance history</text>
-<text x="322" y="791" class="small">DATA REQUESTS</text>
-<text x="322" y="812" class="small">members SELECT</text>
-<text x="322" y="831" class="small">attendance INSERT (time-in)</text>
-<text x="322" y="850" class="small">attendance UPDATE (time-out)</text>
-<text x="322" y="869" class="small">attendance SELECT</text>
-<text x="322" y="902" class="tiny">Returns check-in / history result</text>
-
-<!-- Module 3 -->
+<text x="435" y="602" text-anchor="middle" class="small">admin.html - customer.html</text>
+<rect x="305" y="634" width="260" height="65" rx="8" class="service"/>
+<text x="435" y="672" text-anchor="middle" class="section">ATTENDANCE SERVICE</text>
+<path d="M435 699V718" class="plain"/>
+<path d="M320 718H550" class="plain"/>
+<path d="M327 718V1000" class="solid"/>
+<text x="315" y="970" transform="rotate(-90 315 970)" text-anchor="start" class="tiny">QR member lookup</text>
+<path d="M396 718V1000" class="solid"/>
+<text x="384" y="970" transform="rotate(-90 384 970)" text-anchor="start" class="tiny">attendance INSERT time-in</text>
+<path d="M464 718V1000" class="solid"/>
+<text x="452" y="970" transform="rotate(-90 452 970)" text-anchor="start" class="tiny">attendance UPDATE time-out</text>
+<path d="M533 718V1000" class="solid"/>
+<text x="521" y="970" transform="rotate(-90 521 970)" text-anchor="start" class="tiny">attendance SELECT history</text>
+<path d="M575 1005V718" class="response"/>
 <path d="M715 526V548" class="solid"/>
 <rect x="585" y="553" width="260" height="70" rx="8" class="module"/>
 <text x="715" y="580" text-anchor="middle" class="head">Inventory &amp; Products</text>
-<text x="715" y="602" text-anchor="middle" class="small">admin.html · read-only member catalog</text>
-<rect x="585" y="634" width="260" height="299" rx="8" class="service"/>
-<text x="715" y="659" text-anchor="middle" class="section">INVENTORY SERVICE</text>
-<text x="602" y="687" class="body">• Create / edit product details</text>
-<text x="602" y="710" class="body">• Manage product stock</text>
-<text x="602" y="733" class="body">• Read active member catalog</text>
-<text x="602" y="791" class="small">DATA REQUESTS</text>
-<text x="602" y="812" class="small">products SELECT (lookup)</text>
-<text x="602" y="831" class="small">products INSERT / UPDATE</text>
-<text x="602" y="850" class="small">products SELECT (active catalog)</text>
-<text x="602" y="902" class="tiny">Returns product / stock result</text>
-
-<!-- Module 4 -->
+<text x="715" y="602" text-anchor="middle" class="small">admin.html - member read-only catalog</text>
+<rect x="585" y="634" width="260" height="65" rx="8" class="service"/>
+<text x="715" y="672" text-anchor="middle" class="section">INVENTORY SERVICE</text>
+<path d="M715 699V718" class="plain"/>
+<path d="M600 718H830" class="plain"/>
+<path d="M607 718V1000" class="solid"/>
+<text x="595" y="970" transform="rotate(-90 595 970)" text-anchor="start" class="tiny">products SELECT lookup</text>
+<path d="M710 718V1000" class="solid"/>
+<text x="698" y="970" transform="rotate(-90 698 970)" text-anchor="start" class="tiny">products INSERT / UPDATE</text>
+<path d="M813 718V1000" class="solid"/>
+<text x="801" y="970" transform="rotate(-90 801 970)" text-anchor="start" class="tiny">active catalog SELECT</text>
+<path d="M855 1005V718" class="response"/>
 <path d="M995 526V548" class="solid"/>
 <rect x="865" y="553" width="260" height="70" rx="8" class="module"/>
 <text x="995" y="580" text-anchor="middle" class="head">Walk-in POS / Receipts</text>
-<text x="995" y="602" text-anchor="middle" class="small">Staff-entered product sale</text>
-<rect x="865" y="634" width="260" height="299" rx="8" class="service"/>
-<text x="995" y="659" text-anchor="middle" class="section">SALES SERVICE · RPC</text>
-<text x="882" y="687" class="body">• Call record_walk_in_sale()</text>
-<text x="882" y="710" class="body">• Validate product and stock</text>
-<text x="882" y="733" class="body">• Save receipt and sale lines</text>
-<text x="882" y="756" class="body">• Decrement merchandise stock</text>
-<text x="882" y="791" class="small">DATA REQUESTS</text>
-<text x="882" y="812" class="small">products SELECT / UPDATE</text>
-<text x="882" y="831" class="small">sales INSERT receipt</text>
-<text x="882" y="850" class="small">sale_items INSERT lines</text>
-<text x="882" y="902" class="tiny">Returns receipt result</text>
-
-<!-- Module 5 -->
+<text x="995" y="602" text-anchor="middle" class="small">staff-entered sale</text>
+<rect x="865" y="634" width="260" height="65" rx="8" class="service"/>
+<text x="995" y="672" text-anchor="middle" class="section">SALES SERVICE - RPC</text>
+<path d="M995 699V718" class="plain"/>
+<path d="M880 718H1110" class="plain"/>
+<path d="M887 718V1000" class="solid"/>
+<text x="875" y="970" transform="rotate(-90 875 970)" text-anchor="start" class="tiny">product validation / stock</text>
+<path d="M956 718V1000" class="solid"/>
+<text x="944" y="970" transform="rotate(-90 944 970)" text-anchor="start" class="tiny">sales INSERT receipt</text>
+<path d="M1024 718V1000" class="solid"/>
+<text x="1012" y="970" transform="rotate(-90 1012 970)" text-anchor="start" class="tiny">sale_items INSERT lines</text>
+<path d="M1093 718V1000" class="solid"/>
+<text x="1081" y="970" transform="rotate(-90 1081 970)" text-anchor="start" class="tiny">products UPDATE merchandise stock</text>
+<path d="M1135 1005V718" class="response"/>
 <path d="M1275 526V548" class="solid"/>
 <rect x="1145" y="553" width="260" height="70" rx="8" class="module"/>
 <text x="1275" y="580" text-anchor="middle" class="head">Member Portal</text>
 <text x="1275" y="602" text-anchor="middle" class="small">customer.html</text>
-<rect x="1145" y="634" width="260" height="299" rx="8" class="service"/>
-<text x="1275" y="659" text-anchor="middle" class="section">MEMBER DATA SERVICE</text>
-<text x="1162" y="687" class="body">• View own membership / visits</text>
-<text x="1162" y="710" class="body">• View active product catalog</text>
-<text x="1162" y="733" class="body">• Submit renewal application</text>
-<text x="1162" y="756" class="body">• Update personal information</text>
-<text x="1162" y="791" class="small">DATA REQUESTS</text>
-<text x="1162" y="812" class="small">own members / attendance SELECT</text>
-<text x="1162" y="831" class="small">active products SELECT</text>
-<text x="1162" y="850" class="small">membership_applications INSERT</text>
-<text x="1162" y="869" class="small">personal information RPC</text>
-<text x="1162" y="902" class="tiny">Returns member / portal result</text>
-
-<!-- Module 6 -->
+<rect x="1145" y="634" width="260" height="65" rx="8" class="service"/>
+<text x="1275" y="672" text-anchor="middle" class="section">MEMBER DATA SERVICE</text>
+<path d="M1275 699V718" class="plain"/>
+<path d="M1160 718H1390" class="plain"/>
+<path d="M1167 718V1000" class="solid"/>
+<text x="1155" y="970" transform="rotate(-90 1155 970)" text-anchor="start" class="tiny">own member SELECT</text>
+<path d="M1219 718V1000" class="solid"/>
+<text x="1207" y="970" transform="rotate(-90 1207 970)" text-anchor="start" class="tiny">own attendance SELECT</text>
+<path d="M1270 718V1000" class="solid"/>
+<text x="1258" y="970" transform="rotate(-90 1258 970)" text-anchor="start" class="tiny">active products SELECT</text>
+<path d="M1321 718V1000" class="solid"/>
+<text x="1309" y="970" transform="rotate(-90 1309 970)" text-anchor="start" class="tiny">renewal application INSERT</text>
+<path d="M1373 718V1000" class="solid"/>
+<text x="1361" y="970" transform="rotate(-90 1361 970)" text-anchor="start" class="tiny">personal info RPC</text>
+<path d="M1415 1005V718" class="response"/>
 <path d="M1555 526V548" class="solid"/>
 <rect x="1425" y="553" width="260" height="70" rx="8" class="module"/>
 <text x="1555" y="580" text-anchor="middle" class="head">Reports &amp; Exports</text>
-<text x="1555" y="602" text-anchor="middle" class="small">admin.html · authorized queries</text>
-<rect x="1425" y="634" width="260" height="299" rx="8" class="service"/>
-<text x="1555" y="659" text-anchor="middle" class="section">REPORT QUERY SERVICE</text>
-<text x="1442" y="687" class="body">• Apply frontend date / filters</text>
-<text x="1442" y="710" class="body">• Build dashboard summaries</text>
-<text x="1442" y="733" class="body">• Generate report / export output</text>
-<text x="1442" y="791" class="small">DATA REQUESTS</text>
-<text x="1442" y="812" class="small">members / applications SELECT</text>
-<text x="1442" y="831" class="small">attendance date SELECT</text>
-<text x="1442" y="850" class="small">products / sales / sale_items SELECT</text>
-<text x="1442" y="869" class="small">membership_history SELECT</text>
-<text x="1442" y="902" class="tiny">Returns query / report results</text>
-
-<!-- Requests and responses share six aligned lanes -->
-<path d="M139 933V1000" class="solid"/><path d="M161 1000V933" class="response"/>
-<path d="M419 933V1000" class="solid"/><path d="M441 1000V933" class="response"/>
-<path d="M699 933V1000" class="solid"/><path d="M721 1000V933" class="response"/>
-<path d="M979 933V1000" class="solid"/><path d="M1001 1000V933" class="response"/>
-<path d="M1259 933V1000" class="solid"/><path d="M1281 1000V933" class="response"/>
-<path d="M1539 933V1000" class="solid"/><path d="M1561 1000V933" class="response"/>
-<text x="850" y="985" text-anchor="middle" class="tiny">Solid arrows: requests / records saved · Dashed arrows: query results / responses</text>
-
+<text x="1555" y="602" text-anchor="middle" class="small">admin.html</text>
+<rect x="1425" y="634" width="260" height="65" rx="8" class="service"/>
+<text x="1555" y="672" text-anchor="middle" class="section">REPORT QUERY SERVICE</text>
+<path d="M1555 699V718" class="plain"/>
+<path d="M1440 718H1670" class="plain"/>
+<path d="M1447 718V1000" class="solid"/>
+<text x="1435" y="970" transform="rotate(-90 1435 970)" text-anchor="start" class="tiny">member / application query</text>
+<path d="M1499 718V1000" class="solid"/>
+<text x="1487" y="970" transform="rotate(-90 1487 970)" text-anchor="start" class="tiny">attendance date query</text>
+<path d="M1550 718V1000" class="solid"/>
+<text x="1538" y="970" transform="rotate(-90 1538 970)" text-anchor="start" class="tiny">inventory query</text>
+<path d="M1601 718V1000" class="solid"/>
+<text x="1589" y="970" transform="rotate(-90 1589 970)" text-anchor="start" class="tiny">sales / sale_items query</text>
+<path d="M1653 718V1000" class="solid"/>
+<text x="1641" y="970" transform="rotate(-90 1641 970)" text-anchor="start" class="tiny">history query / export</text>
+<path d="M1695 1005V718" class="response"/>
+<text x="850" y="985" text-anchor="middle" class="tiny">Solid arrows carry the labeled request to Supabase; dashed arrows return query / operation results to the service.</text>
 <!-- Security and server-side operations -->
 <rect x="35" y="1005" width="1630" height="112" rx="9" class="api"/>
-<text x="850" y="1031" text-anchor="middle" class="head">SUPABASE DATA API / RPC · ROW LEVEL SECURITY (RLS)</text>
+<text x="850" y="1031" text-anchor="middle" class="head">SUPABASE DATA API / RPC + ROW LEVEL SECURITY (RLS)</text>
 <text x="850" y="1054" text-anchor="middle" class="small">Browser table requests carry the signed-in user's Auth session; RLS policies restrict direct table access.</text>
 <text x="850" y="1074" text-anchor="middle" class="small">RPC functions enforce their own authorization and validation checks.</text>
-<text x="850" y="1094" text-anchor="middle" class="small">Staff account creation uses admin-create-member Edge Function: verify admin → Auth Admin API → privileged member-creation RPC.</text>
+<text x="850" y="1094" text-anchor="middle" class="small">Staff accounts: Edge Function verifies admin - Auth Admin API - privileged member-creation RPC.</text>
 
 <!-- Realtime scope -->
 <rect x="1230" y="1133" width="435" height="65" rx="8" class="soft"/>
-<text x="1447" y="1157" text-anchor="middle" class="small">SUPABASE REALTIME</text>
-<text x="1447" y="1175" text-anchor="middle" class="tiny">Publication: applications + attendance; not members.</text>
+<text x="1447" y="1153" text-anchor="middle" class="small">SUPABASE REALTIME</text>
+<text x="1447" y="1171" text-anchor="middle" class="tiny">Publication: membership_applications + attendance.</text>
+<text x="1447" y="1187" text-anchor="middle" class="tiny">members is not enabled.</text>
 
 <!-- Shared database -->
 <path d="M850 1117V1190" class="solid"/>
@@ -193,7 +189,7 @@
 <ellipse cx="850" cy="1332" rx="330" ry="32" fill="#121820"/>
 <text x="850" y="1208" text-anchor="middle" style="fill:#fff;font-size:19px;font-weight:700">SUPABASE POSTGRESQL</text>
 <text x="850" y="1248" text-anchor="middle" style="fill:#fff;font-size:12px">Shared system database</text>
-<text x="850" y="1271" text-anchor="middle" style="fill:#fff;font-size:11px">profiles · members · membership_applications · attendance</text>
-<text x="850" y="1294" text-anchor="middle" style="fill:#fff;font-size:11px">products · sales · sale_items · membership_history</text>
+<text x="850" y="1271" text-anchor="middle" style="fill:#fff;font-size:11px">profiles, members, membership_applications, attendance</text>
+<text x="850" y="1294" text-anchor="middle" style="fill:#fff;font-size:11px">products, sales, sale_items, membership_history</text>
 <text x="850" y="1402" text-anchor="middle" class="title">Figure 3. System Architecture Diagram</text>
 </svg>
