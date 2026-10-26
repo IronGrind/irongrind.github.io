@@ -29,7 +29,7 @@
     <text x="612" y="144" font-size="14" font-weight="700" fill="#ffffff">3</text>
     <text x="882" y="144" font-size="14" font-weight="700" fill="#ffffff">4</text>
     <text x="150" y="168" font-size="18" font-weight="700">Prioritize backlog</text>
-    <text x="150" y="192" font-size="14">Select needs and criteria</text>
+    <text x="150" y="192" font-size="14">Chapter 1-2 priorities</text>
     <text x="420" y="168" font-size="18" font-weight="700">Plan and design</text>
     <text x="420" y="192" font-size="14">Define the iteration work</text>
     <text x="690" y="168" font-size="18" font-weight="700">Build and test</text>
@@ -45,8 +45,9 @@
   <path d="M960 216 V284 H150 V228" fill="none" stroke="#c7352b" stroke-width="3" marker-end="url(#arrow-red)" />
   <rect x="425" y="264" width="260" height="38" rx="19" fill="#ffffff" />
   <text x="555" y="289" text-anchor="middle" font-family="Arial, sans-serif" font-size="15" font-weight="700" fill="#c7352b">Feedback updates the backlog</text>
-  <path d="M960 216 V328" fill="none" stroke="#344054" stroke-width="3" marker-end="url(#arrow)" />
-  <rect x="760" y="330" width="305" height="54" rx="8" fill="#eef2f6" stroke="#344054" stroke-width="2" />
-  <text x="912" y="353" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#1d2939">Verified increments</text>
-  <text x="912" y="373" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#344054">Release and transition when scope is complete</text>
+  <text x="550" y="322" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#344054">IronGrind increments: applications and renewals | staff QR attendance | inventory and sales | reports</text>
+  <path d="M960 216 V341" fill="none" stroke="#344054" stroke-width="3" marker-end="url(#arrow)" />
+  <rect x="760" y="343" width="305" height="54" rx="8" fill="#eef2f6" stroke="#344054" stroke-width="2" />
+  <text x="912" y="366" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#1d2939">Verified increments</text>
+  <text x="912" y="386" text-anchor="middle" font-family="Arial, sans-serif" font-size="14" fill="#344054">Release and transition when scope is complete</text>
 </svg>
