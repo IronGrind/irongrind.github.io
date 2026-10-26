@@ -57,8 +57,8 @@ erDiagram
 
     MEMBERS {
         uuid id PK
-        uuid user_id FK
-        uuid application_id FK
+        uuid user_id FK,UK
+        uuid application_id FK,UK
         text full_name
         text mobile
         text plan
@@ -158,9 +158,9 @@ erDiagram
     }
 
     AUTH_USERS ||--o| PROFILES : "profiles.id"
-    %% These account-reference columns are nullable and are not confirmed unique.
+    %% auth_user_id is nullable and not unique; legacy members.user_id is nullable and unique.
     AUTH_USERS o|--o{ MEMBERS : "auth_user_id"
-    AUTH_USERS o|--o{ MEMBERS : "legacy user_id"
+    AUTH_USERS o|--o| MEMBERS : "legacy user_id"
     AUTH_USERS o|--o{ MEMBERSHIP_APPLICATIONS : "auth_user_id"
     AUTH_USERS o|--o{ MEMBERSHIP_APPLICATIONS : "legacy user_id"
     AUTH_USERS o|--o{ ATTENDANCE : "recorded_by"
@@ -169,7 +169,7 @@ erDiagram
 
     PROFILES o|--o{ MEMBERSHIP_APPLICATIONS : "reviewed_by"
     MEMBERS o|--o{ MEMBERSHIP_APPLICATIONS : "member_id"
-    MEMBERSHIP_APPLICATIONS o|--o{ MEMBERS : "application_id"
+    MEMBERSHIP_APPLICATIONS o|--o| MEMBERS : "application_id"
     MEMBERS ||--o{ ATTENDANCE : "member_id"
     MEMBERS o|--o{ SALES : "member_id"
     SALES ||--o{ SALE_ITEMS : "sale_id"
