@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1100" height="420" viewBox="0 0 1100 420" role="img" aria-labelledby="title description">
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="336" viewBox="0 0 1100 420" role="img" aria-labelledby="title description">
   <title id="title">Agile development cycle for IronGrind</title>
   <desc id="description">A four-step iterative workflow: prioritize the backlog, plan and design an iteration, build and test an increment, and review and refine. Review feedback returns to the backlog. Verified increments proceed to release and transition.</desc>
   <defs>
