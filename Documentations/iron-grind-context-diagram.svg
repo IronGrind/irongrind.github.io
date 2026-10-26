@@ -76,5 +76,8 @@
 <rect x="650" y="920" width="400" height="100" rx="12" fill="#fff8e8" stroke="#a66a00" stroke-width="2.2" stroke-dasharray="9 7"/>
 <text x="850" y="960" text-anchor="middle" class="entityTitle" style="font-size:18px;fill:#875500">External Email Provider</text>
 <text x="850" y="988" text-anchor="middle" class="flow" style="fill:#875500">Planned — provider not selected</text>
+<path d="M650 970H180V565" class="planned"/>
+<text x="415" y="930" text-anchor="middle" class="flow" style="fill:#875500">Application / renewal decision or</text>
+<text x="415" y="950" text-anchor="middle" class="flow" style="fill:#875500">membership expiry email to member</text>
 <text x="850" y="1055" text-anchor="middle" class="note">Dashed line and outline: planned email notification integration (in development).</text>
 </svg>
