@@ -936,7 +936,7 @@ async function loadSupabaseOperationalData(options = {}) {
     const [productsResult, salesResult, attendanceResult, renewalsResult, historyResult] = await Promise.all([
         client.from('products').select('*').order('name'),
         client.from('sales')
-            .select('*, sale_items!sale_items_sale_id_compat_fkey(*)')
+            .select('*, sale_items!sale_items_sale_id_fkey(*)')
             .order('sold_at', { ascending: false }),
         client.from('attendance').select('*, members(full_name)').order('time_in', { ascending: false }),
         client.from('membership_applications').select('*')
