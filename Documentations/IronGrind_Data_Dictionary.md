@@ -12,7 +12,7 @@ PostgreSQL `text` and `text[]` have no declared character limit; `jsonb` has no 
 
 | Table | Purpose |
 | --- | --- |
-| `profiles` | Application profile and authorization role for a Supabase Auth account. It provides the application-facing identity for a signed-in user. |
+| `profiles` | profile a Applicationnd authorization role for a Supabase Auth account. It provides the application-facing identity for a signed-in user. |
 | `members` | Current gym member profile, membership, and account link. It holds the member's current details and membership state. |
 | `membership_applications` | Submitted registration and renewal requests and their review outcomes. It tracks each request from submission through review. |
 | `attendance` | Member check-in and check-out records. It provides a visit history for each member. |
