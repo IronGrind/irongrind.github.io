@@ -27,6 +27,7 @@ let currentMemberTab = 'members';
 let currentApprovalType = 'registration';
 let activeQRScanner = null;
 let qrScanHandled = false;
+let qrCameraHintTimer = null;
 let adminRealtimeChannel = null;
 let realtimeRefreshTimer = null;
 let realtimeRefreshBusy = false;
@@ -974,7 +975,11 @@ async function loadSupabaseOperationalData(options = {}) {
     }
     if (historyResult.error) {
         console.error('Could not load membership history:', historyResult.error);
-        toast(`Could not load membership archives from Supabase: ${historyResult.error.message}`, 'error');
+        const permissionDenied = historyResult.error.code === '42501'
+            || /permission denied for table .*membership_history/i.test(historyResult.error.message || '');
+        toast(permissionDenied
+            ? 'Supabase denied access to membership_history. Run migration 20261027000001_membership_history_read_access.sql in the connected Supabase project, then reload.'
+            : `Could not load membership archives from Supabase: ${historyResult.error.message}`, 'error');
     } else {
         const remoteHistory = historyResult.data.map(row => {
             const member = members.find(item => String(item.id) === String(row.member_id));
@@ -1713,13 +1718,27 @@ function startQRScanner() {
         }
     };
 
+    clearTimeout(qrCameraHintTimer);
+    qrCameraHintTimer = window.setTimeout(() => {
+        const status = document.getElementById('qrCameraStatus');
+        if (status?.textContent === 'Starting camera…') {
+            status.textContent = 'Waiting for browser camera permission. If no prompt appeared, allow Camera for this site in browser settings and try again.';
+        }
+    }, 8000);
+
     startCamera().then(() => {
+        clearTimeout(qrCameraHintTimer);
+        qrCameraHintTimer = null;
         const status = document.getElementById('qrCameraStatus');
         if (status) status.textContent = 'Camera is on. Point it at the member’s QR code.';
     }).catch(error => {
+        clearTimeout(qrCameraHintTimer);
+        qrCameraHintTimer = null;
         stopQRScanner();
         const status = document.getElementById('qrCameraStatus');
-        if (status) status.textContent = getQRScannerErrorMessage(error);
+        const message = getQRScannerErrorMessage(error);
+        if (status) status.textContent = message;
+        toast(message, 'error');
         console.warn('QR camera failed to start:', error);
     });
 }
@@ -1741,6 +1760,8 @@ function getQRScannerErrorMessage(error) {
 }
 
 function stopQRScanner() {
+    clearTimeout(qrCameraHintTimer);
+    qrCameraHintTimer = null;
     const scanner = activeQRScanner;
     activeQRScanner = null;
     if (!scanner) return;
