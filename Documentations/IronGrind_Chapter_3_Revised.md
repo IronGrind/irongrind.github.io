@@ -1,4 +1,4 @@
-# CHAPTER 3
+﻿# CHAPTER 3
 
 # RESEARCH METHODOLOGY
 
@@ -104,25 +104,25 @@ The functional requirements describe the operations available to applicants, mem
 
 ### Explanation of Functional Requirements
 
-**FR-01 — Authentication and access.** Supabase Auth verifies account credentials and maintains the authenticated session. The application role determines which interface is presented, while database policies and server-side functions enforce access to protected records. A role displayed by the client is not sufficient on its own to authorize a database operation.
+**FR-01 â€” Authentication and access.** Supabase Auth verifies account credentials and maintains the authenticated session. The application role determines which interface is presented, while database policies and server-side functions enforce access to protected records. A role displayed by the client is not sufficient on its own to authorize a database operation.
 
-**FR-02 — Online application.** The application form accepts a prospective member's account and membership details. The request is persisted separately from the approved member record and remains pending for administrator review. This separation lets the system show a request's progress without treating every signup as an active membership.
+**FR-02 â€” Online application.** The application form accepts a prospective member's account and membership details. The request is persisted separately from the approved member record and remains pending for administrator review. This separation lets the system show a request's progress without treating every signup as an active membership.
 
-**FR-03 — Application review.** The administrator queue presents new registration and renewal requests for decision. Approval or rejection records the status and review metadata. Registration approval creates or links a member record; renewal approval updates an existing member's current membership after retaining the prior state. A successful decision should be reflected in the member list and reports after data refresh.
+**FR-03 â€” Application review.** The administrator queue presents new registration and renewal requests for decision. Approval or rejection records the status and review metadata. Registration approval creates or links a member record; renewal approval updates an existing member's current membership after retaining the prior state. A successful decision should be reflected in the member list and reports after data refresh.
 
-**FR-04 — Membership management.** The administrator can view the member register and perform supported plan-change or counter-renewal actions. A current membership record contains the member's current plan and dates. Expired periods and plan changes are retained in archive/history records so that changing current values does not erase the earlier period.
+**FR-04 â€” Membership management.** The administrator can view the member register and perform supported plan-change or counter-renewal actions. A current membership record contains the member's current plan and dates. Expired periods and plan changes are retained in archive/history records so that changing current values does not erase the earlier period.
 
-**FR-05 — Member portal.** An authenticated member sees permitted information associated with their own account, including current membership data, QR identifier, and attendance history. Profile changes are limited to fields offered by the portal. Data access must remain scoped to the signed-in identity by database policies.
+**FR-05 â€” Member portal.** An authenticated member sees permitted information associated with their own account, including current membership data, QR identifier, and attendance history. Profile changes are limited to fields offered by the portal. Data access must remain scoped to the signed-in identity by database policies.
 
-**FR-06 — Renewal request.** A member may submit a renewal request at any time. The application remains pending until staff review and does not change the current membership by itself. On approval, the selected plan duration is added after the current expiry when the membership is still active, preserving unused days. If the membership has expired, the new period starts on the approval date. The renewal sale and prior/new membership details are recorded.
+**FR-06 â€” Renewal request.** A member may submit a renewal request at any time. The application remains pending until staff review and does not change the current membership by itself. On approval, the selected plan duration is added after the current expiry when the membership is still active, preserving unused days. If the membership has expired, the new period starts on the approval date. The renewal sale and prior/new membership details are recorded.
 
-**FR-07 — Attendance.** Staff use the administrator scanner to resolve a QR identifier and record a visit. A scan checks for an existing open visit to determine whether the action is check-in or check-out. The member portal can display the member's own history but does not provide the staff attendance-write function.
+**FR-07 â€” Attendance.** Staff use the administrator scanner to resolve a QR identifier and record a visit. A scan checks for an existing open visit to determine whether the action is check-in or check-out. The member portal can display the member's own history but does not provide the staff attendance-write function.
 
-**FR-08 — Product and inventory management.** The administrator maintains the catalog and can archive items. Product category determines the unit: supplements are measured by gram, while merchandise is measured by item and its available stock is tracked. Archived products are excluded from active choices while historic sale lines retain their item descriptions.
+**FR-08 â€” Product and inventory management.** The administrator maintains the catalog and can archive items. Product category determines the unit: supplements are measured by gram, while merchandise is measured by item and its available stock is tracked. Archived products are excluded from active choices while historic sale lines retain their item descriptions.
 
-**FR-09 — Sales and receipts.** Staff record customer and item details for counter transactions. A sale header stores customer, receipt, date, status, and total; sale-item rows store each product or membership line. The receipt view presents those saved transaction details. For merchandise, the transaction workflow validates and updates stock.
+**FR-09 â€” Sales and receipts.** Staff record customer and item details for counter transactions. A sale header stores customer, receipt, date, status, and total; sale-item rows store each product or membership line. The receipt view presents those saved transaction details. For merchandise, the transaction workflow validates and updates stock.
 
-**FR-10 — Operational reports.** The administrator selects a report or export period and reviews data produced by the relevant processes. Report outputs summarize saved records and their configured status/date fields. They do not establish outcomes beyond the data collected by the system.
+**FR-10 â€” Operational reports.** The administrator selects a report or export period and reviews data produced by the relevant processes. Report outputs summarize saved records and their configured status/date fields. They do not establish outcomes beyond the data collected by the system.
 
 ### Input Requirements
 
@@ -276,7 +276,7 @@ Figure 3 sets the boundary around IronGrind as a single system, without showing 
 
 **Figure 4.** Level 1 data-process model for IronGrind.
 
-Figure 4 decomposes the single IronGrind system from Figure 3 into numbered processes and named data stores. External actors provide inputs to the process that handles them: credentials go to authentication; application details and staff decisions go to application processing; member requests go to the portal; QR scans go to attendance; product changes go to inventory; and customer and item details go to walk-in sales. The report process reads the operational stores to prepare summaries. The data stores D1–D8 correspond to profiles, membership applications, members, attendance, products, sales, sale items, and membership history, as listed in the Data Stores table. Arrows between processes and stores distinguish information read from information written; arrows between a process and an actor represent the corresponding request or response. The figure's email process is explicitly planned only: the current system has no configured email provider and does not send these messages. Together, this diagram explains the record flow in more detail than the context diagram, while the tables below define each process and store in text.
+Figure 4 decomposes the single IronGrind system from Figure 3 into numbered processes and named data stores. External actors provide inputs to the process that handles them: credentials go to authentication; application details and staff decisions go to application processing; member requests go to the portal; QR scans go to attendance; product changes go to inventory; and customer and item details go to walk-in sales. The report process reads the operational stores to prepare summaries. The data stores D1â€“D8 correspond to profiles, membership applications, members, attendance, products, sales, sale items, and membership history, as listed in the Data Stores table. Arrows between processes and stores distinguish information read from information written; arrows between a process and an actor represent the corresponding request or response. The figure's email process is explicitly planned only: the current system has no configured email provider and does not send these messages. Together, this diagram explains the record flow in more detail than the context diagram, while the tables below define each process and store in text.
 
 #### Explanation of Data-Flow Paths
 
@@ -375,7 +375,7 @@ The use cases in Figure 5 are grouped by the actor's role. The associations show
 
 Each use case describes a user goal and its normal result. The alternate paths identify conditions the interface must handle; they are not claims that a particular test has already been executed.
 
-#### Use Case 1 — Submit Membership Registration
+#### Use Case 1 â€” Submit Membership Registration
 
 | Element | Description |
 | --- | --- |
@@ -385,7 +385,7 @@ Each use case describes a user goal and its normal result. The alternate paths i
 | Alternate flow | Invalid or missing fields are shown for correction; duplicate account details or a service error prevent successful submission and produce an error message. |
 | Postcondition | A pending registration application is associated with the submitting identity; no active member record is implied before approval. |
 
-#### Use Case 2 — Review and Decide an Application
+#### Use Case 2 â€” Review and Decide an Application
 
 | Element | Description |
 | --- | --- |
@@ -395,7 +395,7 @@ Each use case describes a user goal and its normal result. The alternate paths i
 | Alternate flow | If the request is no longer pending or the database operation fails, the system reports the condition and refreshes the queue before retry. |
 | Postcondition | A rejected request remains recorded as rejected; an approved registration is linked to a member record and associated sale according to the configured workflow. |
 
-#### Use Case 3 — Submit and Approve a Renewal
+#### Use Case 3 â€” Submit and Approve a Renewal
 
 | Element | Description |
 | --- | --- |
@@ -405,7 +405,7 @@ Each use case describes a user goal and its normal result. The alternate paths i
 | Alternate flow | If the member record or expiry date cannot be verified, submission is refused with an explanatory message. A second pending request is not accepted. If a request is already decided, the pending-only update should not apply again. |
 | Postcondition | The request has a recorded decision; only an approved renewal updates current membership dates. |
 
-#### Use Case 4 — Record Member Attendance
+#### Use Case 4 â€” Record Member Attendance
 
 | Element | Description |
 | --- | --- |
@@ -415,7 +415,7 @@ Each use case describes a user goal and its normal result. The alternate paths i
 | Alternate flow | An unknown code, expired membership at check-in, camera failure, or database/network error is reported. An existing open visit may still be checked out. |
 | Postcondition | A timestamped attendance event is stored or the user is told that no write occurred. |
 
-#### Use Case 5 — Maintain Products and Record a Sale
+#### Use Case 5 â€” Maintain Products and Record a Sale
 
 | Element | Description |
 | --- | --- |
@@ -425,7 +425,7 @@ Each use case describes a user goal and its normal result. The alternate paths i
 | Alternate flow | Invalid price/stock, insufficient merchandise quantity, inactive product, or failed transaction prevents completion and is reported. |
 | Postcondition | The sale and item line are recorded; merchandise stock is changed by the configured transaction; a receipt can be retrieved by its receipt number. |
 
-#### Use Case 6 — Review Operational Reports
+#### Use Case 6 â€” Review Operational Reports
 
 | Element | Description |
 | --- | --- |
@@ -510,8 +510,8 @@ This data dictionary summarizes the public-schema fields and relationships defin
 | Entity | Key fields and data types | Purpose and relationships |
 | --- | --- | --- |
 | `profiles` | `id` UUID (PK, Auth FK); `email`, `username`, `full_name`, `role`, `account_status` TEXT; timestamps | User profile and role used by the application. `username` is unique. |
-| `members` | `id` UUID (PK); `auth_user_id` UUID (nullable, unique Auth FK); `application_id` UUID (nullable, unique FK); `full_name`, `email`, `username`, `mobile` TEXT; `date_of_birth` DATE; `age` SMALLINT; `height`, `weight_kg` NUMERIC; `height_unit`, `sex`, `plan`, `status`, `registration_source` TEXT; `emergency_contact` JSONB; `plan_price`, `paid` NUMERIC; membership dates; `fitness_goals`, `health_conditions` TEXT[]; `other_medical_conditions`, `signature_path` TEXT; timestamps | Approved member and membership record. Referenced by applications, attendance, sales, sale items, and membership history. |
-| `membership_applications` | `id` UUID (PK); `auth_user_id` UUID (required Auth FK); `member_id` UUID (nullable FK); `application_type`, `status`, applicant and plan details; demographic, health, and signature fields; submission/review timestamps; `reviewed_by` UUID (Auth FK represented through the profile identity) | Registration and renewal requests and their review state. `member_id` can be empty before a member is linked. |
+| `members` | `id` UUID (PK); `auth_user_id` UUID (nullable, unique Auth FK); `application_id` UUID (nullable FK); `full_name`, `email`, `username`, `mobile` TEXT; `date_of_birth` DATE; `age` SMALLINT; `height`, `weight_kg` NUMERIC; `height_unit`, `sex`, `plan`, `status`, `registration_source` TEXT; `emergency_contact` JSONB; `plan_price`, `paid` NUMERIC; membership dates; `fitness_goals`, `health_conditions` TEXT[]; `other_medical_conditions`, `signature_path` TEXT; timestamps | Approved member and membership record. Referenced by applications, attendance, sales, sale items, and membership history. |
+| `membership_applications` | `id` UUID (PK); `auth_user_id` UUID (required Auth FK); `member_id` UUID (nullable FK); `application_type`, `status`, applicant and plan details; demographic, health, and signature fields; submission/review timestamps; `reviewed_by` UUID (FK to `auth.users.id`) | Registration and renewal requests and their review state. `member_id` can be empty before a member is linked. |
 | `attendance` | `id` UUID (PK); `member_id` UUID (FK); `time_in`, `time_out`, `created_at` TIMESTAMPTZ; `recorded_by` UUID (Auth FK) | Staff-recorded check-in and check-out. A member may have multiple attendance records. |
 | `products` | `id` UUID (PK); `name`, `category`, `unit`, `size`, `image_path` TEXT; `price_per_unit` NUMERIC; `stock` INTEGER; `is_active` BOOLEAN; timestamps | Product catalog and inventory. Supplements use gram units; merchandise uses item units and stock. |
 | `sales` | `id` UUID (PK); `receipt_number` TEXT (unique); `customer_type`, `customer_name`, `status` TEXT; `member_id` UUID (nullable FK); `total` NUMERIC; `sold_at` TIMESTAMPTZ; `processed_by` UUID (Auth FK) | Sale header and receipt information. A sale may be associated with a member or a walk-in customer. |
@@ -522,7 +522,7 @@ This data dictionary summarizes the public-schema fields and relationships defin
 
 The following field reference expands the summary above. It describes the principal fields in the project schema and their role in the system. `PK` identifies a row, `FK` connects it to another table or Auth identity, and `UK` denotes a uniqueness rule. A nullable field may be absent when its value is not yet known or does not apply. Database defaults and checks are noted where they affect stored values. Supabase Auth credentials are managed in the separate `auth.users` schema and are not repeated here.
 
-#### `profiles` — Account Profile and Authorization
+#### `profiles` â€” Account Profile and Authorization
 
 The profile row extends the Auth identity with information used by the application. Its `id` shares the Auth user's UUID, so the profile is created and removed in step with the corresponding identity. The role is constrained to the application roles `admin` and `member`; the role is not taken from arbitrary signup input. Profile data supports role-aware navigation and database policies.
 
@@ -537,7 +537,7 @@ The profile row extends the Auth identity with information used by the applicati
 | `created_at` | TIMESTAMPTZ | Required; defaults to current time | Time at which the profile was created. |
 | `updated_at` | TIMESTAMPTZ | Present in the live catalog where deployed | Time of the most recent profile update when maintained by the deployed schema. |
 
-#### `members` — Approved Member and Current Membership
+#### `members` â€” Approved Member and Current Membership
 
 This table is the current operational record for an approved member. It contains identity and contact data, the current plan and dates, and member declarations collected in the application. `auth_user_id` associates the row with a sign-in identity when one exists; a partial unique index enforces no more than one member row for a non-null Auth ID. `application_id` can preserve the source registration link where the deployed schema has that relationship. Attendance, sales, and membership history refer to the member row rather than copying the entire profile.
 
@@ -572,7 +572,7 @@ This table is the current operational record for an approved member. It contains
 | `created_at` | TIMESTAMPTZ | Required; defaults to current time | Member-record creation time. |
 | `updated_at` | TIMESTAMPTZ | Required in the base schema; maintained on update | Most recent member-record update time. |
 
-#### `membership_applications` — Registration and Renewal Requests
+#### `membership_applications` â€” Registration and Renewal Requests
 
 Application rows preserve a submitted request and its review state. The application is distinct from the current member record: submission alone does not activate a membership. A registration request can be linked to the member created after approval, while a renewal request can identify an existing member. Review timestamps and reviewer identity make the decision traceable. This table includes health and emergency-contact data and should therefore be protected by the configured access policies.
 
@@ -607,7 +607,7 @@ Application rows preserve a submitted request and its review state. The applicat
 | `reviewed_at` | TIMESTAMPTZ | Nullable | Time when an administrator reviewed the request. |
 | `reviewed_by` | UUID | Nullable FK to `auth.users.id`; deletion sets null | Auth identity of the reviewing administrator. |
 
-#### `attendance` — Staff-Recorded Visits
+#### `attendance` â€” Staff-Recorded Visits
 
 An attendance row represents one visit period. The member relationship is required and uses a restrictive delete rule so that a member with attendance history cannot be silently removed while those records remain. `time_out` stays empty while a visit is open. The database check prevents a checkout timestamp earlier than check-in. The interface formats timestamps in Manila local time, while the database stores timestamp values.
 
@@ -621,7 +621,7 @@ An attendance row represents one visit period. The member relationship is requir
 | `recorded_by` | UUID | Nullable FK to `auth.users.id`; deletion sets null | Staff or administrator identity that recorded the event. |
 | `created_at` | TIMESTAMPTZ | Required; defaults to current time | Time the attendance row was inserted. |
 
-#### `products` — Catalog and Inventory
+#### `products` â€” Catalog and Inventory
 
 Product rows describe items offered by the gym. The category and unit must agree: supplements are priced and sold by gram, while merchandise is sold by item and has tracked stock. Archiving marks a product inactive and records an archive timestamp in the live schema. Existing sale lines keep their own item description and pricing if a product is later archived or its catalog details change.
 
@@ -640,7 +640,7 @@ Product rows describe items offered by the gym. The category and unit must agree
 | `created_at` | TIMESTAMPTZ | Required; defaults to current time | Product creation timestamp. |
 | `updated_at` | TIMESTAMPTZ | Required; defaults to current time | Most recent product update timestamp. |
 
-#### `sales` — Transaction Headers
+#### `sales` â€” Transaction Headers
 
 The sales table stores one receipt-level transaction. It identifies the customer and processor, captures the total and status, and records when the sale occurred. A sale may refer to a member or represent a walk-in purchase. Detailed goods and services belong in `sale_items`, allowing one receipt to contain multiple lines. Receipt numbers are unique so they can be used to retrieve the corresponding transaction.
 
@@ -656,7 +656,7 @@ The sales table stores one receipt-level transaction. It identifies the customer
 | `sold_at` | TIMESTAMPTZ | Required; defaults to current time | Transaction timestamp. |
 | `processed_by` | UUID | Nullable FK to `auth.users.id`; deletion sets null | Auth identity of the administrator or staff account processing the sale. |
 
-#### `sale_items` — Itemized Receipt Lines
+#### `sale_items` â€” Itemized Receipt Lines
 
 Each row is one service or product line on a sale. The sale relationship is required and cascades when a sale is removed. `product_id` is optional so membership lines and retained historical item descriptions do not require an active catalog product. The item name, category, unit, quantity, and price preserve what was sold at transaction time.
 
@@ -672,7 +672,7 @@ Each row is one service or product line on a sale. The sale relationship is requ
 | `unit_price` | NUMERIC(12,2) | Required; nonnegative | Charge for each recorded unit. |
 | `line_total` | NUMERIC(12,2) | Required; nonnegative | Total charged for this receipt line. |
 
-#### `membership_history` — Membership Lifecycle Events
+#### `membership_history` â€” Membership Lifecycle Events
 
 History rows preserve changes to a member's subscription over time. Depending on the event, previous and new values may be present or null. This makes it possible to distinguish expiration snapshots from renewals and plan changes while retaining dates and prices. The member link is required and restrictive so historical rows are not discarded by deleting a member record.
 
