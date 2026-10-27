@@ -89,27 +89,28 @@ while (index < lines.length) {
 
 const html = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>IronGrind Chapter 3 — Research Methodology and System Design</title>
 <style>
-@page { size: A4; margin: 18mm 17mm 20mm; @bottom-center { content: "Iron Grind Fitness Gym  •  Chapter 3  •  Page " counter(page); font: 8pt Arial, sans-serif; color: #6b7280; } }
+@page { size: Letter; margin: 0.9in 1in 0.9in 1.5in; @top-right { content: counter(page); font: 10pt "Times New Roman", serif; color: #20242c; } }
 * { box-sizing: border-box; }
-body { color: #20242c; font: 10pt/1.48 Arial, Helvetica, sans-serif; }
-h1, h2, h3, h4 { color: #20242c; line-height: 1.2; page-break-after: avoid; }
-h1 { margin: 0 0 5pt; text-align: center; font-size: 17pt; }
-h1 + h1 { margin: 0 0 18pt; padding-bottom: 9pt; border-bottom: 2px solid #d31212; font-size: 13pt; letter-spacing: .5pt; }
-h2 { margin: 19pt 0 8pt; padding-bottom: 4pt; border-bottom: 1px solid #cfd4dc; font-size: 14pt; }
-h3 { margin: 14pt 0 6pt; color: #9d1515; font-size: 11.5pt; }
-h4 { margin: 11pt 0 5pt; font-size: 10pt; }
-p { margin: 0 0 8pt; text-align: justify; orphans: 3; widows: 3; }
+body { color: #20242c; font: 12pt/1.5 "Times New Roman", Times, serif; }
+h1, h2, h3, h4 { color: #20242c; line-height: 1.2; page-break-after: avoid; font-family: "Times New Roman", Times, serif; }
+h1 { margin: 0 0 5pt; text-align: center; font-size: 16pt; }
+h1 + h1 { margin: 0 0 18pt; padding-bottom: 9pt; border-bottom: 0; font-size: 14pt; letter-spacing: .5pt; }
+h2 { margin: 19pt 0 8pt; padding-bottom: 4pt; font-size: 14pt; text-transform: uppercase; }
+h3 { margin: 14pt 0 6pt; font-size: 12pt; }
+h4 { margin: 11pt 0 5pt; font-size: 12pt; }
+p { margin: 0 0 8pt; text-align: justify; text-indent: 0.5in; orphans: 3; widows: 3; }
+.caption, h1, h2, h3, h4, p:has(code) { text-indent: 0; }
 ul { margin: 2pt 0 10pt; padding-left: 20pt; }
 li { margin: 0 0 5pt; text-align: justify; }
-code { font: 9pt Consolas, monospace; color: #283548; }
+code { font: 10pt Consolas, monospace; color: #283548; }
 .table-wrap { margin: 6pt 0 13pt; }
-table { width: 100%; border-collapse: collapse; font-size: 8.2pt; line-height: 1.32; }
+table { width: 100%; border-collapse: collapse; font-size: 10pt; line-height: 1.2; }
 th { background: #e9edf2; color: #20242c; font-weight: 700; text-align: left; }
 th, td { border: 1px solid #aeb6c2; padding: 5pt 6pt; vertical-align: top; }
 tr { page-break-inside: avoid; }
 .diagram { margin: 7pt 0 0; text-align: center; page-break-inside: avoid; page-break-before: auto; }
-.diagram img { display: block; width: auto; max-width: 100%; max-height: 225mm; margin: 0 auto; object-fit: contain; }
-.caption { margin: 2pt 0 10pt; text-align: center; font-size: 9pt; font-style: italic; }
+.diagram img { display: block; width: auto; max-width: 100%; max-height: 8in; margin: 0 auto; object-fit: contain; }
+.caption { margin: 2pt 0 10pt; text-align: center; font-size: 11pt; font-style: italic; }
 strong { color: #20242c; }
 </style></head><body>${output.join('\n')}</body></html>`;
 

@@ -6,15 +6,17 @@ This chapter discusses the methodology used to develop **IronGrind: A Web-Based 
 
 ### System Development Methodology
 
-Agile is an iterative system-development approach in which stakeholder needs are gathered and prioritized, selected work is developed and tested in increments, and review results inform the next iteration. Figure 1 has two connected parts. The circular cycle places Develop, Test, and Review around the IronGrind project name: the team builds a selected increment, checks it against its requirements, and uses review feedback to refine the next increment. The lower project flow shows Data Gathering, Plan, and Design before Launch. This lower row represents the project's overall progression; Launch follows verification of the required increments rather than occurring at the end of every cycle. The work is organized around the gym's applicant/member and administrator workflows. The project does not assume a specific Agile framework such as Scrum; the research team should document the actual iteration length and review practices used and confirm that Agile is the methodology approved in the study proposal.
-
 ![Figure 1. Agile Methodology](iron-grind-agile-methodology.svg)
 
 **Figure 1.** Agile Methodology.
 
+
+Agile is an iterative system-development approach in which stakeholder needs are gathered and prioritized, selected work is developed and tested in increments, and review results inform the next iteration. Figure 1 has two connected parts. The circular cycle places Develop, Test, and Review around the IronGrind project name: the team builds a selected increment, checks it against its requirements, and uses review feedback to refine the next increment. The lower project flow shows Data Gathering, Plan, and Design before Launch. This lower row represents the project's overall progression; Launch follows verification of the required increments rather than occurring at the end of every cycle. The work is organized around the gym's applicant/member and administrator workflows. The figure describes the Agile activities used to organize the project and does not prescribe a particular framework or iteration length.
+
+
 ### Requirements Planning
 
-Requirements planning begins with gathering information about the gym's workflows and needs from the owner and authorized staff and reviewing the project scope in Chapters 1 and 2. The information is translated into system requirements and organized in a prioritized task list, beginning with account access and membership applications, followed by staff review, member access, attendance, inventory, sales, and reporting. Each selected requirement is given acceptance criteria. The final study should identify the data-gathering techniques and participants actually used. Privacy and authorization requirements apply throughout development because the system handles personal and health-related information.
+Requirements planning organizes the workflows and scope described in Chapters 1 and 2 into a prioritized task list. Work begins with account access and membership applications, followed by staff review, member access, attendance, inventory, sales, and reporting. Each selected requirement is assigned acceptance criteria so the increment can be checked during construction. Privacy and authorization requirements apply throughout development because the system handles personal and health-related information.
 
 ### User Design
 
@@ -22,25 +24,27 @@ For each iteration, the relevant user workflows, page layouts, forms, reports, d
 
 ### Prototypes
 
-The system prototype is an interactive, browser-based version of the proposed gym workflows rather than a set of static screen mockups. Applicants can use the sign-in and registration pages to enter the application workflow. Members use the member portal to review membership information, display their QR code, view attendance history, and submit an eligible renewal request. Administrators use the dashboard to review applications and manage membership, staff-scanned attendance, products, sales, receipts, and reports. The prototype uses Supabase Auth and the configured database services for supported operations. Its key pages are listed in the User Interface Modules section. It should be treated as a prototype until deployment and operational readiness have been verified.
+The system prototype is an interactive, browser-based version of the gym workflows. Applicants use the sign-in and registration pages to enter the application workflow. Members use the member portal to review membership information, display their QR code, view attendance history, and submit an eligible renewal request. Administrators use the dashboard to review applications and manage membership, staff-scanned attendance, products, sales, receipts, and reports. The prototype uses Supabase Auth and configured database services for supported operations. Its key pages are listed in the Forms section. Deployment and operational readiness are separate implementation activities.
 
 ### Construction
 
-Selected requirements are implemented in the HTML, CSS, and JavaScript client and the Supabase authentication and PostgreSQL services. Database policies and functions support authorization and operational transactions. Each increment is tested against its acceptance criteria. At the end of an iteration, issues and feedback are recorded, priorities are updated, and unfinished or revised work returns to the prioritized task list. Stakeholder reviews or user feedback should be reported as completed only when the team has records of those activities.
+Selected requirements are implemented in the HTML, CSS, and JavaScript client and the Supabase authentication and PostgreSQL services. Database policies and functions support authorization and operational transactions. Each increment is checked against its acceptance criteria. Issues identified during verification are corrected or returned to the prioritized task list for a later increment.
 
 ### Implementation
 
-Launch takes place after the required increments pass verification; it is not repeated at the end of every iteration. The website and Supabase project can then be configured for the intended environment using the correct project settings, access policies, and authorized administrator accounts. Staff should verify the workflows and receive appropriate orientation. This chapter does not claim a production deployment, completed training, or user acceptance unless those activities are documented separately.
+The implementation phase follows verification of the required increments. It includes configuring the website and Supabase project for the intended environment, applying the approved access policies, preparing administrator accounts, and orienting staff to the supported workflows. Deployment and user-orientation outcomes are reported after those activities are completed.
 
 ## Requirement Specifications
+
+This section presents the operating context and the functional, input, output, software, hardware, and nonfunctional requirements for IronGrind. These specifications describe the system represented by the current project files.
 
 ### Study Setting and Intended Users
 
 The system is intended for Iron Grind Fitness Gym in Purok Mangga, Sulongon, Dapitan City, Zamboanga del Norte. Its intended users are applicants, members, authorized administrators, and walk-in customers served by staff. The database defines `admin` and `member` profile roles; it does not define a separate staff role.
 
-### System Requirements
+### Functionality Requirements
 
-The following requirements describe the website's supported functions and operating conditions. Email notifications are identified as planned work and are not treated as an available output.
+The functional requirements describe the operations available to applicants, members, and authorized administrators. They cover sign-in, application review, membership, attendance, inventory, sales, and reports.
 
 #### Table 1. Functional Requirements
 
@@ -57,18 +61,40 @@ The following requirements describe the website's supported functions and operat
 | FR-09 | Sales and receipts | Staff record in-person product and membership sales for members or walk-in customers. The system stores a sale record and its line items and supports receipt/report views. |
 | FR-10 | Operational reports | Authorized staff view and print or save the available membership, member-status, archive, payment, attendance, renewal, inventory, and sales reports. Report contents depend on the records entered into the system. |
 
-#### Table 2. Nonfunctional Requirements
+### Input Requirements
 
-| Area | Requirement |
+#### Table 2. Input Requirements
+
+Input requirements identify the information supplied to the system by applicants, members, and authorized administrators or recorded through staff actions. Required fields depend on the selected workflow.
+
+| Input requirement | Description |
 | --- | --- |
-| Platform | The application is accessed through a modern browser with JavaScript enabled. The user interface is implemented as web pages and client-side scripts. |
-| Connectivity | Authenticated database-backed functions require an internet connection to reach Supabase. |
-| QR scanning | The staff device requires a camera and browser permission to scan QR codes. Production camera access should be served from a secure HTTPS origin. |
-| Access control | Database access is restricted through authenticated roles and PostgreSQL Row Level Security policies. Privileged account creation is routed through the administrator-verified Edge Function. The deployed configuration must be tested before use. |
-| Data handling | The application stores contact, emergency-contact, and health-related information. Access and retention practices should follow the gym's approved privacy procedures and applicable law. This description is not a certification of legal compliance. |
-| Availability | Users depend on the availability of the website host, internet connection, and Supabase services. Operational backup and recovery procedures must be defined for the deployed environment. |
+| Account credentials | Email and password are submitted to Supabase Auth. |
+| Registration or renewal application | Applicant and plan details, contact and emergency-contact information, goals, health declarations, and signature where collected by the form. |
+| Attendance action | Staff scans a member QR code and records check-in or check-out. |
+| Product and inventory update | Administrator enters product details, price, unit, and merchandise stock quantity where applicable. |
+| Sale transaction | Staff enters customer type and name, products or membership, quantities, and transaction details. |
+| Report request | Administrator selects a report type and available filters or date range. |
 
-#### Table 3. Software Requirements
+### Output Requirements
+
+#### Table 3. Output Requirements
+
+Outputs are the responses and records produced after the system validates a request and processes the stored data. Email notifications remain planned and are not currently sent.
+
+| Output requirement | Description |
+| --- | --- |
+| Authentication and login result | Role-appropriate routing or an authentication error; pending applicants see their application status during login. |
+| Application and membership result | The recorded application status and, after staff review, the decision and updated membership information. |
+| Member portal information | Membership details, QR code, personal attendance history, and active product catalog permitted for the member. |
+| Attendance confirmation | Confirmation of staff-recorded check-in/check-out and permitted attendance history. |
+| Receipt | Sale details, line items, quantities, prices, customer information, and total. |
+| Administrative reports | Membership, member status, archives, payments, attendance, renewals, inventory, and sales data based on stored records. |
+| Planned: email notifications | Application or renewal decisions and expiry reminders are planned; email delivery is not currently available. |
+
+### Software Requirements
+
+#### Table 4. Software Requirements
 
 | Software | Requirement or purpose |
 | --- | --- |
@@ -79,7 +105,9 @@ The following requirements describe the website's supported functions and operat
 | Development environment | Node.js 20 or later to run the repository's local static-file server. This local server is for development, not the production database backend. |
 | QR scanning | Browser camera permission and a secure HTTPS origin for production QR scanning. |
 
-#### Table 4. Hardware Requirements
+### Hardware Requirements
+
+#### Table 5. Hardware Requirements
 
 | User or component | Requirement |
 | --- | --- |
@@ -87,26 +115,30 @@ The following requirements describe the website's supported functions and operat
 | Applicant or member | Smartphone, tablet, laptop, or desktop computer with a current browser and internet access. |
 | Web hosting | Hosting capable of serving the static HTML, CSS, JavaScript, and image assets over HTTPS. Supabase provides the separate authentication and database services. |
 
+### Nonfunctional Requirements
 
-#### Table 5. System Inputs and Outputs
+#### Table 6. Nonfunctional Requirements
 
-| Type | Information | Description |
-| --- | --- | --- |
-| Input | Account credentials | Email and password are submitted to Supabase Auth. |
-| Input | Registration or renewal application | Applicant and plan details, contact and emergency-contact information, goals, health declarations, and signature where collected by the form. |
-| Input | Attendance action | Staff scans a member QR code and records check-in or check-out. |
-| Input | Product and inventory update | Administrator enters product details, price, unit, and merchandise stock quantity where applicable. |
-| Input | Sale transaction | Staff enters customer type and name, products or membership, quantities, and transaction details. |
-| Input | Report request | Administrator selects a report type and available filters or date range. |
-| Output | Authentication and login result | Role-appropriate routing or an authentication error; pending applicants see their application status during login. |
-| Output | Application and membership result | The recorded application status and, after staff review, the decision and updated membership information. |
-| Output | Member portal information | Membership details, QR code, personal attendance history, and active product catalog permitted for the member. |
-| Output | Attendance confirmation | Confirmation of staff-recorded check-in/check-out and permitted attendance history. |
-| Output | Receipt | Sale details, line items, quantities, prices, customer information, and total. |
-| Output | Administrative reports | Membership, member status, archives, payments, attendance, renewals, inventory, and sales data based on stored records. |
-| Planned output | Email notifications | Application or renewal decisions and expiry reminders are planned; email delivery is not currently available. |
+| Area | Requirement |
+| --- | --- |
+| Platform | The application is accessed through a modern browser with JavaScript enabled. The user interface is implemented as web pages and client-side scripts. |
+| Connectivity | Authenticated database-backed functions require an internet connection to reach Supabase. |
+| QR scanning | The staff device requires a camera and browser permission to scan QR codes. Production camera access should be served from a secure HTTPS origin. |
+| Access control | Database access is restricted through authenticated roles and PostgreSQL Row Level Security policies. Privileged account creation is routed through the administrator-verified Edge Function. The deployed configuration must be tested before use. |
+| Data handling | The application stores contact, emergency-contact, and health-related information. Access and retention practices should follow the gym's approved privacy procedures and applicable law. This description is not a certification of legal compliance. |
+| Availability | Users depend on the availability of the website host, internet connection, and Supabase services. Operational backup and recovery procedures must be defined for the deployed environment. |
 
 ## System Design
+
+### System Architecture Diagram
+
+![Figure 2. IronGrind system architecture](iron-grind-system-architecture.svg)
+
+**Figure 2.** System architecture of IronGrind.
+
+
+Figure 2 is a component view of the system and shows where each kind of work takes place. On the user side, applicants and members use the login, registration, and member pages; administrators use the dashboard. Supabase Auth verifies credentials and establishes a session, while the application uses the profile role to route a signed-in person to the appropriate interface. Inside the browser application, the labeled modules group related functions: Applications and Membership handle submissions and staff decisions; Attendance and QR supports staff scans; Inventory and Products maintains the catalog; Walk-in POS and Receipts records transactions; Member Portal presents a member's permitted information; and Reports and Exports prepares administrative summaries. Requests go to Supabase through its Data API or database RPC functions. The PostgreSQL database contains the application records, and Row Level Security (RLS) policies plus function-level checks restrict access to them. Realtime sends changes from `membership_applications` and `attendance` to subscribed website views. The email component is marked as in development because no external provider is selected. The Node.js server in the repository serves static files for local development and is not the production database backend.
+
 
 ### Data Process Modeling
 
@@ -114,44 +146,92 @@ Data process modeling describes how information enters IronGrind, which processe
 
 #### Diagrams
 
-##### System Architecture
-
-Figure 2 is a component view of the system and shows where each kind of work takes place. On the user side, applicants and members use the login, registration, and member pages; administrators use the dashboard. Supabase Auth verifies credentials and establishes a session, while the application uses the profile role to route a signed-in person to the appropriate interface. Inside the browser application, the labeled modules group related functions: Applications and Membership handle submissions and staff decisions; Attendance and QR supports staff scans; Inventory and Products maintains the catalog; Walk-in POS and Receipts records transactions; Member Portal presents a member's permitted information; and Reports and Exports prepares administrative summaries. Requests go to Supabase through its Data API or database RPC functions. The PostgreSQL database contains the application records, and Row Level Security (RLS) policies plus function-level checks restrict access to them. Realtime sends changes from `membership_applications` and `attendance` to subscribed website views. The email component is marked as in development because no external provider is selected. The Node.js server in the repository serves static files for local development and is not the production database backend.
-
-![Figure 2. IronGrind system architecture](iron-grind-system-architecture.svg)
-
-**Figure 2.** System architecture of IronGrind.
+The diagrams that follow present the system at different levels. The context diagram defines the system boundary and external exchanges. The Level 1 data-flow diagram expands the system into processes and stores. The use-case diagram groups functions by actor, and the ERD describes the database relationships that support those functions.
 
 ##### Context Diagram
-
-Figure 3 sets the boundary around IronGrind as a single system, without showing its internal modules or database tables. Applicants and members send credentials, registration or renewal details, and supported profile requests into that boundary. IronGrind returns authentication results and the membership, attendance, or active catalog information their role permits. Administrators send review decisions, member and product updates, sale entries, and report filters; the system returns updated records, receipts, and reports. A walk-in customer is represented through the staff-entered purchase rather than a direct system account. Supabase Auth and Supabase data services appear outside the application boundary because they provide authentication and database services to the website. The email exchange is planned and should be read as a future integration, not a current system output.
 
 ![Figure 3. IronGrind system context diagram](iron-grind-context-diagram.svg)
 
 **Figure 3.** System context diagram of IronGrind.
 
+
+Figure 3 sets the boundary around IronGrind as a single system, without showing its internal modules or database tables. Applicants and members send credentials, registration or renewal details, and supported profile requests into that boundary. IronGrind returns authentication results and the membership, attendance, or active catalog information their role permits. Administrators send review decisions, member and product updates, sale entries, and report filters; the system returns updated records, receipts, and reports. A walk-in customer is represented through the staff-entered purchase rather than a direct system account. Supabase Auth and Supabase data services appear outside the application boundary because they provide authentication and database services to the website. The email exchange is planned and should be read as a future integration, not a current system output.
+
+
 ##### Data Flow Diagram
-Figure 4 decomposes the single IronGrind system from Figure 3 into numbered processes and named data stores. External actors provide inputs to the process that handles them: credentials go to authentication; application details and staff decisions go to application processing; member requests go to the portal; QR scans go to attendance; product changes go to inventory; and customer and item details go to walk-in sales. The report process reads the operational stores to prepare summaries. The data stores D1–D8 correspond to profiles, membership applications, members, attendance, products, sales, sale items, and membership history, as listed in the Data Stores table. Arrows between processes and stores distinguish information read from information written; arrows between a process and an actor represent the corresponding request or response. The figure's email process is explicitly planned only: the current system has no configured email provider and does not send these messages. Together, this diagram explains the record flow in more detail than the context diagram, while the tables below define each process and store in text.
 
 ![Figure 4. Level 1 data-process model for IronGrind](iron-grind-data-flow.svg)
 
 **Figure 4.** Level 1 data-process model for IronGrind.
 
-##### Use-Case Diagram
+Figure 4 decomposes the single IronGrind system from Figure 3 into numbered processes and named data stores. External actors provide inputs to the process that handles them: credentials go to authentication; application details and staff decisions go to application processing; member requests go to the portal; QR scans go to attendance; product changes go to inventory; and customer and item details go to walk-in sales. The report process reads the operational stores to prepare summaries. The data stores D1–D8 correspond to profiles, membership applications, members, attendance, products, sales, sale items, and membership history, as listed in the Data Stores table. Arrows between processes and stores distinguish information read from information written; arrows between a process and an actor represent the corresponding request or response. The figure's email process is explicitly planned only: the current system has no configured email provider and does not send these messages. Together, this diagram explains the record flow in more detail than the context diagram, while the tables below define each process and store in text.
 
-Figure 5 describes the system from each actor's point of view. The actor lines connect a role to the use cases that role may initiate; the system boundary encloses the functions provided by IronGrind. Applicants can register and access the application/login workflow. Members can use the member portal, view their membership and attendance information, and submit renewal requests when eligible. Administrators review applications and manage members, attendance, products, sales, and reports. Walk-in customers are not shown as authenticated users because staff enter their sale details at the counter. The diagram expresses available role interactions; it does not imply that a member can approve an application or record their own attendance.
+
+### Data Process Explanations
+
+The Level 1 diagram can be read as a sequence of related responsibilities. Each process validates its input, uses only the records needed for its task, and returns the corresponding result.
+
+**1.0 Authenticate User.** Supabase Auth verifies submitted credentials and provides the authenticated session. The application reads the associated profile role to route the account to the member or administrator interface. Pending applicants receive an application-status response; they are not treated as approved members.
+
+**2.0 Process Membership Applications.** The system records registration or renewal details in the applications store. An authorized administrator reviews the request. Approval creates or updates the member record and records the associated transaction where configured; rejection updates the application status.
+
+**3.0 Manage Member Portal.** A signed-in member requests permitted membership, attendance, catalog, or profile information. The system returns records allowed for that member and stores a renewal request for staff review.
+
+**4.0 Record Attendance.** Staff scan a member QR code. The system resolves the member and either records a check-in or closes the member's open visit. The QR code identifies a member for staff use; it does not grant entry by itself.
+
+**5.0 Manage Inventory.** An authorized administrator creates, edits, or archives product records. Supplement prices and quantities use gram units; merchandise uses item units and tracked stock. The active catalog is returned to permitted views.
+
+**6.0 Process Walk-in Sale.** Staff enter the customer and selected product. The system validates product availability, records a sale header and itemized line, updates merchandise stock according to the configured transaction, and provides receipt details.
+
+**7.0 Query Reports and History.** An administrator selects a report and available filters. The system reads the relevant membership, attendance, inventory, sales, or history records and returns the corresponding view or export.
+
+**8.0 Email Notifications (planned).** Approval and expiry events may be used by a future notification integration. No external provider is configured, so this process currently produces no email output.
+
+##### Use-Case Diagram
 
 ![Figure 5. IronGrind use-case diagram](iron-grind-use-case.svg)
 
 **Figure 5.** Use-case diagram of IronGrind.
 
-##### Entity Relationship Diagram
 
-Figure 6 is a relational view of the core tables, rather than a flow of screens or activities. Each box names a table and shows selected fields; PK marks a primary key, FK marks a foreign key, and UK marks a unique field or link. The line ends indicate relationship cardinality: for example, one member may have many attendance events and membership-history records, while each such record points back to one member. A sale may belong to a member or to a walk-in customer, and its itemized lines are stored separately in `sale_items`; a line can retain its item description even when it has no linked product. `auth.users` is managed by Supabase and is shown to explain identity links, while `profiles` stores application role information. The `members.auth_user_id` link is nullable and unique, so a member can exist without a linked Auth identity and a single Auth user cannot be linked to multiple member rows. Application and member links also allow pending submissions to exist before they are connected to an approved member. The simplified ERD omits secondary fields to keep the relationships readable; consult the data dictionary and current schema for the full field list.
+Figure 5 describes the system from each actor's point of view. The actor lines connect a role to the use cases that role may initiate; the system boundary encloses the functions provided by IronGrind. Applicants can register and access the application/login workflow. Members can use the member portal, view their membership and attendance information, and submit renewal requests when eligible. Administrators review applications and manage members, attendance, products, sales, and reports. Walk-in customers are not shown as authenticated users because staff enter their sale details at the counter. The diagram expresses available role interactions; it does not imply that a member can approve an application or record their own attendance.
+
+
+### Use-Case Explanations
+
+The use cases in Figure 5 are grouped by the actor's role. The associations show which actor can initiate each function; database policies and server-side checks still control access to the underlying records.
+
+**Applicant.** An applicant creates an account and submits a membership application. The application remains pending until an administrator reviews it.
+
+**Member.** A member signs in to view permitted membership details, the issued QR code, personal attendance history, and the active catalog. An eligible member may submit a renewal request, which remains subject to staff review.
+
+**Administrator.** An administrator reviews applications and manages member records, staff-scanned attendance, products, sales, receipts, and operational reports.
+
+**Walk-in customer.** A walk-in customer does not need a system account. Staff enter the customer's purchase in the point-of-sale workflow and provide a receipt.
+
+##### Entity Relationship Diagram
 
 ![Figure 6. IronGrind entity relationship diagram](iron-grind-erd-simplified.svg)
 
 **Figure 6.** Entity relationship diagram of IronGrind.
+
+
+Figure 6 is a relational view of the core tables, rather than a flow of screens or activities. Each box names a table and shows selected fields; PK marks a primary key, FK marks a foreign key, and UK marks a unique field or link. The line ends indicate relationship cardinality: for example, one member may have many attendance events and membership-history records, while each such record points back to one member. A sale may belong to a member or to a walk-in customer, and its itemized lines are stored separately in `sale_items`; a line can retain its item description even when it has no linked product. `auth.users` is managed by Supabase and is shown to explain identity links, while `profiles` stores application role information. The `members.auth_user_id` link is nullable and unique, so a member can exist without a linked Auth identity and a single Auth user cannot be linked to multiple member rows. Application and member links also allow pending submissions to exist before they are connected to an approved member. The simplified ERD omits secondary fields to keep the relationships readable; consult the data dictionary and current schema for the full field list.
+
+
+### Entity and Relationship Explanations
+
+The ERD is a database structure diagram. Primary keys identify rows; foreign keys connect records; unique keys prevent duplicate identity or receipt links. Optional links are nullable, so a record can exist before an associated account or member has been linked.
+
+**Authentication and profiles.** Supabase manages authentication identities in `auth.users`. The `profiles` row stores the application role and account information. A profile's identifier corresponds to its Auth user.
+
+**Applications and members.** `membership_applications` stores registration and renewal requests and their review state. An application may refer to a member after the account is approved or when it represents an existing member's renewal. `members` stores approved membership information. The nullable unique `members.auth_user_id` link permits no more than one member row per Auth user.
+
+**Attendance and membership history.** Each attendance row refers to the member whose visit it records; a member can have multiple visits. Membership history stores lifecycle events such as expiration, renewal, and plan change, with prior and new values where available.
+
+**Sales, sale items, and products.** A sale stores the receipt-level customer, date, status, and total. Its itemized details are stored in `sale_items`. A line may refer to a product, while the item name and price are retained on the line for the transaction record. A member sale may link to a member; a walk-in sale may have no member link.
+
+These links support the reports and workflows described in the process model. The simplified diagram omits secondary fields for readability; the Data Dictionary lists the principal fields and their purposes.
 
 ### Data Processes
 
@@ -260,13 +340,15 @@ The project does not provide online payment processing, online product checkout 
 
 ## Gantt Chart
 
-The Gantt chart should show the actual schedule for requirements planning, user design and prototype refinement, construction iterations, verification, implementation, and evaluation. The project files do not establish approved calendar dates, so enter the actual dates and durations from the project records rather than estimating them.
+The development schedule follows the order of the Agile activities. The table records each phase, its main work, and its expected output. Calendar start and end dates should follow the approved project schedule.
 
-| Activity | Planned start | Planned end | Deliverable |
-| --- | --- | --- | --- |
-| Data gathering and requirements planning | To be completed from project records | To be completed from project records | Approved requirements specification. |
-| User design and prototype | To be completed from project records | To be completed from project records | Reviewed interface and diagrams. |
-| Construction iterations | To be completed from project records | To be completed from project records | Working feature increments. |
-| Verification and refinement | To be completed from project records | To be completed from project records | Test records and refined system. |
-| Implementation and transition | To be completed from project records | To be completed from project records | Deployment and user-orientation records. |
-| Evaluation | To be completed from project records | To be completed from project records | Evaluation data and findings. |
+| Phase | Main activities | Expected output |
+| --- | --- | --- |
+| 1. Requirements planning | Define scope, users, workflows, data needs, and access requirements. | Prioritized requirements and acceptance criteria. |
+| 2. User design and prototyping | Refine page flows, forms, reports, database relationships, and role permissions. | Reviewed interface prototype and system diagrams. |
+| 3. Construction iterations | Implement prioritized features in the browser client and Supabase services; verify each increment. | Integrated feature increments and recorded issues. |
+| 4. Refinement | Resolve verification findings and update the prioritized requirements. | Refined system ready for deployment preparation. |
+| 5. Implementation and transition | Configure the intended environment, prepare administrator access, and orient staff. | Configured deployment and user-orientation records. |
+| 6. Evaluation | Conduct the approved user evaluation and analyze collected responses. | Evaluation dataset and reported findings. |
+
+Exact calendar dates and durations are not included because no approved dated schedule was present in the project files. Add those dates from the project plan before submitting a date-based Gantt chart.
