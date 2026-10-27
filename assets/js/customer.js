@@ -884,7 +884,7 @@ async function loadSupabaseMember() {
     }
     supabaseMember = {
         id: row.id,
-        authUserId: row.auth_user_id || row.user_id,
+        authUserId: row.auth_user_id,
         name: row.full_name,
         dateOfBirth: row.date_of_birth,
         sex: row.sex,

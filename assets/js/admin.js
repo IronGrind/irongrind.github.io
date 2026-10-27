@@ -602,7 +602,7 @@ async function completeSupabaseRegistrationApproval(application) {
     }
 
     const appRow = application.supabaseRecord;
-    const userId = appRow.auth_user_id || appRow.user_id;
+    const userId = appRow.auth_user_id;
     if (!userId) {
         toast('This application is missing its Auth user link.', 'error');
         return;
@@ -839,7 +839,7 @@ function mapSupabaseMember(row, username = '', email = '') {
     const paidValue = row.paid;
     return {
         id: row.id,
-        authUserId: row.auth_user_id || row.user_id,
+        authUserId: row.auth_user_id,
         name: row.full_name,
         plan: row.plan,
         planPrice: Number(row.plan_price) || (typeof paidValue === 'number' ? paidValue : 0),

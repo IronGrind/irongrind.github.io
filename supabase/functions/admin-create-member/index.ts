@@ -76,7 +76,6 @@ Deno.serve(async (request) => {
   const now = new Date().toISOString();
   const member = {
     auth_user_id: userId,
-    user_id: userId,
     full_name: fullName,
     email,
     username,

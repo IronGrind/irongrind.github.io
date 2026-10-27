@@ -264,7 +264,6 @@ begin
     from information_schema.columns
     where table_schema = 'public' and table_name = 'members' and column_name = 'paid';
     member_data := jsonb_set(member_data, '{id}', to_jsonb(gen_random_uuid()), true);
-    member_data := jsonb_set(member_data, '{user_id}', member_data -> 'auth_user_id', true);
     if paid_type in ('numeric', 'integer', 'bigint', 'real', 'double precision') then
         member_data := jsonb_set(member_data, '{paid}', member_data -> 'plan_price', true);
     else
