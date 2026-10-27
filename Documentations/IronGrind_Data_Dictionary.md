@@ -158,7 +158,7 @@ Each row documents one database field. Type precision and scale are included in 
 
 ## Indexes and Keys
 
-Primary and unique keys are identified in the table definitions above. In addition, the schema and migrations define these query-supporting indexes:
+Primary and unique keys are identified in the master field dictionary. The schema and migrations also define these query-supporting indexes:
 
 | Index | Fields | Purpose |
 | --- | --- | --- |
@@ -171,12 +171,20 @@ Primary and unique keys are identified in the table definitions above. In additi
 | `sale_items_sale_id_idx` | `sale_items(sale_id)` | Retrieves a receipt's line items. |
 | `membership_history_member_date_idx` | `membership_history(member_id, recorded_at DESC)` | Retrieves a member's history in time order. |
 
-`profiles.email`, `profiles.username`, and `sales.receipt_number` are unique in the canonical schema. Some compatibility migrations implement nullable profile uniqueness with partial unique indexes. `members.auth_user_id` is deliberately a partial unique index because multiple unlinked member records may have NULL account IDs.
+| Unique field/index | Rule |
+| --- | --- |
+| `profiles.email` | Unique account email in the canonical schema. |
+| `profiles.username` | Unique username; compatibility migrations may use a partial unique index when the field is nullable. Availability checks compare case-insensitively. |
+| `sales.receipt_number` | Unique receipt number. |
+| `members.auth_user_id` | Partial unique index; non-NULL Auth IDs can link to at most one member, while multiple unlinked members may have NULL. |
 
 ## Data Access and Operational Notes
 
-- Row-level security is enabled for all eight application tables. Members can access their own permitted records; administrators have broader management access. Exact behavior is determined by the policies in `supabase/schema.sql` and subsequent migrations.
-- Auth and staff IDs are UUID references to `auth.users`, not copies of authentication credentials.
-- `emergency_contact` and `emergency_contact_data` coexist on applications for compatibility. New or maintained code should use the field expected by the current application flow and avoid assuming the two values are automatically synchronized.
-- `expiry_date` is the canonical member expiry field; `end_date` remains for compatibility with existing membership operations. Code that reads older data may fall back between these fields.
-- This dictionary describes the intended/current schema contract, not every possible legacy column on an upgraded installation. Before database changes, inspect `information_schema` and `pg_catalog` on the target Supabase project and apply migrations in the documented order.
+| Topic | Notes |
+| --- | --- |
+| Row-level security | Enabled for all eight application tables. Members can access their own permitted records; administrators have broader management access. Exact behavior is defined by the policies in `supabase/schema.sql` and subsequent migrations. |
+| Auth identifiers | Account and staff IDs reference `auth.users`; they do not contain authentication credentials. |
+| Application emergency contacts | `emergency_contact` and `emergency_contact_data` coexist for compatibility and are not automatically synchronized. |
+| Membership expiry | `expiry_date` is canonical; `end_date` is retained for compatibility. Operations may fall back between them. |
+| Schema authority | This dictionary describes the intended/current contract, not every legacy column on upgraded installations. The target project's `information_schema` and `pg_catalog` are authoritative before database changes. |
+| Migration source | Apply and review schema changes from `supabase/schema.sql` and `supabase/migrations/` in the documented order. |
