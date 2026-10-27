@@ -1616,6 +1616,10 @@ function startQRScanner() {
         toast('The QR scanner could not load. Check your internet connection and reload.', 'error');
         return;
     }
+    if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
+        toast('Camera access requires this page to be opened over HTTPS or localhost in a supported browser.', 'error');
+        return;
+    }
 
     qrScanHandled = false;
     openModal(`<div class="qr-camera-modal">
@@ -1633,11 +1637,10 @@ function startQRScanner() {
         <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancel</button></div>
     </div>`);
 
-    activeQRScanner = new Html5Qrcode('qrReader');
-    activeQRScanner.start(
-        { facingMode: 'environment' },
-        { fps: 10, qrbox: { width: 240, height: 240 }, aspectRatio: 1 },
-        async decodedText => {
+    const scanner = new Html5Qrcode('qrReader');
+    activeQRScanner = scanner;
+    const scanConfig = { fps: 10, qrbox: { width: 240, height: 240 }, aspectRatio: 1 };
+    const handleScanSuccess = async decodedText => {
             if (qrScanHandled) return;
             qrScanHandled = true;
             const scannedText = decodedText.trim();
@@ -1688,17 +1691,53 @@ function startQRScanner() {
             await new Promise(resolve => window.setTimeout(resolve, 350));
             closeModal();
             await recordMemberAttendanceScan(member);
-        },
-        () => {}
-    ).then(() => {
+    };
+    const startCamera = async () => {
+        try {
+            await scanner.start(
+                { facingMode: { ideal: 'environment' } },
+                scanConfig,
+                handleScanSuccess,
+                () => {}
+            );
+        } catch (firstError) {
+            // Some desktop cameras and browsers cannot satisfy an environment
+            // camera preference. Retry with a listed device when available.
+            if (!['OverconstrainedError', 'NotFoundError', 'ConstraintNotSatisfiedError'].includes(firstError?.name)) {
+                throw firstError;
+            }
+            const cameras = await Html5Qrcode.getCameras().catch(() => []);
+            const camera = cameras.find(item => /back|rear|environment/i.test(item.label)) || cameras[0];
+            if (!camera) throw firstError;
+            await scanner.start(camera.id, scanConfig, handleScanSuccess, () => {});
+        }
+    };
+
+    startCamera().then(() => {
         const status = document.getElementById('qrCameraStatus');
         if (status) status.textContent = 'Camera is on. Point it at the member’s QR code.';
     }).catch(error => {
         stopQRScanner();
         const status = document.getElementById('qrCameraStatus');
-        if (status) status.textContent = 'Camera unavailable. Allow camera access and use this page over HTTPS or localhost.';
+        if (status) status.textContent = getQRScannerErrorMessage(error);
         console.warn('QR camera failed to start:', error);
     });
+}
+
+function getQRScannerErrorMessage(error) {
+    if (['NotAllowedError', 'PermissionDeniedError', 'SecurityError'].includes(error?.name)) {
+        return 'Camera permission is blocked. Allow camera access for this site in your browser settings, then try again.';
+    }
+    if (error?.name === 'NotFoundError') {
+        return 'No camera was found. Connect or enable a camera, then try again.';
+    }
+    if (error?.name === 'NotReadableError') {
+        return 'The camera is busy or unavailable. Close other apps using it, then try again.';
+    }
+    if (['OverconstrainedError', 'ConstraintNotSatisfiedError'].includes(error?.name)) {
+        return 'No compatible camera was found. Check the camera connection or try another browser.';
+    }
+    return `Camera could not start${error?.message ? `: ${error.message}` : '. Check browser camera permissions and try again.'}`;
 }
 
 function stopQRScanner() {
