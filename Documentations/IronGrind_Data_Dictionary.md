@@ -12,14 +12,14 @@ PostgreSQL `text` and `text[]` have no declared character limit; `jsonb` has no 
 
 | Table | Purpose |
 | --- | --- |
-| `profiles` | Application profile and authorization role for a Supabase Auth account. |
-| `members` | Current gym member profile, membership, and account link. |
-| `membership_applications` | Submitted registration and renewal requests and their review outcomes. |
-| `attendance` | Member check-in and check-out records. |
-| `products` | Product catalog, prices, inventory, and archive state. |
-| `sales` | Transaction header, receipt, customer, payment total, and staff attribution. |
-| `sale_items` | Product or membership line items belonging to a sale. |
-| `membership_history` | Historical membership lifecycle events and before/after details. |
+| `profiles` | Application profile and authorization role for a Supabase Auth account. It provides the application-facing identity for a signed-in user. |
+| `members` | Current gym member profile, membership, and account link. It holds the member's current details and membership state. |
+| `membership_applications` | Submitted registration and renewal requests and their review outcomes. It tracks each request from submission through review. |
+| `attendance` | Member check-in and check-out records. It provides a visit history for each member. |
+| `products` | Product catalog, prices, inventory, and archive state. It tracks which items are available for sale and their stock. |
+| `sales` | Transaction header, receipt, customer, payment total, and staff attribution. It stores one record for each receipt-level transaction. |
+| `sale_items` | Product or membership line items belonging to a sale. It records the individual charges included on a receipt. |
+| `membership_history` | Historical membership lifecycle events and before/after details. It preserves membership changes for review and reporting. |
 
 ## 1. `profiles`
 
@@ -106,7 +106,7 @@ PostgreSQL `text` and `text[]` have no declared character limit; `jsonb` has no 
 
 ## 4. `attendance`
 
-**Description:** One row per member visit, with check-in and optional check-out times.
+**Description:** One row per member visit, with check-in and optional check-out times. It keeps visit history separate from the member profile.
 
 | Field | Type | Null / default | Key / constraint | Purpose |
 | --- | --- | --- | --- | --- |
@@ -119,7 +119,7 @@ PostgreSQL `text` and `text[]` have no declared character limit; `jsonb` has no 
 
 ## 5. `products`
 
-**Description:** Stores products available for sale, including prices and inventory state.
+**Description:** Stores products available for sale, including prices and inventory state. It supports catalog availability and merchandise stock tracking.
 
 | Field | Type | Null / default | Key / constraint | Purpose |
 | --- | --- | --- | --- | --- |
@@ -172,7 +172,7 @@ The table also has a category/unit consistency check: supplements must use `gram
 
 ## 8. `membership_history`
 
-**Description:** Records membership events and prior/new values for administrative review and reporting.
+**Description:** Records membership events and prior/new values for administrative review and reporting. Each row preserves the membership details associated with an event.
 
 | Field | Type | Null / default | Key / constraint | Purpose |
 | --- | --- | --- | --- | --- |
