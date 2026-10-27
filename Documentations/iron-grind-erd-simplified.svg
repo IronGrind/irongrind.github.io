@@ -1,0 +1,157 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1260" viewBox="0 0 1700 1260" role="img" aria-labelledby="title desc">
+<title id="title">IronGrind Simplified Entity Relationship Diagram</title>
+<desc id="desc">A simplified ERD showing the main IronGrind database tables, key fields, primary and foreign keys, and their relationships.</desc>
+<defs>
+  <style>
+    text{font-family:Arial,Helvetica,sans-serif;fill:#172033}.title{font-size:25px;font-weight:700}.subtitle{font-size:13px;fill:#536174}.table{fill:#fff;stroke:#62748a;stroke-width:1.5}.head{fill:#e8eef5}.th{font-size:16px;font-weight:700}.field{font-size:12px}.type{font-size:11px;fill:#536174}.key{font-size:10px;font-weight:700;fill:#176b87}.edge{fill:none;stroke:#52677f;stroke-width:1.6}.rel{font-size:11px;font-weight:700;fill:#40536b}.legend{font-size:12px;fill:#40536b}
+  </style>
+</defs>
+<rect width="1700" height="1260" fill="#f7f9fc"/>
+<text x="850" y="42" text-anchor="middle" class="title">IRON GRIND FITNESS GYM — SIMPLIFIED ERD</text>
+<text x="850" y="66" text-anchor="middle" class="subtitle">Core fields and confirmed relationships from the live Supabase schema</text>
+
+<!-- Relationship connectors are routed behind the entity tables. -->
+<g class="edge">
+  <path d="M760 160V190H310V220"/><path d="M820 160V220"/><path d="M900 160V190H1150V220"/>
+  <path d="M470 302H520"/>
+  <path d="M920 335H970"/><path d="M920 392H970"/>
+  <path d="M1330 384H1360V470H1460V520"/>
+  <path d="M1240 470V700H1410"/>
+  <path d="M1100 470V650H615V700"/>
+  <path d="M780 820H820"/>
+  <path d="M400 830H420V650H980V700"/>
+  <path d="M950 150H1680V585H1640"/>
+  <path d="M950 145H1660V840H1640"/>
+  <path d="M950 155H1670V950H780V850"/>
+</g>
+<g class="rel">
+  <text x="310" y="185" text-anchor="middle">id → profiles.id</text>
+  <text x="825" y="188" text-anchor="middle">auth_user_id</text>
+  <text x="1060" y="122" text-anchor="middle">auth_user_id</text>
+  <text x="495" y="292" text-anchor="middle">reviewed_by</text>
+  <text x="945" y="327" text-anchor="middle">member_id</text>
+  <text x="945" y="385" text-anchor="middle">application_id (unique)</text>
+  <text x="1370" y="455">member_id</text>
+  <text x="1247" y="590" transform="rotate(-90 1247 590)" text-anchor="middle">member_id</text>
+  <text x="855" y="810" text-anchor="middle">sale_id</text>
+  <text x="700" y="645" text-anchor="middle">product_id</text>
+  <text x="1665" y="570" transform="rotate(-90 1665 570)" text-anchor="middle">recorded_by</text>
+  <text x="1667" y="820" transform="rotate(-90 1667 820)" text-anchor="middle">recorded_by</text>
+  <text x="1200" y="945" text-anchor="middle">processed_by</text>
+  <text x="900" y="645" text-anchor="middle">member_id</text>
+</g>
+
+<!-- Auth identity -->
+<g transform="translate(650 90)">
+  <rect width="300" height="70" rx="6" class="table"/><path d="M0 34H300" stroke="#62748a"/>
+  <rect width="300" height="34" rx="6" class="head"/><text x="150" y="23" text-anchor="middle" class="th">auth.users</text>
+  <text x="14" y="56" class="field">id</text><text x="265" y="56" class="type">uuid · PK</text>
+  <text x="14" y="67" class="field">email</text>
+</g>
+
+<!-- Profiles -->
+<g transform="translate(150 220)">
+  <rect width="320" height="190" rx="6" class="table"/><path d="M0 36H320" stroke="#62748a"/><rect width="320" height="36" rx="6" class="head"/>
+  <text x="160" y="24" text-anchor="middle" class="th">profiles</text>
+  <text x="14" y="59" class="field">id</text><text x="205" y="59" class="type">uuid</text><text x="260" y="59" class="key">PK, FK</text>
+  <text x="14" y="84" class="field">username</text><text x="205" y="84" class="type">text</text><text x="260" y="84" class="key">UK</text>
+  <text x="14" y="109" class="field">full_name</text><text x="205" y="109" class="type">text</text>
+  <text x="14" y="134" class="field">role</text><text x="205" y="134" class="type">text</text>
+  <text x="14" y="159" class="field">account_status</text><text x="205" y="159" class="type">text</text>
+  <text x="14" y="180" class="field">email</text><text x="205" y="180" class="type">text</text>
+</g>
+
+<!-- Membership applications -->
+<g transform="translate(520 220)">
+  <rect width="400" height="250" rx="6" class="table"/><path d="M0 36H400" stroke="#62748a"/><rect width="400" height="36" rx="6" class="head"/>
+  <text x="200" y="24" text-anchor="middle" class="th">membership_applications</text>
+  <text x="14" y="59" class="field">id</text><text x="280" y="59" class="type">uuid</text><text x="340" y="59" class="key">PK</text>
+  <text x="14" y="84" class="field">auth_user_id</text><text x="280" y="84" class="type">uuid</text><text x="340" y="84" class="key">FK</text>
+  <text x="14" y="109" class="field">member_id</text><text x="280" y="109" class="type">uuid</text><text x="340" y="109" class="key">FK</text>
+  <text x="14" y="134" class="field">reviewed_by</text><text x="280" y="134" class="type">uuid</text><text x="340" y="134" class="key">FK</text>
+  <text x="14" y="159" class="field">application_type</text><text x="280" y="159" class="type">text</text>
+  <text x="14" y="184" class="field">plan</text><text x="280" y="184" class="type">text</text>
+  <text x="14" y="209" class="field">status</text><text x="280" y="209" class="type">text</text>
+  <text x="14" y="234" class="field">submitted_at</text><text x="280" y="234" class="type">timestamptz</text>
+</g>
+
+<!-- Members -->
+<g transform="translate(970 220)">
+  <rect width="360" height="250" rx="6" class="table"/><path d="M0 36H360" stroke="#62748a"/><rect width="360" height="36" rx="6" class="head"/>
+  <text x="180" y="24" text-anchor="middle" class="th">members</text>
+  <text x="14" y="59" class="field">id</text><text x="250" y="59" class="type">uuid</text><text x="310" y="59" class="key">PK</text>
+  <text x="14" y="84" class="field">auth_user_id</text><text x="250" y="84" class="type">uuid</text><text x="310" y="84" class="key">FK</text>
+  <text x="14" y="109" class="field">application_id</text><text x="250" y="109" class="type">uuid</text><text x="310" y="109" class="key">FK, UK</text>
+  <text x="14" y="134" class="field">full_name / email</text><text x="250" y="134" class="type">text</text>
+  <text x="14" y="159" class="field">plan / status</text><text x="250" y="159" class="type">text</text>
+  <text x="14" y="184" class="field">start_date</text><text x="250" y="184" class="type">date</text>
+  <text x="14" y="209" class="field">expiry_date</text><text x="250" y="209" class="type">date</text>
+  <text x="14" y="234" class="field">registration_source</text><text x="250" y="234" class="type">text</text>
+</g>
+
+<!-- Attendance -->
+<g transform="translate(1360 520)">
+  <rect width="280" height="170" rx="6" class="table"/><path d="M0 36H280" stroke="#62748a"/><rect width="280" height="36" rx="6" class="head"/>
+  <text x="140" y="24" text-anchor="middle" class="th">attendance</text>
+  <text x="14" y="59" class="field">id</text><text x="190" y="59" class="type">uuid · PK</text>
+  <text x="14" y="84" class="field">member_id</text><text x="190" y="84" class="type">uuid · FK</text>
+  <text x="14" y="109" class="field">time_in</text><text x="190" y="109" class="type">timestamptz</text>
+  <text x="14" y="134" class="field">time_out</text><text x="190" y="134" class="type">timestamptz</text>
+  <text x="14" y="159" class="field">recorded_by</text><text x="190" y="159" class="type">uuid · FK</text>
+</g>
+
+<!-- Business tables -->
+<g transform="translate(80 700)">
+  <rect width="320" height="190" rx="6" class="table"/><path d="M0 36H320" stroke="#62748a"/><rect width="320" height="36" rx="6" class="head"/>
+  <text x="160" y="24" text-anchor="middle" class="th">products</text>
+  <text x="14" y="59" class="field">id</text><text x="205" y="59" class="type">uuid · PK</text>
+  <text x="14" y="84" class="field">name</text><text x="205" y="84" class="type">text</text>
+  <text x="14" y="109" class="field">category</text><text x="205" y="109" class="type">text</text>
+  <text x="14" y="134" class="field">price_per_unit</text><text x="205" y="134" class="type">numeric</text>
+  <text x="14" y="159" class="field">stock</text><text x="205" y="159" class="type">integer</text>
+  <text x="14" y="180" class="field">is_active</text><text x="205" y="180" class="type">boolean</text>
+</g>
+
+<g transform="translate(450 700)">
+  <rect width="330" height="220" rx="6" class="table"/><path d="M0 36H330" stroke="#62748a"/><rect width="330" height="36" rx="6" class="head"/>
+  <text x="165" y="24" text-anchor="middle" class="th">sales</text>
+  <text x="14" y="59" class="field">id</text><text x="220" y="59" class="type">uuid · PK</text>
+  <text x="14" y="84" class="field">member_id</text><text x="220" y="84" class="type">uuid · FK</text>
+  <text x="14" y="109" class="field">receipt_number</text><text x="220" y="109" class="type">text · UK</text>
+  <text x="14" y="134" class="field">customer_name</text><text x="220" y="134" class="type">text</text>
+  <text x="14" y="159" class="field">total / status</text><text x="220" y="159" class="type">numeric / text</text>
+  <text x="14" y="184" class="field">sold_at</text><text x="220" y="184" class="type">timestamptz</text>
+  <text x="14" y="209" class="field">processed_by</text><text x="220" y="209" class="type">uuid · FK</text>
+</g>
+
+<g transform="translate(820 700)">
+  <rect width="320" height="220" rx="6" class="table"/><path d="M0 36H320" stroke="#62748a"/><rect width="320" height="36" rx="6" class="head"/>
+  <text x="160" y="24" text-anchor="middle" class="th">sale_items</text>
+  <text x="14" y="59" class="field">id</text><text x="210" y="59" class="type">uuid · PK</text>
+  <text x="14" y="84" class="field">sale_id</text><text x="210" y="84" class="type">uuid · FK</text>
+  <text x="14" y="109" class="field">product_id</text><text x="210" y="109" class="type">uuid · FK</text>
+  <text x="14" y="134" class="field">item_name</text><text x="210" y="134" class="type">text</text>
+  <text x="14" y="159" class="field">quantity / unit</text><text x="210" y="159" class="type">numeric / text</text>
+  <text x="14" y="184" class="field">unit_price</text><text x="210" y="184" class="type">numeric</text>
+  <text x="14" y="209" class="field">line_total</text><text x="210" y="209" class="type">numeric</text>
+</g>
+
+<g transform="translate(1330 700)">
+  <rect width="310" height="190" rx="6" class="table"/><path d="M0 36H310" stroke="#62748a"/><rect width="310" height="36" rx="6" class="head"/>
+  <text x="155" y="24" text-anchor="middle" class="th">membership_history</text>
+  <text x="14" y="59" class="field">id</text><text x="200" y="59" class="type">uuid · PK</text>
+  <text x="14" y="84" class="field">member_id</text><text x="200" y="84" class="type">uuid · FK</text>
+  <text x="14" y="109" class="field">event_type</text><text x="200" y="109" class="type">text</text>
+  <text x="14" y="134" class="field">previous_plan</text><text x="200" y="134" class="type">text</text>
+  <text x="14" y="159" class="field">new_plan</text><text x="200" y="159" class="type">text</text>
+  <text x="14" y="180" class="field">recorded_at / by</text><text x="200" y="180" class="type">time / uuid · FK</text>
+</g>
+
+<g transform="translate(80 1010)">
+  <rect width="1050" height="105" rx="8" fill="#eef3f8" stroke="#9aabba"/>
+  <text x="22" y="30" class="th">KEY</text>
+  <text x="22" y="57" class="legend"><tspan font-weight="700">PK</tspan> primary key  ·  <tspan font-weight="700">FK</tspan> foreign key  ·  <tspan font-weight="700">UK</tspan> unique key</text>
+  <text x="22" y="82" class="legend">Auth users is Supabase-managed. The simplified view omits legacy compatibility fields and other non-key details.</text>
+</g>
+<text x="850" y="1200" text-anchor="middle" class="subtitle">Figure. Simplified Entity Relationship Diagram</text>
+</svg>
