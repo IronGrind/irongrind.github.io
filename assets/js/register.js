@@ -167,6 +167,21 @@ async function submitRegistration(event) {
     submitButton.disabled = true;
     submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account…';
     try {
+        const { data: usernameAvailable, error: usernameCheckError } = await window.ironGrindSupabase.rpc(
+            'is_registration_username_available',
+            { p_username: username }
+        );
+        if (usernameCheckError) {
+            console.error('Could not check registration username:', usernameCheckError);
+            showError('We could not check whether that username is available. Please try again shortly.');
+            return;
+        }
+        if (!usernameAvailable) {
+            showError('That username is already in use. Please choose another username.');
+            document.getElementById('regUsername').focus();
+            return;
+        }
+
         const { data, error } = await window.ironGrindSupabase.auth.signUp({
             email,
             password,
