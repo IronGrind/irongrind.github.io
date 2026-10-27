@@ -34,6 +34,47 @@ Selected requirements are implemented in the HTML, CSS, and JavaScript client an
 
 The implementation phase follows verification of the required increments. It includes configuring the website and Supabase project for the intended environment, applying the approved access policies, preparing administrator accounts, and orienting staff to the supported workflows. Deployment and user-orientation outcomes are reported after those activities are completed.
 
+### Research Design and Development Approach
+
+This study produces a web-based information system for a defined operational setting. The system-development work is organized into requirements planning, user design, construction, verification, and implementation activities described above. Agile describes how the software work is organized; it is distinct from the research design used to evaluate the completed system. Chapter 1 establishes the system objectives and Chapter 2 identifies the DeLone and McLean Information Systems Success Model as a possible evaluation framework. The final formal research-design label and evaluation method should follow the design approved for the study. No experimental effect or user-evaluation outcome is claimed in this chapter.
+
+### Study Locale
+
+The study is situated at Iron Grind Fitness Gym in Purok Mangga, Sulongon, Dapitan City, Zamboanga del Norte, as stated in Chapter 1. The system is tailored to the gym's membership and front-desk operations. Applicants and members use the web pages remotely or at a compatible device; the administrator and staff workflows are intended for the gym's authorized users. The project files do not specify a separate research-data-collection venue or schedule, so any such details should be supplied from the approved study plan.
+
+### Intended Users, Respondents, and Sampling
+
+The system's intended users are applicants, approved members, and authorized administrators or staff. Walk-in customers are represented in staff-entered sales and do not require accounts. These user roles define who may interact with the system; they do not by themselves establish who participated in the study evaluation.
+
+The supplied chapters and application files do not identify the final respondent population, number of participants, inclusion criteria, sampling method, or actual sample size. Those details must match the approved research proposal and the participants who actually take part. If respondents include gym members, the study should identify the eligible member group and the selection method. If the owner, administrator, or staff are included, their roles and number should be reported separately. Do not report intended users as actual respondents unless data were collected from them.
+
+### Research Instrument and Evaluation Criteria
+
+Chapter 2 identifies the DeLone and McLean model as a possible framework. The instrument should measure only the dimensions selected and approved for this study. Its items need to match the intended respondents' experience: members can assess portal access and member-facing information, while administrators or staff can assess the operational workflows they use. Questions about features a respondent has not used should not be treated as direct experience ratings.
+
+The approved instrument, item wording, response scale, validation process, and reliability procedure were not included in the supplied project files. The final manuscript should identify whether the study uses a questionnaire, task checklist, interview guide, or a combination; state the source or development process; describe any expert review or pilot activity that actually occurred; and append the approved instrument if required. The framework below is a mapping guide, not a substitute for the instrument.
+
+| Evaluation area | Example subject for an approved item or task | Respondent group with relevant experience |
+| --- | --- | --- |
+| System quality | Navigation clarity, availability, error recovery, and reliable completion of common operations | Members and administrators/staff, limited to workflows they use |
+| Information quality | Accuracy, completeness, readability, and usefulness of membership, attendance, inventory, sales, and reports | Members for their own portal data; administrators/staff for operational records |
+| Service quality | Assistance, support, and guidance received during system orientation or use | Participants who actually received support |
+| Use and intended use | Ability or willingness to use the functions assigned to the respondent's role | Members and administrators/staff by role |
+| User satisfaction | Overall experience after completing representative tasks | Participants who used the system during evaluation |
+| Net benefits | Perceived contribution to organizing and retrieving gym records | Participants with sufficient experience to judge the relevant work |
+
+### Data-Gathering Procedure
+
+The project files describe the system but do not document a completed participant evaluation. A defensible procedure should be finalized with the approved proposal before data collection. A general sequence is to obtain institutional and gym authorization, explain the study and obtain informed consent, prepare test accounts and representative tasks, orient participants without coaching their ratings, allow them to use the relevant functions, administer the approved instrument, and secure the responses for analysis. The final chapter should state the actual dates, setting, participants, task set, instrument administration method, and handling of incomplete responses. These details should describe what was done, not a proposed procedure presented as completed work.
+
+### Statistical Treatment of Evaluation Data
+
+The analysis method depends on the approved instrument and response scale. The proposal should specify how responses are coded, how missing answers are handled, what descriptive statistics or other analyses are used, and how rating ranges are interpreted. If a Likert-type questionnaire is used, the manuscript should state the exact scale anchors and the approved calculation and interpretation rules. The supplied project files do not provide respondent data or an approved statistical-treatment plan; therefore, this section does not report weighted means, ratings, acceptance levels, or conclusions.
+
+### Ethical and Privacy Considerations
+
+The system handles personal identifiers, contact and emergency-contact details, and health declarations. Evaluation should use only the information required for the study, explain the purpose and voluntary nature of participation, restrict access to collected responses, and avoid exposing live member records in screenshots or demonstration accounts. Test data should be used where possible. Any consent, retention, anonymization, and disposal procedures must follow the institution's approved ethics requirements and the gym's privacy procedures. The presence of access policies in the application does not by itself establish that the research or deployment complies with every applicable requirement.
+
 ## Requirement Specifications
 
 This section presents the operating context and the functional, input, output, software, hardware, and nonfunctional requirements for IronGrind. These specifications describe the system represented by the current project files.
@@ -61,6 +102,28 @@ The functional requirements describe the operations available to applicants, mem
 | FR-09 | Sales and receipts | Staff record in-person product and membership sales for members or walk-in customers. The system stores a sale record and its line items and supports receipt/report views. |
 | FR-10 | Operational reports | Authorized staff view and print or save the available membership, member-status, archive, payment, attendance, renewal, inventory, and sales reports. Report contents depend on the records entered into the system. |
 
+### Explanation of Functional Requirements
+
+**FR-01 — Authentication and access.** Supabase Auth verifies account credentials and maintains the authenticated session. The application role determines which interface is presented, while database policies and server-side functions enforce access to protected records. A role displayed by the client is not sufficient on its own to authorize a database operation.
+
+**FR-02 — Online application.** The application form accepts a prospective member's account and membership details. The request is persisted separately from the approved member record and remains pending for administrator review. This separation lets the system show a request's progress without treating every signup as an active membership.
+
+**FR-03 — Application review.** The administrator queue presents new registration and renewal requests for decision. Approval or rejection records the status and review metadata. Registration approval creates or links a member record; renewal approval updates an existing member's current membership after retaining the prior state. A successful decision should be reflected in the member list and reports after data refresh.
+
+**FR-04 — Membership management.** The administrator can view the member register and perform supported plan-change or counter-renewal actions. A current membership record contains the member's current plan and dates. Expired periods and plan changes are retained in archive/history records so that changing current values does not erase the earlier period.
+
+**FR-05 — Member portal.** An authenticated member sees permitted information associated with their own account, including current membership data, QR identifier, and attendance history. Profile changes are limited to fields offered by the portal. Data access must remain scoped to the signed-in identity by database policies.
+
+**FR-06 — Renewal request.** A member submits a request during the configured five-calendar-day period before and including expiry. The application remains pending until staff review. A request does not automatically change the current membership dates or count as a completed renewal transaction.
+
+**FR-07 — Attendance.** Staff use the administrator scanner to resolve a QR identifier and record a visit. A scan checks for an existing open visit to determine whether the action is check-in or check-out. The member portal can display the member's own history but does not provide the staff attendance-write function.
+
+**FR-08 — Product and inventory management.** The administrator maintains the catalog and can archive items. Product category determines the unit: supplements are measured by gram, while merchandise is measured by item and its available stock is tracked. Archived products are excluded from active choices while historic sale lines retain their item descriptions.
+
+**FR-09 — Sales and receipts.** Staff record customer and item details for counter transactions. A sale header stores customer, receipt, date, status, and total; sale-item rows store each product or membership line. The receipt view presents those saved transaction details. For merchandise, the transaction workflow validates and updates stock.
+
+**FR-10 — Operational reports.** The administrator selects a report or export period and reviews data produced by the relevant processes. Report outputs summarize saved records and their configured status/date fields. They do not establish outcomes beyond the data collected by the system.
+
 ### Input Requirements
 
 #### Table 2. Input Requirements
@@ -75,6 +138,23 @@ Input requirements identify the information supplied to the system by applicants
 | Product and inventory update | Administrator enters product details, price, unit, and merchandise stock quantity where applicable. |
 | Sale transaction | Staff enters customer type and name, products or membership, quantities, and transaction details. |
 | Report request | Administrator selects a report type and available filters or date range. |
+
+### Input Design
+
+Input design specifies how information is collected and checked before it becomes an application, member update, attendance record, product, or sale. The browser forms provide immediate validation to help a user correct incomplete or incorrectly formatted entries. Database constraints and authorized functions provide additional checks for shared records. The following table maps the main input groups to their validation and destination.
+
+| Input group | Examples of captured values | Validation or processing | Main destination |
+| --- | --- | --- | --- |
+| Sign-in | Email/username and password | Required credential fields; Auth validates account and session | Supabase Auth; `profiles` role lookup |
+| Registration request | Name, contact, plan, membership dates, declarations, signature | Required fields, supported formats, plan selection, unique account identifiers | `membership_applications` |
+| Renewal request | Existing member, selected plan, requested details | Existing member link and configured eligibility window; staff review remains required | `membership_applications` |
+| Staff decision | Application identifier and approve/reject action | Administrator authorization; pending status checked before decision | `membership_applications`, `members`, `membership_history`, and `sales` as applicable |
+| Attendance scan | QR payload and staff scan action | Resolve identifier; check open visit and expiry before check-in | `attendance` |
+| Product maintenance | Name, category, unit price, unit, size, stock, optional image | Name required; positive valid price; nonnegative stock; category-unit consistency | `products` |
+| Sale entry | Customer type/name, product or membership line, quantity | Active product, positive quantity, merchandise integer/stock limit, valid membership line | `sales` and `sale_items`; product stock where applicable |
+| Report request | Report type and optional month/date | Supported report identifier and valid year-month input for monthly export | Report query and generated output |
+
+Inputs containing emergency contact or health information are personal data. The system should collect only the values required by the approved workflow, restrict access through the deployed policies, and follow the gym's established privacy and retention procedures.
 
 ### Output Requirements
 
@@ -91,6 +171,21 @@ Outputs are the responses and records produced after the system validates a requ
 | Receipt | Sale details, line items, quantities, prices, customer information, and total. |
 | Administrative reports | Membership, member status, archives, payments, attendance, renewals, inventory, and sales data based on stored records. |
 | Planned: email notifications | Application or renewal decisions and expiry reminders are planned; email delivery is not currently available. |
+
+### Output Design
+
+Output design presents the result of a request in a form appropriate to its user. Applicants receive a submission or status response; members receive only their permitted membership and attendance information; administrators receive management views, transaction receipts, and reports. The table identifies the content and intended use of principal outputs.
+
+| Output | Recipient | Information presented | Purpose |
+| --- | --- | --- | --- |
+| Login result | Applicant/member/administrator | Successful role routing, pending application status, or authentication error | Tell the user whether the requested account workflow can continue |
+| Application status | Applicant/member and administrator | Pending, approved, or rejected status with review information where available | Communicate the application decision and queue state |
+| Member portal view | Signed-in member | Current plan, dates, time-based progress, QR identifier, and own attendance history | Let the member review their recorded information |
+| Attendance confirmation | Staff | Member name and check-in/check-out result or error | Confirm a scan operation and prompt staff to retry when needed |
+| Transaction receipt | Customer and administrator | Receipt number, customer, date, item descriptions, quantities, unit prices, line totals, and transaction total | Provide a transaction record for a completed sale |
+| Operational report | Administrator | Data selected for membership, status, archives, payment, attendance, renewals, inventory, or sales | Support review of stored operational records |
+| Monthly report archive | Administrator | PDF reports for the selected month in a ZIP download | Provide portable report copies for the chosen period |
+| Email notification | Planned recipient | Approval or expiry notice | Future communication; no configured provider currently sends it |
 
 ### Software Requirements
 
@@ -139,6 +234,23 @@ Outputs are the responses and records produced after the system validates a requ
 
 Figure 2 is a component view of the system and shows where each kind of work takes place. On the user side, applicants and members use the login, registration, and member pages; administrators use the dashboard. Supabase Auth verifies credentials and establishes a session, while the application uses the profile role to route a signed-in person to the appropriate interface. Inside the browser application, the labeled modules group related functions: Applications and Membership handle submissions and staff decisions; Attendance and QR supports staff scans; Inventory and Products maintains the catalog; Walk-in POS and Receipts records transactions; Member Portal presents a member's permitted information; and Reports and Exports prepares administrative summaries. Requests go to Supabase through its Data API or database RPC functions. The PostgreSQL database contains the application records, and Row Level Security (RLS) policies plus function-level checks restrict access to them. Realtime sends changes from `membership_applications` and `attendance` to subscribed website views. The email component is marked as in development because no external provider is selected. The Node.js server in the repository serves static files for local development and is not the production database backend.
 
+#### Explanation of Architecture Components
+
+| Component | Responsibility | Main interaction |
+| --- | --- | --- |
+| Applicant interface | Presents sign-in and membership registration pages. | Sends credentials to Auth and application details to the database-backed application workflow. |
+| Member portal | Presents permitted membership, attendance, QR, catalog, and account information. | Reads member-scoped records and submits supported profile or renewal requests. |
+| Administrator dashboard | Presents operational summaries and administration sections. | Reads and updates records through authenticated database requests and configured functions. |
+| Supabase Auth | Verifies credentials and issues user sessions. | Supplies the identity used by profile lookup and database policies. |
+| Supabase Data API | Provides authenticated access to PostgreSQL tables and views. | Applies database role and RLS rules to client requests. |
+| Database RPC functions | Perform selected privileged or transactional workflows. | Validate caller authorization and carry out operations such as recording a sale or membership change. |
+| PostgreSQL public schema | Stores profiles and gym operational records. | Enforces keys, relationships, checks, and unique constraints defined in the deployed schema. |
+| Realtime service | Announces configured database changes to subscribed views. | Current admin subscriptions refresh application and attendance information. |
+| Static web host | Serves HTML, CSS, JavaScript, and images. | Delivers the browser application over HTTPS in the deployed environment. |
+| Email integration | Planned external communication component. | Not active because no provider is configured in the current project. |
+
+The architecture separates interface responsibilities from record storage and authorization. The browser gathers user input and renders results, but shared data is stored in PostgreSQL. Authentication establishes who is making a request; RLS and checked database functions determine what that identity can do. Static hosting and the database service are separate deployment components, so a browser page may load successfully while a database request still fails due to connectivity, session, policy, or schema configuration.
+
 
 ### Data Process Modeling
 
@@ -165,6 +277,20 @@ Figure 3 sets the boundary around IronGrind as a single system, without showing 
 **Figure 4.** Level 1 data-process model for IronGrind.
 
 Figure 4 decomposes the single IronGrind system from Figure 3 into numbered processes and named data stores. External actors provide inputs to the process that handles them: credentials go to authentication; application details and staff decisions go to application processing; member requests go to the portal; QR scans go to attendance; product changes go to inventory; and customer and item details go to walk-in sales. The report process reads the operational stores to prepare summaries. The data stores D1–D8 correspond to profiles, membership applications, members, attendance, products, sales, sale items, and membership history, as listed in the Data Stores table. Arrows between processes and stores distinguish information read from information written; arrows between a process and an actor represent the corresponding request or response. The figure's email process is explicitly planned only: the current system has no configured email provider and does not send these messages. Together, this diagram explains the record flow in more detail than the context diagram, while the tables below define each process and store in text.
+
+#### Explanation of Data-Flow Paths
+
+**Identity path.** Credentials move from the user to the authentication process and Supabase Auth. After authentication, the profile role is read to determine the appropriate application route. Database requests then carry the authenticated identity so policies can evaluate the request.
+
+**Application path.** Applicant details enter the application process and are stored in D2. Administrator decisions read the pending application and write its status and review metadata. An approved registration produces or links a D3 member record; a renewal uses the existing D3 member. Related transactions and lifecycle events are recorded in D6/D7 and D8 when the corresponding operation succeeds.
+
+**Member portal path.** The signed-in member's request is checked against their identity and permitted data access. The portal reads D3 for current membership information, D4 for attendance history, D5 for the active catalog, and D1 for profile details where needed. A renewal request writes to D2 and awaits an administrator response.
+
+**Attendance path.** A staff scan supplies a QR identifier to process 4.0. The process reads D3 to resolve the member and D4 to determine whether an open attendance visit exists. It writes a new check-in or updates the open row with a check-out timestamp, then returns confirmation to staff.
+
+**Inventory and sales path.** An administrator's product changes write to D5. A counter sale reads D5 to validate the selected product and available merchandise quantity, then writes a transaction header to D6 and its line to D7. The sale result is used to display a receipt and refresh operational views.
+
+**Reporting path.** The report process reads the data stores relevant to the selected report, applies the configured date/status grouping, and returns a view or export to the administrator. It does not change source operational records as part of ordinary report viewing. Email is not a live path in the current deployment.
 
 
 ### Data Process Explanations
@@ -245,6 +371,70 @@ The use cases in Figure 5 are grouped by the actor's role. The associations show
 
 **Walk-in customer.** A walk-in customer does not need a system account. Staff enter the customer's purchase in the point-of-sale workflow and provide a receipt.
 
+### Detailed Use-Case Descriptions
+
+Each use case describes a user goal and its normal result. The alternate paths identify conditions the interface must handle; they are not claims that a particular test has already been executed.
+
+#### Use Case 1 — Submit Membership Registration
+
+| Element | Description |
+| --- | --- |
+| Primary actor | Applicant |
+| Preconditions | The registration page is available; the applicant can provide the required account and application information. |
+| Main flow | The applicant creates or uses an Auth account, completes required fields, selects a plan, submits the application, and receives a pending status. |
+| Alternate flow | Invalid or missing fields are shown for correction; duplicate account details or a service error prevent successful submission and produce an error message. |
+| Postcondition | A pending registration application is associated with the submitting identity; no active member record is implied before approval. |
+
+#### Use Case 2 — Review and Decide an Application
+
+| Element | Description |
+| --- | --- |
+| Primary actor | Administrator |
+| Preconditions | The administrator is authenticated and authorized; the request is pending. |
+| Main flow | The administrator opens the appropriate queue, reviews submitted details, and approves or rejects the request. The system records the decision and review metadata. |
+| Alternate flow | If the request is no longer pending or the database operation fails, the system reports the condition and refreshes the queue before retry. |
+| Postcondition | A rejected request remains recorded as rejected; an approved registration is linked to a member record and associated sale according to the configured workflow. |
+
+#### Use Case 3 — Submit and Approve a Renewal
+
+| Element | Description |
+| --- | --- |
+| Primary actor | Member submits; administrator decides |
+| Preconditions | The member has an existing member record and is within the configured renewal eligibility period. |
+| Main flow | The member submits a renewal request. The administrator reviews it and approves or rejects it. On approval, prior and new membership values, the current membership update, and the transaction are recorded. |
+| Alternate flow | If the member is ineligible, submission is unavailable or refused. If a request is already decided, the pending-only update should not apply again. |
+| Postcondition | The request has a recorded decision; only an approved renewal updates current membership dates. |
+
+#### Use Case 4 — Record Member Attendance
+
+| Element | Description |
+| --- | --- |
+| Primary actor | Administrator/staff |
+| Preconditions | Staff is signed in with required permissions; the device camera is available and permission is granted. |
+| Main flow | Staff scans a member QR. The system resolves the member, checks for an open visit, then records check-in or check-out and displays the result. |
+| Alternate flow | An unknown code, expired membership at check-in, camera failure, or database/network error is reported. An existing open visit may still be checked out. |
+| Postcondition | A timestamped attendance event is stored or the user is told that no write occurred. |
+
+#### Use Case 5 — Maintain Products and Record a Sale
+
+| Element | Description |
+| --- | --- |
+| Primary actor | Administrator/staff |
+| Preconditions | Staff is authenticated and authorized; the selected product is active. |
+| Main flow | Staff create or update catalog data as needed, enter a customer and quantity, complete the transaction, and present the generated receipt. |
+| Alternate flow | Invalid price/stock, insufficient merchandise quantity, inactive product, or failed transaction prevents completion and is reported. |
+| Postcondition | The sale and item line are recorded; merchandise stock is changed by the configured transaction; a receipt can be retrieved by its receipt number. |
+
+#### Use Case 6 — Review Operational Reports
+
+| Element | Description |
+| --- | --- |
+| Primary actor | Administrator |
+| Preconditions | Administrator access is active and relevant source data is available. |
+| Main flow | The administrator selects a report, reviews the rows and totals, and optionally prints or exports the output. |
+| Alternate flow | Empty result sets display an empty-state message; invalid month selection or unavailable PDF/ZIP libraries is reported. |
+| Postcondition | The report is displayed or an export file is generated from available stored records. |
+
 ##### Entity Relationship Diagram
 
 ![Figure 6. IronGrind entity relationship diagram](iron-grind-erd-simplified.svg)
@@ -266,6 +456,20 @@ The ERD is a database structure diagram. Primary keys identify rows; foreign key
 **Attendance and membership history.** Each attendance row refers to the member whose visit it records; a member can have multiple visits. Membership history stores lifecycle events such as expiration, renewal, and plan change, with prior and new values where available.
 
 **Sales, sale items, and products.** A sale stores the receipt-level customer, date, status, and total. Its itemized details are stored in `sale_items`. A line may refer to a product, while the item name and price are retained on the line for the transaction record. A member sale may link to a member; a walk-in sale may have no member link.
+
+**Profile-to-identity relationship.** Each application profile uses the same UUID as its Auth identity. The Auth service owns credentials, while the `profiles` table owns the application role and display information. Deleting an Auth identity cascades to its profile; application records reference Auth identities according to their defined deletion rules.
+
+**Application-to-member relationship.** Applications are stored independently from members so a pending request exists before approval. A registration approval can link the resulting member to its application. A renewal application links to an existing member. The Auth link on a member is nullable and unique, allowing an imported or staff-created member row without a portal identity while preventing two member rows from sharing one Auth user.
+
+**Member-to-attendance relationship.** One member may have many attendance rows, and each attendance row belongs to one member. The foreign key is required and restricts deletion while attendance history remains. Each row stores a time-in and optional time-out; the check constraint requires the checkout not to precede check-in.
+
+**Member-to-membership-history relationship.** One member may have many lifecycle events. Each event records its type and any available prior/new plan, price, and dates. This one-to-many link preserves the sequence of expiration, renewal, and plan-change records for a member.
+
+**Sale-to-sale-item relationship.** One sale header can have multiple item lines. Each line must point to a sale, and deletion of that sale cascades to its lines. Membership sales use a membership line category and do not need a catalog product reference.
+
+**Product-to-sale-item relationship.** One product may be referenced by many sale lines. The line's `product_id` is nullable and is set to null if a product row is removed; the line retains its item name, unit, and price so the historical receipt remains interpretable. Product archival marks the catalog row inactive rather than removing it from active selection.
+
+**Administrator-to-operational-record relationships.** Review, attendance, sales, and history rows can retain the Auth user who recorded or processed the event. These audit references may become null if the associated Auth identity is removed, while the operational event itself remains available for historical reporting.
 
 These links support the reports and workflows described in the process model. The simplified diagram omits secondary fields for readability; the Data Dictionary lists the principal fields and their purposes.
 
@@ -307,7 +511,7 @@ This data dictionary summarizes the public-schema fields and relationships defin
 | --- | --- | --- |
 | `profiles` | `id` UUID (PK, Auth FK); `email`, `username`, `full_name`, `role`, `account_status` TEXT; timestamps | User profile and role used by the application. `username` is unique. |
 | `members` | `id` UUID (PK); `auth_user_id` UUID (nullable, unique Auth FK); `application_id` UUID (nullable, unique FK); `full_name`, `email`, `username`, `mobile` TEXT; `date_of_birth` DATE; `age` SMALLINT; `height`, `weight_kg` NUMERIC; `height_unit`, `sex`, `plan`, `status`, `registration_source` TEXT; `emergency_contact` JSONB; `plan_price`, `paid` NUMERIC; membership dates; `fitness_goals`, `health_conditions` TEXT[]; `other_medical_conditions`, `signature_path` TEXT; timestamps | Approved member and membership record. Referenced by applications, attendance, sales, sale items, and membership history. |
-| `membership_applications` | `id` UUID (PK); `auth_user_id` UUID (nullable Auth FK); `member_id` UUID (nullable FK); `application_type`, `status`, applicant and plan details; demographic, health, and signature fields; submission/review timestamps; `reviewed_by` UUID (FK to `profiles`) | Registration and renewal requests and their review state. `member_id` can be empty before a member is linked. |
+| `membership_applications` | `id` UUID (PK); `auth_user_id` UUID (required Auth FK); `member_id` UUID (nullable FK); `application_type`, `status`, applicant and plan details; demographic, health, and signature fields; submission/review timestamps; `reviewed_by` UUID (Auth FK represented through the profile identity) | Registration and renewal requests and their review state. `member_id` can be empty before a member is linked. |
 | `attendance` | `id` UUID (PK); `member_id` UUID (FK); `time_in`, `time_out`, `created_at` TIMESTAMPTZ; `recorded_by` UUID (Auth FK) | Staff-recorded check-in and check-out. A member may have multiple attendance records. |
 | `products` | `id` UUID (PK); `name`, `category`, `unit`, `size`, `image_path` TEXT; `price_per_unit` NUMERIC; `stock` INTEGER; `is_active` BOOLEAN; timestamps | Product catalog and inventory. Supplements use gram units; merchandise uses item units and stock. |
 | `sales` | `id` UUID (PK); `receipt_number` TEXT (unique); `customer_type`, `customer_name`, `status` TEXT; `member_id` UUID (nullable FK); `total` NUMERIC; `sold_at` TIMESTAMPTZ; `processed_by` UUID (Auth FK) | Sale header and receipt information. A sale may be associated with a member or a walk-in customer. |
@@ -617,6 +821,7 @@ Chapter 2 identifies the DeLone and McLean Information Systems Success Model as 
 | --- | --- |
 | System quality | Ease of navigating the browser workflows, reliability of common operations, and access behavior across member and administrator roles. |
 | Information quality | Completeness, consistency, and usefulness of member, attendance, inventory, sales, and report information. |
+| Service quality | Quality of support and assistance available to intended users during deployment and use, if this dimension is included in the approved instrument. |
 | Use | Whether intended users can perform the workflows relevant to their role. |
 | User satisfaction | Users' assessment of the system after completing representative tasks. |
 | Net benefits | Perceived contribution to organizing the gym's records and operations; claims of improved efficiency or accuracy require evidence collected through the approved method. |
