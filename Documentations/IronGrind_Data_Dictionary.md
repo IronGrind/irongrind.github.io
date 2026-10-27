@@ -21,7 +21,7 @@ The field tables use the earlier per-entity format. Type modifiers such as `nume
 
 ## 1. `profiles`
 
-**Description:** Stores application-facing account details and the user's access role. Each profile uses the same identifier as its Supabase Auth account, with account status available in deployments that include that field.
+**Description:** The `profiles` table stores account information for IronGrind users. It contains the details needed to identify users and manage their application roles and account status where that field is deployed.
 
 | Field | Type | Null / default | Key / constraint | Purpose |
 | --- | --- | --- | --- | --- |
@@ -36,7 +36,7 @@ The field tables use the earlier per-entity format. Type modifiers such as `nume
 
 ## 2. `members`
 
-**Description:** Stores each gym member's current personal details and membership information. Previous membership changes are recorded separately in `membership_history`.
+**Description:** The `members` table stores personal details and current membership information for gym members. It contains the data needed to manage member profiles, membership validity, and contact information.
 
 | Field | Type | Null / default | Key / constraint | Purpose |
 | --- | --- | --- | --- | --- |
@@ -71,7 +71,7 @@ The field tables use the earlier per-entity format. Type modifiers such as `nume
 
 ## 3. `membership_applications`
 
-**Description:** Stores submitted registration and renewal requests with the information provided by the applicant. Review status, reviewer, and timestamps track each request through processing.
+**Description:** The `membership_applications` table stores membership registration and renewal requests. It contains applicant details and review information needed to process and track each request.
 
 | Field | Type | Null / default | Key / constraint | Purpose |
 | --- | --- | --- | --- | --- |
@@ -106,7 +106,7 @@ The field tables use the earlier per-entity format. Type modifiers such as `nume
 
 ## 4. `attendance`
 
-**Description:** Stores one record for each member visit to the gym. Check-in and optional check-out timestamps support attendance history and visit tracking.
+**Description:** The `attendance` table stores each member's gym check-in and check-out records. It contains visit times and recording details needed to monitor attendance history.
 
 | Field | Type | Null / default | Key / constraint | Purpose |
 | --- | --- | --- | --- | --- |
@@ -119,7 +119,7 @@ The field tables use the earlier per-entity format. Type modifiers such as `nume
 
 ## 5. `products`
 
-**Description:** Stores products offered for sale, including prices, units, and inventory information. Active and archived product records support catalog management and sales history.
+**Description:** The `products` table stores the gym's saleable products, prices, and inventory details. It contains the information needed to manage product availability, units, and stock.
 
 | Field | Type | Null / default | Key / constraint | Purpose |
 | --- | --- | --- | --- | --- |
@@ -140,7 +140,7 @@ Supplements use `gram` and NULL stock; merchandise uses `item`. Merchandise stoc
 
 ## 6. `sales`
 
-**Description:** Stores one record for each receipt-level transaction. It captures the customer, total, sale status, and staff account that processed the transaction.
+**Description:** The `sales` table stores receipt-level transaction records. It contains customer, total, status, and staff details needed to manage and report on sales.
 
 | Field | Type | Null / default | Key / constraint | Purpose |
 | --- | --- | --- | --- | --- |
@@ -156,7 +156,7 @@ Supplements use `gram` and NULL stock; merchandise uses `item`. Merchandise stoc
 
 ## 7. `sale_items`
 
-**Description:** Stores each product or membership charge associated with a sale. Item name and price are retained as a transaction snapshot if the catalog record later changes or is removed.
+**Description:** The `sale_items` table stores the individual product or membership charges associated with each sale. It contains item and price details needed to describe the receipt and preserve the transaction record.
 
 | Field | Type | Null / default | Key / constraint | Purpose |
 | --- | --- | --- | --- | --- |
@@ -172,7 +172,7 @@ Supplements use `gram` and NULL stock; merchandise uses `item`. Merchandise stoc
 
 ## 8. `membership_history`
 
-**Description:** Stores membership lifecycle events and the relevant membership values before and after each event. These records support administrative review and reporting without replacing the member's current details.
+**Description:** The `membership_history` table stores events such as membership expirations, renewals, and plan changes. It contains previous and updated membership details needed for historical review and reporting.
 
 | Field | Type | Null / default | Key / constraint | Purpose |
 | --- | --- | --- | --- | --- |
