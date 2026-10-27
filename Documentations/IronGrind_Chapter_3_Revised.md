@@ -717,43 +717,59 @@ Foreign keys and `NOT NULL`, `CHECK`, and unique constraints provide database-le
 
 ### Form and Screen Descriptions
 
-The screens below follow the user's task from entry through its result. Required fields and controls vary by workflow. The descriptions explain the purpose of each interface and how it connects to the records described in the Data Dictionary.
+The following figure captions and descriptions are prepared for the supplied IronGrind interface screenshots. Each description identifies the screen's purpose and the principal information or actions visible in it.
 
-#### Sign-In Screen
+**Figure 7.** IronGrind Login Screen.
 
-The sign-in page accepts the account email and password and passes authentication to Supabase Auth. After successful authentication, the application reads the associated profile role and opens the appropriate member or administrator interface. When a valid account has a pending application rather than an approved member record, the application status is surfaced to the user. Invalid credentials, unavailable connectivity, or a missing profile should produce a recoverable message rather than imply that an application was approved. The page does not collect a role choice that could grant administrator access.
+This figure shows the login page for applicants, members, and administrators. It provides credential fields, a remember-me option, password recovery, and a link to new-member registration.
 
-#### Registration Screen
+**Figure 8.** Administrator Dashboard.
 
-The registration screen collects account credentials and membership application information. Depending on the form configuration, this includes name, date of birth, contact and emergency-contact details, selected plan, goals, health declarations, and digital signature. The form validates required values and formats before sending the request. Successful submission creates a pending application for administrator review; it does not directly grant membership access. The request is associated with the Auth identity so the applicant can later sign in and see the request state.
+This figure shows the administrator's operational overview. Summary panels present current member count, today's check-ins and sales, and low-stock items, with navigation to the system's management sections.
 
-#### Application Review Screen
+**Figure 9.** Membership Management Screen.
 
-The administrator approval queue separates new registrations from renewal requests. Each row presents the submitted information needed for review and offers approve or reject actions. Approval of a registration creates or links the member record and records its membership sale where the transaction workflow succeeds. Approval of a renewal updates the existing membership period and records the renewal transaction/history. A rejected request receives a rejected status and reviewer/time information. These actions require an authenticated administrator and database-side authorization; hiding a button is not an access-control measure.
+This figure shows the member list and membership controls available to an administrator. Search, membership filters, approval access, plan changes, and renewals support routine member management.
 
-#### Administrator Dashboard and Membership Management
+**Figure 10.** QR Code Attendance Screen.
 
-The dashboard presents operational summaries such as member count, daily attendance, sales, low merchandise stock, and pending applications. The values are derived from the records loaded for the current view and reflect the data available to the signed-in administrator. Membership management supports filtering current members, reviewing member details, changing a plan, and recording a counter renewal. A plan change or renewal updates the current membership fields while preserving the prior period in membership history or archive records. The resulting receipt or confirmation is displayed after the required database operations succeed.
+This figure shows the staff attendance interface with a QR scanning area and attendance log. Staff use it to identify members and record or review visit check-ins and check-outs.
 
-#### Attendance Scanner
+**Figure 11.** Locked Store and Inventory Screen.
 
-The attendance interface requests camera permission and scans a QR code issued for a member. The application resolves the identifier to a member record, checks whether an open visit already exists, and records check-in or check-out accordingly. An expired membership is not checked in, while an open visit can still be checked out. The scanner reports an unrecognized code, camera denial, network failure, or database error to staff. A member can view permitted attendance history in the portal, but the staff scanner is the workflow that creates and closes attendance events.
+This figure shows the store-access prompt before inventory is opened. The password field and Open Store control protect the inventory view with the application's configured store password.
 
-#### Product and Inventory Forms
+**Figure 12.** Store and Inventory Screen.
 
-The product form collects a name, category, unit price, and optional photo. Merchandise also collects size and stock quantity; supplements are priced by gram and do not use merchandise stock tracking in the base data model. The edit form updates the product catalog and can replace or remove the image. Archive changes the product to inactive and records the archive time, removing it from active catalog and sale selections while preserving historical sale-line descriptions. The interface validates prices and quantities before writing the row.
+This figure shows the product catalog after store access is granted. Administrators can review product details and use the available controls to add products or begin a sale.
 
-#### Point of Sale and Receipt
+**Figure 13.** Sales Transactions Screen.
 
-The point-of-sale form collects the customer name, selected product, and quantity. Merchandise quantity must be a whole number within available stock; supplement quantity may be fractional grams. A transaction is stored as a sale header with one or more itemized lines and an associated receipt number. The receipt shows customer, date, item description, unit, quantity, unit price, line total, and amount paid. Membership transactions use the membership category and do not require a product catalog link. The system should report a failed transaction clearly so that a displayed receipt is not mistaken for a saved sale.
+This figure shows saved walk-in and membership transactions in the administrator's sales view. Receipt, customer, item, total, date, status, and receipt-view actions support transaction review.
 
-#### Member Portal
+**Figure 14.** Walk-In Product Sales Screen.
 
-The portal displays the signed-in member's current membership details and QR identifier, attendance history, and active product catalog where those features are enabled. Profile settings are limited to supported fields and apply only to the authenticated member's own profile. A member may submit a renewal request at any time, and the portal explains that approval carries unused active membership time forward. The portal distinguishes current membership information from a pending request so the member can see whether a renewal still needs approval.
+This figure shows the walk-in sales view with date selection, income summaries, product-category tabs, and a sale-recording action. It helps staff review daily product sales and enter a new walk-in transaction.
 
-#### Reports and Password Recovery
+**Figure 15.** Reports Screen.
 
-The reports screen lets the administrator choose a report and view or print its data; monthly export controls can package reports for a selected month. Password recovery uses the Supabase Auth recovery workflow and reset page. The reset screen accepts a replacement password only after a valid recovery session is established. It does not change membership or application status.
+This figure shows the report-selection page for administrators. It provides a month selector and report actions for viewing or printing and saving the available operational reports.
+
+**Figure 16.** Member Dashboard.
+
+This figure shows the member portal's overview of current membership progress and attendance. It also provides access to the member's QR code, renewal request, and products available at the gym.
+
+**Figure 17.** Member Account Settings.
+
+This figure shows the account-settings form for a member's personal information. The visible sections include contact and demographic details, emergency contact, and health and fitness declarations.
+
+**Figure 18.** Membership Registration Form: Applicant and Plan Details.
+
+This figure shows the upper portion of the registration form. Applicants enter personal and emergency-contact information, select a membership plan, and provide health declarations and fitness goals.
+
+**Figure 19.** Membership Registration Form: Agreement and Account Submission.
+
+This figure shows the lower portion of the registration form. It contains the rules and agreement acknowledgments, liability waiver, signature area, account credentials, and application-submission action.
 
 ## Prototype
 
