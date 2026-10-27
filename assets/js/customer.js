@@ -44,6 +44,38 @@ function addDays(dateStr, days) {
     const [year, month, day] = dateStr.split('-').map(Number);
     return new Date(Date.UTC(year, month - 1, day + days, 12)).toISOString().slice(0, 10);
 }
+function getRenewalExpiryError(expiry) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(String(expiry || ''))) {
+        return 'We could not confirm your membership expiry date. Please contact the gym to check your renewal eligibility.';
+    }
+    const expiryTime = Date.parse(`${expiry}T00:00:00Z`);
+    const todayTime = Date.parse(`${todayStr()}T00:00:00Z`);
+    if (!Number.isFinite(expiryTime) || !Number.isFinite(todayTime)) {
+        return 'We could not confirm your membership expiry date. Please contact the gym to check your renewal eligibility.';
+    }
+    return '';
+}
+function getRenewalGuidance(expiry) {
+    const dateError = getRenewalExpiryError(expiry);
+    if (dateError) return dateError;
+    if (expiry < todayStr()) {
+        return `Your membership expired on ${expiry}. You may still request renewal; if approved, the new period starts today.`;
+    }
+    return `You may request renewal at any time. If approved while your membership is active, the new plan duration is added after your current expiry (${expiry}).`;
+}
+function renderRenewalEligibility(member) {
+    const status = document.getElementById('renewalFormStatus');
+    if (!status || !member) return;
+    status.textContent = getRenewalGuidance(member.expiry);
+    status.style.color = getRenewalExpiryError(member.expiry) ? '#e7ad58' : '#b8c0cc';
+}
+function getRenewalSubmissionErrorMessage(error) {
+    const message = String(error?.message || '').toLowerCase();
+    if (message.includes('only during the five days before expiry')) {
+        return 'Supabase is still enforcing the old five-day renewal limit. Ask the gym administrator to apply the early-renewal migration, then try again.';
+    }
+    return 'We could not submit your renewal request right now. Please try again or contact the gym.';
+}
 function formatPeso(n) { return '₱' + Number(n).toLocaleString('en-PH'); }
 function formatAttendanceClock(value) {
     if (!value) return '—';
@@ -562,6 +594,11 @@ async function submitMembershipForm(event) {
         renewalFormMessage('We could not find a membership linked to this login. Contact the gym admin for help.', 'error');
         return;
     }
+    const renewalDateError = getRenewalExpiryError(member.expiry);
+    if (renewalDateError) {
+        renewalFormMessage(renewalDateError, 'error');
+        return;
+    }
     const name = member.name?.trim() || '';
     if (!name) {
         renewalFormMessage('Your member name is missing. Update it in Account Settings first.', 'error');
@@ -609,7 +646,7 @@ async function submitMembershipForm(event) {
         });
         if (insertError) {
             console.error('Supabase renewal request failed:', insertError);
-            renewalFormMessage('We could not submit your renewal request right now. Please try again or contact the gym.', 'error');
+            renewalFormMessage(getRenewalSubmissionErrorMessage(insertError), 'error');
             return;
         }
 
@@ -859,6 +896,7 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSupabaseMember().finally(() => {
     const member = getCurrentMember();
     document.getElementById('mfName').value = member?.name || session.fullName || '';
+    renderRenewalEligibility(member);
     populateMemberSettings(member);
     updateMemberStatus();
     renderMembershipProgress();

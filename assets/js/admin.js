@@ -723,7 +723,9 @@ async function completeSupabaseRenewalApproval(application) {
     const plan = appRow.plan || application.plan || memberRow.plan;
     const price = Number(appRow.plan_price ?? application.planPrice) || 0;
     const startDate = todayStr();
-    const endDate = addDays(startDate, getPlanDurationDays(plan));
+    const currentExpiry = memberRow.expiry_date || memberRow.end_date || '';
+    const extensionAnchor = currentExpiry >= startDate ? currentExpiry : startDate;
+    const endDate = addDays(extensionAnchor, getPlanDurationDays(plan));
     const reviewedAt = new Date().toISOString();
     const receiptNumber = `IG-R-${String(appRow.id).slice(0, 8).toUpperCase()}`;
     const historyNote = `Member portal renewal application ${appRow.id}`;
@@ -779,7 +781,7 @@ async function completeSupabaseRenewalApproval(application) {
 
     // These checks make an approval retry safe if a later Supabase write failed.
     const { data: priorHistory, error: historyLookupError } = await client
-        .from('membership_history').select('id').eq('member_id', memberId)
+        .from('membership_history').select('id,new_plan,new_price,new_start_date,new_expiry_date').eq('member_id', memberId)
         .eq('event_type', 'renewal').eq('notes', historyNote).maybeSingle();
     if (historyLookupError) {
         toast(`Could not check renewal history: ${historyLookupError.message}`, 'error');
@@ -806,12 +808,19 @@ async function completeSupabaseRenewalApproval(application) {
         }
     }
 
+    // Reuse the dates stored by a previous attempt if it stopped after writing
+    // history. This prevents retrying an approval from extending the plan twice.
+    const renewalStartDate = priorHistory?.new_start_date || startDate;
+    const renewalExpiry = priorHistory?.new_expiry_date || endDate;
+    const approvedPlan = priorHistory?.new_plan || plan;
+    const approvedPrice = Number(priorHistory?.new_price ?? price);
+
     const { error: updateMemberError } = await client.from('members').update({
-        plan,
-        plan_price: price,
-        start_date: startDate,
-        end_date: endDate,
-        expiry_date: endDate,
+        plan: approvedPlan,
+        plan_price: approvedPrice,
+        start_date: renewalStartDate,
+        end_date: renewalExpiry,
+        expiry_date: renewalExpiry,
         status: 'active',
         mobile: appRow.mobile || memberRow.mobile,
         updated_at: reviewedAt
