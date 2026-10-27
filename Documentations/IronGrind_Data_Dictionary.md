@@ -10,7 +10,7 @@ The field tables use the earlier per-entity format. Type modifiers such as `nume
 
 | Table | Purpose |
 | --- | --- |
-| `profiles` | Stores application-facing account details and access roles. It connects a signed-in Supabase Auth user to IronGrind permissions. |
+| `profiles` | Stores application-facing account details, access roles, and account status where deployed. It connects a signed-in Supabase Auth user to IronGrind permissions. |
 | `members` | Stores current personal and membership details for gym members. It links member records to accounts and applications where applicable. |
 | `membership_applications` | Stores submitted registration and renewal requests. It tracks application details and administrative review outcomes. |
 | `attendance` | Stores member check-ins and check-outs. It provides visit history for attendance tracking. |
@@ -21,7 +21,7 @@ The field tables use the earlier per-entity format. Type modifiers such as `nume
 
 ## 1. `profiles`
 
-**Description:** Stores application-facing account details and the user's access role. Each profile uses the same identifier as its Supabase Auth account.
+**Description:** Stores application-facing account details and the user's access role. Each profile uses the same identifier as its Supabase Auth account, with account status available in deployments that include that field.
 
 | Field | Type | Null / default | Key / constraint | Purpose |
 | --- | --- | --- | --- | --- |
@@ -30,7 +30,9 @@ The field tables use the earlier per-entity format. Type modifiers such as `nume
 | `username` | `text` | NULL | UNIQUE | Application username; availability checks compare case-insensitively. |
 | `full_name` | `text` | NOT NULL; `''` | — | Display name associated with the account. |
 | `role` | `text` | NOT NULL; `'member'` | CHECK `admin` or `member` | Controls application administrator or member access. |
+| `account_status` | `text` | Deployment-dependent | No constraint documented | Optional live-schema field where deployed. Represents the account availability state. |
 | `created_at` | `timestamptz` | NOT NULL; `now()` | — | Profile creation time. |
+| `updated_at` | `timestamptz` | Deployment-dependent | No default documented | Optional live-schema field where deployed. Records the most recent profile update time. |
 
 ## 2. `members`
 
