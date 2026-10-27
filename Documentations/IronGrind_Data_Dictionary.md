@@ -176,40 +176,40 @@ Each entity below has its own field table, matching the reference format. Length
 +| `recorded_at` | `timestamptz` | 8 bytes | Part of `(member_id, recorded_at DESC)` index | Required; defaults to `now()`. Time the event was recorded. |
 +| `recorded_by` | `uuid` | 16 bytes | FK `auth.users.id` | Optional. Auth account that recorded the event; deleting the Auth user sets this field to NULL. |
 +
-+## Relationships
-+
-+| Relationship | Cardinality and delete behavior |
-+| --- | --- |
-+| `auth.users` to `profiles` | One-to-one by shared `id`; Auth user deletion cascades to its profile. |
-+| `auth.users` to `members` | Optional one-to-one; unique when `auth_user_id` is non-NULL. Auth user deletion clears the member link. |
-+| `auth.users` to `membership_applications` | One-to-many; Auth user deletion cascades to submitted applications. |
-+| `members` to `membership_applications` | One-to-many through `membership_applications.member_id`; member deletion clears this optional link. |
-+| `membership_applications` to `members` | Optional indexed origin link through `members.application_id`; not unique. Application deletion clears the member link. |
-+| `members` to `attendance` | One-to-many; attendance records restrict deletion of referenced members. |
-+| `members` to `sales` | One-to-many; member deletion clears the optional sale link. |
-+| `sales` to `sale_items` | One-to-many; sale deletion cascades to its line items. |
-+| `products` to `sale_items` | One-to-many; product deletion clears the product link while preserving the line snapshot. |
-+| `members` to `membership_history` | One-to-many; history records restrict deletion of referenced members. |
-+| Auth users to `recorded_by`, `reviewed_by`, `processed_by` | Optional attribution links; Auth user deletion clears the corresponding field. |
-+
-+## Indexes
-+
-+| Index | Fields | Purpose |
-+| --- | --- | --- |
-+| `members_auth_user_id_uidx` | `members(auth_user_id)` WHERE `auth_user_id IS NOT NULL` | Enforces at most one linked member per Auth user. |
-+| `members_application_id_idx` | `members(application_id)` | Finds a member from its originating application; not unique. |
-+| `applications_auth_user_id_idx` | `membership_applications(auth_user_id)` | Finds applications submitted by an account. |
-+| `applications_status_submitted_idx` | `membership_applications(status, submitted_at DESC)` | Supports application review queues. |
-+| `attendance_member_time_idx` | `attendance(member_id, time_in DESC)` | Retrieves a member's visits in time order. |
-+| `sales_sold_at_idx` | `sales(sold_at DESC)` | Supports recent sales and date-based reports. |
-+| `sale_items_sale_id_idx` | `sale_items(sale_id)` | Retrieves a receipt's line items. |
-+| `membership_history_member_date_idx` | `membership_history(member_id, recorded_at DESC)` | Retrieves a member's history in time order. |
-+
-+`profiles.email`, `profiles.username`, and `sales.receipt_number` are unique in the canonical schema. Compatibility migrations may use partial unique indexes for nullable profile fields; `members.auth_user_id` is unique only when non-NULL.
-+
-+## Access and Compatibility Notes
-+
-+- Row-level security is enabled for all eight application tables. Members can access their own permitted records; administrators have broader management access as defined by the database policies.
-+- `expiry_date` is the canonical member expiry field; `end_date` remains for compatibility with membership operations.
-+- `emergency_contact` and `emergency_contact_data` coexist on applications for compatibility and are not automatically synchronized.
-+- Existing installations may retain legacy columns or have schema differences. Inspect the target project's PostgreSQL catalog and apply the documented migrations before making database changes.
+## Relationships
+
+| Relationship | Cardinality and delete behavior |
+| --- | --- |
+| `auth.users` to `profiles` | One-to-one by shared `id`; Auth user deletion cascades to its profile. |
+| `auth.users` to `members` | Optional one-to-one; unique when `auth_user_id` is non-NULL. Auth user deletion clears the member link. |
+| `auth.users` to `membership_applications` | One-to-many; Auth user deletion cascades to submitted applications. |
+| `members` to `membership_applications` | One-to-many through `membership_applications.member_id`; member deletion clears this optional link. |
+| `membership_applications` to `members` | Optional indexed origin link through `members.application_id`; not unique. Application deletion clears the member link. |
+| `members` to `attendance` | One-to-many; attendance records restrict deletion of referenced members. |
+| `members` to `sales` | One-to-many; member deletion clears the optional sale link. |
+| `sales` to `sale_items` | One-to-many; sale deletion cascades to its line items. |
+| `products` to `sale_items` | One-to-many; product deletion clears the product link while preserving the line snapshot. |
+| `members` to `membership_history` | One-to-many; history records restrict deletion of referenced members. |
+| Auth users to `recorded_by`, `reviewed_by`, `processed_by` | Optional attribution links; Auth user deletion clears the corresponding field. |
+
+## Indexes
+
+| Index | Fields | Purpose |
+| --- | --- | --- |
+| `members_auth_user_id_uidx` | `members(auth_user_id)` WHERE `auth_user_id IS NOT NULL` | Enforces at most one linked member per Auth user. |
+| `members_application_id_idx` | `members(application_id)` | Finds a member from its originating application; not unique. |
+| `applications_auth_user_id_idx` | `membership_applications(auth_user_id)` | Finds applications submitted by an account. |
+| `applications_status_submitted_idx` | `membership_applications(status, submitted_at DESC)` | Supports application review queues. |
+| `attendance_member_time_idx` | `attendance(member_id, time_in DESC)` | Retrieves a member's visits in time order. |
+| `sales_sold_at_idx` | `sales(sold_at DESC)` | Supports recent sales and date-based reports. |
+| `sale_items_sale_id_idx` | `sale_items(sale_id)` | Retrieves a receipt's line items. |
+| `membership_history_member_date_idx` | `membership_history(member_id, recorded_at DESC)` | Retrieves a member's history in time order. |
+
+`profiles.email`, `profiles.username`, and `sales.receipt_number` are unique in the canonical schema. Compatibility migrations may use partial unique indexes for nullable profile fields; `members.auth_user_id` is unique only when non-NULL.
+
+## Access and Compatibility Notes
+
+- Row-level security is enabled for all eight application tables. Members can access their own permitted records; administrators have broader management access as defined by the database policies.
+- `expiry_date` is the canonical member expiry field; `end_date` remains for compatibility with membership operations.
+- `emergency_contact` and `emergency_contact_data` coexist on applications for compatibility and are not automatically synchronized.
+- Existing installations may retain legacy columns or have schema differences. Inspect the target project's PostgreSQL catalog and apply the documented migrations before making database changes.
