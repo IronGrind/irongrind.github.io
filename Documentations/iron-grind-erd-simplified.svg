@@ -1,7 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1260" viewBox="0 0 1700 1260" role="img" aria-labelledby="title desc">
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="1250" viewBox="0 0 1700 1250" role="img" aria-labelledby="title desc">
 <title id="title">IronGrind Simplified Entity Relationship Diagram</title>
 <desc id="desc">A simplified ERD showing the main IronGrind database tables, key fields, primary and foreign keys, and their relationships.</desc>
 <defs>
+  <marker id="cardOne" markerWidth="10" markerHeight="14" viewBox="0 0 10 14" refX="8" refY="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M8 1V13" fill="none" stroke="#52677f" stroke-width="1.6"/></marker>
+  <marker id="cardOptionalOne" markerWidth="11" markerHeight="14" viewBox="0 0 11 14" refX="9" refY="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><circle cx="2.5" cy="7" r="2" fill="#f7f9fc" stroke="#52677f" stroke-width="1.4"/><path d="M9 1V13" fill="none" stroke="#52677f" stroke-width="1.6"/></marker>
+  <marker id="cardMany" markerWidth="10" markerHeight="14" viewBox="0 0 10 14" refX="8" refY="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><path d="M1 1L8 7L1 7M1 13L8 7" fill="none" stroke="#52677f" stroke-width="1.6"/></marker>
+  <marker id="cardOptionalMany" markerWidth="14" markerHeight="14" viewBox="0 0 14 14" refX="12" refY="7" markerUnits="userSpaceOnUse" orient="auto-start-reverse"><circle cx="2.5" cy="7" r="2" fill="#f7f9fc" stroke="#52677f" stroke-width="1.4"/><path d="M5 1L12 7L5 7M5 13L12 7" fill="none" stroke="#52677f" stroke-width="1.6"/></marker>
   <style>
     text{font-family:Arial,Helvetica,sans-serif;fill:#172033}.title{font-size:25px;font-weight:700}.subtitle{font-size:13px;fill:#536174}.table{fill:#fff;stroke:#62748a;stroke-width:1.5}.head{fill:#e8eef5}.th{font-size:16px;font-weight:700}.field{font-size:13px}.type{font-size:12px;fill:#536174}.key{font-size:11px;font-weight:700;fill:#176b87}.edge{fill:none;stroke:#52677f;stroke-width:1.6}.rel{font-size:11px;font-weight:700;fill:#30445b;paint-order:stroke;stroke:#f7f9fc;stroke-width:5px;stroke-linejoin:round}.legend{font-size:12px;fill:#40536b}
   </style>
@@ -12,17 +16,17 @@
 
 <!-- Relationship connectors are routed behind the entity tables. -->
 <g class="edge">
-  <path d="M760 160V190H310V220"/><path d="M820 160V220"/><path d="M900 160V190H1150V220"/>
-  <path d="M470 302H520"/>
-  <path d="M920 335H970"/><path d="M920 392H970"/>
-  <path d="M1330 384H1360V470H1460V520"/>
-  <path d="M1240 470V660H1310V730H1330"/>
-  <path d="M1100 470V680H615V700"/>
-  <path d="M780 820H820"/>
-  <path d="M400 830H420V620H980V700"/>
-  <path d="M950 145H1680V585H1640"/>
-  <path d="M950 130H1660V840H1640"/>
-  <path d="M950 160H1670V950H615V920"/>
+  <path d="M760 160V190H310V220" marker-start="url(#cardOptionalOne)" marker-end="url(#cardOne)"/><path d="M820 160V220" marker-start="url(#cardOptionalMany)" marker-end="url(#cardOptionalOne)"/><path d="M900 160V190H1150V220" marker-start="url(#cardOptionalMany)" marker-end="url(#cardOptionalOne)"/>
+  <path d="M470 302H520" marker-start="url(#cardOptionalMany)" marker-end="url(#cardOptionalOne)"/>
+  <path d="M920 335H970" marker-start="url(#cardMany)" marker-end="url(#cardOptionalOne)"/><path d="M920 392H970" marker-start="url(#cardOptionalOne)" marker-end="url(#cardOptionalOne)"/>
+  <path d="M1330 384H1360V470H1460V520" marker-start="url(#cardOne)" marker-end="url(#cardOptionalMany)"/>
+  <path d="M1240 470V660H1310V730H1330" marker-start="url(#cardOne)" marker-end="url(#cardOptionalMany)"/>
+  <path d="M1100 470V680H615V700" marker-start="url(#cardOptionalOne)" marker-end="url(#cardOptionalMany)"/>
+  <path d="M780 820H820" marker-start="url(#cardOne)" marker-end="url(#cardOptionalMany)"/>
+  <path d="M400 830H420V620H980V700" marker-start="url(#cardOptionalOne)" marker-end="url(#cardOptionalMany)"/>
+  <path d="M950 145H1680V585H1640" marker-start="url(#cardOptionalOne)" marker-end="url(#cardOptionalMany)"/>
+  <path d="M950 130H1660V840H1640" marker-start="url(#cardOptionalOne)" marker-end="url(#cardOptionalMany)"/>
+  <path d="M950 160H1670V950H615V920" marker-start="url(#cardOptionalOne)" marker-end="url(#cardOptionalMany)"/>
 </g>
 <g class="rel">
   <text x="540" y="184" text-anchor="middle">profiles.id</text>
@@ -142,11 +146,22 @@
   <text x="14" y="180" class="field">recorded_at / by</text><text x="200" y="180" class="type">time / uuid · FK</text>
 </g>
 
-<g transform="translate(80 1010)">
-  <rect width="1050" height="105" rx="8" fill="#eef3f8" stroke="#9aabba"/>
-  <text x="22" y="30" class="th">KEY</text>
-  <text x="22" y="57" class="legend"><tspan font-weight="700">PK</tspan> primary key  ·  <tspan font-weight="700">FK</tspan> foreign key  ·  <tspan font-weight="700">UK</tspan> unique key</text>
-  <text x="22" y="82" class="legend">Short links are identified by their FK fields. Auth users is Supabase-managed; legacy user_id FKs and other detail fields are omitted.</text>
+<g transform="translate(80 1000)">
+  <rect width="1540" height="150" rx="8" fill="#eef3f8" stroke="#9aabba"/>
+  <text x="22" y="32" class="th">CROW'S-FOOT RELATIONSHIP KEY</text>
+  <text x="22" y="65" class="legend">Symbols appear at the ends of each relationship line. Read each end separately.</text>
+  <g transform="translate(80 100)" fill="none" stroke="#52677f" stroke-width="2">
+    <path d="M0 0H48" marker-start="url(#cardOne)"/>
+    <path d="M250 0H298" marker-start="url(#cardOptionalOne)"/>
+    <path d="M520 0H568" marker-start="url(#cardMany)"/>
+    <path d="M830 0H878" marker-start="url(#cardOptionalMany)"/>
+  </g>
+  <g class="legend">
+    <text x="145" y="106">Exactly one</text>
+    <text x="395" y="106">Zero or one</text>
+    <text x="665" y="106">One or many</text>
+    <text x="975" y="106">Zero or many</text>
+  </g>
 </g>
 <text x="850" y="1200" text-anchor="middle" class="subtitle">Figure. Simplified Entity Relationship Diagram</text>
 </svg>
