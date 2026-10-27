@@ -24,7 +24,7 @@ For each iteration, the relevant user workflows, page layouts, forms, reports, d
 
 ### Prototypes
 
-The system prototype is an interactive, browser-based version of the gym workflows. Applicants use the sign-in and registration pages to enter the application workflow. Members use the member portal to review membership information, display their QR code, view attendance history, and submit an eligible renewal request. Administrators use the dashboard to review applications and manage membership, staff-scanned attendance, products, sales, receipts, and reports. The prototype uses Supabase Auth and configured database services for supported operations. Its key pages are listed in the Forms section. Deployment and operational readiness are separate implementation activities.
+The system prototype is an interactive, browser-based version of the gym workflows. Applicants use the sign-in and registration pages to enter the application workflow. Members use the member portal to review membership information, display their QR code, view attendance history, and submit renewal requests for staff approval. Administrators use the dashboard to review applications and manage membership, staff-scanned attendance, products, sales, receipts, and reports. The prototype uses Supabase Auth and configured database services for supported operations. Its key pages are listed in the Forms section. Deployment and operational readiness are separate implementation activities.
 
 ### Construction
 
@@ -356,7 +356,7 @@ An administrator selects a report type and, for monthly exports, a valid year an
 **Figure 5.** Use-case diagram of IronGrind.
 
 
-Figure 5 describes the system from each actor's point of view. The actor lines connect a role to the use cases that role may initiate; the system boundary encloses the functions provided by IronGrind. Applicants can register and access the application/login workflow. Members can use the member portal, view their membership and attendance information, and submit renewal requests when eligible. Administrators review applications and manage members, attendance, products, sales, and reports. Walk-in customers are not shown as authenticated users because staff enter their sale details at the counter. The diagram expresses available role interactions; it does not imply that a member can approve an application or record their own attendance.
+Figure 5 describes the system from each actor's point of view. The actor lines connect a role to the use cases that role may initiate; the system boundary encloses the functions provided by IronGrind. Applicants can register and access the application/login workflow. Members can use the member portal, view their membership and attendance information, and submit renewal requests for administrator review. Administrators review applications and manage members, attendance, products, sales, and reports. Walk-in customers are not shown as authenticated users because staff enter their sale details at the counter. The diagram expresses available role interactions; it does not imply that a member can approve an application or record their own attendance.
 
 
 ### Use-Case Explanations
@@ -365,7 +365,7 @@ The use cases in Figure 5 are grouped by the actor's role. The associations show
 
 **Applicant.** An applicant creates an account and submits a membership application. The application remains pending until an administrator reviews it.
 
-**Member.** A member signs in to view permitted membership details, the issued QR code, personal attendance history, and the active catalog. An eligible member may submit a renewal request, which remains subject to staff review.
+**Member.** A member signs in to view permitted membership details, the issued QR code, personal attendance history, and the active catalog. A member may submit a renewal request at any time; it remains subject to staff review.
 
 **Administrator.** An administrator reviews applications and manages member records, staff-scanned attendance, products, sales, receipts, and operational reports.
 
@@ -400,9 +400,9 @@ Each use case describes a user goal and its normal result. The alternate paths i
 | Element | Description |
 | --- | --- |
 | Primary actor | Member submits; administrator decides |
-| Preconditions | The member has an existing member record and is within the configured renewal eligibility period. |
+| Preconditions | The member has an existing member record with a valid expiry date and no pending renewal request. |
 | Main flow | The member submits a renewal request. The administrator reviews it and approves or rejects it. On approval, prior and new membership values, the current membership update, and the transaction are recorded. |
-| Alternate flow | If the member is ineligible, submission is unavailable or refused. If a request is already decided, the pending-only update should not apply again. |
+| Alternate flow | If the member record or expiry date cannot be verified, submission is refused with an explanatory message. A second pending request is not accepted. If a request is already decided, the pending-only update should not apply again. |
 | Postcondition | The request has a recorded decision; only an approved renewal updates current membership dates. |
 
 #### Use Case 4 — Record Member Attendance

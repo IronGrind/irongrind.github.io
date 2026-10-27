@@ -575,8 +575,9 @@ function completeApproval(id) {
     members.push(newMember);
     saveDB('members', members);
 
+    const registrationSaleId = nextSaleReceiptId();
     sales.unshift({
-        id: nextSaleReceiptId(),
+        id: registrationSaleId,
         customer: p.fullName,
         items: p.plan + ' Membership',
         total: p.planPrice,
@@ -592,6 +593,7 @@ function completeApproval(id) {
     renderApprovals();
     renderMembers();
     renderDashboard();
+    showSaleReceipt(registrationSaleId);
 }
 
 async function completeSupabaseRegistrationApproval(application) {
@@ -692,10 +694,12 @@ async function completeSupabaseRegistrationApproval(application) {
     saveDB('members', members);
     pendingApprovals = pendingApprovals.filter(item => String(item.id) !== String(application.id));
     saveDB('pendingApprovals', pendingApprovals);
+    await loadSupabaseOperationalData();
     renderApprovals();
     renderMembers();
     renderDashboard();
     toast(`${member.name}'s membership was approved and saved to Supabase.`, 'success');
+    showSaleReceipt(registrationReceipt);
 }
 
 async function completeSupabaseRenewalApproval(application) {
@@ -843,6 +847,7 @@ async function completeSupabaseRenewalApproval(application) {
     await loadSupabaseMembershipData();
     await loadSupabaseOperationalData();
     toast(`${memberRow.full_name}'s renewal was approved and saved to Supabase.`, 'success');
+    showSaleReceipt(receiptNumber);
 }
 
 function mapSupabaseMember(row, username = '', email = '') {
@@ -1475,6 +1480,7 @@ async function submitMemberPlanChange(encodedId) {
         await loadSupabaseMembershipData();
         await loadSupabaseOperationalData();
         toast(`${member.name}'s plan changed to ${newPlan}. Previous plan archived.`, 'success');
+        showSaleReceipt(receiptNumber);
         return;
     }
     const previous = {
@@ -1533,6 +1539,7 @@ async function submitMemberPlanChange(encodedId) {
     renderSales();
     renderReports();
     toast(`${member.name}'s plan changed to ${newPlan}. Previous plan archived.`, 'success');
+    showSaleReceipt(saleId);
 }
 
 function renewMember(id) {
@@ -2301,7 +2308,7 @@ async function submitNewSale() {
     renderDashboard();
     renderWalkinSalesReport();
     showSaleReceipt(saleId);
-    toast(`✅ Sale complete — ${formatPeso(total)}.`, 'success');
+    toast(`✅ Sale complete — ${formatPeso(sale.total)}.`, 'success');
 }
 
 function switchWalkinSalesType(type) {
