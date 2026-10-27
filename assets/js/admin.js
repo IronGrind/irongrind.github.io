@@ -1064,6 +1064,35 @@ function subscribeAdminRealtimeUpdates() {
         });
 }
 
+async function initializeSupabaseAdminData() {
+    const client = window.ironGrindSupabase;
+    if (!client) return;
+
+    const { data: { user } = {}, error: authError } = await client.auth.getUser();
+    if (authError || !user) {
+        console.error('Admin page has no active Supabase Auth session:', authError);
+        toast('Your Supabase admin session is missing or expired. Sign in again to load live data.', 'error');
+        return;
+    }
+
+    const { data: profile, error: profileError } = await client
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .maybeSingle();
+    if (profileError || profile?.role !== 'admin') {
+        console.error('Could not verify the Supabase admin profile:', profileError || 'Profile is not an admin.');
+        toast(profileError
+            ? `Could not verify your Supabase admin profile: ${profileError.message}`
+            : 'This Supabase account is not marked as an admin. Sign in with the admin account.', 'error');
+        return;
+    }
+
+    subscribeAdminRealtimeUpdates();
+    await loadSupabaseMembershipData();
+    await loadSupabaseOperationalData();
+}
+
 function rejectApplication(id) {
     const idx = pendingApprovals.findIndex(x => x.id === id);
     if (idx === -1) return;
@@ -3053,8 +3082,7 @@ document.addEventListener('DOMContentLoaded', () => {
     renderAttendance();
     renderSales();
     renderReports();
-    subscribeAdminRealtimeUpdates();
-    loadSupabaseMembershipData().then(loadSupabaseOperationalData);
+    initializeSupabaseAdminData();
 
     window.setInterval(() => {
         captureExpiredMemberships();
