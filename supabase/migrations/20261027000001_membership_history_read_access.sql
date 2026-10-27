@@ -3,6 +3,25 @@
 
 begin;
 
+create schema if not exists private;
+
+-- Ensure the policy helper exists even if the earlier base-schema migration
+-- was only partially applied to this Supabase project.
+create or replace function private.is_admin()
+returns boolean
+language sql
+stable
+security definer
+set search_path = ''
+as $$
+    select exists (
+        select 1
+        from public.profiles
+        where id = (select auth.uid())
+          and role = 'admin'
+    );
+$$;
+
 alter table public.membership_history enable row level security;
 
 revoke all on table public.membership_history from public, anon;
