@@ -96,7 +96,7 @@ The functional requirements describe the operations available to applicants, mem
 | FR-03 | Application review | Authorized staff view, approve, or reject registration and renewal applications. The decision and application status are retained. |
 | FR-04 | Membership management | Authorized staff manage member records, plan and membership dates, status, payment information, and membership lifecycle records. |
 | FR-05 | Member portal | An approved member views membership status and progress, personal attendance history, and a QR code; updates are limited to supported account and personal-information fields. |
-| FR-06 | Renewal request | An eligible member can submit a renewal request for staff review. A request is not an automatic renewal. Chapter 2 specifies the five-calendar-day renewal window before and including the current expiry date. |
+| FR-06 | Renewal request | A member can submit a renewal request at any time for staff review. A request is not an automatic renewal. Approval carries unused active membership time forward by extending the current expiry; an expired membership restarts from the approval date. |
 | FR-07 | Attendance | Staff scan a member's QR code to record check-in and check-out. Members can view their own attendance history; the member does not record their own attendance. |
 | FR-08 | Product and inventory management | Authorized staff maintain products and inventory. Supplements use gram-based quantities; merchandise uses item quantities and stock tracking. |
 | FR-09 | Sales and receipts | Staff record in-person product and membership sales for members or walk-in customers. The system stores a sale record and its line items and supports receipt/report views. |
@@ -114,7 +114,7 @@ The functional requirements describe the operations available to applicants, mem
 
 **FR-05 — Member portal.** An authenticated member sees permitted information associated with their own account, including current membership data, QR identifier, and attendance history. Profile changes are limited to fields offered by the portal. Data access must remain scoped to the signed-in identity by database policies.
 
-**FR-06 — Renewal request.** A member submits a request during the configured five-calendar-day period before and including expiry. The application remains pending until staff review. A request does not automatically change the current membership dates or count as a completed renewal transaction.
+**FR-06 — Renewal request.** A member may submit a renewal request at any time. The application remains pending until staff review and does not change the current membership by itself. On approval, the selected plan duration is added after the current expiry when the membership is still active, preserving unused days. If the membership has expired, the new period starts on the approval date. The renewal sale and prior/new membership details are recorded.
 
 **FR-07 — Attendance.** Staff use the administrator scanner to resolve a QR identifier and record a visit. A scan checks for an existing open visit to determine whether the action is check-in or check-out. The member portal can display the member's own history but does not provide the staff attendance-write function.
 
@@ -147,7 +147,7 @@ Input design specifies how information is collected and checked before it become
 | --- | --- | --- | --- |
 | Sign-in | Email/username and password | Required credential fields; Auth validates account and session | Supabase Auth; `profiles` role lookup |
 | Registration request | Name, contact, plan, membership dates, declarations, signature | Required fields, supported formats, plan selection, unique account identifiers | `membership_applications` |
-| Renewal request | Existing member, selected plan, requested details | Existing member link and configured eligibility window; staff review remains required | `membership_applications` |
+| Renewal request | Existing member, selected plan, requested details | Existing member link and valid expiry date; staff review remains required | `membership_applications` |
 | Staff decision | Application identifier and approve/reject action | Administrator authorization; pending status checked before decision | `membership_applications`, `members`, `membership_history`, and `sales` as applicable |
 | Attendance scan | QR payload and staff scan action | Resolve identifier; check open visit and expiry before check-in | `attendance` |
 | Product maintenance | Name, category, unit price, unit, size, stock, optional image | Name required; positive valid price; nonnegative stock; category-unit consistency | `products` |
@@ -327,7 +327,7 @@ An applicant creates an account and completes the application form. The client c
 
 #### Renewal Request and Approval Workflow
 
-An existing member opens the renewal request control when eligible under the configured renewal window. The client submits the selected plan and membership details as an application associated with the existing member. That request remains pending while the current membership period remains the authoritative member record. An administrator reviews the renewal queue and approves or rejects it. On approval, the system records prior and new plan dates and prices in membership history, updates the member's current plan and expiry, and records the renewal sale and item line. The transaction should be written in a retry-safe order so an interrupted request can be resumed without charging twice or leaving inconsistent membership dates. The report distinguishes a recorded receipt from a legacy approved request for which a receipt row is missing.
+An existing member may submit a renewal request at any time. The client associates the selected plan with the existing member, and the request remains pending until an administrator reviews it. Submission alone does not change the current membership. On approval, if the current expiry is today or later, the plan duration is added after that expiry so unused days are retained; if the membership has expired, the new period starts on the approval date. The system records prior and new plan dates and prices in membership history and records the renewal sale and item line. The transaction should be written in a retry-safe order so an interrupted request can be resumed without extending the membership twice or duplicating the receipt. The report distinguishes a recorded receipt from a legacy approved request for which a receipt row is missing.
 
 #### Staff Attendance Workflow
 
@@ -749,7 +749,7 @@ The point-of-sale form collects the customer name, selected product, and quantit
 
 #### Member Portal
 
-The portal displays the signed-in member's current membership details and QR identifier, attendance history, and active product catalog where those features are enabled. Profile settings are limited to supported fields and apply only to the authenticated member's own profile. The renewal control is available only under the configured eligibility rule and creates an application for staff review. The portal should distinguish current membership information from a pending request so the user can see whether a renewal still needs approval.
+The portal displays the signed-in member's current membership details and QR identifier, attendance history, and active product catalog where those features are enabled. Profile settings are limited to supported fields and apply only to the authenticated member's own profile. A member may submit a renewal request at any time, and the portal explains that approval carries unused active membership time forward. The portal distinguishes current membership information from a pending request so the member can see whether a renewal still needs approval.
 
 #### Reports and Password Recovery
 
@@ -807,7 +807,7 @@ The following scenarios provide a minimum verification basis. The research team 
 | --- | --- | --- |
 | Authentication and access | Sign in with authorized administrator and member accounts and attempt role-restricted actions. | Each account reaches its intended interface; unauthorized database operations are denied by the configured policies. |
 | Application workflow | Submit a registration application, review it as staff, and test both approval and rejection paths. | The application is recorded with its review status; approval creates or links the member record and associated transaction as configured. |
-| Renewal | Submit a renewal request within the allowed period and review it as staff. | An eligible request is pending until staff decision; the membership is not renewed automatically. |
+| Renewal | Submit an early renewal request, approve it as staff, and inspect the membership dates, history, and receipt. Also submit a request for an expired member. | The request remains pending until staff decision. Approval extends an active member's expiry by the selected plan duration; approval for an expired membership starts from the approval date. The renewal is recorded once in history and sales. |
 | Attendance | Scan a member QR code as staff for check-in and check-out, then view the member's history. | The event is recorded and the member can view their own history; the member cannot create the event through self-scan. |
 | Inventory and sales | Record a merchandise sale and a gram-based supplement sale, then inspect the receipt and inventory records. | The sale and line items are saved with their units and totals; merchandise stock is updated according to the configured sales workflow. |
 | Reports | Open and print or save available reports using records from the test data. | The report presents the corresponding stored records and totals for the selected report type. |
