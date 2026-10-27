@@ -151,7 +151,7 @@
   <rect width="1050" height="105" rx="8" fill="#eef3f8" stroke="#9aabba"/>
   <text x="22" y="30" class="th">KEY</text>
   <text x="22" y="57" class="legend"><tspan font-weight="700">PK</tspan> primary key  ·  <tspan font-weight="700">FK</tspan> foreign key  ·  <tspan font-weight="700">UK</tspan> unique key</text>
-  <text x="22" y="82" class="legend">Auth users is Supabase-managed. The simplified view omits legacy compatibility fields and other non-key details.</text>
+  <text x="22" y="82" class="legend">Auth users is Supabase-managed. Legacy user_id foreign keys and non-key detail fields are omitted; grouped labels represent separate columns.</text>
 </g>
 <text x="850" y="1200" text-anchor="middle" class="subtitle">Figure. Simplified Entity Relationship Diagram</text>
 </svg>
