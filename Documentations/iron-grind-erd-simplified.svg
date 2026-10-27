@@ -79,7 +79,7 @@
   <rect width="360" height="250" rx="6" class="table"/><path d="M0 36H360" stroke="#62748a"/><rect width="360" height="36" rx="6" class="head"/>
   <text x="180" y="24" text-anchor="middle" class="th">members</text>
   <text x="14" y="59" class="field">id</text><text x="250" y="59" class="type">uuid</text><text x="310" y="59" class="key">PK</text>
-  <text x="14" y="84" class="field">auth_user_id</text><text x="250" y="84" class="type">uuid</text><text x="310" y="84" class="key">FK</text>
+  <text x="14" y="84" class="field">auth_user_id</text><text x="250" y="84" class="type">uuid</text><text x="310" y="84" class="key">FK, UK</text>
   <text x="14" y="109" class="field">application_id</text><text x="250" y="109" class="type">uuid</text><text x="310" y="109" class="key">FK, UK</text>
   <text x="14" y="134" class="field">full_name / email</text><text x="250" y="134" class="type">text</text>
   <text x="14" y="159" class="field">plan / status</text><text x="250" y="159" class="type">text</text>
