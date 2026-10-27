@@ -11,6 +11,6 @@
     "dev": "node server.js"
   },
   "devDependencies": {
-    "supabase": "^2.121.0"
+    "supabase": "^2.122.0"
   }
 }
