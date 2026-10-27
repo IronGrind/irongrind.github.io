@@ -975,10 +975,9 @@ async function loadSupabaseOperationalData(options = {}) {
     }
     if (historyResult.error) {
         console.error('Could not load membership history:', historyResult.error);
-        const permissionDenied = historyResult.error.code === '42501'
-            || /permission denied for table .*membership_history/i.test(historyResult.error.message || '');
+        const permissionDenied = /permission denied for table ["']?membership_history/i.test(historyResult.error.message || '');
         toast(permissionDenied
-            ? 'Supabase denied access to membership_history. Run migration 20261027000001_membership_history_read_access.sql in the connected Supabase project, then reload.'
+            ? 'Supabase still denies SELECT on membership_history. In the connected project, run migration 20261027000001_membership_history_read_access.sql and verify authenticated has SELECT permission.'
             : `Could not load membership archives from Supabase: ${historyResult.error.message}`, 'error');
     } else {
         const remoteHistory = historyResult.data.map(row => {
@@ -1698,23 +1697,36 @@ function startQRScanner() {
             await recordMemberAttendanceScan(member);
     };
     const startCamera = async () => {
+        let permissionStream;
         try {
-            await scanner.start(
-                { facingMode: { ideal: 'environment' } },
-                scanConfig,
-                handleScanSuccess,
-                () => {}
-            );
-        } catch (firstError) {
-            // Some desktop cameras and browsers cannot satisfy an environment
-            // camera preference. Retry with a listed device when available.
-            if (!['OverconstrainedError', 'NotFoundError', 'ConstraintNotSatisfiedError'].includes(firstError?.name)) {
-                throw firstError;
+            // Request permission directly from this user action, then start
+            // the QR library with the browser-selected camera device ID.
+            permissionStream = await navigator.mediaDevices.getUserMedia({
+                audio: false,
+                video: { facingMode: { ideal: 'environment' } }
+            });
+            if (activeQRScanner !== scanner) return;
+
+            const deviceId = permissionStream.getVideoTracks()[0]?.getSettings?.().deviceId;
+            permissionStream.getTracks().forEach(track => track.stop());
+            permissionStream = null;
+            if (activeQRScanner !== scanner) return;
+
+            if (deviceId) {
+                try {
+                    await scanner.start(deviceId, scanConfig, handleScanSuccess, () => {});
+                    return;
+                } catch (deviceError) {
+                    console.warn('Could not start the initially selected camera; trying another available camera.', deviceError);
+                }
             }
-            const cameras = await Html5Qrcode.getCameras().catch(() => []);
+
+            const cameras = await Html5Qrcode.getCameras();
             const camera = cameras.find(item => /back|rear|environment/i.test(item.label)) || cameras[0];
-            if (!camera) throw firstError;
+            if (!camera) throw new Error('No camera device is available to the browser.');
             await scanner.start(camera.id, scanConfig, handleScanSuccess, () => {});
+        } finally {
+            permissionStream?.getTracks().forEach(track => track.stop());
         }
     };
 
