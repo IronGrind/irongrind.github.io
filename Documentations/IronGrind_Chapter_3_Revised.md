@@ -147,9 +147,9 @@ The use-case diagram presents applicant/member and administrator interactions wi
 
 ##### Entity Relationship Diagram
 
-The entity relationship diagram (ERD) summarizes the principal relationships in the Supabase PostgreSQL schema. A member can have multiple applications, attendance events, membership-history records, and sales. Each sale can have multiple sale items; a sale item may reference a product. Supabase Auth manages account identities separately, with profile and member records linked to authenticated users where configured.
+The entity relationship diagram (ERD) summarizes the principal relationships in the Supabase PostgreSQL schema. A member can have multiple linked applications, attendance events, membership-history records, and sales. Each sale can have multiple sale items; a sale item may reference a product. Supabase Auth manages account identities separately. The member-to-Auth link is optional and unique, so an Auth user can be linked to at most one member.
 
-![Figure 6. IronGrind entity relationship diagram](iron-grind-erd.svg)
+![Figure 6. IronGrind entity relationship diagram](iron-grind-erd-simplified.svg)
 
 **Figure 6.** Entity relationship diagram of IronGrind.
 
@@ -189,9 +189,9 @@ This data dictionary summarizes the public-schema fields and relationships defin
 
 | Entity | Key fields and data types | Purpose and relationships |
 | --- | --- | --- |
-| `profiles` | `id` UUID (PK, Auth user); `email` TEXT; `username` TEXT; `full_name` TEXT; `role` TEXT; `created_at` TIMESTAMPTZ | User profile and role used by the application. |
-| `members` | `id` UUID (PK); `auth_user_id` UUID (unique, Auth FK); `full_name`, `email`, `username`, `mobile` TEXT; `date_of_birth` DATE; `age` SMALLINT; `height`, `weight_kg` NUMERIC; `height_unit`, `sex`, `plan`, `status`, `registration_source` TEXT; `emergency_contact` JSONB; `plan_price` NUMERIC; `start_date`, `expiry_date` DATE; `paid` BOOLEAN; `fitness_goals`, `health_conditions` TEXT[]; `other_medical_conditions`, `signature_path` TEXT; timestamps | Approved member and membership record. Referenced by applications, attendance, sales, sale items, and membership history. |
-| `membership_applications` | `id` UUID (PK); `auth_user_id` UUID (Auth FK); `member_id` UUID (nullable FK); `application_type`, `status`, applicant and plan details TEXT; demographic fields; `emergency_contact` JSONB; goals and conditions TEXT[]; `plan_price` NUMERIC; submission/review TIMESTAMPTZ fields; `reviewed_by` UUID (Auth FK) | Registration and renewal requests and their review state. `member_id` can be empty before approval. |
+| `profiles` | `id` UUID (PK, Auth FK); `email`, `username`, `full_name`, `role`, `account_status` TEXT; timestamps | User profile and role used by the application. `username` is unique. |
+| `members` | `id` UUID (PK); `auth_user_id` UUID (nullable, unique Auth FK); `application_id` UUID (nullable, unique FK); `full_name`, `email`, `username`, `mobile` TEXT; `date_of_birth` DATE; `age` SMALLINT; `height`, `weight_kg` NUMERIC; `height_unit`, `sex`, `plan`, `status`, `registration_source` TEXT; `emergency_contact` JSONB; `plan_price`, `paid` NUMERIC; membership dates; `fitness_goals`, `health_conditions` TEXT[]; `other_medical_conditions`, `signature_path` TEXT; timestamps | Approved member and membership record. Referenced by applications, attendance, sales, sale items, and membership history. |
+| `membership_applications` | `id` UUID (PK); `auth_user_id` UUID (nullable Auth FK); `member_id` UUID (nullable FK); `application_type`, `status`, applicant and plan details; demographic, health, and signature fields; submission/review timestamps; `reviewed_by` UUID (FK to `profiles`) | Registration and renewal requests and their review state. `member_id` can be empty before a member is linked. |
 | `attendance` | `id` UUID (PK); `member_id` UUID (FK); `time_in`, `time_out`, `created_at` TIMESTAMPTZ; `recorded_by` UUID (Auth FK) | Staff-recorded check-in and check-out. A member may have multiple attendance records. |
 | `products` | `id` UUID (PK); `name`, `category`, `unit`, `size`, `image_path` TEXT; `price_per_unit` NUMERIC; `stock` INTEGER; `is_active` BOOLEAN; timestamps | Product catalog and inventory. Supplements use gram units; merchandise uses item units and stock. |
 | `sales` | `id` UUID (PK); `receipt_number` TEXT (unique); `customer_type`, `customer_name`, `status` TEXT; `member_id` UUID (nullable FK); `total` NUMERIC; `sold_at` TIMESTAMPTZ; `processed_by` UUID (Auth FK) | Sale header and receipt information. A sale may be associated with a member or a walk-in customer. |

@@ -1,5 +1,8 @@
 erDiagram
-    %% Corrected from supabase/schema.sql. AUTH_USERS represents Supabase Auth's auth.users table.
+    %% Documentation ERD based on the current Supabase public schema.
+    %% AUTH_USERS is Supabase-managed auth.users; it is not a public application table.
+    %% MEMBERS.auth_user_id uniqueness was confirmed from the live pg_indexes catalog.
+
     AUTH_USERS {
         uuid id PK
         text email
@@ -7,81 +10,56 @@ erDiagram
 
     PROFILES {
         uuid id PK,FK
-        text email UK
         text username UK
         text full_name
         text role
-        timestamptz created_at
-    }
-
-    MEMBERS {
-        uuid id PK
-        uuid auth_user_id FK
-        uuid application_id FK
-        text full_name
+        text account_status
         text email
-        text username
-        text mobile
-        date date_of_birth
-        smallint age
-        text sex
-        numeric height
-        text height_unit
-        numeric weight_kg
-        jsonb emergency_contact
-        text plan
-        numeric plan_price
-        date start_date
-        date expiry_date
-        text status
-        text registration_source
-        boolean paid
-        text_array fitness_goals
-        text_array health_conditions
-        text other_medical_conditions
-        text signature_path
-        timestamptz created_at
-        timestamptz updated_at
     }
 
     MEMBERSHIP_APPLICATIONS {
         uuid id PK
         uuid auth_user_id FK
         uuid member_id FK
+        uuid reviewed_by FK
         text application_type
+        text full_name
+        text plan
+        numeric plan_price
+        text status
+        timestamptz submitted_at
+        timestamptz reviewed_at
+    }
+
+    MEMBERS {
+        uuid id PK
+        uuid auth_user_id FK,UK
+        uuid application_id FK,UK
         text full_name
         text email
         text username
         text mobile
         date date_of_birth
         smallint age
-        text sex
         numeric height
-        text height_unit
         numeric weight_kg
         jsonb emergency_contact
-        jsonb emergency_contact_data
         text plan
         numeric plan_price
+        numeric paid
         date start_date
         date end_date
-        text_array fitness_goals
-        text_array health_conditions
-        text other_medical_conditions
-        text signature_path
+        date expiry_date
         text status
-        timestamptz submitted_at
-        timestamptz reviewed_at
-        uuid reviewed_by FK
     }
 
     ATTENDANCE {
         uuid id PK
         uuid member_id FK
+        uuid recorded_by FK
+        date date
         timestamptz time_in
         timestamptz time_out
-        uuid recorded_by FK
-        timestamptz created_at
     }
 
     PRODUCTS {
@@ -90,24 +68,21 @@ erDiagram
         text category
         numeric price_per_unit
         text unit
-        text size
         integer stock
-        text image_path
         boolean is_active
-        timestamptz created_at
-        timestamptz updated_at
+        timestamptz archived_at
     }
 
     SALES {
         uuid id PK
+        uuid member_id FK
+        uuid processed_by FK
         text receipt_number UK
         text customer_type
         text customer_name
-        uuid member_id FK
         numeric total
         text status
         timestamptz sold_at
-        uuid processed_by FK
     }
 
     SALE_ITEMS {
@@ -125,32 +100,28 @@ erDiagram
     MEMBERSHIP_HISTORY {
         uuid id PK
         uuid member_id FK
+        uuid recorded_by FK
         text event_type
         text previous_plan
         text new_plan
         numeric previous_price
         numeric new_price
-        date previous_start_date
         date previous_expiry_date
-        date new_start_date
         date new_expiry_date
-        text notes
         timestamptz recorded_at
-        uuid recorded_by FK
     }
 
-    AUTH_USERS ||--o| PROFILES : "profile identity (profiles.id)"
-    AUTH_USERS ||--o| MEMBERS : "member account (auth_user_id)"
-    AUTH_USERS ||--o{ MEMBERSHIP_APPLICATIONS : "submits (auth_user_id)"
-    AUTH_USERS o|--o{ MEMBERSHIP_APPLICATIONS : "reviews (reviewed_by)"
-    AUTH_USERS o|--o{ ATTENDANCE : "records (recorded_by)"
-    AUTH_USERS o|--o{ SALES : "processes (processed_by)"
-    AUTH_USERS o|--o{ MEMBERSHIP_HISTORY : "records (recorded_by)"
-
-    MEMBERS o|--o{ MEMBERSHIP_APPLICATIONS : "linked member (member_id)"
-    MEMBERSHIP_APPLICATIONS o|--o{ MEMBERS : "source application (application_id)"
-    MEMBERS ||--o{ ATTENDANCE : "has attendance"
-    MEMBERS o|--o{ SALES : "associated sales"
-    MEMBERS ||--o{ MEMBERSHIP_HISTORY : "has history"
-    SALES ||--o{ SALE_ITEMS : "contains line items"
-    PRODUCTS o|--o{ SALE_ITEMS : "product reference (product_id)"
+    AUTH_USERS ||--o| PROFILES : "profile id"
+    AUTH_USERS o|--o| MEMBERS : "auth_user_id (unique)"
+    AUTH_USERS o|--o{ MEMBERSHIP_APPLICATIONS : "auth_user_id"
+    PROFILES o|--o{ MEMBERSHIP_APPLICATIONS : "reviewed_by"
+    MEMBERS o|--o{ MEMBERSHIP_APPLICATIONS : "member_id"
+    MEMBERSHIP_APPLICATIONS o|--o| MEMBERS : "application_id (unique)"
+    MEMBERS ||--o{ ATTENDANCE : "member_id"
+    AUTH_USERS o|--o{ ATTENDANCE : "recorded_by"
+    MEMBERS o|--o{ SALES : "member_id"
+    AUTH_USERS o|--o{ SALES : "processed_by"
+    SALES ||--o{ SALE_ITEMS : "sale_id"
+    PRODUCTS o|--o{ SALE_ITEMS : "product_id"
+    MEMBERS ||--o{ MEMBERSHIP_HISTORY : "member_id"
+    AUTH_USERS o|--o{ MEMBERSHIP_HISTORY : "recorded_by"

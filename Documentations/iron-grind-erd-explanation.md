@@ -4,7 +4,7 @@
 
 The simplified entity relationship diagram (ERD) describes how IronGrind organizes information for user accounts, membership applications, gym members, attendance, products, sales, and membership history. Each entity represents a category of records. Primary keys (PKs) uniquely identify records, while foreign keys (FKs) connect records in related entities.
 
-The diagram presents **eight application tables**: `profiles`, `membership_applications`, `members`, `attendance`, `products`, `sales`, `sale_items`, and `membership_history`. `auth_users` is also drawn to show the account links, but it is managed by Supabase Authentication and is not one of the eight application tables in the public database schema.
+The diagram presents **eight application tables**: `profiles`, `membership_applications`, `members`, `attendance`, `products`, `sales`, `sale_items`, and `membership_history`. `auth.users` is also drawn to show account links, but Supabase Authentication manages it outside the eight application tables in the public database schema.
 
 ![Simplified IronGrind entity relationship diagram](iron-grind-erd-simplified.svg)
 
@@ -15,8 +15,8 @@ The diagram presents **eight application tables**: `profiles`, `membership_appli
 | Table | Purpose | Important links |
 | --- | --- | --- |
 | `profiles` | Stores application-facing user details and role information, such as username, name, and whether the user has an administrator or member role. | Its `id` is also the ID of the corresponding Supabase Auth user. |
-| `membership_applications` | Stores submitted registration and renewal requests, their plan and application type, submission time, status, and review information. | Links to the applicant's Auth account; may link to a member record; identifies the reviewer. |
-| `members` | Stores the gym's member and membership details, including plan, dates, status, and the linked account when one exists. | May link to an Auth account and an originating application. A member can have multiple applications, attendance records, sales, and membership-history entries. |
+| `membership_applications` | Stores submitted registration and renewal requests, their plan and application type, submission time, status, and review information. | May link to the applicant's Auth account and a member record; identifies the reviewer through `profiles`. |
+| `members` | Stores the gym's member and membership details, including plan, dates, status, and the linked account when one exists. | May link to an Auth account and an originating application. Both `auth_user_id` and `application_id` are unique when present. A member can have multiple applications, attendance records, sales, and membership-history entries. |
 | `attendance` | Stores each member check-in and check-out as an individual attendance record, including the times and staff account that recorded it. | Links to one member and optionally to the recording Auth user. |
 | `products` | Stores the active product catalog and inventory details, including product name, category, price, stock, and active status. | A product may be referenced by sale-item records. |
 | `sales` | Stores each transaction's receipt number, customer/member association, total, status, time, and staff account that processed it. | May link to a member and can contain multiple sale items. |
@@ -26,9 +26,9 @@ The diagram presents **eight application tables**: `profiles`, `membership_appli
 ## Relationships
 
 - **Auth users and profiles:** Each profile uses the same ID as its Supabase Auth user. Authentication credentials are managed by Supabase, separately from the eight application tables.
-- **Auth users and members:** A member may be connected to an Auth account for portal access. The account link can be absent, for example, for a record created by an administrator. The database enforces at most one member record per Auth user.
+- **Auth users and members:** A member may be connected to an Auth account for portal access. The account link can be absent, for example, for a record created by an administrator. The live database has a unique partial index on `members.auth_user_id`, enforcing at most one member row per Auth user.
 - **Auth users and applications:** An application is associated with the account that submitted it. A member may submit multiple applications over time, including renewal requests.
-- **Applications and members:** An application can be linked to a member after it is reviewed and processed. The member record may also store the originating application ID. This is shown as a one-to-one-style link in the simplified diagram, but the live schema does not enforce uniqueness on `members.application_id`; treat that cardinality as the intended workflow, not a database-enforced guarantee.
+- **Applications and members:** An application can be linked to a member after it is reviewed and processed through `membership_applications.member_id`. A member can have multiple linked applications over time. The member record may also store its originating application in `members.application_id`; that column has a unique constraint, so one application can be the origin of at most one member row.
 - **Members and attendance:** One member can have many attendance records; each attendance record belongs to one member.
 - **Members and sales:** A sale may be associated with a member, while a walk-in sale may have no member link. A member can have multiple sales.
 - **Sales and sale items:** One sale can contain multiple sale-item rows. Each sale-item row belongs to one sale.
@@ -36,7 +36,7 @@ The diagram presents **eight application tables**: `profiles`, `membership_appli
 - **Members and membership history:** One member can have multiple history entries; each entry belongs to one member.
 - **Staff attribution:** Attendance, sales, and membership-history records can identify the Auth user who recorded or processed them. Application review also records the reviewer. These IDs provide accountability without making the staff account itself an operational record.
 
-In the current SQL schema, `membership_applications.reviewed_by` references `auth.users`. The diagram draws this review relationship through `profiles` to make the application role visible. Both represent the reviewing user's account identity, but the direct foreign-key target in the database is the Auth user table.
+In the current schema, `membership_applications.reviewed_by` references `profiles.id`. The profile ID is itself the Auth user's ID through `profiles.id` referencing `auth.users.id`.
 
 ## Entity Process Flow
 
