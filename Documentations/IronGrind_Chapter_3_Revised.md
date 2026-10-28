@@ -307,7 +307,7 @@ The Level 1 diagram can be read as a sequence of related responsibilities. Each 
 
 **5.0 Manage Inventory.** An authorized administrator creates, edits, or archives product records. Supplement prices and quantities use gram units; merchandise uses item units and tracked stock. The active catalog is returned to permitted views.
 
-**6.0 Process Walk-in Sale.** Staff enter the customer and selected product. The system validates product availability, records a sale header and itemized line, updates merchandise stock according to the configured transaction, and provides receipt details.
+**6.0 Process In-Person Sales and Receipts (FR-09).** Staff record product or membership sales for members or walk-in customers. The system validates the selected items, records a sale header and itemized lines, updates merchandise stock when applicable, and provides receipt details. Membership changes and application decisions remain handled by process 2.0; this process records the corresponding counter-sale transaction.
 
 **7.0 Query Reports and History.** An administrator selects a report and available filters. The system reads the relevant membership, attendance, inventory, sales, or history records and returns the corresponding view or export.
 
