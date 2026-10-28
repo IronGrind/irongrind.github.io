@@ -1,0 +1,235 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1820" height="2020" viewBox="0 0 1820 2020" role="img" aria-labelledby="title desc">
+  <title id="title">Iron Grind Level 1 Data Flow Diagram</title>
+  <desc id="desc">Eight Level 1 processes mapped to functional requirements FR-01 through FR-10, with external actors and data stores.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#263445"/>
+    </marker>
+    <style>
+      text { font-family: Arial, Helvetica, sans-serif; fill: #17212b; }
+      .title { font-size: 30px; font-weight: 700; }
+      .subtitle { font-size: 16px; fill: #526173; }
+      .column { font-size: 15px; font-weight: 700; letter-spacing: 1px; fill: #526173; }
+      .actor { fill: #dce8f8; stroke: #263445; stroke-width: 2; }
+      .process { fill: #ffffff; stroke: #263445; stroke-width: 2; }
+      .process-head { fill: #dce8f8; stroke: #263445; stroke-width: 2; }
+      .store { fill: #e8f0fb; stroke: #263445; stroke-width: 2; }
+      .rule { stroke: #263445; stroke-width: 2; }
+      .flow { fill: none; stroke: #263445; stroke-width: 2; marker-start: url(#arrow); marker-end: url(#arrow); }
+      .store-read { fill: none; stroke: #34715d; stroke-width: 2; marker-end: url(#arrow); }
+      .store-write { fill: none; stroke: #b46a2d; stroke-width: 2; marker-end: url(#arrow); }
+      .store-rw { fill: none; stroke: #263445; stroke-width: 2; marker-start: url(#arrow); marker-end: url(#arrow); }
+      .actor-text { font-size: 16px; font-weight: 700; text-anchor: middle; }
+      .number { font-size: 15px; font-weight: 700; text-anchor: middle; }
+      .process-name { font-size: 20px; font-weight: 700; text-anchor: middle; }
+      .fr { font-size: 14px; fill: #526173; text-anchor: middle; }
+      .store-id { font-size: 13px; font-weight: 700; text-anchor: middle; }
+      .store-name { font-size: 14px; font-weight: 700; }
+      .store-mode { font-size: 12px; fill: #526173; text-anchor: end; }
+      .legend { font-size: 14px; fill: #526173; }
+      .legend-line { fill: none; stroke-width: 2; }
+    </style>
+  </defs>
+  <rect width="1820" height="2020" fill="#ffffff"/>
+  <text class="title" x="60" y="58">Iron Grind Fitness Gym</text>
+  <text class="subtitle" x="60" y="88">Level 1 Data Flow Diagram | Eight functional processes mapped to FR-01 through FR-10</text>
+  <text class="column" x="60" y="150">EXTERNAL ACTORS</text>
+  <text class="column" x="465" y="150">IRON GRIND PROCESSES</text>
+  <text class="column" x="1200" y="150">DATA STORES / SERVICES</text>
+
+  <g aria-label="Process 1.0 Authenticate and Manage Access">
+    <rect class="actor" x="60" y="220" width="250" height="60"/>
+    <text class="actor-text" x="185" y="246"><tspan x="185">Applicant / Member /</tspan><tspan x="185" dy="20">Administrator</tspan></text>
+    <path class="flow" d="M310 250 H465"/>
+    <rect class="process" x="465" y="194" width="500" height="112" rx="12"/>
+    <path class="process-head" d="M477 194 H953 Q965 194 965 206 V224 H465 V206 Q465 194 477 194 Z"/>
+    <text class="number" x="715" y="215">1.0</text>
+    <text class="process-name" x="715" y="259">Authenticate and Manage Access</text>
+    <text class="fr" x="715" y="283">FR-01</text>
+    <rect class="store" x="1200" y="210" width="540" height="36"/>
+    <line class="rule" x1="1252" y1="210" x2="1252" y2="246"/>
+    <text class="store-id" x="1226" y="233">S1</text><text class="store-name" x="1266" y="233">Supabase Auth</text><text class="store-mode" x="1725" y="233">read / write</text>
+    <path class="store-rw" d="M1200 228 C1110 228 1060 250 965 250"/>
+    <rect class="store" x="1200" y="256" width="540" height="36"/>
+    <line class="rule" x1="1252" y1="256" x2="1252" y2="292"/>
+    <text class="store-id" x="1226" y="279">D1</text><text class="store-name" x="1266" y="279">profiles</text><text class="store-mode" x="1725" y="279">read</text>
+    <path class="store-read" d="M1200 274 C1110 274 1060 250 965 250"/>
+  </g>
+
+  <g aria-label="Process 2.0 Submit and Review Applications">
+    <rect class="actor" x="60" y="440" width="250" height="60"/>
+    <text class="actor-text" x="185" y="466"><tspan x="185">Applicant /</tspan><tspan x="185" dy="20">Administrator</tspan></text>
+    <path class="flow" d="M310 470 H465"/>
+    <rect class="process" x="465" y="414" width="500" height="112" rx="12"/>
+    <path class="process-head" d="M477 414 H953 Q965 414 965 426 V444 H465 V426 Q465 414 477 414 Z"/>
+    <text class="number" x="715" y="435">2.0</text>
+    <text class="process-name" x="715" y="479">Submit and Review Applications</text>
+    <text class="fr" x="715" y="503">FR-02, FR-03</text>
+    <rect class="store" x="1200" y="426" width="540" height="36"/>
+    <line class="rule" x1="1252" y1="426" x2="1252" y2="462"/>
+    <text class="store-id" x="1226" y="449">D2</text><text class="store-name" x="1266" y="449">membership_applications</text><text class="store-mode" x="1725" y="449">read / write</text>
+    <path class="store-rw" d="M1200 444 C1110 444 1060 470 965 470"/>
+    <rect class="store" x="1200" y="472" width="540" height="36"/>
+    <line class="rule" x1="1252" y1="472" x2="1252" y2="508"/>
+    <text class="store-id" x="1226" y="495">D3</text><text class="store-name" x="1266" y="495">members</text><text class="store-mode" x="1725" y="495">write on approval</text>
+    <path class="store-write" d="M965 470 C1060 470 1110 490 1200 490"/>
+  </g>
+
+  <g aria-label="Process 3.0 Manage Membership and Renewals">
+    <rect class="actor" x="60" y="660" width="250" height="60"/>
+    <text class="actor-text" x="185" y="686"><tspan x="185">Member /</tspan><tspan x="185" dy="20">Administrator</tspan></text>
+    <path class="flow" d="M310 690 H465"/>
+    <rect class="process" x="465" y="634" width="500" height="112" rx="12"/>
+    <path class="process-head" d="M477 634 H953 Q965 634 965 646 V664 H465 V646 Q465 634 477 634 Z"/>
+    <text class="number" x="715" y="655">3.0</text>
+    <text class="process-name" x="715" y="699">Manage Membership and Renewals</text>
+    <text class="fr" x="715" y="723">FR-04, FR-06</text>
+    <rect class="store" x="1200" y="638" width="540" height="30"/>
+    <line class="rule" x1="1252" y1="638" x2="1252" y2="668"/>
+    <text class="store-id" x="1226" y="658">D2</text><text class="store-name" x="1266" y="658">membership_applications</text><text class="store-mode" x="1725" y="658">read / write</text>
+    <path class="store-rw" d="M1200 653 C1110 653 1060 690 965 690"/>
+    <rect class="store" x="1200" y="672" width="540" height="30"/>
+    <line class="rule" x1="1252" y1="672" x2="1252" y2="702"/>
+    <text class="store-id" x="1226" y="692">D3</text><text class="store-name" x="1266" y="692">members</text><text class="store-mode" x="1725" y="692">read / write</text>
+    <path class="store-rw" d="M1200 687 C1110 687 1060 690 965 690"/>
+    <rect class="store" x="1200" y="706" width="540" height="30"/>
+    <line class="rule" x1="1252" y1="706" x2="1252" y2="736"/>
+    <text class="store-id" x="1226" y="726">D8</text><text class="store-name" x="1266" y="726">membership_history</text><text class="store-mode" x="1725" y="726">write</text>
+    <path class="store-write" d="M965 690 C1060 690 1110 721 1200 721"/>
+    <rect class="store" x="1200" y="740" width="540" height="30"/>
+    <line class="rule" x1="1252" y1="740" x2="1252" y2="770"/>
+    <text class="store-id" x="1226" y="760">D6/D7</text><text class="store-name" x="1266" y="760">sales / sale_items</text><text class="store-mode" x="1725" y="760">write when charged</text>
+    <path class="store-write" d="M965 690 C1060 690 1110 755 1200 755"/>
+  </g>
+
+  <g aria-label="Process 4.0 Provide Member Portal">
+    <rect class="actor" x="60" y="880" width="250" height="60"/>
+    <text class="actor-text" x="185" y="916">Member</text>
+    <path class="flow" d="M310 910 H465"/>
+    <rect class="process" x="465" y="854" width="500" height="112" rx="12"/>
+    <path class="process-head" d="M477 854 H953 Q965 854 965 866 V884 H465 V866 Q465 854 477 854 Z"/>
+    <text class="number" x="715" y="875">4.0</text>
+    <text class="process-name" x="715" y="919">Provide Member Portal</text>
+    <text class="fr" x="715" y="943">FR-05</text>
+    <rect class="store" x="1200" y="864" width="540" height="30"/>
+    <line class="rule" x1="1252" y1="864" x2="1252" y2="894"/>
+    <text class="store-id" x="1226" y="884">D1</text><text class="store-name" x="1266" y="884">profiles</text><text class="store-mode" x="1725" y="884">read / write</text>
+    <path class="store-rw" d="M1200 879 C1110 879 1060 910 965 910"/>
+    <rect class="store" x="1200" y="898" width="540" height="30"/>
+    <line class="rule" x1="1252" y1="898" x2="1252" y2="928"/>
+    <text class="store-id" x="1226" y="918">D3</text><text class="store-name" x="1266" y="918">members</text><text class="store-mode" x="1725" y="918">read</text>
+    <path class="store-read" d="M1200 913 C1110 913 1060 910 965 910"/>
+    <rect class="store" x="1200" y="932" width="540" height="30"/>
+    <line class="rule" x1="1252" y1="932" x2="1252" y2="962"/>
+    <text class="store-id" x="1226" y="952">D4</text><text class="store-name" x="1266" y="952">attendance</text><text class="store-mode" x="1725" y="952">read</text>
+    <path class="store-read" d="M1200 947 C1110 947 1060 910 965 910"/>
+    <rect class="store" x="1200" y="966" width="540" height="30"/>
+    <line class="rule" x1="1252" y1="966" x2="1252" y2="996"/>
+    <text class="store-id" x="1226" y="986">D5</text><text class="store-name" x="1266" y="986">products</text><text class="store-mode" x="1725" y="986">read</text>
+    <path class="store-read" d="M1200 981 C1110 981 1060 910 965 910"/>
+  </g>
+
+  <g aria-label="Process 5.0 Record Attendance">
+    <rect class="actor" x="60" y="1100" width="250" height="60"/>
+    <text class="actor-text" x="185" y="1126"><tspan x="185">Administrator /</tspan><tspan x="185" dy="20">Staff</tspan></text>
+    <path class="flow" d="M310 1130 H465"/>
+    <rect class="process" x="465" y="1074" width="500" height="112" rx="12"/>
+    <path class="process-head" d="M477 1074 H953 Q965 1074 965 1086 V1104 H465 V1086 Q465 1074 477 1074 Z"/>
+    <text class="number" x="715" y="1095">5.0</text>
+    <text class="process-name" x="715" y="1139">Record Attendance</text>
+    <text class="fr" x="715" y="1163">FR-07</text>
+    <rect class="store" x="1200" y="1092" width="540" height="36"/>
+    <line class="rule" x1="1252" y1="1092" x2="1252" y2="1128"/>
+    <text class="store-id" x="1226" y="1115">D3</text><text class="store-name" x="1266" y="1115">members</text><text class="store-mode" x="1725" y="1115">read</text>
+    <path class="store-read" d="M1200 1110 C1110 1110 1060 1130 965 1130"/>
+    <rect class="store" x="1200" y="1138" width="540" height="36"/>
+    <line class="rule" x1="1252" y1="1138" x2="1252" y2="1174"/>
+    <text class="store-id" x="1226" y="1161">D4</text><text class="store-name" x="1266" y="1161">attendance</text><text class="store-mode" x="1725" y="1161">read / write</text>
+    <path class="store-rw" d="M1200 1156 C1110 1156 1060 1130 965 1130"/>
+  </g>
+
+  <g aria-label="Process 6.0 Manage Products and Inventory">
+    <rect class="actor" x="60" y="1320" width="250" height="60"/>
+    <text class="actor-text" x="185" y="1346"><tspan x="185">Administrator /</tspan><tspan x="185" dy="20">Staff</tspan></text>
+    <path class="flow" d="M310 1350 H465"/>
+    <rect class="process" x="465" y="1294" width="500" height="112" rx="12"/>
+    <path class="process-head" d="M477 1294 H953 Q965 1294 965 1306 V1324 H465 V1306 Q465 1294 477 1294 Z"/>
+    <text class="number" x="715" y="1315">6.0</text>
+    <text class="process-name" x="715" y="1359">Manage Products and Inventory</text>
+    <text class="fr" x="715" y="1383">FR-08</text>
+    <rect class="store" x="1200" y="1332" width="540" height="36"/>
+    <line class="rule" x1="1252" y1="1332" x2="1252" y2="1368"/>
+    <text class="store-id" x="1226" y="1355">D5</text><text class="store-name" x="1266" y="1355">products</text><text class="store-mode" x="1725" y="1355">read / write</text>
+    <path class="store-rw" d="M1200 1350 C1110 1350 1060 1350 965 1350"/>
+  </g>
+
+  <g aria-label="Process 7.0 Process Sales and Receipts">
+    <rect class="actor" x="60" y="1540" width="250" height="60"/>
+    <text class="actor-text" x="185" y="1566"><tspan x="185">Administrator / Staff</tspan><tspan x="185" dy="20">Walk-in via staff</tspan></text>
+    <path class="flow" d="M310 1570 H465"/>
+    <rect class="process" x="465" y="1514" width="500" height="112" rx="12"/>
+    <path class="process-head" d="M477 1514 H953 Q965 1514 965 1526 V1544 H465 V1526 Q465 1514 477 1514 Z"/>
+    <text class="number" x="715" y="1535">7.0</text>
+    <text class="process-name" x="715" y="1579">Process Sales and Receipts</text>
+    <text class="fr" x="715" y="1603">FR-09</text>
+    <rect class="store" x="1200" y="1520" width="540" height="30"/>
+    <line class="rule" x1="1252" y1="1520" x2="1252" y2="1550"/>
+    <text class="store-id" x="1226" y="1540">D3</text><text class="store-name" x="1266" y="1540">members</text><text class="store-mode" x="1725" y="1540">read</text>
+    <path class="store-read" d="M1200 1535 C1110 1535 1060 1570 965 1570"/>
+    <rect class="store" x="1200" y="1554" width="540" height="30"/>
+    <line class="rule" x1="1252" y1="1554" x2="1252" y2="1584"/>
+    <text class="store-id" x="1226" y="1574">D5</text><text class="store-name" x="1266" y="1574">products</text><text class="store-mode" x="1725" y="1574">read / write stock</text>
+    <path class="store-rw" d="M1200 1569 C1110 1569 1060 1570 965 1570"/>
+    <rect class="store" x="1200" y="1588" width="540" height="30"/>
+    <line class="rule" x1="1252" y1="1588" x2="1252" y2="1618"/>
+    <text class="store-id" x="1226" y="1608">D6</text><text class="store-name" x="1266" y="1608">sales</text><text class="store-mode" x="1725" y="1608">write</text>
+    <path class="store-write" d="M965 1570 C1060 1570 1110 1603 1200 1603"/>
+    <rect class="store" x="1200" y="1622" width="540" height="30"/>
+    <line class="rule" x1="1252" y1="1622" x2="1252" y2="1652"/>
+    <text class="store-id" x="1226" y="1642">D7</text><text class="store-name" x="1266" y="1642">sale_items</text><text class="store-mode" x="1725" y="1642">write</text>
+    <path class="store-write" d="M965 1570 C1060 1570 1110 1637 1200 1637"/>
+  </g>
+
+  <g aria-label="Process 8.0 Generate Operational Reports">
+    <rect class="actor" x="60" y="1760" width="250" height="60"/>
+    <text class="actor-text" x="185" y="1786"><tspan x="185">Administrator /</tspan><tspan x="185" dy="20">Authorized Staff</tspan></text>
+    <path class="flow" d="M310 1790 H465"/>
+    <rect class="process" x="465" y="1734" width="500" height="112" rx="12"/>
+    <path class="process-head" d="M477 1734 H953 Q965 1734 965 1746 V1764 H465 V1746 Q465 1734 477 1734 Z"/>
+    <text class="number" x="715" y="1755">8.0</text>
+    <text class="process-name" x="715" y="1799">Generate Operational Reports</text>
+    <text class="fr" x="715" y="1823">FR-10</text>
+    <rect class="store" x="1200" y="1742" width="540" height="24"/>
+    <line class="rule" x1="1252" y1="1742" x2="1252" y2="1766"/>
+    <text class="store-id" x="1226" y="1759">D2</text><text class="store-name" x="1266" y="1759">membership_applications</text><text class="store-mode" x="1725" y="1759">read</text>
+    <path class="store-read" d="M1200 1754 C1110 1754 1060 1790 965 1790"/>
+    <rect class="store" x="1200" y="1770" width="540" height="24"/>
+    <line class="rule" x1="1252" y1="1770" x2="1252" y2="1794"/>
+    <text class="store-id" x="1226" y="1787">D3</text><text class="store-name" x="1266" y="1787">members</text><text class="store-mode" x="1725" y="1787">read</text>
+    <path class="store-read" d="M1200 1782 C1110 1782 1060 1790 965 1790"/>
+    <rect class="store" x="1200" y="1798" width="540" height="24"/>
+    <line class="rule" x1="1252" y1="1798" x2="1252" y2="1822"/>
+    <text class="store-id" x="1226" y="1815">D4</text><text class="store-name" x="1266" y="1815">attendance</text><text class="store-mode" x="1725" y="1815">read</text>
+    <path class="store-read" d="M1200 1810 C1110 1810 1060 1790 965 1790"/>
+    <rect class="store" x="1200" y="1826" width="540" height="24"/>
+    <line class="rule" x1="1252" y1="1826" x2="1252" y2="1850"/>
+    <text class="store-id" x="1226" y="1843">D5</text><text class="store-name" x="1266" y="1843">products</text><text class="store-mode" x="1725" y="1843">read</text>
+    <path class="store-read" d="M1200 1838 C1110 1838 1060 1790 965 1790"/>
+    <rect class="store" x="1200" y="1854" width="540" height="24"/>
+    <line class="rule" x1="1252" y1="1854" x2="1252" y2="1878"/>
+    <text class="store-id" x="1226" y="1871">D6/D7</text><text class="store-name" x="1266" y="1871">sales / sale_items</text><text class="store-mode" x="1725" y="1871">read</text>
+    <path class="store-read" d="M1200 1866 C1110 1866 1060 1790 965 1790"/>
+    <rect class="store" x="1200" y="1882" width="540" height="24"/>
+    <line class="rule" x1="1252" y1="1882" x2="1252" y2="1906"/>
+    <text class="store-id" x="1226" y="1899">D8</text><text class="store-name" x="1266" y="1899">membership_history</text><text class="store-mode" x="1725" y="1899">read</text>
+    <path class="store-read" d="M1200 1894 C1110 1894 1060 1790 965 1790"/>
+  </g>
+
+  <line class="legend-line" x1="60" y1="1960" x2="112" y2="1960" stroke="#263445" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
+  <text class="legend" x="124" y="1965">Actor request / system response</text>
+  <line class="legend-line" x1="420" y1="1960" x2="472" y2="1960" stroke="#34715d" marker-end="url(#arrow)"/>
+  <text class="legend" x="484" y="1965">Store read</text>
+  <line class="legend-line" x1="620" y1="1960" x2="672" y2="1960" stroke="#b46a2d" marker-end="url(#arrow)"/>
+  <text class="legend" x="684" y="1965">Store write</text>
+  <text class="legend" x="870" y="1965">Repeated store IDs refer to the same database store.</text>
+</svg>
