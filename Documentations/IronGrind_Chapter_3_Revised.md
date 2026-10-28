@@ -477,14 +477,14 @@ These links support the reports and workflows described in the process model. Th
 
 | Process | Input | Data stores or services used | Output |
 | --- | --- | --- | --- |
-| 1.0 Authenticate User | Member/applicant or administrator credentials | Supabase Auth; D1 `profiles` for role lookup | Authenticated session and role-based routing, or an authentication error. |
-| 2.0 Process Membership Applications | Registration or renewal details; administrator approval or rejection | D2 `membership_applications`; D3 `members`; D8 `membership_history`; D6 `sales` when a membership transaction is recorded | Updated application status, member record and related transaction result. |
-| 3.0 Manage Member Portal | Member requests, supported profile updates, renewal submissions | D1 `profiles`; D2 `membership_applications`; D3 `members`; D4 `attendance`; D5 `products` | Member's permitted membership, attendance, and active product information; renewal or update result. |
-| 4.0 Record Attendance | Staff QR scan and check-in/check-out action | D3 `members` for member lookup; D4 `attendance` for attendance records | Saved attendance event and confirmation; attendance history for permitted member access. |
-| 5.0 Manage Inventory | Administrator product, price, category, or stock changes | D5 `products` | Updated product and inventory records; active catalog data for members. |
-| 6.0 Process Walk-in Sale | Staff-entered customer and sale-item details | D5 `products` for validation and stock; D6 `sales`; D7 `sale_items` | Validated sale, receipt details, and applicable merchandise stock update. |
-| 7.0 Query Reports and History | Administrator report type and filters, including date range | D2 `membership_applications`; D3 `members`; D4 `attendance`; D5 `products`; D6 `sales`; D7 `sale_items`; D8 `membership_history` | Dashboard summaries, filtered report data, and available exports. |
-| 8.0 Email Notifications (planned) | Future approval or expiry events | No live notification store or external provider configured | No email output is currently produced; this process remains planned. |
+| 1.0 Authenticate User (FR-01) | Member/applicant or administrator credentials | Supabase Auth; D1 `profiles` for role lookup | Authenticated session and role-based routing, or an authentication error. |
+| 2.0 Process Membership Applications (FR-02, FR-03, FR-04, FR-06) | Registration or renewal details; administrator approval or rejection; supported membership changes | D2 `membership_applications`; D3 `members`; D8 `membership_history`; D6 `sales` and D7 `sale_items` when a membership transaction is recorded | Updated application status, member and membership-history records, and related transaction result. |
+| 3.0 Manage Member Portal (FR-05) | Member requests, supported profile updates, renewal submissions | D1 `profiles`; D2 `membership_applications`; D3 `members`; D4 `attendance`; D5 `products` | Member's permitted membership, attendance, and active product information; renewal or update result. |
+| 4.0 Record Attendance (FR-07) | Staff QR scan and check-in/check-out action | D3 `members` for member lookup; D4 `attendance` for attendance records | Saved staff-recorded attendance event and confirmation; attendance history for permitted member access. |
+| 5.0 Manage Inventory (FR-08) | Administrator product, price, category, or stock changes | D5 `products` | Updated product and inventory records; active catalog data for members. |
+| 6.0 Process In-Person Sales and Receipts (FR-09) | Staff-entered member or walk-in customer details and product or membership sale items | D5 `products` for product validation and stock; D3 `members` for member sales; D6 `sales`; D7 `sale_items`; D8 `membership_history` when a membership change is recorded by process 2.0 | Validated product or membership sale, receipt details, and applicable merchandise stock update. |
+| 7.0 Query Reports and History (FR-10) | Authorized administrator report type and filters, including date range | D2 `membership_applications`; D3 `members`; D4 `attendance`; D5 `products`; D6 `sales`; D7 `sale_items`; D8 `membership_history` | Dashboard summaries, filtered report data, and available print/export outputs. |
+| 8.0 Email Notifications (planned; not an FR) | Future approval or expiry events | No live notification store or external provider configured | No email output is currently produced; this process remains planned and outside current functional scope. |
 
 ### Data Stores
 
