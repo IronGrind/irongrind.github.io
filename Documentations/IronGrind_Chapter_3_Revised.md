@@ -258,16 +258,16 @@ Data process modeling describes how information enters IronGrind, which processe
 
 #### Diagrams
 
-The diagrams that follow present the system at different levels. The context diagram defines the system boundary and external exchanges. The Level 1 data-flow diagram expands the system into processes and stores. The use-case diagram groups functions by actor, and the ERD describes the database relationships that support those functions.
+The diagrams that follow present the system at different levels. The Gane and Sarson system data flow diagram gives an overview of how the Administrator and Member / Applicant exchange information with the main system process and its data store. The Level 1 data-flow diagram expands the system into its processes and data stores. The use-case diagram groups functions by actor, and the ERD describes the database relationships that support those functions.
 
-##### Context Diagram
+##### System Data Flow Diagram
 
-![Figure 3. IronGrind system context diagram](iron-grind-context-diagram.svg)
+![Figure 3. IronGrind system data flow diagram](iron-grind-context-diagram.svg)
 
-**Figure 3.** System context diagram of IronGrind.
+**Figure 3.** System data flow diagram of IronGrind using Gane and Sarson notation.
 
 
-Figure 3 sets the boundary around IronGrind as a single system, without showing its internal modules or database tables. The Administrator is placed on the left and sends sign-in credentials, application review decisions, member, attendance, and inventory updates, walk-in sale entries, and report requests into the system. IronGrind returns dashboard information, application and attendance records, inventory and sales records, receipts, and reports. The Member / Applicant is placed on the right and sends sign-in credentials, registration details, membership applications, renewal requests, and profile updates. The system returns authentication results, application status, membership details, attendance history, the active product catalog, and account information permitted for that user. A walk-in customer is represented through the staff-entered purchase rather than a direct system account. Supabase Auth and Supabase data services remain outside the application boundary because they provide authentication and database services to the website.
+Figure 3 follows the Gane and Sarson format specified for the study. The Administrator and Member / Applicant are external entities that exchange information with process 1.0, the IronGrind Membership and Operations System. The administrator provides credentials, application decisions, operational updates, sales entries, and report requests; the system returns dashboard information, records, receipts, and reports. The member or applicant provides credentials, applications, renewal requests, and profile requests; the system returns application status, membership and attendance information, and the active catalog. Process 1.0 saves and updates membership, attendance, inventory, and sales records in data store D1, the Supabase database, and retrieves records to support system features. A walk-in purchase is entered by the administrator rather than through a separate customer account.
 
 
 ##### Data Flow Diagram

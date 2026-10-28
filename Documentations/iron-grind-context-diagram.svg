@@ -1,72 +1,38 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1700" height="900" viewBox="0 0 1700 900" role="img" aria-labelledby="title desc">
-<title id="title">Iron Grind Context Diagram</title>
-<desc id="desc">Context-level data flow diagram showing the Administrator on the left and the Member / Applicant on the right exchanging information with the Iron Grind Fitness Gym Membership and Operations Management System.</desc>
-<defs>
-  <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#000"/></marker>
-  <style>
-    text{font-family:Arial,Helvetica,sans-serif;fill:#17212b}
-    .title{font-size:26px;font-weight:700}
-    .entity{fill:#d5e2f5;stroke:#000;stroke-width:5}
-    .process{fill:#f7f7f7;stroke:#000;stroke-width:5}
-    .processHeader{fill:#d5e2f5}
-    .rule{stroke:#000;stroke-width:3}
-    .entityTitle{font-size:22px;font-weight:700}
-    .processNum{font-size:18px;font-weight:700}
-    .processTitle{font-size:23px;font-weight:700}
-    .flowTitle{font-size:15px;font-weight:700;fill:#344054}
-    .flow{font-size:14px;fill:#344054}
-    .note{font-size:13px;fill:#667085}
-    .dataflow{fill:none;stroke:#000;stroke-width:3;marker-end:url(#arrow)}
-  </style>
-</defs>
-<rect width="1700" height="1120" fill="#fff"/>
+<title id="title">Iron Grind system data flow diagram</title>
+<desc id="desc">Gane and Sarson data flow overview. The Administrator and Member / Applicant send information to process 1.0, the IronGrind Membership and Operations System. The process exchanges records with data store D1, the Supabase database, and returns relevant information to each user.</desc>
+<defs><marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#000"/></marker>
+<style>
+text{font-family:Arial,Helvetica,sans-serif;fill:#17212b}.title{font-size:26px;font-weight:700}
+.entity,.store{fill:#d5e2f5;stroke:#000;stroke-width:5}.process{fill:#f7f7f7;stroke:#000;stroke-width:5}.header{fill:#d5e2f5}
+.rule{stroke:#000;stroke-width:3}.entityTitle{font-size:22px;font-weight:700}.processNum{font-size:20px;font-weight:700}
+.processTitle{font-size:23px;font-weight:700}.flowTitle{font-size:17px;font-weight:700;fill:#344054}
+.flow{font-size:15px;fill:#344054}.dataflow{fill:none;stroke:#000;stroke-width:3;marker-end:url(#arrow)}
+</style></defs>
+<rect width="1700" height="900" fill="#fff"/>
 <text x="850" y="52" text-anchor="middle" class="title">IRON GRIND FITNESS GYM MEMBERSHIP &amp; OPERATIONS MANAGEMENT SYSTEM</text>
-<text x="850" y="82" text-anchor="middle" class="flowTitle">CONTEXT DIAGRAM</text>
-
-<!-- External entities -->
-<rect x="55" y="420" width="250" height="150" class="entity"/>
-<text x="180" y="510" text-anchor="middle" class="entityTitle">Administrator</text>
-<rect x="1395" y="420" width="250" height="150" class="entity"/>
-<text x="1520" y="495" text-anchor="middle" class="entityTitle">Member /</text>
-<text x="1520" y="525" text-anchor="middle" class="entityTitle">Applicant</text>
-
-<!-- Central context process -->
-<rect x="600" y="145" width="500" height="665" rx="42" class="process"/>
-<path d="M642 147H1058A40 40 0 0 1 1098 187V215H602V187A40 40 0 0 1 642 147Z" class="processHeader"/>
-<path d="M600 215H1100" class="rule"/>
-<text x="850" y="190" text-anchor="middle" class="processNum">0</text>
-<text x="850" y="380" text-anchor="middle" class="processTitle">Iron Grind Fitness Gym</text>
-<text x="850" y="418" text-anchor="middle" class="processTitle">Membership &amp; Operations</text>
-<text x="850" y="456" text-anchor="middle" class="processTitle">Management System</text>
-<text x="850" y="520" text-anchor="middle" class="flow">Handles authentication, membership, attendance,</text>
-<text x="850" y="545" text-anchor="middle" class="flow">inventory, sales, member services, and reporting</text>
-
-<!-- Administrator data flows -->
-<path d="M305 340H600" class="dataflow"/>
-<text x="452" y="190" text-anchor="middle" class="flowTitle">ADMINISTRATOR TO SYSTEM</text>
-<text x="452" y="220" text-anchor="middle" class="flow">Sign-in credentials</text>
-<text x="452" y="245" text-anchor="middle" class="flow">Application review decisions</text>
-<text x="452" y="270" text-anchor="middle" class="flow">Member, attendance, and inventory updates</text>
-<text x="452" y="295" text-anchor="middle" class="flow">Walk-in sale entries and report requests</text>
-
-<path d="M600 650H305" class="dataflow"/>
-<text x="452" y="605" text-anchor="middle" class="flowTitle">SYSTEM TO ADMINISTRATOR</text>
-<text x="452" y="680" text-anchor="middle" class="flow">Authentication result and dashboard data</text>
-<text x="452" y="705" text-anchor="middle" class="flow">Application, member, and attendance records</text>
-<text x="452" y="730" text-anchor="middle" class="flow">Inventory and sales records; receipts</text>
-<text x="452" y="755" text-anchor="middle" class="flow">Generated reports and exports</text>
-
-<!-- Member / Applicant data flows -->
-<path d="M1395 340H1100" class="dataflow"/>
-<text x="1247" y="190" text-anchor="middle" class="flowTitle">MEMBER / APPLICANT TO SYSTEM</text>
-<text x="1247" y="220" text-anchor="middle" class="flow">Sign-in credentials</text>
-<text x="1247" y="245" text-anchor="middle" class="flow">Registration details and membership application</text>
-<text x="1247" y="270" text-anchor="middle" class="flow">Renewal requests and profile updates</text>
-<text x="1247" y="295" text-anchor="middle" class="flow">Member requests</text>
-
-<path d="M1100 650H1395" class="dataflow"/>
-<text x="1247" y="605" text-anchor="middle" class="flowTitle">SYSTEM TO MEMBER / APPLICANT</text>
-<text x="1247" y="680" text-anchor="middle" class="flow">Authentication result and application status</text>
-<text x="1247" y="705" text-anchor="middle" class="flow">Membership details and attendance history</text>
-<text x="1247" y="730" text-anchor="middle" class="flow">Active product catalog and account information</text>
+<text x="850" y="86" text-anchor="middle" class="flowTitle">SYSTEM DATA FLOW DIAGRAM — GANE AND SARSON NOTATION</text>
+<rect x="55" y="220" width="270" height="110" class="entity"/><text x="190" y="285" text-anchor="middle" class="entityTitle">Administrator</text>
+<rect x="55" y="570" width="270" height="110" class="entity"/><text x="190" y="620" text-anchor="middle" class="entityTitle">Member / Applicant</text>
+<rect x="600" y="300" width="500" height="330" rx="28" class="process"/>
+<path d="M628 302H1072A26 26 0 0 1 1098 328V355H602V328A26 26 0 0 1 628 302Z" class="header"/>
+<path d="M600 355H1100" class="rule"/><text x="850" y="338" text-anchor="middle" class="processNum">1.0</text>
+<text x="850" y="430" text-anchor="middle" class="processTitle">IronGrind Membership</text>
+<text x="850" y="466" text-anchor="middle" class="processTitle">&amp; Operations System</text>
+<text x="850" y="525" text-anchor="middle" class="flow">Processes membership, attendance, inventory,</text>
+<text x="850" y="551" text-anchor="middle" class="flow">sales, account, and reporting activities</text>
+<rect x="1350" y="375" width="300" height="180" class="store"/>
+<rect x="1350" y="375" width="65" height="180" fill="#d5e2f5" stroke="#000" stroke-width="5"/>
+<path d="M1415 375V555" class="rule"/><text x="1382" y="472" text-anchor="middle" class="entityTitle">D1</text>
+<text x="1535" y="455" text-anchor="middle" class="entityTitle">Supabase</text><text x="1535" y="490" text-anchor="middle" class="entityTitle">Database</text>
+<path d="M325 245L600 390" class="dataflow"/><text x="455" y="270" text-anchor="middle" class="flowTitle">ADMINISTRATOR INPUT</text>
+<text x="455" y="295" text-anchor="middle" class="flow">Credentials, review decisions,</text><text x="455" y="317" text-anchor="middle" class="flow">updates, sales, report requests</text>
+<path d="M600 455L325 310" class="dataflow"/><text x="455" y="360" text-anchor="middle" class="flow">Dashboard, records, receipts,</text><text x="455" y="382" text-anchor="middle" class="flow">and generated reports</text>
+<path d="M325 650L600 545" class="dataflow"/><text x="455" y="575" text-anchor="middle" class="flowTitle">MEMBER / APPLICANT INPUT</text>
+<text x="455" y="600" text-anchor="middle" class="flow">Credentials, applications, renewals,</text><text x="455" y="622" text-anchor="middle" class="flow">and profile requests</text>
+<path d="M600 500L325 610" class="dataflow"/><text x="455" y="660" text-anchor="middle" class="flow">Application status, membership,</text><text x="455" y="682" text-anchor="middle" class="flow">attendance, and catalog information</text>
+<path d="M1100 405H1350" class="dataflow"/><text x="1225" y="365" text-anchor="middle" class="flowTitle">SAVE / UPDATE</text>
+<text x="1225" y="390" text-anchor="middle" class="flow">Membership, attendance,</text><text x="1225" y="412" text-anchor="middle" class="flow">inventory, and sales records</text>
+<path d="M1350 500H1100" class="dataflow"/><text x="1225" y="535" text-anchor="middle" class="flowTitle">RETRIEVE RECORDS</text>
+<text x="1225" y="560" text-anchor="middle" class="flow">Data used by system features</text>
 </svg>
