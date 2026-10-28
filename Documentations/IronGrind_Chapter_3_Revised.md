@@ -94,9 +94,9 @@ The functional requirements describe the operations available to applicants, mem
 | FR-01 | Authentication and access | Users authenticate through Supabase Auth. Administrator and member access is governed by profile roles and database authorization policies. |
 | FR-02 | Online application | An applicant submits registration details through the website. The application is stored for administrator review and is not automatically an active membership. If the applicant attempts to log in while the application is pending, the website displays the pending status. |
 | FR-03 | Application review | Authorized staff view, approve, or reject registration and renewal applications. The decision and application status are retained. |
-| FR-04 | Membership management | Authorized staff manage member records, plan and membership dates, status, payment information, and membership lifecycle records. |
+| FR-04 | Membership management | The administrator can add members, view the member register, change a member's plan separately from a renewal request, and record a counter renewal. |
 | FR-05 | Member portal | An approved member views membership status and progress, personal attendance history, and a QR code; updates are limited to supported account and personal-information fields. |
-| FR-06 | Renewal request | A member can submit a renewal request at any time for staff review. A request is not an automatic renewal. Approval carries unused active membership time forward by extending the current expiry; an expired membership restarts from the approval date. |
+| FR-06 | Renewal request | A member can submit a renewal request at any time and select a plan. The request remains pending until administrator review; approval applies the selected plan and price. For an active membership, the selected plan duration extends from the current expiry. For an expired membership, the new period starts on the approval date. |
 | FR-07 | Attendance | Staff scan a member's QR code to record check-in and check-out. Members can view their own attendance history; the member does not record their own attendance. |
 | FR-08 | Product and inventory management | Authorized staff maintain products and inventory. Supplements use gram-based quantities; merchandise uses item quantities and stock tracking. |
 | FR-09 | Sales and receipts | Staff record in-person product and membership sales for members or walk-in customers. The system stores a sale record and its line items and supports receipt/report views. |
@@ -110,11 +110,11 @@ The functional requirements describe the operations available to applicants, mem
 
 **FR-03 â€” Application review.** The administrator queue presents new registration and renewal requests for decision. Approval or rejection records the status and review metadata. Registration approval creates or links a member record; renewal approval updates an existing member's current membership after retaining the prior state. A successful decision should be reflected in the member list and reports after data refresh.
 
-**FR-04 â€” Membership management.** The administrator can view the member register and perform supported plan-change or counter-renewal actions. A current membership record contains the member's current plan and dates. Expired periods and plan changes are retained in archive/history records so that changing current values does not erase the earlier period.
+**FR-04 — Membership management.** The administrator can add a member and view the member register. The administrator can also perform a standalone plan change or record a counter renewal. A standalone plan change preserves the previous plan and dates in membership history and creates a transaction record. A counter renewal applies the selected plan and starts its period on the transaction date. General editing of member personal-profile fields is not available in the admin dashboard; members can update only the supported fields in their own account settings.
 
 **FR-05 â€” Member portal.** An authenticated member sees permitted information associated with their own account, including current membership data, QR identifier, and attendance history. Profile changes are limited to fields offered by the portal. Data access must remain scoped to the signed-in identity by database policies.
 
-**FR-06 â€” Renewal request.** A member may submit a renewal request at any time. The application remains pending until staff review and does not change the current membership by itself. On approval, the selected plan duration is added after the current expiry when the membership is still active, preserving unused days. If the membership has expired, the new period starts on the approval date. The renewal sale and prior/new membership details are recorded.
+**FR-06 — Renewal request.** A member may submit a renewal request at any time and select the plan for the requested renewal. The application remains pending until administrator review and does not change the current membership by itself. On approval, the selected plan and price are applied. If the membership is still active, the selected plan duration is added after the current expiry, preserving unused days. If the membership has expired, the new period starts on the approval date. The renewal sale and prior/new membership details are recorded.
 
 **FR-07 â€” Attendance.** Staff use the administrator scanner to resolve a QR identifier and record a visit. A scan checks for an existing open visit to determine whether the action is check-in or check-out. The member portal can display the member's own history but does not provide the staff attendance-write function.
 
@@ -133,7 +133,8 @@ Input requirements identify the information supplied to the system by applicants
 | Input requirement | Description |
 | --- | --- |
 | Account credentials | Email and password are submitted to Supabase Auth. |
-| Registration or renewal application | Applicant and plan details, contact and emergency-contact information, goals, health declarations, and signature where collected by the form. |
+| Registration or renewal application | Applicant or renewing-member details and selected plan, contact and emergency-contact information, goals, health declarations, and signature where collected by the form. A member selects the plan for a portal renewal request. |
+| Membership management action | The administrator enters new-member details or selects a member and replacement plan for a standalone plan change or counter renewal, then supplies any additional values requested by the form. |
 | Attendance action | Staff scans a member QR code and records check-in or check-out. |
 | Product and inventory update | Administrator enters product details, price, unit, and merchandise stock quantity where applicable. |
 | Sale transaction | Staff enters customer type and name, products or membership, quantities, and transaction details. |
@@ -165,7 +166,8 @@ Outputs are the responses and records produced after the system validates a requ
 | Output requirement | Description |
 | --- | --- |
 | Authentication and login result | Role-appropriate routing or an authentication error; pending applicants see their application status during login. |
-| Application and membership result | The recorded application status and, after staff review, the decision and updated membership information. |
+| Application and membership result | The recorded application status and, after administrator review, the decision and updated membership information. An approved renewal applies the selected plan and price and records its membership dates, history, and transaction. |
+| Membership management result | The member register reflects a saved membership change. A standalone plan change or counter renewal records its applicable history and transaction details. |
 | Member portal information | Membership details, QR code, personal attendance history, and active product catalog permitted for the member. |
 | Attendance confirmation | Confirmation of staff-recorded check-in/check-out and permitted attendance history. |
 | Receipt | Sale details, line items, quantities, prices, customer information, and total. |
@@ -401,7 +403,7 @@ Each use case describes a user goal and its normal result. The alternate paths i
 | --- | --- |
 | Primary actor | Member submits; administrator decides |
 | Preconditions | The member has an existing member record with a valid expiry date and no pending renewal request. |
-| Main flow | The member submits a renewal request. The administrator reviews it and approves or rejects it. On approval, prior and new membership values, the current membership update, and the transaction are recorded. |
+| Main flow | The member selects a renewal plan and submits a request. The administrator reviews it and approves or rejects it. On approval, the selected plan and price are applied, prior and new membership values are retained, the current membership is updated, and the transaction is recorded. |
 | Alternate flow | If the member record or expiry date cannot be verified, submission is refused with an explanatory message. A second pending request is not accepted. If a request is already decided, the pending-only update should not apply again. |
 | Postcondition | The request has a recorded decision; only an approved renewal updates current membership dates. |
 
@@ -823,7 +825,8 @@ The following scenarios provide a minimum verification basis. The research team 
 | --- | --- | --- |
 | Authentication and access | Sign in with authorized administrator and member accounts and attempt role-restricted actions. | Each account reaches its intended interface; unauthorized database operations are denied by the configured policies. |
 | Application workflow | Submit a registration application, review it as staff, and test both approval and rejection paths. | The application is recorded with its review status; approval creates or links the member record and associated transaction as configured. |
-| Renewal | Submit an early renewal request, approve it as staff, and inspect the membership dates, history, and receipt. Also submit a request for an expired member. | The request remains pending until staff decision. Approval extends an active member's expiry by the selected plan duration; approval for an expired membership starts from the approval date. The renewal is recorded once in history and sales. |
+| Renewal | Select a plan, submit a member-portal renewal request, approve it as staff, and inspect the membership dates, history, and receipt. Also submit a request for an expired member. | The request remains pending until staff decision. Approval applies the selected plan and price; an active membership extends from its current expiry, while an expired membership starts from the approval date. The renewal is recorded once in history and sales. |
+| Membership management | Add a member, perform a standalone plan change, and record a counter renewal. Inspect the member register, history/archive, and receipts. | The member appears in the register; a standalone plan change preserves prior values and records its transaction. A counter renewal applies the selected plan and starts its period on the transaction date. |
 | Attendance | Scan a member QR code as staff for check-in and check-out, then view the member's history. | The event is recorded and the member can view their own history; the member cannot create the event through self-scan. |
 | Inventory and sales | Record a merchandise sale and a gram-based supplement sale, then inspect the receipt and inventory records. | The sale and line items are saved with their units and totals; merchandise stock is updated according to the configured sales workflow. |
 | Reports | Open and print or save available reports using records from the test data. | The report presents the corresponding stored records and totals for the selected report type. |
