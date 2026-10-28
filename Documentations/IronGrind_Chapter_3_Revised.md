@@ -134,7 +134,6 @@ Input requirements identify the information supplied to the system by applicants
 | --- | --- |
 | Account credentials | Email and password are submitted to Supabase Auth. |
 | Registration or renewal application | Applicant or renewing-member details and selected plan, contact and emergency-contact information, goals, health declarations, and signature where collected by the form. A member selects the plan for a portal renewal request. |
-| Membership management action | The administrator enters new-member details or selects a member and replacement plan for a standalone plan change or counter renewal, then supplies any additional values requested by the form. |
 | Attendance action | Staff scans a member QR code and records check-in or check-out. |
 | Product and inventory update | Administrator enters product details, price, unit, and merchandise stock quantity where applicable. |
 | Sale transaction | Staff enters customer type and name, products or membership, quantities, and transaction details. |
@@ -167,7 +166,6 @@ Outputs are the responses and records produced after the system validates a requ
 | --- | --- |
 | Authentication and login result | Role-appropriate routing or an authentication error; pending applicants see their application status during login. |
 | Application and membership result | The recorded application status and, after administrator review, the decision and updated membership information. An approved renewal applies the selected plan and price and records its membership dates, history, and transaction. |
-| Membership management result | The member register reflects a saved membership change. A standalone plan change or counter renewal records its applicable history and transaction details. |
 | Member portal information | Membership details, QR code, personal attendance history, and active product catalog permitted for the member. |
 | Attendance confirmation | Confirmation of staff-recorded check-in/check-out and permitted attendance history. |
 | Receipt | Sale details, line items, quantities, prices, customer information, and total. |
@@ -826,7 +824,6 @@ The following scenarios provide a minimum verification basis. The research team 
 | Authentication and access | Sign in with authorized administrator and member accounts and attempt role-restricted actions. | Each account reaches its intended interface; unauthorized database operations are denied by the configured policies. |
 | Application workflow | Submit a registration application, review it as staff, and test both approval and rejection paths. | The application is recorded with its review status; approval creates or links the member record and associated transaction as configured. |
 | Renewal | Select a plan, submit a member-portal renewal request, approve it as staff, and inspect the membership dates, history, and receipt. Also submit a request for an expired member. | The request remains pending until staff decision. Approval applies the selected plan and price; an active membership extends from its current expiry, while an expired membership starts from the approval date. The renewal is recorded once in history and sales. |
-| Membership management | Add a member, perform a standalone plan change, and record a counter renewal. Inspect the member register, history/archive, and receipts. | The member appears in the register; a standalone plan change preserves prior values and records its transaction. A counter renewal applies the selected plan and starts its period on the transaction date. |
 | Attendance | Scan a member QR code as staff for check-in and check-out, then view the member's history. | The event is recorded and the member can view their own history; the member cannot create the event through self-scan. |
 | Inventory and sales | Record a merchandise sale and a gram-based supplement sale, then inspect the receipt and inventory records. | The sale and line items are saved with their units and totals; merchandise stock is updated according to the configured sales workflow. |
 | Reports | Open and print or save available reports using records from the test data. | The report presents the corresponding stored records and totals for the selected report type. |
