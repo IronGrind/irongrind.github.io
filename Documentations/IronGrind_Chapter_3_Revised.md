@@ -288,7 +288,7 @@ Figure 4 decomposes the single IronGrind system from Figure 3 into numbered proc
 
 **Attendance path.** A staff scan supplies a QR identifier to process 4.0. The process reads D3 to resolve the member and D4 to determine whether an open attendance visit exists. It writes a new check-in or updates the open row with a check-out timestamp, then returns confirmation to staff.
 
-**Inventory and sales path.** An administrator's product changes write to D5. A counter sale reads D5 to validate the selected product and available merchandise quantity, then writes a transaction header to D6 and its line to D7. The sale result is used to display a receipt and refresh operational views.
+**Inventory and sales path.** An administrator's product changes write to D5. An in-person sale for a member or walk-in customer can contain product or membership lines. Product sales read D5 to validate the item and applicable merchandise quantity, then write the transaction header to D6 and itemized lines to D7. Membership transactions associated with an approval, renewal, or plan change also update the applicable member/history records in D3/D8 and transaction records in D6/D7. The saved result is used to display a receipt and refresh operational views.
 
 **Reporting path.** The report process reads the data stores relevant to the selected report, applies the configured date/status grouping, and returns a view or export to the administrator. It does not change source operational records as part of ordinary report viewing. Email is not a live path in the current deployment.
 
