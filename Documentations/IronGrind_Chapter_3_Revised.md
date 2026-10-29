@@ -254,7 +254,7 @@ The architecture separates interface responsibilities from record storage and au
 
 ### Data Process Modeling
 
-Data process modeling describes how information enters IronGrind, which processes handle it, where records are stored, and what results are returned to applicants, members, and administrators. The model is based on the current Supabase schema and implemented workflows. Email notification is shown only as a planned feature.
+Data process modeling describes how information enters IronGrind, which processes handle it, where records are stored, and what results are returned to applicants, members, and administrators. The model is based on the current Supabase schema and implemented workflows.
 
 #### Diagrams
 
@@ -267,7 +267,9 @@ The diagrams that follow present the system at different levels. The Gane and Sa
 **Figure 3.** System data flow diagram of IronGrind using Gane and Sarson notation.
 
 
-Figure 3 follows the Gane and Sarson format specified for the study. The Administrator and Member / Applicant are external entities that exchange information with process 1.0, the IronGrind Membership and Operations System. The administrator provides credentials, application decisions, operational updates, sales entries, and report requests; the system returns dashboard information, records, receipts, and reports. The member or applicant provides credentials, applications, renewal requests, and profile requests; the system returns application status, membership and attendance information, and the active catalog. Process 1.0 saves and updates membership, attendance, inventory, and sales records in data store D1, the Supabase database, and retrieves records to support system features. A walk-in purchase is entered by the administrator rather than through a separate customer account.
+Figure 3 presents a high-level view of how information moves through IronGrind, using the Gane and Sarson symbols required for the study. The rectangular shapes on the left represent the external entities: the Administrator and the Member / Applicant. The rounded process shape in the center, numbered 1.0, represents the IronGrind Membership and Operations System. The data-store shape on the right, labeled D1, represents the Supabase database. The labeled arrows show information exchanged between these parts; they describe data movement rather than the order of user actions.
+
+The Administrator sends sign-in credentials, application review decisions, membership and operational updates, walk-in sale entries, and report requests to process 1.0. In response, the system provides dashboard information, application and attendance records, inventory and sales records, receipts, and reports. The Member / Applicant sends sign-in credentials, registration and membership application details, renewal requests, and profile requests. The system returns the applicable application status, membership details, attendance history, active product catalog, and account information. Process 1.0 saves and updates membership, application, attendance, inventory, and sales records in D1, and retrieves stored records when system features need them. Walk-in customers do not access the system directly; an administrator records their purchases.
 
 
 ##### Data Flow Diagram
