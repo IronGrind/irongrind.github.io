@@ -65,6 +65,78 @@ begin
 end;
 $$;
 
+-- Policies can depend on columns whose types are changing. Save policies on
+-- the affected tables, remove them for the type changes, and restore them
+-- exactly within this transaction. If a later statement fails, rollback
+-- restores the original policies along with the original column types.
+create temporary table _text_length_policy_backup (
+    policy_sql text not null
+) on commit drop;
+
+insert into _text_length_policy_backup (policy_sql)
+select format(
+    'create policy %I on %I.%I as %s for %s to %s%s%s',
+    p.polname,
+    n.nspname,
+    t.relname,
+    case when p.polpermissive then 'permissive' else 'restrictive' end,
+    case p.polcmd
+        when 'r' then 'select'
+        when 'a' then 'insert'
+        when 'w' then 'update'
+        when 'd' then 'delete'
+        else 'all'
+    end,
+    roles.role_list,
+    case when p.polqual is not null
+        then format(' using (%s)', pg_catalog.pg_get_expr(p.polqual, p.polrelid))
+        else ''
+    end,
+    case when p.polwithcheck is not null
+        then format(' with check (%s)', pg_catalog.pg_get_expr(p.polwithcheck, p.polrelid))
+        else ''
+    end
+)
+from pg_catalog.pg_policy p
+join pg_catalog.pg_class t on t.oid = p.polrelid
+join pg_catalog.pg_namespace n on n.oid = t.relnamespace
+cross join lateral (
+    select string_agg(
+        case when role_id = 0 then 'public' else pg_catalog.quote_ident(r.rolname) end,
+        ', ' order by role_id
+    ) as role_list
+    from unnest(p.polroles) as policy_role(role_id)
+    left join pg_catalog.pg_roles r on r.oid = role_id
+) roles
+where n.nspname = 'public'
+  and t.relname in (
+      'profiles', 'members', 'membership_applications', 'products',
+      'sales', 'sale_items', 'membership_history'
+  );
+
+do $$
+declare
+    policy record;
+begin
+    for policy in
+        select n.nspname as schema_name, t.relname as table_name, p.polname as policy_name
+        from pg_catalog.pg_policy p
+        join pg_catalog.pg_class t on t.oid = p.polrelid
+        join pg_catalog.pg_namespace n on n.oid = t.relnamespace
+        where n.nspname = 'public'
+          and t.relname in (
+              'profiles', 'members', 'membership_applications', 'products',
+              'sales', 'sale_items', 'membership_history'
+          )
+    loop
+        execute format(
+            'drop policy %I on %I.%I',
+            policy.policy_name, policy.schema_name, policy.table_name
+        );
+    end loop;
+end;
+$$;
+
 alter table public.profiles
     alter column email type varchar(254),
     alter column username type varchar(30),
@@ -114,6 +186,17 @@ alter table public.membership_history
     alter column event_type type varchar(30),
     alter column previous_plan type varchar(30),
     alter column new_plan type varchar(30);
+
+do $$
+declare
+    policy record;
+begin
+    for policy in select policy_sql from _text_length_policy_backup
+    loop
+        execute policy.policy_sql;
+    end loop;
+end;
+$$;
 
 commit;
 
