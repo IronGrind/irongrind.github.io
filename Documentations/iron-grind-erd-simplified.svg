@@ -53,11 +53,11 @@
   <rect width="320" height="190" rx="6" class="table"/><path d="M0 36H320" stroke="#62748a"/><rect width="320" height="36" rx="6" class="head"/>
   <text x="160" y="24" text-anchor="middle" class="th">profiles</text>
   <text x="14" y="59" class="field">id</text><text x="205" y="59" class="type">uuid</text><text x="260" y="59" class="key">PK, FK</text>
-  <text x="14" y="84" class="field">username</text><text x="205" y="84" class="type">text</text><text x="260" y="84" class="key">UK</text>
-  <text x="14" y="109" class="field">full_name</text><text x="205" y="109" class="type">text</text>
-  <text x="14" y="134" class="field">role</text><text x="205" y="134" class="type">text</text>
+  <text x="14" y="84" class="field">username</text><text x="205" y="84" class="type">varchar(30)</text><text x="260" y="84" class="key">UK</text>
+  <text x="14" y="109" class="field">full_name</text><text x="205" y="109" class="type">varchar(150)</text>
+  <text x="14" y="134" class="field">role</text><text x="205" y="134" class="type">varchar(20)</text>
   <text x="14" y="159" class="field">account_status</text><text x="205" y="159" class="type">text</text>
-  <text x="14" y="180" class="field">email</text><text x="205" y="180" class="type">text</text>
+  <text x="14" y="180" class="field">email</text><text x="205" y="180" class="type">varchar(254)</text>
 </g>
 
 <!-- Membership applications -->
@@ -68,9 +68,9 @@
   <text x="14" y="84" class="field">auth_user_id</text><text x="280" y="84" class="type">uuid</text><text x="340" y="84" class="key">FK</text>
   <text x="14" y="109" class="field">member_id</text><text x="280" y="109" class="type">uuid</text><text x="340" y="109" class="key">FK</text>
   <text x="14" y="134" class="field">reviewed_by</text><text x="280" y="134" class="type">uuid</text><text x="340" y="134" class="key">FK</text>
-  <text x="14" y="159" class="field">application_type</text><text x="280" y="159" class="type">text</text>
-  <text x="14" y="184" class="field">plan</text><text x="280" y="184" class="type">text</text>
-  <text x="14" y="209" class="field">status</text><text x="280" y="209" class="type">text</text>
+  <text x="14" y="159" class="field">application_type</text><text x="280" y="159" class="type">varchar(20)</text>
+  <text x="14" y="184" class="field">plan</text><text x="280" y="184" class="type">varchar(30)</text>
+  <text x="14" y="209" class="field">status</text><text x="280" y="209" class="type">varchar(20)</text>
   <text x="14" y="234" class="field">submitted_at</text><text x="280" y="234" class="type">timestamptz</text>
 </g>
 
@@ -81,11 +81,11 @@
   <text x="14" y="59" class="field">id</text><text x="250" y="59" class="type">uuid</text><text x="310" y="59" class="key">PK</text>
   <text x="14" y="84" class="field">auth_user_id</text><text x="250" y="84" class="type">uuid</text><text x="310" y="84" class="key">FK, UK</text>
   <text x="14" y="109" class="field">application_id</text><text x="250" y="109" class="type">uuid</text><text x="310" y="109" class="key">FK, UK</text>
-  <text x="14" y="134" class="field">full_name / email</text><text x="250" y="134" class="type">text</text>
-  <text x="14" y="159" class="field">plan / status</text><text x="250" y="159" class="type">text</text>
+  <text x="14" y="134" class="field">full_name / email</text><text x="175" y="134" class="type" style="font-size:10px">varchar(150) / varchar(254)</text>
+  <text x="14" y="159" class="field">plan / status</text><text x="175" y="159" class="type" style="font-size:10px">varchar(30) / varchar(20)</text>
   <text x="14" y="184" class="field">start_date</text><text x="250" y="184" class="type">date</text>
   <text x="14" y="209" class="field">expiry_date</text><text x="250" y="209" class="type">date</text>
-  <text x="14" y="234" class="field">registration_source</text><text x="250" y="234" class="type">text</text>
+  <text x="14" y="234" class="field">registration_source</text><text x="250" y="234" class="type">varchar(40)</text>
 </g>
 
 <!-- Attendance -->
@@ -101,14 +101,15 @@
 
 <!-- Business tables -->
 <g transform="translate(80 700)">
-  <rect width="320" height="190" rx="6" class="table"/><path d="M0 36H320" stroke="#62748a"/><rect width="320" height="36" rx="6" class="head"/>
+  <rect width="320" height="215" rx="6" class="table"/><path d="M0 36H320" stroke="#62748a"/><rect width="320" height="36" rx="6" class="head"/>
   <text x="160" y="24" text-anchor="middle" class="th">products</text>
   <text x="14" y="59" class="field">id</text><text x="205" y="59" class="type">uuid · PK</text>
-  <text x="14" y="84" class="field">name</text><text x="205" y="84" class="type">text</text>
-  <text x="14" y="109" class="field">category</text><text x="205" y="109" class="type">text</text>
+  <text x="14" y="84" class="field">name</text><text x="205" y="84" class="type">varchar(120)</text>
+  <text x="14" y="109" class="field">category</text><text x="205" y="109" class="type">varchar(20)</text>
   <text x="14" y="134" class="field">price_per_unit</text><text x="205" y="134" class="type">numeric</text>
-  <text x="14" y="159" class="field">stock</text><text x="205" y="159" class="type">integer</text>
-  <text x="14" y="180" class="field">is_active</text><text x="205" y="180" class="type">boolean</text>
+  <text x="14" y="159" class="field">size</text><text x="205" y="159" class="type">varchar(30)</text>
+  <text x="14" y="184" class="field">stock</text><text x="205" y="184" class="type">integer</text>
+  <text x="14" y="209" class="field">is_active</text><text x="205" y="209" class="type">boolean</text>
 </g>
 
 <g transform="translate(450 700)">
@@ -116,9 +117,9 @@
   <text x="165" y="24" text-anchor="middle" class="th">sales</text>
   <text x="14" y="59" class="field">id</text><text x="220" y="59" class="type">uuid · PK</text>
   <text x="14" y="84" class="field">member_id</text><text x="220" y="84" class="type">uuid · FK</text>
-  <text x="14" y="109" class="field">receipt_number</text><text x="220" y="109" class="type">text · UK</text>
-  <text x="14" y="134" class="field">customer_name</text><text x="220" y="134" class="type">text</text>
-  <text x="14" y="159" class="field">total / status</text><text x="220" y="159" class="type">numeric / text</text>
+  <text x="14" y="109" class="field">receipt_number</text><text x="220" y="109" class="type">varchar(64) · UK</text>
+  <text x="14" y="134" class="field">customer_name</text><text x="220" y="134" class="type">varchar(150)</text>
+  <text x="14" y="159" class="field">total / status</text><text x="220" y="159" class="type">numeric / varchar(12)</text>
   <text x="14" y="184" class="field">sold_at</text><text x="220" y="184" class="type">timestamptz</text>
   <text x="14" y="209" class="field">processed_by</text><text x="220" y="209" class="type">uuid · FK</text>
 </g>
@@ -129,8 +130,8 @@
   <text x="14" y="59" class="field">id</text><text x="210" y="59" class="type">uuid · PK</text>
   <text x="14" y="84" class="field">sale_id</text><text x="210" y="84" class="type">uuid · FK</text>
   <text x="14" y="109" class="field">product_id</text><text x="210" y="109" class="type">uuid · FK</text>
-  <text x="14" y="134" class="field">item_name</text><text x="210" y="134" class="type">text</text>
-  <text x="14" y="159" class="field">quantity / unit</text><text x="210" y="159" class="type">numeric / text</text>
+  <text x="14" y="134" class="field">item_name</text><text x="210" y="134" class="type">varchar(150)</text>
+  <text x="14" y="159" class="field">quantity / unit</text><text x="210" y="159" class="type">numeric / varchar(12)</text>
   <text x="14" y="184" class="field">unit_price</text><text x="210" y="184" class="type">numeric</text>
   <text x="14" y="209" class="field">line_total</text><text x="210" y="209" class="type">numeric</text>
 </g>
@@ -140,9 +141,9 @@
   <text x="155" y="24" text-anchor="middle" class="th">membership_history</text>
   <text x="14" y="59" class="field">id</text><text x="200" y="59" class="type">uuid · PK</text>
   <text x="14" y="84" class="field">member_id</text><text x="200" y="84" class="type">uuid · FK</text>
-  <text x="14" y="109" class="field">event_type</text><text x="200" y="109" class="type">text</text>
-  <text x="14" y="134" class="field">previous_plan</text><text x="200" y="134" class="type">text</text>
-  <text x="14" y="159" class="field">new_plan</text><text x="200" y="159" class="type">text</text>
+  <text x="14" y="109" class="field">event_type</text><text x="200" y="109" class="type">varchar(30)</text>
+  <text x="14" y="134" class="field">previous_plan</text><text x="200" y="134" class="type">varchar(30)</text>
+  <text x="14" y="159" class="field">new_plan</text><text x="200" y="159" class="type">varchar(30)</text>
   <text x="14" y="180" class="field">recorded_at / by</text><text x="200" y="180" class="type">time / uuid · FK</text>
 </g>
 

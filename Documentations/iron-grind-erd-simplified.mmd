@@ -14,6 +14,7 @@ erDiagram
         varchar(30) username UK
         varchar(150) full_name
         varchar(20) role
+        varchar(254) email
     }
 
     MEMBERS {
@@ -22,11 +23,13 @@ erDiagram
         uuid application_id FK
         varchar(150) full_name
         varchar(254) email
+        varchar(11) mobile
         varchar(30) plan
         numeric plan_price
         date start_date
         date expiry_date
         varchar(20) status
+        varchar(40) registration_source
     }
 
     MEMBERSHIP_APPLICATIONS {
@@ -36,6 +39,9 @@ erDiagram
         uuid reviewed_by FK
         varchar(20) application_type
         varchar(150) full_name
+        varchar(254) email
+        varchar(30) username
+        varchar(11) mobile
         varchar(30) plan
         numeric plan_price
         varchar(20) status
@@ -55,6 +61,7 @@ erDiagram
         uuid id PK
         varchar(120) name
         varchar(20) category
+        varchar(30) size
         numeric price_per_unit
         varchar(12) unit
         integer stock
