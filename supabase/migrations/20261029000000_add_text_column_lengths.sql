@@ -72,6 +72,7 @@ $$;
 create temporary table _text_length_policy_backup (
     policy_sql text not null
 ) on commit drop;
+alter table _text_length_policy_backup enable row level security;
 
 insert into _text_length_policy_backup (policy_sql)
 select format(
