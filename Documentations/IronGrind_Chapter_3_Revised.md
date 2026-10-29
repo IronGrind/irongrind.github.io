@@ -507,18 +507,18 @@ IronGrind is a browser-based membership and operations system for applicants, me
 
 ## Data Dictionary
 
-This data dictionary summarizes the public-schema fields and relationships defined in the project SQL. Supabase Auth manages credentials separately from these application tables.
+This data dictionary summarizes the public-schema fields and relationships defined in the project SQL. Bounded values use `VARCHAR(n)`, where `n` is the maximum number of characters; free-form declarations, notes, and stored file paths remain `TEXT`. The length migration checks existing values and stops rather than truncating data if any value exceeds a declared limit. Supabase Auth manages credentials separately from these application tables.
 
 | Entity | Key fields and data types | Purpose and relationships |
 | --- | --- | --- |
-| `profiles` | `id` UUID (PK, Auth FK); `email`, `username`, `full_name`, `role`, `account_status` TEXT; timestamps | User profile and role used by the application. `username` is unique. |
-| `members` | `id` UUID (PK); `auth_user_id` UUID (nullable, unique Auth FK); `application_id` UUID (nullable FK); `full_name`, `email`, `username`, `mobile` TEXT; `date_of_birth` DATE; `age` SMALLINT; `height`, `weight_kg` NUMERIC; `height_unit`, `sex`, `plan`, `status`, `registration_source` TEXT; `emergency_contact` JSONB; `plan_price`, `paid` NUMERIC; membership dates; `fitness_goals`, `health_conditions` TEXT[]; `other_medical_conditions`, `signature_path` TEXT; timestamps | Approved member and membership record. Referenced by applications, attendance, sales, sale items, and membership history. |
-| `membership_applications` | `id` UUID (PK); `auth_user_id` UUID (required Auth FK); `member_id` UUID (nullable FK); `application_type`, `status`, applicant and plan details; demographic, health, and signature fields; submission/review timestamps; `reviewed_by` UUID (FK to `auth.users.id`) | Registration and renewal requests and their review state. `member_id` can be empty before a member is linked. |
+| `profiles` | `id` UUID (PK, Auth FK); `email` VARCHAR(254); `username` VARCHAR(30); `full_name` VARCHAR(150); `role` VARCHAR(20); optional `account_status` TEXT; timestamps | User profile and role used by the application. `username` is unique. |
+| `members` | `id` UUID (PK); `auth_user_id` UUID (nullable, unique Auth FK); `application_id` UUID (nullable FK); `full_name` VARCHAR(150); `email` VARCHAR(254); `username` VARCHAR(30); `mobile` VARCHAR(11); `date_of_birth` DATE; `age` SMALLINT; `height`, `weight_kg` NUMERIC; `height_unit` VARCHAR(3); `sex` VARCHAR(30); `plan` VARCHAR(30); `status` VARCHAR(20); `registration_source` VARCHAR(40); `emergency_contact` JSONB; `plan_price`, `paid` NUMERIC; membership dates; `fitness_goals`, `health_conditions` TEXT[]; `other_medical_conditions`, `signature_path` TEXT; timestamps | Approved member and membership record. Referenced by applications, attendance, sales, sale items, and membership history. |
+| `membership_applications` | `id` UUID (PK); `auth_user_id` UUID (required Auth FK); `member_id` UUID (nullable FK); `application_type` VARCHAR(20); `full_name` VARCHAR(150); `email` VARCHAR(254); `username` VARCHAR(30); `mobile` VARCHAR(11); `plan` VARCHAR(30); `status` VARCHAR(20); demographic, health, and signature fields; submission/review timestamps; `reviewed_by` UUID (FK to `auth.users.id`) | Registration and renewal requests and their review state. `member_id` can be empty before a member is linked. |
 | `attendance` | `id` UUID (PK); `member_id` UUID (FK); `time_in`, `time_out`, `created_at` TIMESTAMPTZ; `recorded_by` UUID (Auth FK) | Staff-recorded check-in and check-out. A member may have multiple attendance records. |
-| `products` | `id` UUID (PK); `name`, `category`, `unit`, `size`, `image_path` TEXT; `price_per_unit` NUMERIC; `stock` INTEGER; `is_active` BOOLEAN; timestamps | Product catalog and inventory. Supplements use gram units; merchandise uses item units and stock. |
-| `sales` | `id` UUID (PK); `receipt_number` TEXT (unique); `customer_type`, `customer_name`, `status` TEXT; `member_id` UUID (nullable FK); `total` NUMERIC; `sold_at` TIMESTAMPTZ; `processed_by` UUID (Auth FK) | Sale header and receipt information. A sale may be associated with a member or a walk-in customer. |
-| `sale_items` | `id` UUID (PK); `sale_id` UUID (FK); `product_id` UUID (nullable FK); `item_name`, `category`, `unit` TEXT; `quantity` NUMERIC; `unit_price`, `line_total` NUMERIC | Itemized sale lines. Product reference can be null; item name and price are stored on the sale line. |
-| `membership_history` | `id` UUID (PK); `member_id` UUID (FK); `event_type`, previous/new plan, `notes` TEXT; previous/new prices NUMERIC; previous/new dates DATE; `recorded_at` TIMESTAMPTZ; `recorded_by` UUID (Auth FK) | Expiration, renewal, and plan-change history for a member. |
+| `products` | `id` UUID (PK); `name` VARCHAR(120); `category` VARCHAR(20); `unit` VARCHAR(12); `size` VARCHAR(30); `image_path` TEXT; `price_per_unit` NUMERIC; `stock` INTEGER; `is_active` BOOLEAN; timestamps | Product catalog and inventory. Supplements use gram units; merchandise uses item units and stock. |
+| `sales` | `id` UUID (PK); `receipt_number` VARCHAR(64) (unique); `customer_type` VARCHAR(15); `customer_name` VARCHAR(150); `status` VARCHAR(12); `member_id` UUID (nullable FK); `total` NUMERIC; `sold_at` TIMESTAMPTZ; `processed_by` UUID (Auth FK) | Sale header and receipt information. A sale may be associated with a member or a walk-in customer. |
+| `sale_items` | `id` UUID (PK); `sale_id` UUID (FK); `product_id` UUID (nullable FK); `item_name` VARCHAR(150); `category` VARCHAR(20); `unit` VARCHAR(12); `quantity` NUMERIC; `unit_price`, `line_total` NUMERIC | Itemized sale lines. Product reference can be null; item name and price are stored on the sale line. |
+| `membership_history` | `id` UUID (PK); `member_id` UUID (FK); `event_type` VARCHAR(30); previous/new plan VARCHAR(30); `notes` TEXT; previous/new prices NUMERIC; previous/new dates DATE; `recorded_at` TIMESTAMPTZ; `recorded_by` UUID (Auth FK) | Expiration, renewal, and plan-change history for a member. |
 
 ### Detailed Field Reference
 
@@ -531,11 +531,11 @@ The profile row extends the Auth identity with information used by the applicati
 | Field | Type | Key / rule | Description |
 | --- | --- | --- | --- |
 | `id` | UUID | PK, FK to `auth.users.id`, cascade delete | Stable identifier for the authenticated profile. |
-| `email` | TEXT | Required, unique | Email associated with the profile and authentication account. |
-| `username` | TEXT | Nullable, unique | Optional username shown or used by supported account workflows. |
-| `full_name` | TEXT | Required; defaults to empty text | Account holder's display name. |
-| `role` | TEXT | Required; `admin` or `member`; defaults to `member` | Application role used with authorization rules. |
-| `account_status` | TEXT | Present in the live catalog where deployed | Account availability state when this optional live-schema field is enabled. |
+| `email` | VARCHAR(254) | Required, unique | Email associated with the profile and authentication account. |
+| `username` | VARCHAR(30) | Nullable, unique | Optional username shown or used by supported account workflows. |
+| `full_name` | VARCHAR(150) | Required; defaults to empty text | Account holder's display name. |
+| `role` | VARCHAR(20) | Required; `admin` or `member`; defaults to `member` | Application role used with authorization rules. |
+| `account_status` | VARCHAR(20) | Present in the live catalog where deployed | Account availability state when this optional live-schema field is enabled. |
 | `created_at` | TIMESTAMPTZ | Required; defaults to current time | Time at which the profile was created. |
 | `updated_at` | TIMESTAMPTZ | Present in the live catalog where deployed | Time of the most recent profile update when maintained by the deployed schema. |
 
@@ -548,24 +548,24 @@ This table is the current operational record for an approved member. It contains
 | `id` | UUID | PK; generated when omitted | Identifier referenced by operational records. |
 | `auth_user_id` | UUID | Nullable, unique FK to `auth.users.id`; deletion sets null | Optional link to the member's login identity. |
 | `application_id` | UUID | Nullable FK to `membership_applications.id` in the deployed relationship | Registration application associated with creation of the member record. |
-| `full_name` | TEXT | Required | Member's recorded full name. |
-| `email` | TEXT | Nullable | Contact email copied from the application or account. |
-| `username` | TEXT | Nullable | Member-facing account name where available. |
-| `mobile` | TEXT | Nullable | Member's mobile contact number. |
+| `full_name` | VARCHAR(150) | Required | Member's recorded full name. |
+| `email` | VARCHAR(254) | Nullable | Contact email copied from the application or account. |
+| `username` | VARCHAR(30) | Nullable | Member-facing account name where available. |
+| `mobile` | VARCHAR(11) | Nullable | Member's mobile contact number; the current form accepts 11-digit Philippine numbers. |
 | `date_of_birth` | DATE | Nullable | Date of birth supplied by the applicant. |
 | `age` | SMALLINT | Nullable; nonnegative when supplied | Age recorded at application or registration time. |
-| `sex` | TEXT | Nullable | Sex response supplied through the form. |
+| `sex` | VARCHAR(30) | Nullable | Sex response supplied through the form. |
 | `height` | NUMERIC(7,2) | Nullable | Numeric height measurement. |
-| `height_unit` | TEXT | Nullable; `cm`, `in`, or `ft` | Unit associated with the height value. |
+| `height_unit` | VARCHAR(3) | Nullable; `cm`, `in`, or `ft` | Unit associated with the height value. |
 | `weight_kg` | NUMERIC(7,2) | Nullable | Body weight in kilograms when provided. |
 | `emergency_contact` | JSONB | Required; defaults to an empty object | Structured emergency-contact name, relationship, and contact details. |
-| `plan` | TEXT | Nullable | Current membership plan label. |
+| `plan` | VARCHAR(30) | Nullable | Current membership plan label. |
 | `plan_price` | NUMERIC(12,2) | Required; nonnegative; defaults to zero | Current plan charge recorded for the member. |
 | `start_date` | DATE | Nullable | First date of the current membership period. |
 | `end_date` | DATE | Present in compatible live schemas | End date retained by deployments using the `end_date` alias. |
 | `expiry_date` | DATE | Nullable | Current membership expiry date used by the application. |
-| `status` | TEXT | Required; constrained values in the schema | Membership state such as active, expired, or inactive. |
-| `registration_source` | TEXT | Required; defaults to `Online application` | Channel recorded for the member's registration. |
+| `status` | VARCHAR(20) | Required; constrained values in the schema | Membership state such as active, expired, or inactive. |
+| `registration_source` | VARCHAR(40) | Required; defaults to `Online application` | Channel recorded for the member's registration. |
 | `paid` | BOOLEAN or deployed payment value | Required in base schema; live projects may retain a compatible numeric representation | Indicates or records the payment state/value according to the deployed schema version. |
 | `fitness_goals` | TEXT[] | Required; defaults to an empty array | One or more fitness goals supplied by the member. |
 | `health_conditions` | TEXT[] | Required; defaults to an empty array | Selected health-condition declarations. |
@@ -583,20 +583,20 @@ Application rows preserve a submitted request and its review state. The applicat
 | `id` | UUID | PK; generated when omitted | Identifier for the submitted request. |
 | `auth_user_id` | UUID | FK to `auth.users.id`; required in the base schema | Auth identity that submitted the request. |
 | `member_id` | UUID | Nullable FK to `members.id`; deletion sets null | Existing or resulting member associated with the application. |
-| `application_type` | TEXT | Required; `registration` or `renewal` | Distinguishes a new membership request from a renewal request. |
-| `full_name` | TEXT | Required | Applicant's or renewing member's name as submitted. |
-| `email` | TEXT | Required in the base schema | Email contact supplied with the request. |
-| `username` | TEXT | Nullable | Requested or associated username. |
-| `mobile` | TEXT | Nullable | Mobile number supplied with the request. |
+| `application_type` | VARCHAR(20) | Required; `registration` or `renewal` | Distinguishes a new membership request from a renewal request. |
+| `full_name` | VARCHAR(150) | Required | Applicant's or renewing member's name as submitted. |
+| `email` | VARCHAR(254) | Required in the base schema | Email contact supplied with the request. |
+| `username` | VARCHAR(30) | Nullable | Requested or associated username. |
+| `mobile` | VARCHAR(11) | Nullable | Mobile number supplied with the request. |
 | `date_of_birth` | DATE | Nullable | Applicant's date of birth. |
 | `age` | SMALLINT | Nullable; nonnegative when supplied | Age at the time of submission. |
-| `sex` | TEXT | Nullable | Sex response supplied in the form. |
+| `sex` | VARCHAR(30) | Nullable | Sex response supplied in the form. |
 | `height` | NUMERIC(7,2) | Nullable | Height measurement supplied by the applicant. |
-| `height_unit` | TEXT | Nullable; `cm`, `in`, or `ft` | Unit of the submitted height. |
+| `height_unit` | VARCHAR(3) | Nullable; `cm`, `in`, or `ft` | Unit of the submitted height. |
 | `weight_kg` | NUMERIC(7,2) | Nullable | Weight in kilograms if supplied. |
 | `emergency_contact` | JSONB | Required; defaults to an empty object | Structured emergency contact details. |
 | `emergency_contact_data` | JSONB | Required in compatible schema; defaults to an empty object | Compatibility field used by deployed form and migration versions. |
-| `plan` | TEXT | Required | Plan requested by the applicant. |
+| `plan` | VARCHAR(30) | Required | Plan requested by the applicant. |
 | `plan_price` | NUMERIC(12,2) | Required; nonnegative | Proposed plan charge recorded with the request. |
 | `start_date` | DATE | Nullable | Requested or planned membership start date. |
 | `end_date` | DATE | Nullable | Requested membership end date. |
@@ -604,7 +604,7 @@ Application rows preserve a submitted request and its review state. The applicat
 | `health_conditions` | TEXT[] | Required; defaults to an empty array | Health declarations selected in the application. |
 | `other_medical_conditions` | TEXT | Required; defaults to empty text | Additional health declaration text. |
 | `signature_path` | TEXT | Nullable | Reference to the submitted signature. |
-| `status` | TEXT | Required; `pending`, `approved`, or `rejected`; defaults to pending | Current review result. |
+| `status` | VARCHAR(20) | Required; `pending`, `approved`, or `rejected`; defaults to pending | Current review result. |
 | `submitted_at` | TIMESTAMPTZ | Required; defaults to current time | Submission timestamp. |
 | `reviewed_at` | TIMESTAMPTZ | Nullable | Time when an administrator reviewed the request. |
 | `reviewed_by` | UUID | Nullable FK to `auth.users.id`; deletion sets null | Auth identity of the reviewing administrator. |
@@ -630,11 +630,11 @@ Product rows describe items offered by the gym. The category and unit must agree
 | Field | Type | Key / rule | Description |
 | --- | --- | --- | --- |
 | `id` | UUID | PK; generated when omitted | Product identifier referenced by sale lines. |
-| `name` | TEXT | Required | Product display name. |
-| `category` | TEXT | Required; `supplement` or `merchandise` | Product class used by sales and inventory workflows. |
+| `name` | VARCHAR(120) | Required | Product display name. |
+| `category` | VARCHAR(20) | Required; `supplement` or `merchandise` | Product class used by sales and inventory workflows. |
 | `price_per_unit` | NUMERIC(12,2) | Required; nonnegative | Price per gram or per item according to `unit`. |
-| `unit` | TEXT | Required; `gram` or `item` | Unit used to calculate a product sale. |
-| `size` | TEXT | Nullable | Merchandise size or variant label. |
+| `unit` | VARCHAR(12) | Required; `gram` or `item` | Unit used to calculate a product sale. |
+| `size` | VARCHAR(30) | Nullable | Merchandise size or variant label. |
 | `stock` | INTEGER | Nullable; nonnegative when present | Merchandise quantity available; supplement stock is not tracked in the base rule. |
 | `image_path` | TEXT | Nullable | Product image reference shown in the catalog. |
 | `is_active` | BOOLEAN | Required; defaults to true | Controls whether the product is available in active views. |
@@ -649,12 +649,12 @@ The sales table stores one receipt-level transaction. It identifies the customer
 | Field | Type | Key / rule | Description |
 | --- | --- | --- | --- |
 | `id` | UUID | PK; generated when omitted | Internal transaction identifier. |
-| `receipt_number` | TEXT | Required, unique | Human-readable receipt reference. |
-| `customer_type` | TEXT | Required; `member` or `walk_in` | Customer classification for the transaction. |
-| `customer_name` | TEXT | Required | Customer name printed on the receipt. |
+| `receipt_number` | VARCHAR(64) | Required, unique | Human-readable receipt reference. |
+| `customer_type` | VARCHAR(15) | Required; `member` or `walk_in` | Customer classification for the transaction. |
+| `customer_name` | VARCHAR(150) | Required | Customer name printed on the receipt. |
 | `member_id` | UUID | Nullable FK to `members.id`; deletion sets null | Member link when the customer is a member. |
 | `total` | NUMERIC(12,2) | Required; nonnegative | Receipt-level transaction total. |
-| `status` | TEXT | Required; `paid` or `voided`; defaults to paid | Payment/void state used by reports. |
+| `status` | VARCHAR(12) | Required; `paid` or `voided`; defaults to paid | Payment/void state used by reports. |
 | `sold_at` | TIMESTAMPTZ | Required; defaults to current time | Transaction timestamp. |
 | `processed_by` | UUID | Nullable FK to `auth.users.id`; deletion sets null | Auth identity of the administrator or staff account processing the sale. |
 
@@ -667,10 +667,10 @@ Each row is one service or product line on a sale. The sale relationship is requ
 | `id` | UUID | PK; generated when omitted | Identifier for the receipt line. |
 | `sale_id` | UUID | Required FK to `sales.id`; cascade delete | Receipt header containing this line. |
 | `product_id` | UUID | Nullable FK to `products.id`; deletion sets null | Catalog product when the line represents a product sale. |
-| `item_name` | TEXT | Required | Description shown on the receipt, retained independently of later catalog edits. |
-| `category` | TEXT | Required; `supplement`, `merchandise`, or `membership` | Type of line item. |
+| `item_name` | VARCHAR(150) | Required | Description shown on the receipt, retained independently of later catalog edits. |
+| `category` | VARCHAR(20) | Required; `supplement`, `merchandise`, or `membership` | Type of line item. |
 | `quantity` | NUMERIC(12,3) | Required; greater than zero | Grams, item count, or membership quantity sold. |
-| `unit` | TEXT | Required; `gram`, `item`, or `membership` | Quantity unit for the line. |
+| `unit` | VARCHAR(12) | Required; `gram`, `item`, or `membership` | Quantity unit for the line. |
 | `unit_price` | NUMERIC(12,2) | Required; nonnegative | Charge for each recorded unit. |
 | `line_total` | NUMERIC(12,2) | Required; nonnegative | Total charged for this receipt line. |
 
@@ -682,9 +682,9 @@ History rows preserve changes to a member's subscription over time. Depending on
 | --- | --- | --- | --- |
 | `id` | UUID | PK; generated when omitted | Identifier for the lifecycle event. |
 | `member_id` | UUID | Required FK to `members.id`; deletion restricted | Member whose membership changed. |
-| `event_type` | TEXT | Required; `expired`, `renewal`, or `plan_change` | Type of lifecycle event recorded. |
-| `previous_plan` | TEXT | Nullable | Plan before the event. |
-| `new_plan` | TEXT | Nullable | Plan after the event when applicable. |
+| `event_type` | VARCHAR(30) | Required; `expired`, `renewal`, or `plan_change` | Type of lifecycle event recorded. |
+| `previous_plan` | VARCHAR(30) | Nullable | Plan before the event. |
+| `new_plan` | VARCHAR(30) | Nullable | Plan after the event when applicable. |
 | `previous_price` | NUMERIC(12,2) | Nullable; nonnegative | Prior plan price. |
 | `new_price` | NUMERIC(12,2) | Nullable; nonnegative | New plan price when applicable. |
 | `previous_start_date` | DATE | Nullable | Start date of the prior membership period. |

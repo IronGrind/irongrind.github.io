@@ -11,22 +11,22 @@ erDiagram
 
     PROFILES {
         uuid id PK,FK
-        text username UK
-        text full_name
-        text role
+        varchar(30) username UK
+        varchar(150) full_name
+        varchar(20) role
     }
 
     MEMBERS {
         uuid id PK
         uuid auth_user_id FK,UK
         uuid application_id FK
-        text full_name
-        text email
-        text plan
+        varchar(150) full_name
+        varchar(254) email
+        varchar(30) plan
         numeric plan_price
         date start_date
         date expiry_date
-        text status
+        varchar(20) status
     }
 
     MEMBERSHIP_APPLICATIONS {
@@ -34,11 +34,11 @@ erDiagram
         uuid auth_user_id FK
         uuid member_id FK
         uuid reviewed_by FK
-        text application_type
-        text full_name
-        text plan
+        varchar(20) application_type
+        varchar(150) full_name
+        varchar(30) plan
         numeric plan_price
-        text status
+        varchar(20) status
         timestamptz submitted_at
         timestamptz reviewed_at
     }
@@ -53,10 +53,10 @@ erDiagram
 
     PRODUCTS {
         uuid id PK
-        text name
-        text category
+        varchar(120) name
+        varchar(20) category
         numeric price_per_unit
-        text unit
+        varchar(12) unit
         integer stock
         boolean is_active
     }
@@ -65,11 +65,11 @@ erDiagram
         uuid id PK
         uuid member_id FK
         uuid processed_by FK
-        text receipt_number UK
-        text customer_type
-        text customer_name
+        varchar(64) receipt_number UK
+        varchar(15) customer_type
+        varchar(150) customer_name
         numeric total
-        text status
+        varchar(12) status
         timestamptz sold_at
     }
 
@@ -77,10 +77,10 @@ erDiagram
         uuid id PK
         uuid sale_id FK
         uuid product_id FK
-        text item_name
-        text category
+        varchar(150) item_name
+        varchar(20) category
         numeric quantity
-        text unit
+        varchar(12) unit
         numeric unit_price
         numeric line_total
     }
@@ -89,9 +89,9 @@ erDiagram
         uuid id PK
         uuid member_id FK
         uuid recorded_by FK
-        text event_type
-        text previous_plan
-        text new_plan
+        varchar(30) event_type
+        varchar(30) previous_plan
+        varchar(30) new_plan
         date previous_expiry_date
         date new_expiry_date
         timestamptz recorded_at
