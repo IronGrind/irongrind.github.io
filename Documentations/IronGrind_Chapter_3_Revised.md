@@ -453,7 +453,7 @@ The ERD is a database structure diagram. Primary keys identify rows; foreign key
 
 **Authentication and profiles.** Supabase manages authentication identities in `auth.users`. The `profiles` row stores the application role and account information. A profile's identifier corresponds to its Auth user.
 
-**Applications and members.** `membership_applications` stores registration and renewal requests and their review state. An application may refer to a member after the account is approved or when it represents an existing member's renewal. `members` stores approved membership information. The nullable unique `members.auth_user_id` link permits no more than one member row per Auth user.
+**Applications and members.** `membership_applications` stores registration and renewal requests and their review state. Renewal requests link to an existing member through `member_id`; a registration application can be linked to at most one created member through the unique `members.application_id` field. Either link can be absent when it does not yet apply. The nullable unique `members.auth_user_id` link permits no more than one member row per Auth user, while profiles can exist without a corresponding member record.
 
 **Attendance and membership history.** Each attendance row refers to the member whose visit it records; a member can have multiple visits. Membership history stores lifecycle events such as expiration, renewal, and plan change, with prior and new values where available.
 
@@ -461,7 +461,7 @@ The ERD is a database structure diagram. Primary keys identify rows; foreign key
 
 **Profile-to-identity relationship.** Each application profile uses the same UUID as its Auth identity. The Auth service owns credentials, while the `profiles` table owns the application role and display information. Deleting an Auth identity cascades to its profile; application records reference Auth identities according to their defined deletion rules.
 
-**Application-to-member relationship.** Applications are stored independently from members so a pending request exists before approval. A registration approval can link the resulting member to its application. A renewal application links to an existing member. The Auth link on a member is nullable and unique, allowing an imported or staff-created member row without a portal identity while preventing two member rows from sharing one Auth user.
+**Application-to-member relationship.** Applications are stored independently from members so a pending request exists before approval. A registration approval can link at most one resulting member to its application through the unique `members.application_id` foreign key. A renewal application links to an existing member through `membership_applications.member_id`, so one member can have multiple renewal requests over time. The Auth link on a member is nullable and unique, allowing a staff-created member row without a portal identity while preventing two member rows from sharing one Auth user.
 
 **Member-to-attendance relationship.** One member may have many attendance rows, and each attendance row belongs to one member. The foreign key is required and restricts deletion while attendance history remains. Each row stores a time-in and optional time-out; the check constraint requires the checkout not to precede check-in.
 
