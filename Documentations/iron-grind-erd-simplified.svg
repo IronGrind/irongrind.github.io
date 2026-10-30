@@ -17,7 +17,7 @@
 <!-- Relationship connectors are routed behind the entity tables. -->
 <g class="edge">
   <path d="M760 160V190H310V220" marker-start="url(#cardOptionalOne)" marker-end="url(#cardOne)"/><path d="M820 160V220" marker-start="url(#cardOptionalMany)" marker-end="url(#cardOptionalOne)"/><path d="M900 160V190H1150V220" marker-start="url(#cardOptionalMany)" marker-end="url(#cardOptionalOne)"/>
-  <path d="M470 302H520" marker-start="url(#cardOptionalMany)" marker-end="url(#cardOptionalOne)"/>
+  <path d="M470 302H520" marker-start="url(#cardOne)" marker-end="url(#cardOptionalOne)"/>
   <path d="M920 335H970" marker-start="url(#cardMany)" marker-end="url(#cardOptionalOne)"/><path d="M920 392H970" marker-start="url(#cardOptionalOne)" marker-end="url(#cardOptionalOne)"/>
   <path d="M1330 384H1360V470H1460V520" marker-start="url(#cardOne)" marker-end="url(#cardOptionalMany)"/>
   <path d="M1240 470V660H1310V730H1330" marker-start="url(#cardOne)" marker-end="url(#cardOptionalMany)"/>
@@ -30,6 +30,8 @@
 </g>
 <g class="rel">
   <text x="540" y="184" text-anchor="middle">profiles.id</text>
+  <text x="495" y="294" text-anchor="middle">reviewed_by</text>
+  <text x="945" y="384" text-anchor="middle">application_id</text>
   <text x="1060" y="184" text-anchor="middle">auth_user_id</text>
   <text x="1395" y="464" text-anchor="middle">member_id</text>
   <text x="1230" y="565" transform="rotate(-90 1230 565)" text-anchor="middle">member_id</text>

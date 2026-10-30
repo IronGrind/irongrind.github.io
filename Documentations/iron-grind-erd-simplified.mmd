@@ -20,7 +20,7 @@ erDiagram
     MEMBERS {
         uuid id PK
         uuid auth_user_id FK,UK
-        uuid application_id FK
+        uuid application_id FK,UK
         varchar(150) full_name
         varchar(254) email
         varchar(11) mobile
@@ -107,13 +107,13 @@ erDiagram
     AUTH_USERS ||--o| PROFILES : "profile"
     AUTH_USERS o|--o| MEMBERS : "member login"
     AUTH_USERS ||--o{ MEMBERSHIP_APPLICATIONS : "applicant"
-    AUTH_USERS o|--o{ MEMBERSHIP_APPLICATIONS : "reviewer"
     AUTH_USERS o|--o{ ATTENDANCE : "recorder"
     AUTH_USERS o|--o{ SALES : "processor"
     AUTH_USERS o|--o{ MEMBERSHIP_HISTORY : "recorder"
 
+    PROFILES o|--o{ MEMBERSHIP_APPLICATIONS : "reviewer"
     MEMBERS o|--o{ MEMBERSHIP_APPLICATIONS : "renewal request"
-    MEMBERSHIP_APPLICATIONS o|--o{ MEMBERS : "registration source"
+    MEMBERSHIP_APPLICATIONS o|--o| MEMBERS : "registration source"
     MEMBERS ||--o{ ATTENDANCE : "visits"
     MEMBERS o|--o{ SALES : "member sales"
     MEMBERS ||--o{ MEMBERSHIP_HISTORY : "history"
