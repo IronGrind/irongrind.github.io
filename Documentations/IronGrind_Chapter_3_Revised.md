@@ -512,8 +512,8 @@ This data dictionary summarizes the public-schema fields and relationships defin
 | Entity | Key fields and data types | Purpose and relationships |
 | --- | --- | --- |
 | `profiles` | `id` UUID (PK, Auth FK); `email` VARCHAR(254); `username` VARCHAR(30); `full_name` VARCHAR(150); `role` VARCHAR(20); optional `account_status` TEXT; timestamps | User profile and role used by the application. `username` is unique. |
-| `members` | `id` UUID (PK); `auth_user_id` UUID (nullable, unique Auth FK); `application_id` UUID (nullable FK); `full_name` VARCHAR(150); `email` VARCHAR(254); `username` VARCHAR(30); `mobile` VARCHAR(11); `date_of_birth` DATE; `age` SMALLINT; `height`, `weight_kg` NUMERIC; `height_unit` VARCHAR(3); `sex` VARCHAR(30); `plan` VARCHAR(30); `status` VARCHAR(20); `registration_source` VARCHAR(40); `emergency_contact` JSONB; `plan_price`, `paid` NUMERIC; membership dates; `fitness_goals`, `health_conditions` TEXT[]; `other_medical_conditions`, `signature_path` TEXT; timestamps | Approved member and membership record. Referenced by applications, attendance, sales, sale items, and membership history. |
-| `membership_applications` | `id` UUID (PK); `auth_user_id` UUID (required Auth FK); `member_id` UUID (nullable FK); `application_type` VARCHAR(20); `full_name` VARCHAR(150); `email` VARCHAR(254); `username` VARCHAR(30); `mobile` VARCHAR(11); `plan` VARCHAR(30); `status` VARCHAR(20); demographic, health, and signature fields; submission/review timestamps; `reviewed_by` UUID (FK to `auth.users.id`) | Registration and renewal requests and their review state. `member_id` can be empty before a member is linked. |
+| `members` | `id` UUID (PK); `auth_user_id` UUID (nullable, unique Auth FK); `application_id` UUID (nullable, unique FK); `full_name` VARCHAR(150); `email` VARCHAR(254); `username` VARCHAR(30); `mobile` VARCHAR(11); `date_of_birth` DATE; `age` SMALLINT; `height`, `weight_kg` NUMERIC; `height_unit` VARCHAR(3); `sex` VARCHAR(30); `plan` VARCHAR(30); `status` VARCHAR(20); `registration_source` VARCHAR(40); `emergency_contact` JSONB; `plan_price`, `paid` NUMERIC; membership dates; `fitness_goals`, `health_conditions` TEXT[]; `other_medical_conditions`, `signature_path` TEXT; timestamps | Approved member and membership record. Referenced by applications, attendance, sales, sale items, and membership history. |
+| `membership_applications` | `id` UUID (PK); `auth_user_id` UUID (required Auth FK); `member_id` UUID (nullable FK); `application_type` VARCHAR(20); `full_name` VARCHAR(150); `email` VARCHAR(254); `username` VARCHAR(30); `mobile` VARCHAR(11); `plan` VARCHAR(30); `status` VARCHAR(20); demographic, health, and signature fields; submission/review timestamps; `reviewed_by` UUID (nullable FK to `profiles.id`) | Registration and renewal requests and their review state. `member_id` identifies the existing member for renewal requests; `reviewed_by` identifies the reviewing profile. |
 | `attendance` | `id` UUID (PK); `member_id` UUID (FK); `time_in`, `time_out`, `created_at` TIMESTAMPTZ; `recorded_by` UUID (Auth FK) | Staff-recorded check-in and check-out. A member may have multiple attendance records. |
 | `products` | `id` UUID (PK); `name` VARCHAR(120); `category` VARCHAR(20); `unit` VARCHAR(12); `size` VARCHAR(30); `image_path` TEXT; `price_per_unit` NUMERIC; `stock` INTEGER; `is_active` BOOLEAN; timestamps | Product catalog and inventory. Supplements use gram units; merchandise uses item units and stock. |
 | `sales` | `id` UUID (PK); `receipt_number` VARCHAR(64) (unique); `customer_type` VARCHAR(15); `customer_name` VARCHAR(150); `status` VARCHAR(12); `member_id` UUID (nullable FK); `total` NUMERIC; `sold_at` TIMESTAMPTZ; `processed_by` UUID (Auth FK) | Sale header and receipt information. A sale may be associated with a member or a walk-in customer. |
@@ -541,13 +541,13 @@ The profile row extends the Auth identity with information used by the applicati
 
 #### `members` â€” Approved Member and Current Membership
 
-This table is the current operational record for an approved member. It contains identity and contact data, the current plan and dates, and member declarations collected in the application. `auth_user_id` associates the row with a sign-in identity when one exists; a partial unique index enforces no more than one member row for a non-null Auth ID. `application_id` can preserve the source registration link where the deployed schema has that relationship. Attendance, sales, and membership history refer to the member row rather than copying the entire profile.
+This table is the current operational record for an approved member. It contains identity and contact data, the current plan and dates, and member declarations collected in the application. `auth_user_id` associates the row with a sign-in identity when one exists; a partial unique index enforces no more than one member row for a non-null Auth ID. `application_id` is a nullable unique foreign key to the source registration application, so an application can be associated with at most one created member. Attendance, sales, and membership history refer to the member row rather than copying the entire profile.
 
 | Field | Type | Key / rule | Description |
 | --- | --- | --- | --- |
 | `id` | UUID | PK; generated when omitted | Identifier referenced by operational records. |
 | `auth_user_id` | UUID | Nullable, unique FK to `auth.users.id`; deletion sets null | Optional link to the member's login identity. |
-| `application_id` | UUID | Nullable FK to `membership_applications.id` in the deployed relationship | Registration application associated with creation of the member record. |
+| `application_id` | UUID | Nullable, unique FK to `membership_applications.id` | Registration application associated with creation of the member record; each application can link to at most one member. |
 | `full_name` | VARCHAR(150) | Required | Member's recorded full name. |
 | `email` | VARCHAR(254) | Nullable | Contact email copied from the application or account. |
 | `username` | VARCHAR(30) | Nullable | Member-facing account name where available. |
@@ -566,7 +566,7 @@ This table is the current operational record for an approved member. It contains
 | `expiry_date` | DATE | Nullable | Current membership expiry date used by the application. |
 | `status` | VARCHAR(20) | Required; constrained values in the schema | Membership state such as active, expired, or inactive. |
 | `registration_source` | VARCHAR(40) | Required; defaults to `Online application` | Channel recorded for the member's registration. |
-| `paid` | BOOLEAN or deployed payment value | Required in base schema; live projects may retain a compatible numeric representation | Indicates or records the payment state/value according to the deployed schema version. |
+| `paid` | NUMERIC | As defined in the deployed schema | Numeric payment amount/value recorded for the member. |
 | `fitness_goals` | TEXT[] | Required; defaults to an empty array | One or more fitness goals supplied by the member. |
 | `health_conditions` | TEXT[] | Required; defaults to an empty array | Selected health-condition declarations. |
 | `other_medical_conditions` | TEXT | Required; defaults to empty text | Additional health information entered by the applicant. |
@@ -589,13 +589,12 @@ Application rows preserve a submitted request and its review state. The applicat
 | `username` | VARCHAR(30) | Nullable | Requested or associated username. |
 | `mobile` | VARCHAR(11) | Nullable | Mobile number supplied with the request. |
 | `date_of_birth` | DATE | Nullable | Applicant's date of birth. |
-| `age` | SMALLINT | Nullable; nonnegative when supplied | Age at the time of submission. |
+| `age` | INTEGER | Nullable; nonnegative when supplied | Age at the time of submission. |
 | `sex` | VARCHAR(30) | Nullable | Sex response supplied in the form. |
 | `height` | NUMERIC(7,2) | Nullable | Height measurement supplied by the applicant. |
 | `height_unit` | VARCHAR(3) | Nullable; `cm`, `in`, or `ft` | Unit of the submitted height. |
 | `weight_kg` | NUMERIC(7,2) | Nullable | Weight in kilograms if supplied. |
-| `emergency_contact` | JSONB | Required; defaults to an empty object | Structured emergency contact details. |
-| `emergency_contact_data` | JSONB | Required in compatible schema; defaults to an empty object | Compatibility field used by deployed form and migration versions. |
+| `emergency_name`, `emergency_relationship`, `emergency_contact` | TEXT | Separate emergency-contact fields | Emergency contact name, relationship, and phone number. |
 | `plan` | VARCHAR(30) | Required | Plan requested by the applicant. |
 | `plan_price` | NUMERIC(12,2) | Required; nonnegative | Proposed plan charge recorded with the request. |
 | `start_date` | DATE | Nullable | Requested or planned membership start date. |
@@ -607,7 +606,7 @@ Application rows preserve a submitted request and its review state. The applicat
 | `status` | VARCHAR(20) | Required; `pending`, `approved`, or `rejected`; defaults to pending | Current review result. |
 | `submitted_at` | TIMESTAMPTZ | Required; defaults to current time | Submission timestamp. |
 | `reviewed_at` | TIMESTAMPTZ | Nullable | Time when an administrator reviewed the request. |
-| `reviewed_by` | UUID | Nullable FK to `auth.users.id`; deletion sets null | Auth identity of the reviewing administrator. |
+| `reviewed_by` | UUID | Nullable FK to `profiles.id` | Profile of the reviewing administrator; profile IDs correspond to Auth user IDs. |
 
 #### `attendance` â€” Staff-Recorded Visits
 
