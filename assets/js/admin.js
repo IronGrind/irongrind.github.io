@@ -268,8 +268,9 @@ function switchMemberTab(tab) {
     document.querySelectorAll('.admin-tab').forEach(t => t.classList.toggle('active', t.dataset.tab === tab));
     document.getElementById('tab-members').classList.toggle('hidden', tab !== 'members');
     document.getElementById('tab-approvals').classList.toggle('hidden', tab !== 'approvals');
+    document.getElementById('tab-expired').classList.toggle('hidden', tab !== 'expired');
     if (tab === 'approvals') renderApprovals();
-    else renderMembers();
+    else if (tab === 'members' || tab === 'expired') renderMembers();
 }
 
 function switchApprovalType(type) {
@@ -292,7 +293,7 @@ function logout() {
 
 /* ========== RENDER: DASHBOARD ========== */
 function renderDashboard() {
-    const currentMemberships = members.filter(member => !isPastMembershipArchiveGrace(member));
+    const currentMemberships = members.filter(member => member.expiry && member.expiry >= todayStr());
     document.getElementById('statTotalMembers').textContent = currentMemberships.length;
 
     const today = todayStr();
@@ -354,44 +355,39 @@ function isMembershipArchiveReady(record) {
 }
 
 function renderMembers() {
-    const searchEl = document.getElementById('memberSearch');
+    const isExpiredTab = currentMemberTab === 'expired';
+    const searchEl = document.getElementById(isExpiredTab ? 'expiredMemberSearch' : 'memberSearch');
     const query = searchEl ? searchEl.value.toLowerCase() : '';
-
-    let filtered = members.filter(m => !isPastMembershipArchiveGrace(m)).filter(m => {
+    const today = todayStr();
+    let filtered = members.filter(m => isExpiredTab
+        ? Boolean(m.expiry && m.expiry < today)
+        : Boolean(m.expiry && m.expiry >= today)).filter(m => {
         if (currentPlanFilter !== 'all' && m.plan !== currentPlanFilter) return false;
-        if (query && !m.name.toLowerCase().includes(query)) return false;
+        if (query && !String(m.name || '').toLowerCase().includes(query)) return false;
         return true;
     });
 
-    const listEl = document.getElementById('membersList');
+    const listEl = document.getElementById(isExpiredTab ? 'expiredMembersList' : 'membersList');
+    document.getElementById('expiredMembersCount').textContent = members.filter(m => m.expiry && m.expiry < today).length;
     if (filtered.length === 0) {
-        const hasArchived = members.some(member =>
-            isPastMembershipArchiveGrace(member)
-            && (currentPlanFilter === 'all' || member.plan === currentPlanFilter)
-            && (!query || member.name.toLowerCase().includes(query))
-        );
-        listEl.innerHTML = hasArchived
-            ? '<div class="empty-state membership-empty-state"><span>No current members match these filters. Expired memberships beyond the 10-day grace period are archived.</span><button class="btn-sm" onclick="viewReport(\'archives\')"><i class="fas fa-box-archive"></i> Membership Archives</button></div>'
-            : '<div class="empty-state">No members found.</div>';
+        listEl.innerHTML = `<div class="empty-state">No ${isExpiredTab ? 'expired' : 'active'} members match these filters.</div>`;
         return;
     }
 
-    const today = todayStr();
     listEl.innerHTML = filtered.map(m => {
-        const expired = m.expiry < today;
-        const statusClass = expired ? 'expired' : (m.paid ? '' : 'pending');
-        const statusText = expired ? 'Expired' : (m.paid ? 'Paid' : 'Pending');
+        const statusClass = isExpiredTab ? 'expired' : (m.paid ? '' : 'pending');
+        const statusText = isExpiredTab ? 'Expired' : (m.paid ? 'Paid' : 'Pending');
         return `
             <div class="member-row">
                 <div class="member-info">
                     <div class="member-avatar">${initials(m.name)}</div>
                     <div class="member-details">
                         <h4>${m.name}</h4>
-                        <p>${m.plan} · Expires ${m.expiry}${expired ? ' · EXPIRED' : ''}</p>
+                        <p>${m.plan} · Expires ${m.expiry}${isExpiredTab ? ' · EXPIRED' : ''}</p>
                     </div>
                 </div>
                 <div class="member-actions">
-                    <button class="renew-btn" onclick="openChangePlanModal('${m.id}')"><i class="fas fa-exchange-alt"></i> Change Plan</button>
+                    ${isExpiredTab ? '' : `<button class="renew-btn" onclick="openChangePlanModal('${m.id}')"><i class="fas fa-exchange-alt"></i> Change Plan</button>`}
                     <button class="renew-btn" onclick="renewMember('${m.id}')"><i class="fas fa-sync-alt"></i> Renew</button>
                     <span class="approve-badge ${statusClass}">${statusText}</span>
                 </div>
@@ -401,7 +397,7 @@ function renderMembers() {
 
 function filterPlan(plan) {
     currentPlanFilter = plan;
-    document.querySelectorAll('#planPills .pill').forEach(p => p.classList.toggle('active', p.dataset.plan === plan));
+    document.querySelectorAll('#planPills .pill, #expiredPlanPills .pill').forEach(p => p.classList.toggle('active', p.dataset.plan === plan));
     renderMembers();
 }
 

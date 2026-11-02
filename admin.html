@@ -61,7 +61,7 @@
                     <div class="stat-card">
                         <div class="stat-label">Current Members</div>
                         <div class="stat-value" id="statTotalMembers">0</div>
-                        <div class="stat-sub"><i class="fas fa-users"></i> Excludes archived memberships</div>
+                        <div class="stat-sub"><i class="fas fa-users"></i> Unexpired memberships</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Today's Check-ins</div>
@@ -105,6 +105,9 @@
                         <button class="admin-tab active" data-tab="members" onclick="switchMemberTab('members')">
                             <i class="fas fa-users"></i> Active Members
                         </button>
+                        <button class="admin-tab" data-tab="expired" onclick="switchMemberTab('expired')">
+                            <i class="fas fa-user-clock"></i> Expired <span class="badge" id="expiredMembersCount">0</span>
+                        </button>
                         <button class="admin-tab" data-tab="approvals" onclick="switchMemberTab('approvals')">
                             <i class="fas fa-clock"></i> Approvals
                             <span class="badge" id="approvalsCount">0</span>
@@ -124,6 +127,21 @@
                             </div>
                         </div>
                         <div id="membersList"></div>
+                    </div>
+                    <div id="tab-expired" class="hidden">
+                        <div class="membership-controls">
+                            <div class="search">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="expiredMemberSearch" placeholder="Search expired members by name..." oninput="renderMembers()">
+                            </div>
+                            <div class="plan-pills" id="expiredPlanPills">
+                                <span class="pill active" data-plan="all" onclick="filterPlan('all')">All</span>
+                                <span class="pill" data-plan="Monthly" onclick="filterPlan('Monthly')">Monthly</span>
+                                <span class="pill" data-plan="Half Month" onclick="filterPlan('Half Month')">Half Month</span>
+                                <span class="pill" data-plan="Walk-in" onclick="filterPlan('Walk-in')">Walk-in</span>
+                            </div>
+                        </div>
+                        <div id="expiredMembersList"></div>
                     </div>
                     <div id="tab-approvals" class="hidden">
                         <p style="font-size:0.85rem; color:#8b95a9; margin-bottom:16px;">
