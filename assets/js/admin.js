@@ -25,8 +25,8 @@ let membershipArchives = [];
 let currentPlanFilter = 'all';
 let currentMemberTab = 'members';
 let currentApprovalType = 'registration';
-let currentSalesView = 'transactions';
-let currentSalesTransactionType = 'all';
+let currentSalesView = 'membership';
+let currentSalesTransactionType = 'membership';
 let currentSalesSubType = 'all';
 let currentMembershipSalesMonth = localDateStr().slice(0, 7);
 let currentSalesProductName = 'all';
@@ -2328,13 +2328,17 @@ function switchWalkinSalesType(type) {
 }
 
 function switchSalesView(view) {
-    currentSalesView = view === 'walkin' ? 'walkin' : 'transactions';
+    currentSalesView = ['membership', 'products', 'walkin'].includes(view) ? view : 'membership';
+    if (currentSalesView !== 'walkin') currentSalesTransactionType = currentSalesView;
+    currentSalesSubType = 'all';
+    currentSalesProductName = 'all';
     document.querySelectorAll('[data-sales-view]').forEach(button =>
         button.classList.toggle('active', button.dataset.salesView === currentSalesView)
     );
-    document.getElementById('salesTransactionsPanel').classList.toggle('hidden', currentSalesView !== 'transactions');
+    document.getElementById('salesTransactionsPanel').classList.toggle('hidden', currentSalesView === 'walkin');
     document.getElementById('walkinSalesPanel').classList.toggle('hidden', currentSalesView !== 'walkin');
     if (currentSalesView === 'walkin') renderWalkinSalesReport();
+    else renderSales();
 }
 
 function getWalkinProductDetails(sale) {
@@ -2450,14 +2454,27 @@ function getMembershipPlanFromSale(sale) {
 
 function renderSales() {
     const el = document.getElementById('salesTable');
+    document.getElementById('salesTransactionsPanel')
+        ?.classList.toggle('membership-sales-active', currentSalesTransactionType === 'membership');
     const membershipSales = sales.filter(isMembershipSale);
     const monthMembershipSales = membershipSales.filter(sale => reportDateBelongsToMonth(sale.date || sale.createdAt, currentMembershipSalesMonth));
     const productSales = sales.filter(sale => !isMembershipSale(sale) && Boolean(getSaleProductCategory(sale)));
-    document.getElementById('salesCountAll').textContent = sales.length;
+    const currentMonth = localDateStr().slice(0, 7);
+    const currentMonthSales = sales.filter(sale => reportDateBelongsToMonth(sale.date || sale.createdAt, currentMonth));
+    const currentMonthMembershipCount = currentMonthSales.filter(isMembershipSale).length;
+    const currentMonthProductCount = currentMonthSales.filter(sale => !isMembershipSale(sale) && Boolean(getSaleProductCategory(sale))).length;
+    const currentMonthPaidSales = currentMonthSales.filter(sale => sale.status === 'Paid');
+    const currentMonthPaidMembershipCount = currentMonthPaidSales.filter(isMembershipSale).length;
+    const currentMonthPaidProductCount = currentMonthPaidSales.filter(sale => !isMembershipSale(sale) && Boolean(getSaleProductCategory(sale))).length;
+    const currentMonthIncome = currentMonthPaidSales.reduce((sum, sale) => sum + (Number(sale.total) || 0), 0);
+    const currentMonthLabel = new Intl.DateTimeFormat('en', { month: 'long', year: 'numeric' })
+        .format(new Date(`${currentMonth}-01T00:00:00`));
+    document.getElementById('salesMonthOverview').innerHTML = `<div class="sales-month-overview-copy"><span>This month · ${currentMonthLabel}</span><h3>Overall income</h3><p>Memberships: ${currentMonthPaidMembershipCount} paid sales · Products: ${currentMonthPaidProductCount} paid sales</p></div><strong class="sales-month-overview-total">${formatPeso(currentMonthIncome)}</strong>`;
+    document.getElementById('salesMonthlyCountSummary').innerHTML = `<span class="sales-monthly-count-title">${currentMonth} transaction count</span><strong>${currentMonthSales.length} total sales</strong><span>Memberships: ${currentMonthMembershipCount}</span><span>Products: ${currentMonthProductCount}</span>`;
     document.getElementById('salesCountMembership').textContent = membershipSales.length;
     document.getElementById('salesCountProducts').textContent = productSales.length;
     const salesByType = { membership: monthMembershipSales, products: productSales };
-    const typedSales = currentSalesTransactionType === 'all' ? sales : (salesByType[currentSalesTransactionType] || []);
+    const typedSales = salesByType[currentSalesTransactionType] || [];
     const planOptions = [...new Set(monthMembershipSales.map(getMembershipPlanFromSale))].sort((a, b) => {
         const order = ['Monthly', 'Half Month', 'Weekly', 'Walk-in', 'Other'];
         return (order.indexOf(a) < 0 ? order.length : order.indexOf(a)) - (order.indexOf(b) < 0 ? order.length : order.indexOf(b)) || a.localeCompare(b);
@@ -2533,16 +2550,6 @@ function renderSales() {
         <tbody>${visibleSales.map(s => `<tr><td>#${escapeHTML(s.id)}</td><td>${escapeHTML(s.customer === 'Walk-in' ? 'Name not recorded' : (s.customer || 'Name not recorded'))}</td><td>${escapeHTML(s.items || '')}</td><td>${formatPeso(s.total)}</td><td>${escapeHTML(s.date || '')}</td>
             <td>${s.status === 'Paid' ? '<span class="badge-status paid">Paid</span>' : '<span class="badge-status reserved">Reserved</span>'}</td>
             <td><button class="btn-sm" onclick="showSaleReceipt(decodeURIComponent('${encodeURIComponent(String(s.id))}'))" aria-label="View or print receipt"><i class="fas fa-receipt"></i> Receipt</button></td></tr>`).join('')}</tbody></table></div>`;
-}
-
-function switchSalesTransactionType(type) {
-    currentSalesTransactionType = ['membership', 'products'].includes(type) ? type : 'all';
-    currentSalesSubType = 'all';
-    currentSalesProductName = 'all';
-    document.querySelectorAll('[data-sale-filter]').forEach(button =>
-        button.classList.toggle('active', button.dataset.saleFilter === currentSalesTransactionType)
-    );
-    renderSales();
 }
 
 function getSaleReceiptMarkup(sale) {

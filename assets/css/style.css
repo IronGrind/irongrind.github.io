@@ -112,6 +112,12 @@ body.dashboard-body .low-stock-item { background-color: rgba(13,18,25,0.64); bor
 .report-icon-btn:focus-visible { outline: 2px solid #c34b4b; outline-offset: 3px; }
 .report-export-all-btn { border-color: rgba(195,75,75,.35); background: rgba(120,0,0,.2); color: #f0c2c2; }
 .sales-section-tabs { width: fit-content; margin-bottom: 16px; padding: 4px; border: 1px solid rgba(190,201,220,.1); border-radius: 14px; background: rgba(8,11,16,.55); }
+.sales-month-overview { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 18px; padding: 18px 20px; border: 1px solid rgba(195,75,75,.24); border-radius: 16px; background: radial-gradient(ellipse at 100% 0%, rgba(120,0,0,.2), transparent 55%), linear-gradient(135deg, rgba(24,28,37,.95), rgba(11,14,20,.9)); }
+.sales-month-overview-copy > span { color: #c78686; font-size: .72rem; font-weight: 650; letter-spacing: .04em; text-transform: uppercase; }
+.sales-month-overview-copy h3 { margin-top: 6px; color: #f1f3f7; font-size: .9rem; }
+.sales-month-overview-copy p { margin-top: 7px; color: #a4adc2; font-size: .76rem; }
+.sales-month-overview-copy small { color: #737d91; }
+.sales-month-overview-total { color: #fff; font-size: clamp(1.4rem, 2.5vw, 2rem); font-weight: 750; letter-spacing: -.03em; }
 #salesTransactionsPanel, #walkinSalesPanel { padding: 16px; border: 1px solid rgba(190,201,220,.1); border-radius: 16px; background: rgba(10,13,19,.52); }
 .walkin-sales-content { padding-top: 4px; }
 .transaction-filter-row { display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; margin-bottom: 14px; padding: 12px 14px; border: 1px solid rgba(190,201,220,.1); border-radius: 12px; background: rgba(255,255,255,.025); flex-wrap: wrap; }
@@ -130,6 +136,14 @@ body.dashboard-body .low-stock-item { background-color: rgba(13,18,25,0.64); bor
 #salesTable .table-scroll { overflow: auto; border: 1px solid rgba(190,201,220,.1); border-radius: 12px; background: rgba(8,11,16,.45); }
 #salesTable .attendance-table th { position: sticky; top: 0; z-index: 1; background: #1b202a; }
 #salesTable .attendance-table tbody tr:hover { background: rgba(255,255,255,.035); }
+.sales-monthly-count-summary { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 18px; margin-top: 14px; padding: 12px 14px; border: 1px solid rgba(190,201,220,.1); border-radius: 12px; background: rgba(255,255,255,.025); color: #a4adc2; font-size: .76rem; }
+.sales-monthly-count-summary strong { color: #f1f3f7; font-size: .82rem; }
+.sales-monthly-count-title { color: #737d91; }
+#salesTransactionsPanel.membership-sales-active #salesTable .table-scroll { max-height: min(58vh, 620px); overscroll-behavior: contain; }
+#salesTransactionsPanel.membership-sales-active #salesTable .attendance-table { min-width: 820px; }
+#salesTransactionsPanel.membership-sales-active #salesTable .attendance-table td:nth-child(1),
+#salesTransactionsPanel.membership-sales-active #salesTable .attendance-table td:nth-child(4),
+#salesTransactionsPanel.membership-sales-active #salesTable .attendance-table td:nth-child(5) { white-space: nowrap; }
 .membership-sales-summary { display: grid; gap: 12px; margin-bottom: 16px; padding: 14px; border: 1px solid rgba(190,201,220,.1); border-radius: 13px; background: rgba(255,255,255,.025); }
 .membership-sales-summary-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .membership-sales-summary-heading h3 { color: #f1f3f7; font-size: .9rem; }
@@ -151,6 +165,7 @@ body.dashboard-body .low-stock-item { background-color: rgba(13,18,25,0.64); bor
     .reports-toolbar { align-items: stretch; flex-direction: column; }
     .report-export-controls { justify-content: flex-start; }
     .transaction-filter-row { align-items: flex-start; flex-direction: column; }
+    #salesTransactionsPanel.membership-sales-active #salesTable .table-scroll { max-height: 52vh; }
     .transaction-filter-tabs { width: 100%; }
     .sales-product-filter { width: 100%; margin-left: 0; justify-content: space-between; }
     .sales-product-filter select { max-width: none; flex: 1; }
@@ -160,6 +175,7 @@ body.dashboard-body .low-stock-item { background-color: rgba(13,18,25,0.64); bor
 @media (max-width: 460px) {
     .report-export-controls { align-items: stretch; flex-direction: column; }
     .report-export-controls input[type="month"], .report-export-controls .btn-primary { width: 100%; }
+    .sales-month-overview { align-items: flex-start; flex-direction: column; }
 }
 
 /* ========== BUTTONS ========== */

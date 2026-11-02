@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IronGrind · Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261102-sales-membership-summary">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261102-sales-month-overview">
 </head>
 <body class="dashboard-body">
 <div id="page-loader" class="page-loader" aria-label="Loading dashboard" role="status"><div class="loader-content"><img class="loader-mark" src="assets/images/iron-grind-mark.png" alt=""><div class="loader-brand">Iron<span>Grind</span></div><div class="loader-track"><span></span></div></div></div>
@@ -207,22 +207,17 @@
                         <h2><i class="fas fa-receipt"></i> Sales</h2>
                         <button class="btn-primary" onclick="openNewSaleModal()"><i class="fas fa-plus"></i> New Sale</button>
                     </div>
+                    <div id="salesMonthOverview" class="sales-month-overview" aria-live="polite"></div>
                     <div class="admin-tabs sales-section-tabs">
-                        <button class="admin-tab active" data-sales-view="transactions" onclick="switchSalesView('transactions')"><i class="fas fa-receipt"></i> All Transactions</button>
+                        <button class="admin-tab active" data-sales-view="membership" onclick="switchSalesView('membership')"><i class="fas fa-id-card"></i> Memberships <span class="badge" id="salesCountMembership">0</span></button>
+                        <button class="admin-tab" data-sales-view="products" onclick="switchSalesView('products')"><i class="fas fa-box"></i> Products <span class="badge" id="salesCountProducts">0</span></button>
                         <button class="admin-tab" data-sales-view="walkin" onclick="switchSalesView('walkin')"><i class="fas fa-store"></i> Walk-in Product Summary</button>
                     </div>
                     <div id="salesTransactionsPanel">
-                        <div class="transaction-filter-row">
-                            <p>Choose a sale type, then narrow the list by plan or product category.</p>
-                            <div class="admin-tabs transaction-filter-tabs" aria-label="Filter transactions">
-                                <button class="admin-tab active" data-sale-filter="all" onclick="switchSalesTransactionType('all')">All <span class="badge" id="salesCountAll">0</span></button>
-                                <button class="admin-tab" data-sale-filter="membership" onclick="switchSalesTransactionType('membership')">Memberships <span class="badge" id="salesCountMembership">0</span></button>
-                                <button class="admin-tab" data-sale-filter="products" onclick="switchSalesTransactionType('products')">Products <span class="badge" id="salesCountProducts">0</span></button>
-                            </div>
-                        </div>
                         <div id="membershipSalesSummary" class="membership-sales-summary hidden"></div>
                         <div id="salesSubFilters" class="sales-subfilters hidden" aria-label="Filter by plan or product category"></div>
                         <div id="salesTable"></div>
+                        <div id="salesMonthlyCountSummary" class="sales-monthly-count-summary" aria-live="polite"></div>
                     </div>
 
             <div id="walkinSalesPanel" class="hidden">
@@ -275,6 +270,6 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script src="assets/js/signature.js"></script>
-<script src="assets/js/admin.js?v=20261102-sales-membership-summary"></script>
+<script src="assets/js/admin.js?v=20261102-sales-month-overview"></script>
 </body>
 </html>
