@@ -213,7 +213,7 @@ async function runWithButtonLoading(button, action, loadingLabel = 'Working…')
 }
 function closeModal() {
     document.getElementById('modalOverlay').classList.add('hidden');
-    document.getElementById('modalContent').parentElement.classList.remove('report-pdf-modal');
+    document.getElementById('modalContent').classList.remove('report-pdf-modal');
     stopQRScanner();
 }
 let pendingConfirmationAction = null;
@@ -2692,13 +2692,13 @@ function renderReports() {
     grid.innerHTML = `
         <div class="reports-toolbar">
             <div class="reports-toolbar-copy">
-                <strong>Export all reports</strong>
+                <strong>Export reports</strong>
                 <span>Dated reports use the selected month. Membership and inventory reports show current records.</span>
             </div>
             <div class="report-export-controls">
                 <label for="reportsExportMonth">Report month</label>
                 <input id="reportsExportMonth" type="month" aria-label="Choose a month for dated report records">
-                <button class="btn-primary" onclick="exportAllReports()"><i class="fas fa-file-zipper"></i> Export all PDFs</button>
+                <button class="report-icon-btn report-export-all-btn" type="button" onclick="exportAllReports()" aria-label="Download all reports as a ZIP file" title="Download all reports as ZIP"><i class="fas fa-file-zipper" aria-hidden="true"></i></button>
             </div>
         </div>
         ${groups.map(group => `
@@ -2715,9 +2715,10 @@ function renderReports() {
                                 <h4>${report.name}</h4>
                                 <p>${report.description}</p>
                             </div>
-                            <div class="report-card-actions">
-                                <button class="btn-sm" onclick="viewReport('${report.id}')"><i class="fas fa-eye"></i> View</button>
-                                <button class="btn-sm" onclick="printReportPDF('${report.id}')"><i class="fas fa-file-pdf"></i> Print / Save</button>
+                            <div class="report-card-actions" aria-label="${report.name} actions">
+                                <button class="report-icon-btn" type="button" onclick="viewReportPDF('${report.id}')" aria-label="Preview ${report.name}" title="Preview"><i class="fas fa-eye" aria-hidden="true"></i></button>
+                                <button class="report-icon-btn" type="button" onclick="printReportPDF('${report.id}')" aria-label="Print ${report.name}" title="Print"><i class="fas fa-print" aria-hidden="true"></i></button>
+                                <button class="report-icon-btn" type="button" onclick="downloadReportPDF('${report.id}')" aria-label="Download ${report.name} as PDF" title="Download PDF"><i class="fas fa-download" aria-hidden="true"></i></button>
                             </div>
                         </article>
                     `).join('')}
@@ -2869,11 +2870,12 @@ function viewReportPDF(type) {
             <button class="btn-sm" onclick="closeModal()">Close</button>
         </div>
     </div><iframe id="reportPdfPreviewFrame" class="report-pdf-preview-frame" title="Scrollable report PDF preview"></iframe>`);
-    document.getElementById('modalContent').parentElement.classList.add('report-pdf-modal');
+    document.getElementById('modalContent').classList.add('report-pdf-modal');
     printReportPDF(type, true);
 }
 
 function printReportPDF(type, inAppPreview = false) {
+    const selectedMonth = document.getElementById('reportsExportMonth')?.value || '';
     let reportWindow;
     if (inAppPreview) {
         reportWindow = document.getElementById('reportPdfPreviewFrame')?.contentWindow;
@@ -2954,6 +2956,13 @@ function printReportPDF(type, inAppPreview = false) {
                 product.category === 'Supplement' ? 'Not tracked' : product.stock
             ]
         }));
+    }
+
+    // Keep status and inventory reports as current snapshots. Dated activity
+    // reports follow the month selected in the Reports toolbar.
+    if (/^\d{4}-(0[1-9]|1[0-2])$/.test(selectedMonth)
+        && ['membership', 'archives', 'payment', 'sales', 'renewals', 'attendance'].includes(type)) {
+        rows = rows.filter(row => reportDateBelongsToMonth(dateForRow(row), selectedMonth));
     }
 
     const tableHTML = records => `<table><thead><tr>${columns.map(column => `<th>${escapeHTML(column)}</th>`).join('')}</tr></thead><tbody>${records.map(row =>
@@ -3205,6 +3214,37 @@ async function exportAllReports() {
     } catch (error) {
         console.error('Could not export monthly PDF reports:', error);
         toast(error.message || 'Could not create the monthly report archive.', 'error');
+    }
+}
+
+function downloadReportPDF(type) {
+    const selectedMonth = document.getElementById('reportsExportMonth')?.value || '';
+    if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(selectedMonth)) {
+        toast('Choose a month before downloading.', 'error');
+        return;
+    }
+    const names = {
+        membership: 'Membership Report',
+        'member-status': 'Member Status Report',
+        archives: 'Archives Report',
+        payment: 'Payment Report',
+        attendance: 'Attendance Report',
+        renewals: 'Membership Renewal Report',
+        inventory: 'Inventory Report',
+        sales: 'Sales Report'
+    };
+    try {
+        const pdfBlob = createMonthlyReportPDF(type, selectedMonth);
+        const url = URL.createObjectURL(pdfBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `${names[type] || 'Report'} (${selectedMonth}).pdf`;
+        link.click();
+        window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+        toast(`${names[type] || 'Report'} downloaded.`, 'success');
+    } catch (error) {
+        console.error('Could not download PDF report:', error);
+        toast(error.message || 'Could not create this PDF report.', 'error');
     }
 }
 
