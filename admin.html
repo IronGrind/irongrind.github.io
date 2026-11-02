@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IronGrind · Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261102-report-preview">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261102-sales-membership-summary">
 </head>
 <body class="dashboard-body">
 <div id="page-loader" class="page-loader" aria-label="Loading dashboard" role="status"><div class="loader-content"><img class="loader-mark" src="assets/images/iron-grind-mark.png" alt=""><div class="loader-brand">Iron<span>Grind</span></div><div class="loader-track"><span></span></div></div></div>
@@ -220,6 +220,7 @@
                                 <button class="admin-tab" data-sale-filter="products" onclick="switchSalesTransactionType('products')">Products <span class="badge" id="salesCountProducts">0</span></button>
                             </div>
                         </div>
+                        <div id="membershipSalesSummary" class="membership-sales-summary hidden"></div>
                         <div id="salesSubFilters" class="sales-subfilters hidden" aria-label="Filter by plan or product category"></div>
                         <div id="salesTable"></div>
                     </div>
@@ -274,6 +275,6 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script src="assets/js/signature.js"></script>
-<script src="assets/js/admin.js?v=20261102-report-preview"></script>
+<script src="assets/js/admin.js?v=20261102-sales-membership-summary"></script>
 </body>
 </html>

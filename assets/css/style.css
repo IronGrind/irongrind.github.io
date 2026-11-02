@@ -111,14 +111,15 @@ body.dashboard-body .low-stock-item { background-color: rgba(13,18,25,0.64); bor
 .report-icon-btn:hover { transform: translateY(-1px); border-color: rgba(195,75,75,.55); background: rgba(120,0,0,.2); color: #fff; }
 .report-icon-btn:focus-visible { outline: 2px solid #c34b4b; outline-offset: 3px; }
 .report-export-all-btn { border-color: rgba(195,75,75,.35); background: rgba(120,0,0,.2); color: #f0c2c2; }
-.sales-section-tabs { margin-bottom: 18px; }
+.sales-section-tabs { width: fit-content; margin-bottom: 16px; padding: 4px; border: 1px solid rgba(190,201,220,.1); border-radius: 14px; background: rgba(8,11,16,.55); }
+#salesTransactionsPanel, #walkinSalesPanel { padding: 16px; border: 1px solid rgba(190,201,220,.1); border-radius: 16px; background: rgba(10,13,19,.52); }
 .walkin-sales-content { padding-top: 4px; }
-.transaction-filter-row { display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; margin-bottom: 14px; flex-wrap: wrap; }
+.transaction-filter-row { display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; margin-bottom: 14px; padding: 12px 14px; border: 1px solid rgba(190,201,220,.1); border-radius: 12px; background: rgba(255,255,255,.025); flex-wrap: wrap; }
 .transaction-filter-row > p { color: #8b95a9; font-size: .8rem; }
 .transaction-filter-tabs { margin: 0; padding: 3px; }
 .transaction-filter-tabs .admin-tab { padding: 8px 12px; font-size: .76rem; }
 .transaction-filter-tabs .badge { font-size: .6rem; padding: 2px 6px; }
-.sales-subfilters { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; margin: -2px 0 14px; }
+.sales-subfilters { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; margin: 0 0 14px; }
 .sales-subfilter { display: inline-flex; align-items: center; gap: 9px; min-height: 32px; padding: 6px 11px; border: 1px solid #303030; border-radius: 30px; background: #111; color: #a4adc2; font: inherit; font-size: .74rem; cursor: pointer; }
 .sales-subfilter:hover { border-color: #555; color: #f1f3f7; }
 .sales-subfilter.active { border-color: #780000; background: rgba(120,0,0,.2); color: #fff; }
@@ -126,6 +127,22 @@ body.dashboard-body .low-stock-item { background-color: rgba(13,18,25,0.64); bor
 .sales-subfilter.active span { color: #e9baba; }
 .sales-product-filter { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; color: #8b95a9; font-size: .74rem; font-weight: 600; }
 .sales-product-filter select { max-width: min(280px, 52vw); min-height: 34px; padding: 6px 10px; border: 1px solid #303030; border-radius: 9px; background: #111; color: #e8edf5; font: inherit; font-weight: 400; }
+#salesTable .table-scroll { overflow: auto; border: 1px solid rgba(190,201,220,.1); border-radius: 12px; background: rgba(8,11,16,.45); }
+#salesTable .attendance-table th { position: sticky; top: 0; z-index: 1; background: #1b202a; }
+#salesTable .attendance-table tbody tr:hover { background: rgba(255,255,255,.035); }
+.membership-sales-summary { display: grid; gap: 12px; margin-bottom: 16px; padding: 14px; border: 1px solid rgba(190,201,220,.1); border-radius: 13px; background: rgba(255,255,255,.025); }
+.membership-sales-summary-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.membership-sales-summary-heading h3 { color: #f1f3f7; font-size: .9rem; }
+.membership-sales-summary-heading p { margin-top: 4px; color: #8b95a9; font-size: .75rem; }
+.membership-sales-summary-heading label { display: flex; align-items: center; gap: 8px; color: #8b95a9; font-size: .76rem; }
+.membership-sales-summary-heading input { min-height: 34px; padding: 5px 9px; border: 1px solid #393939; border-radius: 8px; background: #111; color: #f1f3f7; color-scheme: dark; font: inherit; }
+.membership-income-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 9px; }
+.membership-income-card { display: grid; align-content: start; gap: 5px; min-height: 86px; padding: 12px; border: 1px solid rgba(190,201,220,.1); border-radius: 11px; background: rgba(8,11,16,.5); }
+.membership-income-card span { color: #a4adc2; font-size: .72rem; }
+.membership-income-card strong { color: #f1f3f7; font-size: 1.02rem; }
+.membership-income-card small { color: #737d91; font-size: .68rem; }
+.membership-income-card.overall { border-color: rgba(195,75,75,.28); background: linear-gradient(135deg, rgba(120,0,0,.2), rgba(8,11,16,.5)); }
+.membership-income-card.overall strong { color: #ffdada; }
 .walkin-sales-summary .stat-card { min-height: 108px; padding: 16px 18px; }
 .walkin-sales-summary .stat-value { font-size: 1.55rem; }
 .progress-alert.notice { background: rgba(52,126,190,.12); border-color: rgba(52,126,190,.3); color: #8bc6f2; }

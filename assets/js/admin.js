@@ -28,6 +28,7 @@ let currentApprovalType = 'registration';
 let currentSalesView = 'transactions';
 let currentSalesTransactionType = 'all';
 let currentSalesSubType = 'all';
+let currentMembershipSalesMonth = localDateStr().slice(0, 7);
 let currentSalesProductName = 'all';
 let activeQRScanner = null;
 let qrScanHandled = false;
@@ -2450,18 +2451,35 @@ function getMembershipPlanFromSale(sale) {
 function renderSales() {
     const el = document.getElementById('salesTable');
     const membershipSales = sales.filter(isMembershipSale);
+    const monthMembershipSales = membershipSales.filter(sale => reportDateBelongsToMonth(sale.date || sale.createdAt, currentMembershipSalesMonth));
     const productSales = sales.filter(sale => !isMembershipSale(sale) && Boolean(getSaleProductCategory(sale)));
     document.getElementById('salesCountAll').textContent = sales.length;
     document.getElementById('salesCountMembership').textContent = membershipSales.length;
     document.getElementById('salesCountProducts').textContent = productSales.length;
-    const salesByType = { membership: membershipSales, products: productSales };
+    const salesByType = { membership: monthMembershipSales, products: productSales };
     const typedSales = currentSalesTransactionType === 'all' ? sales : (salesByType[currentSalesTransactionType] || []);
-    const planOptions = [...new Set(membershipSales.map(getMembershipPlanFromSale))].sort((a, b) => {
+    const planOptions = [...new Set(monthMembershipSales.map(getMembershipPlanFromSale))].sort((a, b) => {
         const order = ['Monthly', 'Half Month', 'Weekly', 'Walk-in', 'Other'];
         return (order.indexOf(a) < 0 ? order.length : order.indexOf(a)) - (order.indexOf(b) < 0 ? order.length : order.indexOf(b)) || a.localeCompare(b);
     });
     const productOptions = [...new Set(productSales.map(getSaleProductCategory).filter(Boolean))]
         .sort((a, b) => ['Supplement', 'Merchandise'].indexOf(a) - ['Supplement', 'Merchandise'].indexOf(b));
+    const membershipSummaryEl = document.getElementById('membershipSalesSummary');
+    if (currentSalesTransactionType === 'membership') {
+        const summary = getMembershipIncomeBreakdown(currentMembershipSalesMonth);
+        membershipSummaryEl.classList.remove('hidden');
+        membershipSummaryEl.innerHTML = `<div class="membership-sales-summary-heading"><div><h3>Membership income</h3><p>Paid membership transactions for the selected month</p></div><label>Month <input id="membershipSalesMonth" type="month" value="${currentMembershipSalesMonth}" aria-label="Choose membership sales month"></label></div>
+            <div class="membership-income-cards"><article class="membership-income-card overall"><span>Overall income</span><strong>${formatPeso(summary.totalIncome)}</strong><small>${summary.totalCount} paid sales</small></article>
+                ${summary.rows.map(row => `<article class="membership-income-card"><span>${escapeHTML(row.label)}</span><strong>${formatPeso(row.income)}</strong><small>${row.count} paid sales</small></article>`).join('')}</div>`;
+        document.getElementById('membershipSalesMonth').addEventListener('change', event => {
+            currentMembershipSalesMonth = /^\d{4}-(0[1-9]|1[0-2])$/.test(event.target.value) ? event.target.value : localDateStr().slice(0, 7);
+            currentSalesSubType = 'all';
+            renderSales();
+        });
+    } else {
+        membershipSummaryEl.classList.add('hidden');
+        membershipSummaryEl.innerHTML = '';
+    }
     const subfilterEl = document.getElementById('salesSubFilters');
     const subOptions = currentSalesTransactionType === 'membership' ? planOptions
         : currentSalesTransactionType === 'products' ? productOptions : [];
@@ -2477,7 +2495,7 @@ function renderSales() {
         subfilterEl.innerHTML = `<button class="sales-subfilter ${currentSalesSubType === 'all' ? 'active' : ''}" data-sale-subfilter="all">All ${currentSalesTransactionType === 'membership' ? 'plans' : 'products'} <span>${typedSales.length}</span></button>
             ${subOptions.map(option => {
                 const optionCount = currentSalesTransactionType === 'membership'
-                    ? membershipSales.filter(sale => getMembershipPlanFromSale(sale) === option).length
+                    ? monthMembershipSales.filter(sale => getMembershipPlanFromSale(sale) === option).length
                     : productSales.filter(sale => getSaleProductCategory(sale) === option).length;
                 return `<button class="sales-subfilter ${currentSalesSubType === option ? 'active' : ''}" data-sale-subfilter="${escapeHTML(option)}">${escapeHTML(option)} <span>${optionCount}</span></button>`;
             }).join('')}
@@ -2664,7 +2682,7 @@ function renderReports() {
             name: 'Membership',
             description: 'Member status, renewals, and record history.',
             reports: [
-                { id: 'membership', name: 'Membership Report', icon: 'fa-id-card', description: 'Current member plans and expiry dates.' },
+                { id: 'membership', name: 'Membership Report', icon: 'fa-id-card', description: 'Monthly member records, plan counts, and paid income.' },
                 { id: 'member-status', name: 'Member Status', icon: 'fa-user-check', description: 'Active, recently expired, and inactive member records.' },
                 { id: 'renewals', name: 'Renewal Report', icon: 'fa-rotate', description: 'Completed renewals and their receipts.' },
                 { id: 'archives', name: 'Archives', icon: 'fa-box-archive', description: 'Expired memberships, plan changes, and archived products.' }
@@ -2859,6 +2877,37 @@ function setReportPreviewZoom(change) {
     if (label) label.textContent = `${reportPreviewZoom}%`;
 }
 
+function getMembershipIncomeBreakdown(month) {
+    const breakdown = {
+        Monthly: { count: 0, income: 0 },
+        'Half Month': { count: 0, income: 0 },
+        WalkIn: { count: 0, income: 0 },
+        Other: { count: 0, income: 0 }
+    };
+    sales.filter(sale => sale.status === 'Paid'
+        && isMembershipSale(sale)
+        && (!month || reportDateBelongsToMonth(sale.date || sale.createdAt, month)))
+        .forEach(sale => {
+            const plan = getMembershipPlanFromSale(sale);
+            const key = plan === 'Monthly' ? 'Monthly'
+                : plan === 'Half Month' ? 'Half Month'
+                    : plan === 'Walk-in' ? 'WalkIn' : 'Other';
+            breakdown[key].count += 1;
+            breakdown[key].income += Number(sale.total) || 0;
+        });
+    const rows = [
+        { label: 'Monthly', ...breakdown.Monthly },
+        { label: 'Half Month', ...breakdown['Half Month'] },
+        { label: 'Walk-in (Daily)', ...breakdown.WalkIn },
+        { label: 'Other plans', ...breakdown.Other }
+    ];
+    return {
+        rows,
+        totalCount: rows.reduce((sum, row) => sum + row.count, 0),
+        totalIncome: rows.reduce((sum, row) => sum + row.income, 0)
+    };
+}
+
 function viewReportPDF(type) {
     reportPreviewZoom = 110;
     openModal(`<div class="report-pdf-preview-toolbar">
@@ -3001,6 +3050,15 @@ function printReportPDF(type, inAppPreview = false) {
             : '<p class="empty">No report records available.</p>';
     }
 
+    if (type === 'membership') {
+        const income = getMembershipIncomeBreakdown(selectedMonth);
+        const incomeRows = [
+            ...income.rows.map(row => ({ cells: [row.label, row.count, formatPeso(row.income)] })),
+            { cells: ['Overall membership income', income.totalCount, formatPeso(income.totalIncome)] }
+        ];
+        reportContent = `<section class="report-section membership-income-section"><div class="section-heading"><h2>Membership Income</h2><span>${income.totalCount} paid sales · ${formatPeso(income.totalIncome)}</span></div>${tableHTML(incomeRows)}</section>${reportContent}`;
+    }
+
     const generatedAt = new Date().toLocaleString();
     const logoURL = new URL('assets/images/iron-grind-mark.png', window.location.href).href;
     reportWindow.document.open();
@@ -3067,6 +3125,11 @@ function createMonthlyReportPDF(type, month) {
 
     if (type === 'membership') {
         sections.push(rowsFor(['Member', 'Plan', 'Started', 'Expires'], membersForMonth.map(member => [member.name, member.plan, member.startDate || '-', member.expiry || '-'])));
+        const income = getMembershipIncomeBreakdown(month);
+        sections.push(rowsFor(['Plan', 'Paid Sales', 'Income'], [
+            ...income.rows.map(row => [row.label, String(row.count), `PHP ${row.income.toFixed(2)}`]),
+            ['Overall membership income', String(income.totalCount), `PHP ${income.totalIncome.toFixed(2)}`]
+        ]));
     } else if (type === 'member-status') {
         sections.push(rowsFor(['Member', 'Username', 'Registration Source', 'Plan', 'Expires'], members.map(member => [
             member.name,
