@@ -7,6 +7,7 @@ let session;
 let supabaseMember = null;
 let supabaseAttendance = null;
 let supabaseProducts = null;
+let memberHasPendingRenewal = false;
 let customerAttendanceChannel = null;
 (function guardCustomer() {
     session = JSON.parse(
@@ -58,6 +59,7 @@ function getRenewalExpiryError(expiry) {
 function getRenewalGuidance(expiry) {
     const dateError = getRenewalExpiryError(expiry);
     if (dateError) return dateError;
+    if (memberHasPendingRenewal) return 'Your renewal request is waiting for gym approval. We will update your membership here after it is reviewed.';
     if (expiry < todayStr()) {
         return `Your membership expired on ${expiry}. You may still request renewal; if approved, the new period starts today.`;
     }
@@ -265,8 +267,10 @@ function updateMemberStatus() {
     }
     const today = todayStr();
     const expired = m.expiry < today;
-    if (expired) {
-        statusEl.innerHTML = `Your membership <strong style="color:#e74c3c;">expired</strong> on ${m.expiry}. Please renew at the gym.`;
+    if (memberHasPendingRenewal) {
+        statusEl.textContent = `Your renewal request is waiting for gym approval. Membership expiry: ${m.expiry}.`;
+    } else if (expired) {
+        statusEl.innerHTML = `Your membership <strong style="color:#e74c3c;">expired</strong> on ${m.expiry}. You can request renewal below.`;
     } else {
         statusEl.innerHTML = `Your <strong>${m.plan}</strong> membership is active · Expires ${m.expiry}`;
     }
