@@ -9,6 +9,7 @@ let supabaseAttendance = null;
 let supabaseProducts = null;
 let memberHasPendingRenewal = false;
 let customerAttendanceChannel = null;
+let customerRenewalChannel = null;
 (function guardCustomer() {
     session = JSON.parse(
         localStorage.getItem('irongrind_session') ||
@@ -341,17 +342,30 @@ function renderMembershipProgress() {
                 </div>
             </div>
 
-            ${expired ? `
+            ${memberHasPendingRenewal ? `
+            <div class="progress-alert notice">
+                <i class="fas fa-clock"></i>
+                Your renewal request is being reviewed. Check back here for your updated membership.
+            </div>` : expired ? `
             <div class="progress-alert">
                 <i class="fas fa-exclamation-triangle"></i>
-                Your membership has expired. Visit the front desk to renew.
-            </div>` : daysLeft <= 3 ? `
+                Your membership expired on ${escapeHTML(m.expiry)}. Submit a renewal request here to continue.
+                <button class="btn-sm" onclick="openMemberRenewalForm()">Request renewal</button>
+            </div>` : daysLeft <= 7 ? `
             <div class="progress-alert warn">
                 <i class="fas fa-bell"></i>
-                Only ${daysLeft} day${daysLeft === 1 ? '' : 's'} left — renew soon at the gym!
+                Your membership is nearing expiry. Submit a renewal request here when you are ready.
+                <button class="btn-sm" onclick="openMemberRenewalForm()">Request renewal</button>
             </div>` : ''}
         </div>
     `;
+}
+
+function openMemberRenewalForm() {
+    const form = document.getElementById('member-request');
+    if (form) form.open = true;
+    form?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    window.setTimeout(() => document.getElementById('mfPlan')?.focus(), 250);
 }
 
 // ===== ATTENDANCE HISTORY =====
@@ -655,6 +669,10 @@ async function submitMembershipForm(event) {
         }
 
         renewalFormMessage('Renewal request submitted to the admin for approval.', 'success');
+        memberHasPendingRenewal = true;
+        renderRenewalEligibility(member);
+        updateMemberStatus();
+        renderMembershipProgress();
         return;
     } catch (error) {
         console.error('Unexpected renewal submission error:', error);
@@ -985,9 +1003,12 @@ async function loadSupabaseMember() {
             }
         });
 
-    const [attendanceResult, productsResult] = await Promise.all([
+    const [attendanceResult, productsResult, renewalResult] = await Promise.all([
         client.from('attendance').select('*').eq('member_id', row.id).order('time_in', { ascending: false }),
-        client.from('products').select('*').eq('is_active', true).order('name')
+        client.from('products').select('*').eq('is_active', true).order('name'),
+        client.from('membership_applications').select('id')
+            .eq('auth_user_id', user.id).eq('application_type', 'renewal').eq('status', 'pending')
+            .limit(1).maybeSingle()
     ]);
     if (attendanceResult.error) {
         console.error('Could not load member attendance from Supabase:', attendanceResult.error);
@@ -1008,6 +1029,36 @@ async function loadSupabaseMember() {
             image: product.image_path || ''
         }));
     }
+    if (renewalResult.error) {
+        console.error('Could not load pending renewal status:', renewalResult.error);
+        memberHasPendingRenewal = false;
+    } else {
+        memberHasPendingRenewal = Boolean(renewalResult.data);
+    }
+    if (customerRenewalChannel) client.removeChannel(customerRenewalChannel);
+    customerRenewalChannel = client.channel(`customer-renewal-${row.id}`)
+        .on('postgres_changes', {
+            event: '*',
+            schema: 'public',
+            table: 'membership_applications',
+            filter: `auth_user_id=eq.${user.id}`
+        }, async () => {
+            const { data, error: refreshError } = await client.from('membership_applications').select('id')
+                .eq('auth_user_id', user.id).eq('application_type', 'renewal').eq('status', 'pending')
+                .limit(1).maybeSingle();
+            if (refreshError) {
+                console.error('Could not refresh pending renewal status:', refreshError);
+                return;
+            }
+            memberHasPendingRenewal = Boolean(data);
+            renderRenewalEligibility(supabaseMember);
+            updateMemberStatus();
+            renderMembershipProgress();
+        })
+        .subscribe();
+    renderRenewalEligibility(supabaseMember);
+    updateMemberStatus();
+    renderMembershipProgress();
 }
 
 function mapCustomerAttendanceRecord(record) {

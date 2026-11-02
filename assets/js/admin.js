@@ -355,7 +355,8 @@ function getMemberFollowupGroups() {
     const expiring = activeMembers.filter(member => member.expiry >= today
         && member.expiry <= expiringThrough && withoutPendingRenewal(member))
         .sort((a, b) => String(a.expiry).localeCompare(String(b.expiry)));
-    const lowAttendance = activeMembers.filter(member => member.startDate && member.startDate <= lowAttendanceSince)
+    const lowAttendance = activeMembers.filter(member => withoutPendingRenewal(member)
+        && member.startDate && member.startDate <= lowAttendanceSince)
         .map(member => ({
             ...member,
             visitCount: attendance.filter(record => String(record.memberId) === String(member.id)
@@ -393,11 +394,14 @@ function renderMemberFollowup() {
     list.innerHTML = `<div class="table-scroll followup-table-wrap"><table class="attendance-table followup-table">
         <thead><tr><th>Member</th><th>Plan</th><th>Follow-up</th><th></th></tr></thead>
         <tbody>${candidates.map(member => {
+            const dayLabel = days => `${days} day${days === 1 ? '' : 's'}`;
             const reason = currentFollowupView === 'attendance'
                 ? `${member.visitCount} visits in the last 14 days`
                 : currentFollowupView === 'expired'
-                    ? `Expired ${getDateDayDifference(member.expiry, todayStr())} day(s) ago`
-                    : `Expires in ${getDateDayDifference(todayStr(), member.expiry)} day(s)`;
+                    ? `Expired ${dayLabel(getDateDayDifference(member.expiry, todayStr()))} ago`
+                    : getDateDayDifference(todayStr(), member.expiry) === 0
+                        ? 'Expires today'
+                        : `Expires in ${dayLabel(getDateDayDifference(todayStr(), member.expiry))}`;
             return `<tr><td>${escapeHTML(member.name || 'Member')}</td><td>${escapeHTML(member.plan || '—')}</td><td>${escapeHTML(reason)}</td><td><button class="btn-sm" data-followup-member="${escapeHTML(member.id)}" data-followup-group="${currentFollowupView}">View member</button></td></tr>`;
         }).join('')}</tbody></table></div>`;
     list.querySelectorAll('[data-followup-member]').forEach(button => button.addEventListener('click', () => {
@@ -3360,6 +3364,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.setInterval(() => {
         captureExpiredMemberships();
         renderMembers();
+        renderMemberFollowup();
     }, 60 * 1000);
 
 });
