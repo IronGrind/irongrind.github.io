@@ -11,32 +11,32 @@ This chapter discusses the methodology used to develop **IronGrind: A Web-Based 
 **Figure 1.** Agile Methodology.
 
 
-Agile is an iterative system-development approach in which requirements guide the work, features are built in manageable increments, and the results of testing and review guide subsequent work. As shown in Figure 1, the process begins by planning IronGrind's workflows and priorities and designing the related pages, forms, data relationships, and access permissions. The team then develops a selected group of features and tests them against their requirements. Deployment in the cycle means preparing and checking an increment in its intended environment; review considers the test findings and any feedback actually collected. Those findings return to planning and help determine what to refine or build next. This cycle applies to the system's membership applications and renewals, attendance, inventory, sales, and reports. The final Launch stage represents release of the approved system for operational use after the required increments have been verified. Figure 1 describes this project's workflow; it does not claim use of a specific Agile framework or a fixed iteration length. Evaluation results are reported only after the planned evaluation activities have been completed.
+Agile is an iterative system-development approach in which stakeholder needs are gathered and prioritized, selected work is developed and tested in increments, and review results inform the next iteration. Figure 1 has two connected parts. The circular cycle places Develop, Test, and Review around the IronGrind project name: the team builds a selected increment, checks it against its requirements, and uses review feedback to refine the next increment. The lower project flow shows Data Gathering, Plan, and Design before Launch. This lower row represents the project's overall progression; Launch follows verification of the required increments rather than occurring at the end of every cycle. The work is organized around the gym's applicant/member and administrator workflows. The figure describes the Agile activities used to organize the project and does not prescribe a particular framework or iteration length.
 
 
 ### Requirements Planning
 
-The first step is to identify the gym's user workflows and organize the scope described in Chapters 1 and 2 into prioritized requirements. Account access and membership applications are considered alongside staff review and member access, followed by attendance, inventory, sales, and reporting. The selected requirements become the work for an increment, and each receives acceptance criteria that describe how the team will check whether it works as intended. Privacy and authorization requirements are considered across all features because the system handles personal and health-related information. The requirements selected here provide the basis for the designs in the next stage.
+Requirements planning organizes the workflows and scope described in Chapters 1 and 2 into a prioritized task list. Work begins with account access and membership applications, followed by staff review, member access, attendance, inventory, sales, and reporting. Each selected requirement is assigned acceptance criteria so the increment can be checked during construction. Privacy and authorization requirements apply throughout development because the system handles personal and health-related information.
 
 ### User Design
 
-Using the prioritized requirements, the team designs or refines the corresponding user workflows, page layouts, forms, reports, data relationships, and role permissions. For example, the design distinguishes pending applications from approved member records, keeps attendance as a separate operational record, and stores sales with their itemized lines. The architecture, use-case, and data-flow figures in this chapter summarize how these parts fit together. These designs are then represented in prototypes so that the intended workflows can be reviewed before or during construction.
+For each iteration, the relevant user workflows, page layouts, forms, reports, data relationships, and role permissions are designed or refined. The design distinguishes pending applications from approved member records, keeps attendance as a separate operational record, and stores sales with their itemized lines. The architecture, use-case, and data-flow figures in this chapter summarize the system design.
 
 ### Prototypes
 
-The prototype makes the designed workflows visible as an interactive, browser-based system. Applicants use the sign-in and registration pages to enter the application workflow. Members use the member portal to review membership information, display their QR code, view attendance history, and submit renewal requests for staff approval. Administrators use the dashboard to review applications and manage membership, staff-scanned attendance, products, sales, receipts, and reports. The prototype uses Supabase Auth and configured database services for supported operations. Its key pages are listed in the Forms section. Prototype review can reveal unclear steps or missing requirements; findings are fed back into the prioritized work before or during construction. Preparing the final environment and releasing the approved system are handled during implementation and launch.
+The system prototype is an interactive, browser-based version of the gym workflows. Applicants use the sign-in and registration pages to enter the application workflow. Members use the member portal to review membership information, display their QR code, view attendance history, and submit renewal requests for staff approval. Administrators use the dashboard to review applications and manage membership, staff-scanned attendance, products, sales, receipts, and reports. The prototype uses Supabase Auth and configured database services for supported operations. Its key pages are listed in the Forms section. Deployment and operational readiness are separate implementation activities.
 
 ### Construction
 
-The team constructs the selected increment using the HTML, CSS, and JavaScript client and Supabase authentication and PostgreSQL services. Database policies and functions support authorization and operational transactions. The completed increment is tested against the acceptance criteria established during planning. If a test identifies an issue, the team corrects it and checks it again; unresolved or newly discovered needs are recorded for prioritization. Once the increment passes the required checks, it can be prepared in the intended environment and reviewed. Test findings and any feedback actually collected inform the next planning cycle, connecting construction to continued refinement.
+Selected requirements are implemented in the HTML, CSS, and JavaScript client and the Supabase authentication and PostgreSQL services. Database policies and functions support authorization and operational transactions. Each increment is checked against its acceptance criteria. Issues identified during verification are corrected or returned to the prioritized task list for a later increment.
 
 ### Implementation
 
-Implementation prepares the verified increments for operational use. The team configures the website and Supabase project for the intended environment, applies the approved access policies, and prepares administrator access. Deployment refers to this environment preparation and release check; Launch is the point at which the approved system is made available for the gym's intended workflows. Staff orientation supports the transition to use. These activities follow testing and review, and their outcomes are reported only after they have actually been completed.
+The implementation phase follows verification of the required increments. It includes configuring the website and Supabase project for the intended environment, applying the approved access policies, preparing administrator accounts, and orienting staff to the supported workflows. Deployment and user-orientation outcomes are reported after those activities are completed.
 
 ### Research Design and Development Approach
 
-This study produces a web-based information system for a defined operational setting. Its development follows the connected activities in Figure 1: planned requirements guide design and prototyping; selected designs guide construction; testing checks each increment; and deployment and review findings guide refinement before the approved system is launched. Agile describes how the software work is organized; it is distinct from the research design used to evaluate the completed system. Chapter 1 establishes the system objectives, while Chapter 2 identifies the DeLone and McLean Information Systems Success Model as a possible evaluation framework. The final formal research-design label and evaluation method should follow the design approved for the study. No experimental effect or user-evaluation outcome is claimed in this chapter.
+This study produces a web-based information system for a defined operational setting. The system-development work is organized into requirements planning, user design, construction, verification, and implementation activities described above. Agile describes how the software work is organized; it is distinct from the research design used to evaluate the completed system. Chapter 1 establishes the system objectives and Chapter 2 identifies the DeLone and McLean Information Systems Success Model as a possible evaluation framework. The final formal research-design label and evaluation method should follow the design approved for the study. No experimental effect or user-evaluation outcome is claimed in this chapter.
 
 ### Study Locale
 
@@ -94,9 +94,9 @@ The functional requirements describe the operations available to applicants, mem
 | FR-01 | Authentication and access | Users authenticate through Supabase Auth. Administrator and member access is governed by profile roles and database authorization policies. |
 | FR-02 | Online application | An applicant submits registration details through the website. The application is stored for administrator review and is not automatically an active membership. If the applicant attempts to log in while the application is pending, the website displays the pending status. |
 | FR-03 | Application review | Authorized staff view, approve, or reject registration and renewal applications. The decision and application status are retained. |
-| FR-04 | Membership management | The administrator can add members, view the member register, change a member's plan separately from a renewal request, and record a counter renewal. |
+| FR-04 | Membership management | Authorized staff manage member records, plan and membership dates, status, payment information, and membership lifecycle records. |
 | FR-05 | Member portal | An approved member views membership status and progress, personal attendance history, and a QR code; updates are limited to supported account and personal-information fields. |
-| FR-06 | Renewal request | A member can submit a renewal request at any time and select a plan. The request remains pending until administrator review; approval applies the selected plan and price. For an active membership, the selected plan duration extends from the current expiry. For an expired membership, the new period starts on the approval date. |
+| FR-06 | Renewal request | A member can submit a renewal request at any time for staff review. A request is not an automatic renewal. Approval carries unused active membership time forward by extending the current expiry; an expired membership restarts from the approval date. |
 | FR-07 | Attendance | Staff scan a member's QR code to record check-in and check-out. Members can view their own attendance history; the member does not record their own attendance. |
 | FR-08 | Product and inventory management | Authorized staff maintain products and inventory. Supplements use gram-based quantities; merchandise uses item quantities and stock tracking. |
 | FR-09 | Sales and receipts | Staff record in-person product and membership sales for members or walk-in customers. The system stores a sale record and its line items and supports receipt/report views. |
@@ -110,11 +110,11 @@ The functional requirements describe the operations available to applicants, mem
 
 **FR-03 â€” Application review.** The administrator queue presents new registration and renewal requests for decision. Approval or rejection records the status and review metadata. Registration approval creates or links a member record; renewal approval updates an existing member's current membership after retaining the prior state. A successful decision should be reflected in the member list and reports after data refresh.
 
-**FR-04 — Membership management.** The administrator can add a member and view the member register. The administrator can also perform a standalone plan change or record a counter renewal. A standalone plan change preserves the previous plan and dates in membership history and creates a transaction record. A counter renewal applies the selected plan and starts its period on the transaction date. General editing of member personal-profile fields is not available in the admin dashboard; members can update only the supported fields in their own account settings.
+**FR-04 â€” Membership management.** The administrator can view the member register and perform supported plan-change or counter-renewal actions. A current membership record contains the member's current plan and dates. Expired periods and plan changes are retained in archive/history records so that changing current values does not erase the earlier period.
 
 **FR-05 â€” Member portal.** An authenticated member sees permitted information associated with their own account, including current membership data, QR identifier, and attendance history. Profile changes are limited to fields offered by the portal. Data access must remain scoped to the signed-in identity by database policies.
 
-**FR-06 — Renewal request.** A member may submit a renewal request at any time and select the plan for the requested renewal. The application remains pending until administrator review and does not change the current membership by itself. On approval, the selected plan and price are applied. If the membership is still active, the selected plan duration is added after the current expiry, preserving unused days. If the membership has expired, the new period starts on the approval date. The renewal sale and prior/new membership details are recorded.
+**FR-06 â€” Renewal request.** A member may submit a renewal request at any time. The application remains pending until staff review and does not change the current membership by itself. On approval, the selected plan duration is added after the current expiry when the membership is still active, preserving unused days. If the membership has expired, the new period starts on the approval date. The renewal sale and prior/new membership details are recorded.
 
 **FR-07 â€” Attendance.** Staff use the administrator scanner to resolve a QR identifier and record a visit. A scan checks for an existing open visit to determine whether the action is check-in or check-out. The member portal can display the member's own history but does not provide the staff attendance-write function.
 
@@ -133,7 +133,7 @@ Input requirements identify the information supplied to the system by applicants
 | Input requirement | Description |
 | --- | --- |
 | Account credentials | Email and password are submitted to Supabase Auth. |
-| Registration or renewal application | Applicant or renewing-member details and selected plan, contact and emergency-contact information, goals, health declarations, and signature where collected by the form. A member selects the plan for a portal renewal request. |
+| Registration or renewal application | Applicant and plan details, contact and emergency-contact information, goals, health declarations, and signature where collected by the form. |
 | Attendance action | Staff scans a member QR code and records check-in or check-out. |
 | Product and inventory update | Administrator enters product details, price, unit, and merchandise stock quantity where applicable. |
 | Sale transaction | Staff enters customer type and name, products or membership, quantities, and transaction details. |
@@ -165,7 +165,7 @@ Outputs are the responses and records produced after the system validates a requ
 | Output requirement | Description |
 | --- | --- |
 | Authentication and login result | Role-appropriate routing or an authentication error; pending applicants see their application status during login. |
-| Application and membership result | The recorded application status and, after administrator review, the decision and updated membership information. An approved renewal applies the selected plan and price and records its membership dates, history, and transaction. |
+| Application and membership result | The recorded application status and, after staff review, the decision and updated membership information. |
 | Member portal information | Membership details, QR code, personal attendance history, and active product catalog permitted for the member. |
 | Attendance confirmation | Confirmation of staff-recorded check-in/check-out and permitted attendance history. |
 | Receipt | Sale details, line items, quantities, prices, customer information, and total. |
@@ -254,22 +254,20 @@ The architecture separates interface responsibilities from record storage and au
 
 ### Data Process Modeling
 
-Data process modeling describes how information enters IronGrind, which processes handle it, where records are stored, and what results are returned to applicants, members, and administrators. The model is based on the current Supabase schema and implemented workflows.
+Data process modeling describes how information enters IronGrind, which processes handle it, where records are stored, and what results are returned to applicants, members, and administrators. The model is based on the current Supabase schema and implemented workflows. Email notification is shown only as a planned feature.
 
 #### Diagrams
 
-The diagrams that follow present the system at different levels. The Gane and Sarson system data flow diagram gives an overview of how the Administrator and Member / Applicant exchange information with the main system process and its data store. The Level 1 data-flow diagram expands the system into its processes and data stores. The use-case diagram groups functions by actor, and the ERD describes the database relationships that support those functions.
+The diagrams that follow present the system at different levels. The context diagram defines the system boundary and external exchanges. The Level 1 data-flow diagram expands the system into processes and stores. The use-case diagram groups functions by actor, and the ERD describes the database relationships that support those functions.
 
-##### System Data Flow Diagram
+##### Context Diagram
 
-![Figure 3. IronGrind system data flow diagram](iron-grind-context-diagram.svg)
+![Figure 3. IronGrind system context diagram](iron-grind-context-diagram.svg)
 
-**Figure 3.** System data flow diagram of IronGrind using Gane and Sarson notation.
+**Figure 3.** System context diagram of IronGrind.
 
 
-Figure 3 presents a high-level view of how information moves through IronGrind, using the Gane and Sarson symbols required for the study. The rectangular shapes on the left represent the external entities: the Administrator and the Member / Applicant. The rounded process shape in the center, numbered 1.0, represents the IronGrind Membership and Operations System. The data-store shape on the right, labeled D1, represents the Supabase database. The labeled arrows show information exchanged between these parts; they describe data movement rather than the order of user actions.
-
-The Administrator sends sign-in credentials, application review decisions, membership and operational updates, walk-in sale entries, and report requests to process 1.0. In response, the system provides dashboard information, application and attendance records, inventory and sales records, receipts, and reports. The Member / Applicant sends sign-in credentials, registration and membership application details, renewal requests, and profile requests. The system returns the applicable application status, membership details, attendance history, active product catalog, and account information. Process 1.0 saves and updates membership, application, attendance, inventory, and sales records in D1, and retrieves stored records when system features need them. Walk-in customers do not access the system directly; an administrator records their purchases.
+Figure 3 sets the boundary around IronGrind as a single system, without showing its internal modules or database tables. Applicants and members send credentials, registration or renewal details, and supported profile requests into that boundary. IronGrind returns authentication results and the membership, attendance, or active catalog information their role permits. Administrators send review decisions, member and product updates, sale entries, and report filters; the system returns updated records, receipts, and reports. A walk-in customer is represented through the staff-entered purchase rather than a direct system account. Supabase Auth and Supabase data services appear outside the application boundary because they provide authentication and database services to the website. The email exchange is planned and should be read as a future integration, not a current system output.
 
 
 ##### Data Flow Diagram
@@ -284,36 +282,36 @@ Figure 4 decomposes IronGrind into eight Level 1 processes. Processes 1.0–8.0 
 
 **Identity path.** Credentials move from the user to the authentication process and Supabase Auth. After authentication, the profile role is read to determine the appropriate application route. Database requests then carry the authenticated identity so policies can evaluate the request.
 
-**Application path.** Applicant details enter the application process and are stored in D2. Administrator decisions read the pending application and write its status and review metadata. An approved registration produces or links a D3 member record; a renewal uses the existing D3 member. Related transactions and lifecycle events are recorded in D6/D7 and D8 when the corresponding operation succeeds.
+**Application path.** Applicant details enter process 2.0 and are stored in D2. Administrator decisions read the pending application and write its status and review metadata. An approved registration produces or links a D3 member record and records the applicable membership transaction. Renewal requests remain pending in D2 until reviewed; process 3.0 applies an approved renewal and records its membership-history and transaction details in D8, D6, and D7.
 
-**Member portal path.** The signed-in member's request is checked against their identity and permitted data access. The portal reads D3 for current membership information, D4 for attendance history, D5 for the active catalog, and D1 for profile details where needed. A renewal request writes to D2 and awaits an administrator response.
+**Member portal path.** Process 4.0 checks the signed-in member's identity and permitted data access. It reads D3 for current membership information, D4 for attendance history, D5 for the active catalog, and D1 for profile details where needed. A renewal request writes to D2 and awaits administrator review through process 2.0; approval is applied by process 3.0.
 
-**Attendance path.** A staff scan supplies a QR identifier to process 4.0. The process reads D3 to resolve the member and D4 to determine whether an open attendance visit exists. It writes a new check-in or updates the open row with a check-out timestamp, then returns confirmation to staff.
+**Attendance path.** A staff scan supplies a QR identifier to process 5.0. The process reads D3 to resolve the member and D4 to determine whether an open attendance visit exists. It writes a new check-in or updates the open row with a check-out timestamp, then returns confirmation to staff.
 
-**Inventory and sales path.** An administrator's product changes write to D5. An in-person sale for a member or walk-in customer can contain product or membership lines. Product sales read D5 to validate the item and applicable merchandise quantity, then write the transaction header to D6 and itemized lines to D7. Membership transactions associated with an approval, renewal, or plan change also update the applicable member/history records in D3/D8 and transaction records in D6/D7. The saved result is used to display a receipt and refresh operational views.
+**Inventory and sales path.** Process 6.0 writes administrator product changes to D5. Process 7.0 records in-person product or membership sales for members or walk-in customers served by staff. It reads D3 or D5 as needed, writes the transaction header to D6 and itemized lines to D7, and updates merchandise stock through D5 where applicable. Membership lifecycle updates remain with process 3.0.
 
-**Reporting path.** The report process reads the data stores relevant to the selected report, applies the configured date/status grouping, and returns a view or export to the administrator. It does not change source operational records as part of ordinary report viewing. Email is not a live path in the current deployment.
+**Reporting path.** Process 8.0 reads the data stores relevant to the selected report, applies the configured date/status grouping, and returns a view or print/export output to authorized staff. It does not change source operational records as part of ordinary report viewing.
 
 
 ### Data Process Explanations
 
-The Level 1 diagram can be read as a sequence of related responsibilities. Each process validates its input, uses only the records needed for its task, and returns the corresponding result.
+The Level 1 diagram shows eight responsibilities mapped to the ten functional requirements. FR-02/FR-03 and FR-04/FR-06 are grouped because each pair shares a connected workflow; all other requirements have a dedicated process. Each process validates its input, uses only the records needed for its task, and returns the corresponding result.
 
-**1.0 Authenticate User.** Supabase Auth verifies submitted credentials and provides the authenticated session. The application reads the associated profile role to route the account to the member or administrator interface. Pending applicants receive an application-status response; they are not treated as approved members.
+**1.0 Authenticate and Manage Access (FR-01).** Supabase Auth verifies submitted credentials and provides the authenticated session. The application reads the associated profile role to route the account to the member or administrator interface. Pending applicants receive an application-status response; they are not treated as approved members.
 
-**2.0 Process Membership Applications.** The system records registration or renewal details in the applications store. An authorized administrator reviews the request. Approval creates or updates the member record and records the associated transaction where configured; rejection updates the application status.
+**2.0 Submit and Review Applications (FR-02, FR-03).** The system stores registration and renewal submissions in D2. An authorized administrator reviews pending requests and records approval or rejection. An approved registration creates or links a D3 member record and records the applicable transaction; renewal requests are passed to process 3.0 after approval. Submission alone does not activate or renew a membership.
 
-**3.0 Manage Member Portal.** A signed-in member requests permitted membership, attendance, catalog, or profile information. The system returns records allowed for that member and stores a renewal request for staff review.
+**3.0 Manage Membership and Renewals (FR-04, FR-06).** Authorized administrators manage member records and supported membership changes. Members can submit renewal requests through process 4.0, but only staff approval changes the membership. On approval, the system preserves unused active time or starts an expired membership on the approval date, records lifecycle history, and stores the applicable transaction.
 
-**4.0 Record Attendance.** Staff scan a member QR code. The system resolves the member and either records a check-in or closes the member's open visit. The QR code identifies a member for staff use; it does not grant entry by itself.
+**4.0 Provide Member Portal (FR-05).** A signed-in member views permitted membership details, QR code, attendance history, active catalog, and supported personal information. A renewal request is written to D2 for staff review. Member access remains scoped to the signed-in identity.
 
-**5.0 Manage Inventory.** An authorized administrator creates, edits, or archives product records. Supplement prices and quantities use gram units; merchandise uses item units and tracked stock. The active catalog is returned to permitted views.
+**5.0 Record Attendance (FR-07).** Staff scan a member QR code. The system resolves the member and either records a check-in or closes the member's open visit. The QR code identifies a member for staff use; it does not grant entry by itself, and members cannot record their own attendance.
 
-**6.0 Process In-Person Sales and Receipts (FR-09).** Staff record product or membership sales for members or walk-in customers. The system validates the selected items, records a sale header and itemized lines, updates merchandise stock when applicable, and provides receipt details. Membership changes and application decisions remain handled by process 2.0; this process records the corresponding counter-sale transaction.
+**6.0 Manage Products and Inventory (FR-08).** An authorized administrator creates, edits, or archives product records. Supplement prices and quantities use gram units; merchandise uses item units and tracked stock. The active catalog is returned to permitted views.
 
-**7.0 Query Reports and History.** An administrator selects a report and available filters. The system reads the relevant membership, attendance, inventory, sales, or history records and returns the corresponding view or export.
+**7.0 Process Sales and Receipts (FR-09).** Staff record product or membership sales for members or walk-in customers. The system validates selected items, records the sale header and itemized lines, updates merchandise stock when applicable, and provides receipt details. Membership lifecycle changes are handled by process 3.0.
 
-**8.0 Email Notifications (planned).** Approval and expiry events may be used by a future notification integration. No external provider is configured, so this process currently produces no email output.
+**8.0 Generate Operational Reports (FR-10).** Authorized staff select a report and available filters. The system reads the relevant membership, attendance, inventory, sales, or history records and returns the corresponding view, print, or save/export output.
 
 ### Operational Workflow Details
 
@@ -403,7 +401,7 @@ Each use case describes a user goal and its normal result. The alternate paths i
 | --- | --- |
 | Primary actor | Member submits; administrator decides |
 | Preconditions | The member has an existing member record with a valid expiry date and no pending renewal request. |
-| Main flow | The member selects a renewal plan and submits a request. The administrator reviews it and approves or rejects it. On approval, the selected plan and price are applied, prior and new membership values are retained, the current membership is updated, and the transaction is recorded. |
+| Main flow | The member submits a renewal request. The administrator reviews it and approves or rejects it. On approval, prior and new membership values, the current membership update, and the transaction are recorded. |
 | Alternate flow | If the member record or expiry date cannot be verified, submission is refused with an explanatory message. A second pending request is not accepted. If a request is already decided, the pending-only update should not apply again. |
 | Postcondition | The request has a recorded decision; only an approved renewal updates current membership dates. |
 
@@ -453,7 +451,7 @@ The ERD is a database structure diagram. Primary keys identify rows; foreign key
 
 **Authentication and profiles.** Supabase manages authentication identities in `auth.users`. The `profiles` row stores the application role and account information. A profile's identifier corresponds to its Auth user.
 
-**Applications and members.** `membership_applications` stores registration and renewal requests and their review state. Renewal requests link to an existing member through `member_id`; a registration application can be linked to at most one created member through the unique `members.application_id` field. Either link can be absent when it does not yet apply. The nullable unique `members.auth_user_id` link permits no more than one member row per Auth user, while profiles can exist without a corresponding member record.
+**Applications and members.** `membership_applications` stores registration and renewal requests and their review state. An application may refer to a member after the account is approved or when it represents an existing member's renewal. `members` stores approved membership information. The nullable unique `members.auth_user_id` link permits no more than one member row per Auth user.
 
 **Attendance and membership history.** Each attendance row refers to the member whose visit it records; a member can have multiple visits. Membership history stores lifecycle events such as expiration, renewal, and plan change, with prior and new values where available.
 
@@ -461,7 +459,7 @@ The ERD is a database structure diagram. Primary keys identify rows; foreign key
 
 **Profile-to-identity relationship.** Each application profile uses the same UUID as its Auth identity. The Auth service owns credentials, while the `profiles` table owns the application role and display information. Deleting an Auth identity cascades to its profile; application records reference Auth identities according to their defined deletion rules.
 
-**Application-to-member relationship.** Applications are stored independently from members so a pending request exists before approval. A registration approval can link at most one resulting member to its application through the unique `members.application_id` foreign key. A renewal application links to an existing member through `membership_applications.member_id`, so one member can have multiple renewal requests over time. The Auth link on a member is nullable and unique, allowing a staff-created member row without a portal identity while preventing two member rows from sharing one Auth user.
+**Application-to-member relationship.** Applications are stored independently from members so a pending request exists before approval. A registration approval can link the resulting member to its application. A renewal application links to an existing member. The Auth link on a member is nullable and unique, allowing an imported or staff-created member row without a portal identity while preventing two member rows from sharing one Auth user.
 
 **Member-to-attendance relationship.** One member may have many attendance rows, and each attendance row belongs to one member. The foreign key is required and restricts deletion while attendance history remains. Each row stores a time-in and optional time-out; the check constraint requires the checkout not to precede check-in.
 
@@ -479,14 +477,14 @@ These links support the reports and workflows described in the process model. Th
 
 | Process | Input | Data stores or services used | Output |
 | --- | --- | --- | --- |
-| 1.0 Authenticate User (FR-01) | Member/applicant or administrator credentials | Supabase Auth; D1 `profiles` for role lookup | Authenticated session and role-based routing, or an authentication error. |
-| 2.0 Process Membership Applications (FR-02, FR-03, FR-04, FR-06) | Registration or renewal details; administrator approval or rejection; supported membership changes | D2 `membership_applications`; D3 `members`; D8 `membership_history`; D6 `sales` and D7 `sale_items` when a membership transaction is recorded | Updated application status, member and membership-history records, and related transaction result. |
-| 3.0 Manage Member Portal (FR-05) | Member requests, supported profile updates, renewal submissions | D1 `profiles`; D2 `membership_applications`; D3 `members`; D4 `attendance`; D5 `products` | Member's permitted membership, attendance, and active product information; renewal or update result. |
-| 4.0 Record Attendance (FR-07) | Staff QR scan and check-in/check-out action | D3 `members` for member lookup; D4 `attendance` for attendance records | Saved staff-recorded attendance event and confirmation; attendance history for permitted member access. |
-| 5.0 Manage Inventory (FR-08) | Administrator product, price, category, or stock changes | D5 `products` | Updated product and inventory records; active catalog data for members. |
-| 6.0 Process In-Person Sales and Receipts (FR-09) | Staff-entered member or walk-in customer details and product or membership sale items | D5 `products` for product validation and stock; D3 `members` for member sales; D6 `sales`; D7 `sale_items`; D8 `membership_history` when a membership change is recorded by process 2.0 | Validated product or membership sale, receipt details, and applicable merchandise stock update. |
-| 7.0 Query Reports and History (FR-10) | Authorized administrator report type and filters, including date range | D2 `membership_applications`; D3 `members`; D4 `attendance`; D5 `products`; D6 `sales`; D7 `sale_items`; D8 `membership_history` | Dashboard summaries, filtered report data, and available print/export outputs. |
-| 8.0 Email Notifications (planned; not an FR) | Future approval or expiry events | No live notification store or external provider configured | No email output is currently produced; this process remains planned and outside current functional scope. |
+| 1.0 Authenticate and Manage Access (FR-01) | Applicant/member/administrator credentials | Supabase Auth; D1 `profiles` | Authenticated session and role-based routing, or an authentication error. |
+| 2.0 Submit and Review Applications (FR-02, FR-03) | Registration or renewal details; administrator approval or rejection | D2 `membership_applications`; D3 `members`; D6 `sales`; D7 `sale_items` for an approved registration transaction | Updated application status; approved registration linked to a member and applicable transaction. |
+| 3.0 Manage Membership and Renewals (FR-04, FR-06) | Supported member changes; approved renewal request | D2 `membership_applications`; D3 `members`; D6 `sales`; D7 `sale_items`; D8 `membership_history` | Updated membership, retained lifecycle history, and applicable transaction result. |
+| 4.0 Provide Member Portal (FR-05) | Member requests, supported profile updates, renewal submission | D1 `profiles`; D2 `membership_applications`; D3 `members`; D4 `attendance`; D5 `products` | Member's permitted membership, QR, attendance, catalog, and account information; renewal submission result. |
+| 5.0 Record Attendance (FR-07) | Staff QR scan and check-in/check-out action | D3 `members`; D4 `attendance` | Saved staff-recorded attendance event and confirmation. |
+| 6.0 Manage Products and Inventory (FR-08) | Administrator product, price, category, archive, or stock changes | D5 `products` | Updated product and inventory records; active catalog data. |
+| 7.0 Process Sales and Receipts (FR-09) | Staff-entered member or walk-in customer details and product or membership sale items | D3 `members`; D5 `products`; D6 `sales`; D7 `sale_items` | Validated product or membership sale, receipt details, and applicable merchandise stock update. |
+| 8.0 Generate Operational Reports (FR-10) | Authorized administrator report type and filters, including date range | D2 `membership_applications`; D3 `members`; D4 `attendance`; D5 `products`; D6 `sales`; D7 `sale_items`; D8 `membership_history` | Dashboard summaries, filtered report data, and available print/export outputs. |
 
 ### Data Stores
 
@@ -507,18 +505,18 @@ IronGrind is a browser-based membership and operations system for applicants, me
 
 ## Data Dictionary
 
-This data dictionary summarizes the public-schema fields and relationships defined in the project SQL. Bounded values use `VARCHAR(n)`, where `n` is the maximum number of characters; free-form declarations, notes, and stored file paths remain `TEXT`. The length migration checks existing values and stops rather than truncating data if any value exceeds a declared limit. Supabase Auth manages credentials separately from these application tables.
+This data dictionary summarizes the public-schema fields and relationships defined in the project SQL. Supabase Auth manages credentials separately from these application tables.
 
 | Entity | Key fields and data types | Purpose and relationships |
 | --- | --- | --- |
-| `profiles` | `id` UUID (PK, Auth FK); `email` VARCHAR(254); `username` VARCHAR(30); `full_name` VARCHAR(150); `role` VARCHAR(20); optional `account_status` TEXT; timestamps | User profile and role used by the application. `username` is unique. |
-| `members` | `id` UUID (PK); `auth_user_id` UUID (nullable, unique Auth FK); `application_id` UUID (nullable, unique FK); `full_name` VARCHAR(150); `email` VARCHAR(254); `username` VARCHAR(30); `mobile` VARCHAR(11); `date_of_birth` DATE; `age` SMALLINT; `height`, `weight_kg` NUMERIC; `height_unit` VARCHAR(3); `sex` VARCHAR(30); `plan` VARCHAR(30); `status` VARCHAR(20); `registration_source` VARCHAR(40); `emergency_contact` JSONB; `plan_price`, `paid` NUMERIC; membership dates; `fitness_goals`, `health_conditions` TEXT[]; `other_medical_conditions`, `signature_path` TEXT; timestamps | Approved member and membership record. Referenced by applications, attendance, sales, sale items, and membership history. |
-| `membership_applications` | `id` UUID (PK); `auth_user_id` UUID (required Auth FK); `member_id` UUID (nullable FK); `application_type` VARCHAR(20); `full_name` VARCHAR(150); `email` VARCHAR(254); `username` VARCHAR(30); `mobile` VARCHAR(11); `plan` VARCHAR(30); `status` VARCHAR(20); demographic, health, and signature fields; submission/review timestamps; `reviewed_by` UUID (nullable FK to `profiles.id`) | Registration and renewal requests and their review state. `member_id` identifies the existing member for renewal requests; `reviewed_by` identifies the reviewing profile. |
+| `profiles` | `id` UUID (PK, Auth FK); `email`, `username`, `full_name`, `role`, `account_status` TEXT; timestamps | User profile and role used by the application. `username` is unique. |
+| `members` | `id` UUID (PK); `auth_user_id` UUID (nullable, unique Auth FK); `application_id` UUID (nullable FK); `full_name`, `email`, `username`, `mobile` TEXT; `date_of_birth` DATE; `age` SMALLINT; `height`, `weight_kg` NUMERIC; `height_unit`, `sex`, `plan`, `status`, `registration_source` TEXT; `emergency_contact` JSONB; `plan_price`, `paid` NUMERIC; membership dates; `fitness_goals`, `health_conditions` TEXT[]; `other_medical_conditions`, `signature_path` TEXT; timestamps | Approved member and membership record. Referenced by applications, attendance, sales, sale items, and membership history. |
+| `membership_applications` | `id` UUID (PK); `auth_user_id` UUID (required Auth FK); `member_id` UUID (nullable FK); `application_type`, `status`, applicant and plan details; demographic, health, and signature fields; submission/review timestamps; `reviewed_by` UUID (FK to `auth.users.id`) | Registration and renewal requests and their review state. `member_id` can be empty before a member is linked. |
 | `attendance` | `id` UUID (PK); `member_id` UUID (FK); `time_in`, `time_out`, `created_at` TIMESTAMPTZ; `recorded_by` UUID (Auth FK) | Staff-recorded check-in and check-out. A member may have multiple attendance records. |
-| `products` | `id` UUID (PK); `name` VARCHAR(120); `category` VARCHAR(20); `unit` VARCHAR(12); `size` VARCHAR(30); `image_path` TEXT; `price_per_unit` NUMERIC; `stock` INTEGER; `is_active` BOOLEAN; timestamps | Product catalog and inventory. Supplements use gram units; merchandise uses item units and stock. |
-| `sales` | `id` UUID (PK); `receipt_number` VARCHAR(64) (unique); `customer_type` VARCHAR(15); `customer_name` VARCHAR(150); `status` VARCHAR(12); `member_id` UUID (nullable FK); `total` NUMERIC; `sold_at` TIMESTAMPTZ; `processed_by` UUID (Auth FK) | Sale header and receipt information. A sale may be associated with a member or a walk-in customer. |
-| `sale_items` | `id` UUID (PK); `sale_id` UUID (FK); `product_id` UUID (nullable FK); `item_name` VARCHAR(150); `category` VARCHAR(20); `unit` VARCHAR(12); `quantity` NUMERIC; `unit_price`, `line_total` NUMERIC | Itemized sale lines. Product reference can be null; item name and price are stored on the sale line. |
-| `membership_history` | `id` UUID (PK); `member_id` UUID (FK); `event_type` VARCHAR(30); previous/new plan VARCHAR(30); `notes` TEXT; previous/new prices NUMERIC; previous/new dates DATE; `recorded_at` TIMESTAMPTZ; `recorded_by` UUID (Auth FK) | Expiration, renewal, and plan-change history for a member. |
+| `products` | `id` UUID (PK); `name`, `category`, `unit`, `size`, `image_path` TEXT; `price_per_unit` NUMERIC; `stock` INTEGER; `is_active` BOOLEAN; timestamps | Product catalog and inventory. Supplements use gram units; merchandise uses item units and stock. |
+| `sales` | `id` UUID (PK); `receipt_number` TEXT (unique); `customer_type`, `customer_name`, `status` TEXT; `member_id` UUID (nullable FK); `total` NUMERIC; `sold_at` TIMESTAMPTZ; `processed_by` UUID (Auth FK) | Sale header and receipt information. A sale may be associated with a member or a walk-in customer. |
+| `sale_items` | `id` UUID (PK); `sale_id` UUID (FK); `product_id` UUID (nullable FK); `item_name`, `category`, `unit` TEXT; `quantity` NUMERIC; `unit_price`, `line_total` NUMERIC | Itemized sale lines. Product reference can be null; item name and price are stored on the sale line. |
+| `membership_history` | `id` UUID (PK); `member_id` UUID (FK); `event_type`, previous/new plan, `notes` TEXT; previous/new prices NUMERIC; previous/new dates DATE; `recorded_at` TIMESTAMPTZ; `recorded_by` UUID (Auth FK) | Expiration, renewal, and plan-change history for a member. |
 
 ### Detailed Field Reference
 
@@ -531,42 +529,42 @@ The profile row extends the Auth identity with information used by the applicati
 | Field | Type | Key / rule | Description |
 | --- | --- | --- | --- |
 | `id` | UUID | PK, FK to `auth.users.id`, cascade delete | Stable identifier for the authenticated profile. |
-| `email` | VARCHAR(254) | Required, unique | Email associated with the profile and authentication account. |
-| `username` | VARCHAR(30) | Nullable, unique | Optional username shown or used by supported account workflows. |
-| `full_name` | VARCHAR(150) | Required; defaults to empty text | Account holder's display name. |
-| `role` | VARCHAR(20) | Required; `admin` or `member`; defaults to `member` | Application role used with authorization rules. |
-| `account_status` | VARCHAR(20) | Present in the live catalog where deployed | Account availability state when this optional live-schema field is enabled. |
+| `email` | TEXT | Required, unique | Email associated with the profile and authentication account. |
+| `username` | TEXT | Nullable, unique | Optional username shown or used by supported account workflows. |
+| `full_name` | TEXT | Required; defaults to empty text | Account holder's display name. |
+| `role` | TEXT | Required; `admin` or `member`; defaults to `member` | Application role used with authorization rules. |
+| `account_status` | TEXT | Present in the live catalog where deployed | Account availability state when this optional live-schema field is enabled. |
 | `created_at` | TIMESTAMPTZ | Required; defaults to current time | Time at which the profile was created. |
 | `updated_at` | TIMESTAMPTZ | Present in the live catalog where deployed | Time of the most recent profile update when maintained by the deployed schema. |
 
 #### `members` â€” Approved Member and Current Membership
 
-This table is the current operational record for an approved member. It contains identity and contact data, the current plan and dates, and member declarations collected in the application. `auth_user_id` associates the row with a sign-in identity when one exists; a partial unique index enforces no more than one member row for a non-null Auth ID. `application_id` is a nullable unique foreign key to the source registration application, so an application can be associated with at most one created member. Attendance, sales, and membership history refer to the member row rather than copying the entire profile.
+This table is the current operational record for an approved member. It contains identity and contact data, the current plan and dates, and member declarations collected in the application. `auth_user_id` associates the row with a sign-in identity when one exists; a partial unique index enforces no more than one member row for a non-null Auth ID. `application_id` can preserve the source registration link where the deployed schema has that relationship. Attendance, sales, and membership history refer to the member row rather than copying the entire profile.
 
 | Field | Type | Key / rule | Description |
 | --- | --- | --- | --- |
 | `id` | UUID | PK; generated when omitted | Identifier referenced by operational records. |
 | `auth_user_id` | UUID | Nullable, unique FK to `auth.users.id`; deletion sets null | Optional link to the member's login identity. |
-| `application_id` | UUID | Nullable, unique FK to `membership_applications.id` | Registration application associated with creation of the member record; each application can link to at most one member. |
-| `full_name` | VARCHAR(150) | Required | Member's recorded full name. |
-| `email` | VARCHAR(254) | Nullable | Contact email copied from the application or account. |
-| `username` | VARCHAR(30) | Nullable | Member-facing account name where available. |
-| `mobile` | VARCHAR(11) | Nullable | Member's mobile contact number; the current form accepts 11-digit Philippine numbers. |
+| `application_id` | UUID | Nullable FK to `membership_applications.id` in the deployed relationship | Registration application associated with creation of the member record. |
+| `full_name` | TEXT | Required | Member's recorded full name. |
+| `email` | TEXT | Nullable | Contact email copied from the application or account. |
+| `username` | TEXT | Nullable | Member-facing account name where available. |
+| `mobile` | TEXT | Nullable | Member's mobile contact number. |
 | `date_of_birth` | DATE | Nullable | Date of birth supplied by the applicant. |
 | `age` | SMALLINT | Nullable; nonnegative when supplied | Age recorded at application or registration time. |
-| `sex` | VARCHAR(30) | Nullable | Sex response supplied through the form. |
+| `sex` | TEXT | Nullable | Sex response supplied through the form. |
 | `height` | NUMERIC(7,2) | Nullable | Numeric height measurement. |
-| `height_unit` | VARCHAR(3) | Nullable; `cm`, `in`, or `ft` | Unit associated with the height value. |
+| `height_unit` | TEXT | Nullable; `cm`, `in`, or `ft` | Unit associated with the height value. |
 | `weight_kg` | NUMERIC(7,2) | Nullable | Body weight in kilograms when provided. |
 | `emergency_contact` | JSONB | Required; defaults to an empty object | Structured emergency-contact name, relationship, and contact details. |
-| `plan` | VARCHAR(30) | Nullable | Current membership plan label. |
+| `plan` | TEXT | Nullable | Current membership plan label. |
 | `plan_price` | NUMERIC(12,2) | Required; nonnegative; defaults to zero | Current plan charge recorded for the member. |
 | `start_date` | DATE | Nullable | First date of the current membership period. |
 | `end_date` | DATE | Present in compatible live schemas | End date retained by deployments using the `end_date` alias. |
 | `expiry_date` | DATE | Nullable | Current membership expiry date used by the application. |
-| `status` | VARCHAR(20) | Required; constrained values in the schema | Membership state such as active, expired, or inactive. |
-| `registration_source` | VARCHAR(40) | Required; defaults to `Online application` | Channel recorded for the member's registration. |
-| `paid` | NUMERIC | As defined in the deployed schema | Numeric payment amount/value recorded for the member. |
+| `status` | TEXT | Required; constrained values in the schema | Membership state such as active, expired, or inactive. |
+| `registration_source` | TEXT | Required; defaults to `Online application` | Channel recorded for the member's registration. |
+| `paid` | BOOLEAN or deployed payment value | Required in base schema; live projects may retain a compatible numeric representation | Indicates or records the payment state/value according to the deployed schema version. |
 | `fitness_goals` | TEXT[] | Required; defaults to an empty array | One or more fitness goals supplied by the member. |
 | `health_conditions` | TEXT[] | Required; defaults to an empty array | Selected health-condition declarations. |
 | `other_medical_conditions` | TEXT | Required; defaults to empty text | Additional health information entered by the applicant. |
@@ -583,19 +581,20 @@ Application rows preserve a submitted request and its review state. The applicat
 | `id` | UUID | PK; generated when omitted | Identifier for the submitted request. |
 | `auth_user_id` | UUID | FK to `auth.users.id`; required in the base schema | Auth identity that submitted the request. |
 | `member_id` | UUID | Nullable FK to `members.id`; deletion sets null | Existing or resulting member associated with the application. |
-| `application_type` | VARCHAR(20) | Required; `registration` or `renewal` | Distinguishes a new membership request from a renewal request. |
-| `full_name` | VARCHAR(150) | Required | Applicant's or renewing member's name as submitted. |
-| `email` | VARCHAR(254) | Required in the base schema | Email contact supplied with the request. |
-| `username` | VARCHAR(30) | Nullable | Requested or associated username. |
-| `mobile` | VARCHAR(11) | Nullable | Mobile number supplied with the request. |
+| `application_type` | TEXT | Required; `registration` or `renewal` | Distinguishes a new membership request from a renewal request. |
+| `full_name` | TEXT | Required | Applicant's or renewing member's name as submitted. |
+| `email` | TEXT | Required in the base schema | Email contact supplied with the request. |
+| `username` | TEXT | Nullable | Requested or associated username. |
+| `mobile` | TEXT | Nullable | Mobile number supplied with the request. |
 | `date_of_birth` | DATE | Nullable | Applicant's date of birth. |
-| `age` | INTEGER | Nullable; nonnegative when supplied | Age at the time of submission. |
-| `sex` | VARCHAR(30) | Nullable | Sex response supplied in the form. |
+| `age` | SMALLINT | Nullable; nonnegative when supplied | Age at the time of submission. |
+| `sex` | TEXT | Nullable | Sex response supplied in the form. |
 | `height` | NUMERIC(7,2) | Nullable | Height measurement supplied by the applicant. |
-| `height_unit` | VARCHAR(3) | Nullable; `cm`, `in`, or `ft` | Unit of the submitted height. |
+| `height_unit` | TEXT | Nullable; `cm`, `in`, or `ft` | Unit of the submitted height. |
 | `weight_kg` | NUMERIC(7,2) | Nullable | Weight in kilograms if supplied. |
-| `emergency_name`, `emergency_relationship`, `emergency_contact` | TEXT | Separate emergency-contact fields | Emergency contact name, relationship, and phone number. |
-| `plan` | VARCHAR(30) | Required | Plan requested by the applicant. |
+| `emergency_contact` | JSONB | Required; defaults to an empty object | Structured emergency contact details. |
+| `emergency_contact_data` | JSONB | Required in compatible schema; defaults to an empty object | Compatibility field used by deployed form and migration versions. |
+| `plan` | TEXT | Required | Plan requested by the applicant. |
 | `plan_price` | NUMERIC(12,2) | Required; nonnegative | Proposed plan charge recorded with the request. |
 | `start_date` | DATE | Nullable | Requested or planned membership start date. |
 | `end_date` | DATE | Nullable | Requested membership end date. |
@@ -603,10 +602,10 @@ Application rows preserve a submitted request and its review state. The applicat
 | `health_conditions` | TEXT[] | Required; defaults to an empty array | Health declarations selected in the application. |
 | `other_medical_conditions` | TEXT | Required; defaults to empty text | Additional health declaration text. |
 | `signature_path` | TEXT | Nullable | Reference to the submitted signature. |
-| `status` | VARCHAR(20) | Required; `pending`, `approved`, or `rejected`; defaults to pending | Current review result. |
+| `status` | TEXT | Required; `pending`, `approved`, or `rejected`; defaults to pending | Current review result. |
 | `submitted_at` | TIMESTAMPTZ | Required; defaults to current time | Submission timestamp. |
 | `reviewed_at` | TIMESTAMPTZ | Nullable | Time when an administrator reviewed the request. |
-| `reviewed_by` | UUID | Nullable FK to `profiles.id` | Profile of the reviewing administrator; profile IDs correspond to Auth user IDs. |
+| `reviewed_by` | UUID | Nullable FK to `auth.users.id`; deletion sets null | Auth identity of the reviewing administrator. |
 
 #### `attendance` â€” Staff-Recorded Visits
 
@@ -629,11 +628,11 @@ Product rows describe items offered by the gym. The category and unit must agree
 | Field | Type | Key / rule | Description |
 | --- | --- | --- | --- |
 | `id` | UUID | PK; generated when omitted | Product identifier referenced by sale lines. |
-| `name` | VARCHAR(120) | Required | Product display name. |
-| `category` | VARCHAR(20) | Required; `supplement` or `merchandise` | Product class used by sales and inventory workflows. |
+| `name` | TEXT | Required | Product display name. |
+| `category` | TEXT | Required; `supplement` or `merchandise` | Product class used by sales and inventory workflows. |
 | `price_per_unit` | NUMERIC(12,2) | Required; nonnegative | Price per gram or per item according to `unit`. |
-| `unit` | VARCHAR(12) | Required; `gram` or `item` | Unit used to calculate a product sale. |
-| `size` | VARCHAR(30) | Nullable | Merchandise size or variant label. |
+| `unit` | TEXT | Required; `gram` or `item` | Unit used to calculate a product sale. |
+| `size` | TEXT | Nullable | Merchandise size or variant label. |
 | `stock` | INTEGER | Nullable; nonnegative when present | Merchandise quantity available; supplement stock is not tracked in the base rule. |
 | `image_path` | TEXT | Nullable | Product image reference shown in the catalog. |
 | `is_active` | BOOLEAN | Required; defaults to true | Controls whether the product is available in active views. |
@@ -648,12 +647,12 @@ The sales table stores one receipt-level transaction. It identifies the customer
 | Field | Type | Key / rule | Description |
 | --- | --- | --- | --- |
 | `id` | UUID | PK; generated when omitted | Internal transaction identifier. |
-| `receipt_number` | VARCHAR(64) | Required, unique | Human-readable receipt reference. |
-| `customer_type` | VARCHAR(15) | Required; `member` or `walk_in` | Customer classification for the transaction. |
-| `customer_name` | VARCHAR(150) | Required | Customer name printed on the receipt. |
+| `receipt_number` | TEXT | Required, unique | Human-readable receipt reference. |
+| `customer_type` | TEXT | Required; `member` or `walk_in` | Customer classification for the transaction. |
+| `customer_name` | TEXT | Required | Customer name printed on the receipt. |
 | `member_id` | UUID | Nullable FK to `members.id`; deletion sets null | Member link when the customer is a member. |
 | `total` | NUMERIC(12,2) | Required; nonnegative | Receipt-level transaction total. |
-| `status` | VARCHAR(12) | Required; `paid` or `voided`; defaults to paid | Payment/void state used by reports. |
+| `status` | TEXT | Required; `paid` or `voided`; defaults to paid | Payment/void state used by reports. |
 | `sold_at` | TIMESTAMPTZ | Required; defaults to current time | Transaction timestamp. |
 | `processed_by` | UUID | Nullable FK to `auth.users.id`; deletion sets null | Auth identity of the administrator or staff account processing the sale. |
 
@@ -666,10 +665,10 @@ Each row is one service or product line on a sale. The sale relationship is requ
 | `id` | UUID | PK; generated when omitted | Identifier for the receipt line. |
 | `sale_id` | UUID | Required FK to `sales.id`; cascade delete | Receipt header containing this line. |
 | `product_id` | UUID | Nullable FK to `products.id`; deletion sets null | Catalog product when the line represents a product sale. |
-| `item_name` | VARCHAR(150) | Required | Description shown on the receipt, retained independently of later catalog edits. |
-| `category` | VARCHAR(20) | Required; `supplement`, `merchandise`, or `membership` | Type of line item. |
+| `item_name` | TEXT | Required | Description shown on the receipt, retained independently of later catalog edits. |
+| `category` | TEXT | Required; `supplement`, `merchandise`, or `membership` | Type of line item. |
 | `quantity` | NUMERIC(12,3) | Required; greater than zero | Grams, item count, or membership quantity sold. |
-| `unit` | VARCHAR(12) | Required; `gram`, `item`, or `membership` | Quantity unit for the line. |
+| `unit` | TEXT | Required; `gram`, `item`, or `membership` | Quantity unit for the line. |
 | `unit_price` | NUMERIC(12,2) | Required; nonnegative | Charge for each recorded unit. |
 | `line_total` | NUMERIC(12,2) | Required; nonnegative | Total charged for this receipt line. |
 
@@ -681,9 +680,9 @@ History rows preserve changes to a member's subscription over time. Depending on
 | --- | --- | --- | --- |
 | `id` | UUID | PK; generated when omitted | Identifier for the lifecycle event. |
 | `member_id` | UUID | Required FK to `members.id`; deletion restricted | Member whose membership changed. |
-| `event_type` | VARCHAR(30) | Required; `expired`, `renewal`, or `plan_change` | Type of lifecycle event recorded. |
-| `previous_plan` | VARCHAR(30) | Nullable | Plan before the event. |
-| `new_plan` | VARCHAR(30) | Nullable | Plan after the event when applicable. |
+| `event_type` | TEXT | Required; `expired`, `renewal`, or `plan_change` | Type of lifecycle event recorded. |
+| `previous_plan` | TEXT | Nullable | Plan before the event. |
+| `new_plan` | TEXT | Nullable | Plan after the event when applicable. |
 | `previous_price` | NUMERIC(12,2) | Nullable; nonnegative | Prior plan price. |
 | `new_price` | NUMERIC(12,2) | Nullable; nonnegative | New plan price when applicable. |
 | `previous_start_date` | DATE | Nullable | Start date of the prior membership period. |
@@ -824,7 +823,7 @@ The following scenarios provide a minimum verification basis. The research team 
 | --- | --- | --- |
 | Authentication and access | Sign in with authorized administrator and member accounts and attempt role-restricted actions. | Each account reaches its intended interface; unauthorized database operations are denied by the configured policies. |
 | Application workflow | Submit a registration application, review it as staff, and test both approval and rejection paths. | The application is recorded with its review status; approval creates or links the member record and associated transaction as configured. |
-| Renewal | Select a plan, submit a member-portal renewal request, approve it as staff, and inspect the membership dates, history, and receipt. Also submit a request for an expired member. | The request remains pending until staff decision. Approval applies the selected plan and price; an active membership extends from its current expiry, while an expired membership starts from the approval date. The renewal is recorded once in history and sales. |
+| Renewal | Submit an early renewal request, approve it as staff, and inspect the membership dates, history, and receipt. Also submit a request for an expired member. | The request remains pending until staff decision. Approval extends an active member's expiry by the selected plan duration; approval for an expired membership starts from the approval date. The renewal is recorded once in history and sales. |
 | Attendance | Scan a member QR code as staff for check-in and check-out, then view the member's history. | The event is recorded and the member can view their own history; the member cannot create the event through self-scan. |
 | Inventory and sales | Record a merchandise sale and a gram-based supplement sale, then inspect the receipt and inventory records. | The sale and line items are saved with their units and totals; merchandise stock is updated according to the configured sales workflow. |
 | Reports | Open and print or save available reports using records from the test data. | The report presents the corresponding stored records and totals for the selected report type. |
@@ -857,12 +856,11 @@ The development schedule follows the order of the Agile activities. The table re
 
 | Phase | Main activities | Expected output |
 | --- | --- | --- |
-| 1. Plan and gather requirements | Identify users and workflows; prioritize needs and define acceptance criteria. | Prioritized requirements for the next increment. |
-| 2. Design and prototype | Translate selected requirements into page flows, forms, data relationships, and permissions. | Design and prototype ready for construction and review. |
-| 3. Develop and test increments | Build selected features, check them against acceptance criteria, and correct issues. | Verified increment and recorded findings. |
-| 4. Deploy and review | Prepare the verified increment in the intended environment and review test findings and feedback actually collected. | Refinements and priorities for the next cycle. |
-| 5. Repeat and refine | Return findings to planning and continue the Develop-Test-Deploy-Review cycle for remaining requirements. | Integrated, refined system ready for final release checks. |
-| 6. Launch and transition | Release the approved system for intended use and orient staff to supported workflows. | System made available for gym operations. |
-| 7. Evaluation | Conduct the approved user evaluation and analyze collected responses. | Evaluation dataset and reported findings. |
+| 1. Requirements planning | Define scope, users, workflows, data needs, and access requirements. | Prioritized requirements and acceptance criteria. |
+| 2. User design and prototyping | Refine page flows, forms, reports, database relationships, and role permissions. | Reviewed interface prototype and system diagrams. |
+| 3. Construction iterations | Implement prioritized features in the browser client and Supabase services; verify each increment. | Integrated feature increments and recorded issues. |
+| 4. Refinement | Resolve verification findings and update the prioritized requirements. | Refined system ready for deployment preparation. |
+| 5. Implementation and transition | Configure the intended environment, prepare administrator access, and orient staff. | Configured deployment and user-orientation records. |
+| 6. Evaluation | Conduct the approved user evaluation and analyze collected responses. | Evaluation dataset and reported findings. |
 
 Exact calendar dates and durations are not included because no approved dated schedule was present in the project files. Add those dates from the project plan before submitting a date-based Gantt chart.
