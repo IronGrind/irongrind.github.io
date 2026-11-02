@@ -26,6 +26,9 @@ let currentPlanFilter = 'all';
 let currentMemberTab = 'members';
 let currentApprovalType = 'registration';
 let currentSalesView = 'transactions';
+let currentSalesTransactionType = 'all';
+let currentSalesSubType = 'all';
+let currentSalesProductName = 'all';
 let activeQRScanner = null;
 let qrScanHandled = false;
 let qrCameraHintTimer = null;
@@ -272,9 +275,8 @@ function switchMemberTab(tab) {
     document.getElementById('tab-members').classList.toggle('hidden', tab !== 'members');
     document.getElementById('tab-approvals').classList.toggle('hidden', tab !== 'approvals');
     document.getElementById('tab-expired').classList.toggle('hidden', tab !== 'expired');
-    document.getElementById('tab-inactive').classList.toggle('hidden', tab !== 'inactive');
     if (tab === 'approvals') renderApprovals();
-    else if (tab === 'members' || tab === 'expired' || tab === 'inactive') renderMembers();
+    else if (tab === 'members' || tab === 'expired') renderMembers();
 }
 
 function switchApprovalType(type) {
@@ -351,26 +353,35 @@ function getPlanPrice(plan, member = null) {
 }
 
 function isPastMembershipArchiveGrace(member) {
-    return Boolean(member?.expiry && member.expiry < todayStr() && todayStr() >= addDays(member.expiry, 10));
+    return isInactiveMember(member);
 }
 
 function isMembershipArchiveReady(record) {
-    return Boolean(record?.renewedAt || (record?.expiry && todayStr() >= addDays(record.expiry, 10)));
+    if (record?.renewedAt) return true;
+    const member = members.find(item => String(item.id) === String(record?.memberId));
+    return Boolean(record?.expiry && todayStr() >= addDays(record.expiry, 5) && !hasPendingRenewalForMember(member));
+}
+
+function hasPendingRenewalForMember(member) {
+    return pendingApprovals.some(application =>
+        application.source === 'dashboard-renewal'
+        && String(application.memberId || '') === String(member?.id || '')
+        && application.status === 'pending'
+    );
 }
 
 function isInactiveMember(member, today = todayStr()) {
+    if (hasPendingRenewalForMember(member)) return false;
     return String(member?.status || '').toLowerCase() === 'inactive'
         || Boolean(member?.expiry && today >= addDays(member.expiry, 5));
 }
 
 function renderMembers() {
     const isExpiredTab = currentMemberTab === 'expired';
-    const isInactiveTab = currentMemberTab === 'inactive';
-    const searchEl = document.getElementById(isExpiredTab ? 'expiredMemberSearch' : isInactiveTab ? 'inactiveMemberSearch' : 'memberSearch');
+    const searchEl = document.getElementById(isExpiredTab ? 'expiredMemberSearch' : 'memberSearch');
     const query = searchEl ? searchEl.value.toLowerCase() : '';
     const today = todayStr();
     let filtered = members.filter(m => {
-        if (isInactiveTab) return isInactiveMember(m, today);
         if (isExpiredTab) return Boolean(m.expiry && m.expiry < today && !isInactiveMember(m, today));
         return Boolean(m.expiry && m.expiry >= today) && !isInactiveMember(m, today);
     }).filter(m => {
@@ -379,30 +390,28 @@ function renderMembers() {
         return true;
     });
 
-    const listId = isInactiveTab ? 'inactiveMembersList' : isExpiredTab ? 'expiredMembersList' : 'membersList';
-    const listEl = document.getElementById(listId);
+    const listEl = document.getElementById(isExpiredTab ? 'expiredMembersList' : 'membersList');
     document.getElementById('expiredMembersCount').textContent = members.filter(m => m.expiry && m.expiry < today && !isInactiveMember(m, today)).length;
-    document.getElementById('inactiveMembersCount').textContent = members.filter(m => isInactiveMember(m, today)).length;
     if (filtered.length === 0) {
-        const groupName = isInactiveTab ? 'inactive' : isExpiredTab ? 'recently expired' : 'active';
+        const groupName = isExpiredTab ? 'recently expired' : 'active';
         listEl.innerHTML = `<div class="empty-state">No ${groupName} members match these filters.</div>`;
         return;
     }
 
     listEl.innerHTML = filtered.map(m => {
-        const statusClass = isInactiveTab || isExpiredTab ? 'expired' : (m.paid ? '' : 'pending');
-        const statusText = isInactiveTab ? 'Inactive' : isExpiredTab ? 'Expired' : (m.paid ? 'Paid' : 'Pending');
+        const statusClass = isExpiredTab ? 'expired' : (m.paid ? '' : 'pending');
+        const statusText = isExpiredTab ? 'Expired' : (m.paid ? 'Paid' : 'Pending');
         return `
             <div class="member-row">
                 <div class="member-info">
                     <div class="member-avatar">${initials(m.name)}</div>
                     <div class="member-details">
                         <h4>${m.name}</h4>
-                        <p>${m.plan} · Expires ${m.expiry}${isInactiveTab ? ' · INACTIVE' : isExpiredTab ? ' · EXPIRED' : ''}</p>
+                        <p>${m.plan} · Expires ${m.expiry}${isExpiredTab ? ' · EXPIRED' : ''}</p>
                     </div>
                 </div>
                 <div class="member-actions">
-                    ${isExpiredTab || isInactiveTab ? '' : `<button class="renew-btn" onclick="openChangePlanModal('${m.id}')"><i class="fas fa-exchange-alt"></i> Change Plan</button>`}
+                    ${isExpiredTab ? '' : `<button class="renew-btn" onclick="openChangePlanModal('${m.id}')"><i class="fas fa-exchange-alt"></i> Change Plan</button>`}
                     <button class="renew-btn" onclick="renewMember('${m.id}')"><i class="fas fa-sync-alt"></i> Renew</button>
                     <span class="approve-badge ${statusClass}">${statusText}</span>
                 </div>
@@ -412,7 +421,7 @@ function renderMembers() {
 
 function filterPlan(plan) {
     currentPlanFilter = plan;
-    document.querySelectorAll('#planPills .pill, #expiredPlanPills .pill, #inactivePlanPills .pill').forEach(p => p.classList.toggle('active', p.dataset.plan === plan));
+    document.querySelectorAll('#planPills .pill, #expiredPlanPills .pill').forEach(p => p.classList.toggle('active', p.dataset.plan === plan));
     renderMembers();
 }
 
@@ -891,8 +900,6 @@ function mapSupabaseMember(row, username = '', email = '') {
 async function loadSupabaseMembershipData() {
     const supabaseClient = window.ironGrindSupabase;
     if (!supabaseClient) return;
-    const { error: inactiveError } = await supabaseClient.rpc('admin_mark_members_inactive');
-    if (inactiveError) console.error('Could not update expired members to inactive:', inactiveError);
     const [applicationsResult, membersResult] = await Promise.all([
         supabaseClient.from('membership_applications').select('*').eq('status', 'pending'),
         supabaseClient.from('members').select('*')
@@ -2414,18 +2421,122 @@ function isWalkinProductSale(sale) {
         || sale.lineItems?.some(item => ['Supplement', 'Merch'].includes(item.category));
 }
 
+function getSaleProductCategory(sale) {
+    const lineCategory = sale.lineItems?.map(item => item.category).find(category =>
+        ['supplement', 'merch', 'merchandise'].includes(String(category || '').toLowerCase())
+    );
+    const category = String(lineCategory || sale.category || '').toLowerCase();
+    if (category === 'supplement') return 'Supplement';
+    if (category === 'merch' || category === 'merchandise') return 'Merchandise';
+    return null;
+}
+
+function getSaleProductNames(sale) {
+    const itemNames = (sale.lineItems || [])
+        .filter(item => ['supplement', 'merch', 'merchandise'].includes(String(item.category || '').toLowerCase()))
+        .map(item => String(item.name || '').trim()).filter(Boolean);
+    if (itemNames.length) return [...new Set(itemNames)];
+    return sale.productName ? [String(sale.productName)] : [];
+}
+
+function isMembershipSale(sale) {
+    return Boolean(sale.lineItems?.some(item =>
+        String(item.category || '').toLowerCase() === 'membership'
+        || /\bmembership\b/i.test(item.name || '')
+    ) || String(sale.category || '').toLowerCase() === 'membership'
+        || /\bmembership\b/i.test(sale.items || '') || sale.source === 'counter-renewal'
+        || sale.source === 'dashboard-renewal' || sale.source === 'member-portal-renewal');
+}
+
+function getMembershipPlanFromSale(sale) {
+    const member = members.find(item => String(item.id) === String(sale.memberId));
+    const text = [
+        ...(sale.lineItems || []).filter(item => String(item.category || '').toLowerCase() === 'membership' || /\bmembership\b/i.test(item.name || '')).map(item => item.name),
+        sale.items || ''
+    ].join(' ');
+    const knownPlans = ['Half Month', 'Monthly', 'Weekly', 'Walk-in'];
+    const plan = knownPlans.find(name => text.toLowerCase().includes(name.toLowerCase()));
+    return plan || member?.plan || 'Other';
+}
+
 function renderSales() {
     const el = document.getElementById('salesTable');
-    if (sales.length === 0) { el.innerHTML = '<div class="empty-state">No sales.</div>'; return; }
-    const table = rows => rows.length ? `<div class="table-scroll"><table class="attendance-table">
+    const membershipSales = sales.filter(isMembershipSale);
+    const productSales = sales.filter(sale => !isMembershipSale(sale) && Boolean(getSaleProductCategory(sale)));
+    document.getElementById('salesCountAll').textContent = sales.length;
+    document.getElementById('salesCountMembership').textContent = membershipSales.length;
+    document.getElementById('salesCountProducts').textContent = productSales.length;
+    const salesByType = { membership: membershipSales, products: productSales };
+    const typedSales = currentSalesTransactionType === 'all' ? sales : (salesByType[currentSalesTransactionType] || []);
+    const planOptions = [...new Set(membershipSales.map(getMembershipPlanFromSale))].sort((a, b) => {
+        const order = ['Monthly', 'Half Month', 'Weekly', 'Walk-in', 'Other'];
+        return (order.indexOf(a) < 0 ? order.length : order.indexOf(a)) - (order.indexOf(b) < 0 ? order.length : order.indexOf(b)) || a.localeCompare(b);
+    });
+    const productOptions = [...new Set(productSales.map(getSaleProductCategory).filter(Boolean))]
+        .sort((a, b) => ['Supplement', 'Merchandise'].indexOf(a) - ['Supplement', 'Merchandise'].indexOf(b));
+    const subfilterEl = document.getElementById('salesSubFilters');
+    const subOptions = currentSalesTransactionType === 'membership' ? planOptions
+        : currentSalesTransactionType === 'products' ? productOptions : [];
+    if (currentSalesSubType !== 'all' && !subOptions.includes(currentSalesSubType)) currentSalesSubType = 'all';
+    if (subOptions.length) {
+        const productNameOptions = currentSalesTransactionType === 'products'
+            ? [...new Set(productSales
+                .filter(sale => currentSalesSubType === 'all' || getSaleProductCategory(sale) === currentSalesSubType)
+                .flatMap(getSaleProductNames))].sort((a, b) => a.localeCompare(b))
+            : [];
+        if (currentSalesProductName !== 'all' && !productNameOptions.includes(currentSalesProductName)) currentSalesProductName = 'all';
+        subfilterEl.classList.remove('hidden');
+        subfilterEl.innerHTML = `<button class="sales-subfilter ${currentSalesSubType === 'all' ? 'active' : ''}" data-sale-subfilter="all">All ${currentSalesTransactionType === 'membership' ? 'plans' : 'products'} <span>${typedSales.length}</span></button>
+            ${subOptions.map(option => {
+                const optionCount = currentSalesTransactionType === 'membership'
+                    ? membershipSales.filter(sale => getMembershipPlanFromSale(sale) === option).length
+                    : productSales.filter(sale => getSaleProductCategory(sale) === option).length;
+                return `<button class="sales-subfilter ${currentSalesSubType === option ? 'active' : ''}" data-sale-subfilter="${escapeHTML(option)}">${escapeHTML(option)} <span>${optionCount}</span></button>`;
+            }).join('')}
+            ${currentSalesTransactionType === 'products' ? `<label class="sales-product-filter">Product
+                <select id="salesProductNameFilter"><option value="all">All products</option>${productNameOptions.map(name => `<option value="${escapeHTML(name)}" ${currentSalesProductName === name ? 'selected' : ''}>${escapeHTML(name)}</option>`).join('')}</select>
+            </label>` : ''}`;
+        subfilterEl.querySelectorAll('[data-sale-subfilter]').forEach(button => button.addEventListener('click', () => {
+            currentSalesSubType = button.dataset.saleSubfilter || 'all';
+            renderSales();
+        }));
+        const productSelect = document.getElementById('salesProductNameFilter');
+        productSelect?.addEventListener('change', () => {
+            currentSalesProductName = productSelect.value || 'all';
+            renderSales();
+        });
+    } else {
+        subfilterEl.classList.add('hidden');
+        subfilterEl.innerHTML = '';
+    }
+    const selectedSales = currentSalesSubType === 'all' ? typedSales
+        : currentSalesTransactionType === 'membership'
+            ? typedSales.filter(sale => getMembershipPlanFromSale(sale) === currentSalesSubType)
+            : currentSalesTransactionType === 'products'
+                ? typedSales.filter(sale => getSaleProductCategory(sale) === currentSalesSubType)
+                : typedSales;
+    const visibleSales = currentSalesTransactionType === 'products' && currentSalesProductName !== 'all'
+        ? selectedSales.filter(sale => getSaleProductNames(sale).includes(currentSalesProductName))
+        : selectedSales;
+    if (visibleSales.length === 0) {
+        el.innerHTML = '<div class="empty-state">No transactions match this filter.</div>';
+        return;
+    }
+    el.innerHTML = `<div class="table-scroll"><table class="attendance-table">
         <thead><tr><th>Receipt</th><th>Customer</th><th>Items</th><th>Total</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
-        <tbody>${rows.map(s => `<tr><td>#${escapeHTML(s.id)}</td><td>${escapeHTML(s.customer === 'Walk-in' ? 'Name not recorded' : (s.customer || 'Name not recorded'))}</td><td>${escapeHTML(s.items || '')}</td><td>${formatPeso(s.total)}</td><td>${escapeHTML(s.date || '')}</td>
+        <tbody>${visibleSales.map(s => `<tr><td>#${escapeHTML(s.id)}</td><td>${escapeHTML(s.customer === 'Walk-in' ? 'Name not recorded' : (s.customer || 'Name not recorded'))}</td><td>${escapeHTML(s.items || '')}</td><td>${formatPeso(s.total)}</td><td>${escapeHTML(s.date || '')}</td>
             <td>${s.status === 'Paid' ? '<span class="badge-status paid">Paid</span>' : '<span class="badge-status reserved">Reserved</span>'}</td>
-            <td><button class="btn-sm" onclick="showSaleReceipt(decodeURIComponent('${encodeURIComponent(String(s.id))}'))" aria-label="View or print receipt"><i class="fas fa-receipt"></i> Receipt</button></td></tr>`).join('')}</tbody></table></div>` : '<div class="empty-state">No transactions recorded.</div>';
-    const walkinSales = sales.filter(isWalkinProductSale);
-    const otherSales = sales.filter(sale => !isWalkinProductSale(sale));
-    el.innerHTML = `<section class="sales-transaction-group"><h3><i class="fas fa-cash-register"></i> Walk-in Product Sales</h3>${table(walkinSales)}</section>
-        <section class="sales-transaction-group"><h3><i class="fas fa-id-card"></i> Membership &amp; Other Transactions</h3>${table(otherSales)}</section>`;
+            <td><button class="btn-sm" onclick="showSaleReceipt(decodeURIComponent('${encodeURIComponent(String(s.id))}'))" aria-label="View or print receipt"><i class="fas fa-receipt"></i> Receipt</button></td></tr>`).join('')}</tbody></table></div>`;
+}
+
+function switchSalesTransactionType(type) {
+    currentSalesTransactionType = ['membership', 'products'].includes(type) ? type : 'all';
+    currentSalesSubType = 'all';
+    currentSalesProductName = 'all';
+    document.querySelectorAll('[data-sale-filter]').forEach(button =>
+        button.classList.toggle('active', button.dataset.saleFilter === currentSalesTransactionType)
+    );
+    renderSales();
 }
 
 function getSaleReceiptMarkup(sale) {
@@ -2521,9 +2632,14 @@ function printSaleReceipt(id) {
 
 function getMemberActivityStatus(member) {
     const savedStatus = String(member.status || '').toLowerCase();
-    const explicitlyInactive = ['inactive', 'disabled', 'suspended', 'expired'].includes(savedStatus);
-    const membershipExpired = Boolean(member.expiry && member.expiry < todayStr());
-    return explicitlyInactive || membershipExpired ? 'Inactive' : 'Active';
+    const pendingRenewal = hasPendingRenewalForMember(member);
+    const explicitlyInactive = ['inactive', 'disabled', 'suspended'].includes(savedStatus);
+    if (explicitlyInactive && !pendingRenewal) return 'Inactive';
+    if (savedStatus === 'expired' || (member.expiry && member.expiry < todayStr())) {
+        if (!member.expiry) return 'Inactive';
+        return todayStr() >= addDays(member.expiry, 5) && !pendingRenewal ? 'Inactive' : 'Expired';
+    }
+    return 'Active';
 }
 
 function archiveExpiredMembership(member, renewed = false) {
@@ -2561,7 +2677,7 @@ function renderReports() {
             description: 'Member status, renewals, and record history.',
             reports: [
                 { id: 'membership', name: 'Membership Report', icon: 'fa-id-card', description: 'Current member plans and expiry dates.' },
-                { id: 'member-status', name: 'Member Status', icon: 'fa-user-check', description: 'Active and inactive member records.' },
+                { id: 'member-status', name: 'Member Status', icon: 'fa-user-check', description: 'Active, recently expired, and inactive member records.' },
                 { id: 'renewals', name: 'Renewal Report', icon: 'fa-rotate', description: 'Completed renewals and their receipts.' },
                 { id: 'archives', name: 'Archives', icon: 'fa-box-archive', description: 'Expired memberships, plan changes, and archived products.' }
             ]
@@ -2686,12 +2802,13 @@ function viewReport(type) {
             ${currentMembers.map(m => `<tr><td>${m.name}</td><td>${m.plan}</td><td>${m.startDate || '—'}</td><td>${m.expiry}</td></tr>`).join('')}</tbody></table>`;
     } else if (type === 'member-status') {
         const activeMembers = members.filter(member => getMemberActivityStatus(member) === 'Active');
+        const expiredMembers = members.filter(member => getMemberActivityStatus(member) === 'Expired');
         const inactiveMembers = members.filter(member => getMemberActivityStatus(member) === 'Inactive');
         const statusTable = (items, status) => `<h4 style="margin:18px 0 8px; color:${status === 'Active' ? '#2ecc71' : '#ff6b6b'};">${status} Members (${items.length})</h4>
             <table class="attendance-table"><thead><tr><th>Name</th><th>Username</th><th>Registration Source</th><th>Plan</th><th>Expires</th></tr></thead><tbody>
             ${items.map(member => `<tr><td>${escapeHTML(member.name)}</td><td>${escapeHTML(member.username || '—')}</td><td>${escapeHTML(member.registrationSource || 'Not recorded')}</td><td>${escapeHTML(member.plan || '—')}</td><td>${escapeHTML(member.expiry || '—')}</td></tr>`).join('') || '<tr><td colspan="5">No members in this group.</td></tr>'}</tbody></table>`;
-        body = `<p class="modal-sub">Active means the membership has not expired. Inactive includes expired, suspended, or disabled memberships.</p>
-            ${statusTable(activeMembers, 'Active')}${statusTable(inactiveMembers, 'Inactive')}`;
+        body = `<p class="modal-sub">Expired memberships remain in the five-day renewal window. After that, records without a pending renewal are tracked as inactive.</p>
+            ${statusTable(activeMembers, 'Active')}${statusTable(expiredMembers, 'Expired')}${statusTable(inactiveMembers, 'Inactive')}`;
     } else if (type === 'archives') {
         captureExpiredMemberships();
         const archivedPlans = [...planArchives].sort((a, b) => String(b.changedAt || '').localeCompare(String(a.changedAt || '')));
@@ -2784,7 +2901,7 @@ function printReportPDF(type, inAppPreview = false) {
         return;
     }
 
-    const reportNames = { membership: 'Membership', 'member-status': 'Active / Inactive Members', archives: 'Archives', payment: 'Payment', attendance: 'Attendance', renewals: 'Membership Renewal', inventory: 'Inventory', sales: 'Sales' };
+    const reportNames = { membership: 'Membership', 'member-status': 'Member Status', archives: 'Archives', payment: 'Payment', attendance: 'Attendance', renewals: 'Membership Renewal', inventory: 'Inventory', sales: 'Sales' };
     const reportTitle = `${reportNames[type] || 'Gym'} Report`;
     let columns = [];
     let rows = [];
@@ -2859,7 +2976,7 @@ function printReportPDF(type, inAppPreview = false) {
     if (type === 'inventory') {
         reportContent = `<section class="report-section"><div class="section-heading"><h2>Current Inventory Snapshot</h2><span>${rows.length} products</span></div>${rows.length ? tableHTML(rows) : '<p class="empty">No inventory records.</p>'}</section>`;
     } else if (type === 'member-status') {
-        reportContent = ['Active', 'Inactive'].map(status => {
+        reportContent = ['Active', 'Expired', 'Inactive'].map(status => {
             const groupRows = rows.filter(row => row.status === status);
             return `<section class="report-section"><div class="section-heading"><h2>${status} Members</h2><span>${groupRows.length} ${groupRows.length === 1 ? 'member' : 'members'}</span></div>${groupRows.length ? tableHTML(groupRows) : '<p class="empty">No members in this group.</p>'}</section>`;
         }).join('');
@@ -2938,7 +3055,7 @@ function createMonthlyReportPDF(type, month) {
 
     const reportNames = {
         membership: 'Membership Report',
-        'member-status': 'Active - Inactive Members Report',
+        'member-status': 'Member Status Report',
         archives: 'Archives Report',
         payment: 'Payment Report',
         attendance: 'Attendance Report',
@@ -3073,7 +3190,7 @@ async function exportAllReports() {
     const types = ['membership', 'member-status', 'archives', 'payment', 'attendance', 'renewals', 'inventory', 'sales'];
     const names = {
         membership: 'Membership Report',
-        'member-status': 'Active - Inactive Members Report',
+        'member-status': 'Member Status Report',
         archives: 'Archives Report',
         payment: 'Payment Report',
         attendance: 'Attendance Report',

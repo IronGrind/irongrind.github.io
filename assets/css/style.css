@@ -110,9 +110,28 @@ body.dashboard-body .low-stock-item { background-color: rgba(13,18,25,0.64); bor
 .report-card-actions .btn-sm { min-height: 36px; }
 .sales-section-tabs { margin-bottom: 18px; }
 .walkin-sales-content { padding-top: 4px; }
+.transaction-filter-row { display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; margin-bottom: 14px; flex-wrap: wrap; }
+.transaction-filter-row > p { color: #8b95a9; font-size: .8rem; }
+.transaction-filter-tabs { margin: 0; padding: 3px; }
+.transaction-filter-tabs .admin-tab { padding: 8px 12px; font-size: .76rem; }
+.transaction-filter-tabs .badge { font-size: .6rem; padding: 2px 6px; }
+.sales-subfilters { display: flex; align-items: center; flex-wrap: wrap; gap: 7px; margin: -2px 0 14px; }
+.sales-subfilter { display: inline-flex; align-items: center; gap: 9px; min-height: 32px; padding: 6px 11px; border: 1px solid #303030; border-radius: 30px; background: #111; color: #a4adc2; font: inherit; font-size: .74rem; cursor: pointer; }
+.sales-subfilter:hover { border-color: #555; color: #f1f3f7; }
+.sales-subfilter.active { border-color: #780000; background: rgba(120,0,0,.2); color: #fff; }
+.sales-subfilter span { color: #737d91; font-size: .68rem; }
+.sales-subfilter.active span { color: #e9baba; }
+.sales-product-filter { display: inline-flex; align-items: center; gap: 8px; margin-left: auto; color: #8b95a9; font-size: .74rem; font-weight: 600; }
+.sales-product-filter select { max-width: min(280px, 52vw); min-height: 34px; padding: 6px 10px; border: 1px solid #303030; border-radius: 9px; background: #111; color: #e8edf5; font: inherit; font-weight: 400; }
+.walkin-sales-summary .stat-card { min-height: 108px; padding: 16px 18px; }
+.walkin-sales-summary .stat-value { font-size: 1.55rem; }
 @media (max-width: 760px) {
     .reports-toolbar { align-items: stretch; flex-direction: column; }
     .report-export-controls { justify-content: flex-start; }
+    .transaction-filter-row { align-items: flex-start; flex-direction: column; }
+    .transaction-filter-tabs { width: 100%; }
+    .sales-product-filter { width: 100%; margin-left: 0; justify-content: space-between; }
+    .sales-product-filter select { max-width: none; flex: 1; }
 }
 @media (max-width: 460px) {
     .report-export-controls { align-items: stretch; flex-direction: column; }
