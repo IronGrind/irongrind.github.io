@@ -10,7 +10,9 @@
         event.preventDefault();
         if (pendingLinks.has(link)) { event.preventDefault(); return; }
         pendingLinks.set(link, link.innerHTML);
-        const label = /register/i.test(destination.pathname) ? 'Opening registration…' : 'Opening sign in…';
+        const isBackLink = /\bback\b/i.test(link.textContent);
+        const label = /register/i.test(destination.pathname) ? 'Opening registration…'
+            : isBackLink ? 'Returning to login…' : 'Opening sign in…';
         link.innerHTML = '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i> ' + label;
         link.classList.add('action-loading');
         link.setAttribute('aria-busy', 'true');

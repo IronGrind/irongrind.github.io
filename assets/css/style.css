@@ -73,16 +73,16 @@ body.dashboard-body .low-stock-item { background-color: rgba(13,18,25,0.64); bor
 .admin-section { display: flex; flex-direction: column; gap: 20px; min-width: 0; min-height: 560px; }
 
 /* Keep dashboard navigation and footer in place while section content scrolls. */
-body.dashboard-body { height: 100dvh; overflow: hidden; }
-body.dashboard-body .app { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; height: 100%; min-height: 0; }
-body.dashboard-body .dashboard { min-height: 0; overflow: hidden; grid-template-rows: minmax(0, 1fr); }
-body.dashboard-body .dashboard-footer { margin-top: 0; }
-body.dashboard-body .sidebar { position: static; max-height: 100%; overflow-y: auto; }
-body.dashboard-body .main-content { height: 100%; min-height: 0; overflow-y: scroll; overflow-x: hidden; scrollbar-gutter: stable; overflow-anchor: none; overscroll-behavior-y: contain; }
-body.dashboard-body .admin-section { min-height: 100%; flex-shrink: 0; }
+body.admin-dashboard { height: 100dvh; overflow: hidden; }
+body.admin-dashboard .app { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; height: 100%; min-height: 0; }
+body.admin-dashboard .dashboard { min-height: 0; overflow: hidden; grid-template-rows: minmax(0, 1fr); }
+body.admin-dashboard .dashboard-footer { margin-top: 0; }
+body.admin-dashboard .sidebar { position: static; max-height: 100%; overflow-y: auto; }
+body.admin-dashboard .main-content { height: 100%; min-height: 0; overflow-y: scroll; overflow-x: hidden; scrollbar-gutter: stable; overflow-anchor: none; overscroll-behavior-y: contain; }
+body.admin-dashboard .admin-section { min-height: 100%; flex-shrink: 0; }
 @media (max-width: 1024px) {
-    body.dashboard-body .dashboard { grid-template-rows: auto minmax(0, 1fr); }
-    body.dashboard-body .sidebar { max-height: 26dvh; }
+    body.admin-dashboard .dashboard { grid-template-rows: auto minmax(0, 1fr); }
+    body.admin-dashboard .sidebar { max-height: 26dvh; }
 }
 
 /* ========== STAT CARDS ========== */
@@ -491,6 +491,11 @@ label:has(input[name="wiPlan"]:checked) {
 .customer-view { display: none; min-width: 0; }
 .customer-view.active { display: flex; flex-direction: column; gap: 20px; }
 .customer-main { width: 100%; }
+body.member-dashboard { height: 100dvh; overflow: hidden; }
+body.member-dashboard .app { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; height: 100%; min-height: 0; }
+body.member-dashboard .customer-main { min-height: 0; overflow-y: scroll; overflow-x: hidden; scrollbar-gutter: stable; overflow-anchor: none; overscroll-behavior-y: contain; }
+body.member-dashboard .customer-main > * { flex-shrink: 0; }
+body.member-dashboard .dashboard-footer { margin-top: 0; }
 .customer-main > * { scroll-margin-top: 20px; }
 .member-insights-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 20px; }
 .member-insights-grid > .panel { height: 100%; }

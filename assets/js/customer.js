@@ -190,12 +190,22 @@ function escapeHTML(value) {
 }
 
 function memberTourStorageKey() {
-    return `ig_member_tour_seen_${String(session?.username || 'member').toLowerCase()}`;
+    const member = getCurrentMember();
+    const identity = member?.authUserId || member?.id || session?.username;
+    return identity ? `ig_member_tour_seen_${String(identity).toLowerCase()}` : null;
 }
 
 function showMemberWelcome() {
+    const storageKey = memberTourStorageKey();
+    if (!storageKey || memberTourActive) return;
     let alreadySeen = false;
-    try { alreadySeen = localStorage.getItem(memberTourStorageKey()) === 'true'; }
+    try {
+        const legacyKey = `ig_member_tour_seen_${String(session?.username || 'member').toLowerCase()}`;
+        alreadySeen = localStorage.getItem(storageKey) === 'true'
+            || localStorage.getItem(legacyKey) === 'true';
+        // Record the first display immediately, including refreshes before dismissal.
+        localStorage.setItem(storageKey, 'true');
+    }
     catch { alreadySeen = true; }
     if (alreadySeen) return;
     memberTourActive = true;
@@ -211,7 +221,8 @@ function showMemberWelcome() {
 
 function finishMemberTour() {
     memberTourActive = false;
-    try { localStorage.setItem(memberTourStorageKey(), 'true'); } catch {}
+    const storageKey = memberTourStorageKey();
+    try { if (storageKey) localStorage.setItem(storageKey, 'true'); } catch {}
     document.getElementById('modalOverlay').classList.add('hidden');
 }
 
