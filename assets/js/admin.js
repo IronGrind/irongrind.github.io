@@ -29,7 +29,6 @@ let currentSalesView = 'transactions';
 let currentSalesTransactionType = 'all';
 let currentSalesSubType = 'all';
 let currentSalesProductName = 'all';
-let currentFollowupView = 'expiring';
 let activeQRScanner = null;
 let qrScanHandled = false;
 let qrCameraHintTimer = null;
@@ -316,8 +315,6 @@ function renderDashboard() {
     const low = products.filter(p => p.category === 'Merch' && p.stock <= 4);
     document.getElementById('statLowStock').textContent = low.length;
 
-    renderMemberFollowup();
-
     const attTable = document.getElementById('dashboardAttendanceTable');
     if (todayAtt.length === 0) attTable.innerHTML = '<div class="empty-state">No check-ins yet today.</div>';
     else attTable.innerHTML = `
@@ -338,90 +335,6 @@ function renderDashboard() {
     document.getElementById('approvalsCount').textContent = pending.length;
     document.getElementById('registrationApprovalsCount').textContent = pending.filter(p => p.source !== 'dashboard-renewal').length;
     document.getElementById('renewalApprovalsCount').textContent = pending.filter(p => p.source === 'dashboard-renewal').length;
-}
-
-function getDateDayDifference(fromDate, toDate) {
-    const from = Date.parse(`${fromDate}T00:00:00Z`);
-    const to = Date.parse(`${toDate}T00:00:00Z`);
-    return Number.isFinite(from) && Number.isFinite(to) ? Math.round((to - from) / 86400000) : null;
-}
-
-function getMemberFollowupGroups() {
-    const today = todayStr();
-    const expiringThrough = addDays(today, 7);
-    const lowAttendanceSince = addDays(today, -14);
-    const activeMembers = members.filter(member => getMemberActivityStatus(member) === 'Active');
-    const withoutPendingRenewal = member => !hasPendingRenewalForMember(member);
-    const expiring = activeMembers.filter(member => member.expiry >= today
-        && member.expiry <= expiringThrough && withoutPendingRenewal(member))
-        .sort((a, b) => String(a.expiry).localeCompare(String(b.expiry)));
-    const lowAttendance = activeMembers.filter(member => withoutPendingRenewal(member)
-        && member.startDate && member.startDate <= lowAttendanceSince)
-        .map(member => ({
-            ...member,
-            visitCount: attendance.filter(record => String(record.memberId) === String(member.id)
-                && record.date >= lowAttendanceSince && record.date <= today).length
-        }))
-        .filter(member => member.visitCount < 2)
-        .sort((a, b) => a.visitCount - b.visitCount || String(a.expiry).localeCompare(String(b.expiry)));
-    const recentlyExpired = members.filter(member => member.expiry && member.expiry < today
-        && today < addDays(member.expiry, 5) && withoutPendingRenewal(member))
-        .sort((a, b) => String(b.expiry).localeCompare(String(a.expiry)));
-    return { expiring, attendance: lowAttendance, expired: recentlyExpired };
-}
-
-function renderMemberFollowup() {
-    const groups = getMemberFollowupGroups();
-    document.getElementById('followupExpiringCount').textContent = groups.expiring.length;
-    document.getElementById('followupAttendanceCount').textContent = groups.attendance.length;
-    document.getElementById('followupExpiredCount').textContent = groups.expired.length;
-    document.querySelectorAll('[data-followup-view]').forEach(button =>
-        button.classList.toggle('active', button.dataset.followupView === currentFollowupView)
-    );
-
-    const list = document.getElementById('memberFollowupList');
-    const candidates = groups[currentFollowupView] || [];
-    if (!candidates.length) {
-        const emptyText = currentFollowupView === 'attendance'
-            ? 'No active members are below the attendance follow-up threshold.'
-            : currentFollowupView === 'expired'
-                ? 'No members need follow-up in the five-day renewal window.'
-                : 'No memberships are due to expire in the next seven days.';
-        list.innerHTML = `<div class="empty-state">${emptyText}</div>`;
-        return;
-    }
-
-    list.innerHTML = `<div class="table-scroll followup-table-wrap"><table class="attendance-table followup-table">
-        <thead><tr><th>Member</th><th>Plan</th><th>Follow-up</th><th></th></tr></thead>
-        <tbody>${candidates.map(member => {
-            const dayLabel = days => `${days} day${days === 1 ? '' : 's'}`;
-            const reason = currentFollowupView === 'attendance'
-                ? `${member.visitCount} visits in the last 14 days`
-                : currentFollowupView === 'expired'
-                    ? `Expired ${dayLabel(getDateDayDifference(member.expiry, todayStr()))} ago`
-                    : getDateDayDifference(todayStr(), member.expiry) === 0
-                        ? 'Expires today'
-                        : `Expires in ${dayLabel(getDateDayDifference(todayStr(), member.expiry))}`;
-            return `<tr><td>${escapeHTML(member.name || 'Member')}</td><td>${escapeHTML(member.plan || '—')}</td><td>${escapeHTML(reason)}</td><td><button class="btn-sm" data-followup-member="${escapeHTML(member.id)}" data-followup-group="${currentFollowupView}">View member</button></td></tr>`;
-        }).join('')}</tbody></table></div>`;
-    list.querySelectorAll('[data-followup-member]').forEach(button => button.addEventListener('click', () => {
-        openFollowupMember(button.dataset.followupMember, button.dataset.followupGroup);
-    }));
-}
-
-function switchFollowupView(view) {
-    currentFollowupView = ['attendance', 'expired'].includes(view) ? view : 'expiring';
-    renderMemberFollowup();
-}
-
-function openFollowupMember(memberId, group) {
-    const member = members.find(item => String(item.id) === String(memberId));
-    if (!member) return;
-    currentMemberTab = group === 'expired' ? 'expired' : 'members';
-    showAdminSection('membership');
-    const search = document.getElementById(currentMemberTab === 'expired' ? 'expiredMemberSearch' : 'memberSearch');
-    if (search) search.value = member.name || '';
-    filterPlan('all');
 }
 
 /* ========== RENDER: MEMBERS ========== */
@@ -3364,7 +3277,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.setInterval(() => {
         captureExpiredMemberships();
         renderMembers();
-        renderMemberFollowup();
     }, 60 * 1000);
 
 });

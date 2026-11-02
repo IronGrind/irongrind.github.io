@@ -125,12 +125,6 @@ body.dashboard-body .low-stock-item { background-color: rgba(13,18,25,0.64); bor
 .sales-product-filter select { max-width: min(280px, 52vw); min-height: 34px; padding: 6px 10px; border: 1px solid #303030; border-radius: 9px; background: #111; color: #e8edf5; font: inherit; font-weight: 400; }
 .walkin-sales-summary .stat-card { min-height: 108px; padding: 16px 18px; }
 .walkin-sales-summary .stat-value { font-size: 1.55rem; }
-.member-followup-panel .panel-header { align-items: flex-start; }
-.member-followup-panel .panel-header h2 { margin-bottom: 5px; }
-.followup-tabs { margin: 0 0 12px; }
-.followup-table-wrap { max-height: 390px; }
-.followup-table { min-width: 520px; }
-.followup-table td:last-child { text-align: right; white-space: nowrap; }
 .progress-alert.notice { background: rgba(52,126,190,.12); border-color: rgba(52,126,190,.3); color: #8bc6f2; }
 .progress-alert .btn-sm { margin-left: auto; white-space: nowrap; }
 @media (max-width: 760px) {
@@ -140,8 +134,6 @@ body.dashboard-body .low-stock-item { background-color: rgba(13,18,25,0.64); bor
     .transaction-filter-tabs { width: 100%; }
     .sales-product-filter { width: 100%; margin-left: 0; justify-content: space-between; }
     .sales-product-filter select { max-width: none; flex: 1; }
-    .followup-tabs { width: 100%; }
-    .followup-tabs .admin-tab { flex: 1 1 auto; justify-content: center; padding: 9px 10px; }
     .progress-alert { align-items: flex-start; flex-wrap: wrap; }
     .progress-alert .btn-sm { margin-left: 0; }
 }

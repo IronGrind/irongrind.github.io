@@ -76,20 +76,6 @@
                         <div class="stat-sub danger"><i class="fas fa-exclamation-triangle"></i> Needs restocking</div>
                     </div>
                 </div>
-                <div class="panel member-followup-panel">
-                    <div class="panel-header">
-                        <div>
-                            <h2><i class="fas fa-hand-holding-heart"></i> Member Follow-up</h2>
-                            <p class="modal-sub">Expiring in 7 days, fewer than 2 visits in 14 days, or recently expired. Members with pending renewals are omitted.</p>
-                        </div>
-                    </div>
-                    <div class="admin-tabs followup-tabs" aria-label="Member follow-up groups">
-                        <button class="admin-tab active" data-followup-view="expiring" onclick="switchFollowupView('expiring')">Expiring soon <span class="badge" id="followupExpiringCount">0</span></button>
-                        <button class="admin-tab" data-followup-view="attendance" onclick="switchFollowupView('attendance')">Low attendance <span class="badge" id="followupAttendanceCount">0</span></button>
-                        <button class="admin-tab" data-followup-view="expired" onclick="switchFollowupView('expired')">Recently expired <span class="badge" id="followupExpiredCount">0</span></button>
-                    </div>
-                    <div id="memberFollowupList"></div>
-                </div>
                 <div class="panel">
                     <div class="panel-header">
                         <h2><i class="fas fa-clock"></i> Today's Attendance — Time In / Out</h2>
@@ -288,6 +274,6 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script src="assets/js/signature.js"></script>
-<script src="assets/js/admin.js?v=20261102-member-followup"></script>
+<script src="assets/js/admin.js?v=20261102-admin-cleanup"></script>
 </body>
 </html>
