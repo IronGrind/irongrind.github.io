@@ -2319,13 +2319,6 @@ async function submitNewSale() {
     toast(`✅ Sale complete — ${formatPeso(sale.total)}.`, 'success');
 }
 
-function switchWalkinSalesType(type) {
-    const selected = type === 'Merch' ? 'Merch' : 'Supplement';
-    document.querySelectorAll('[data-walkin-type]').forEach(button => button.classList.toggle('active', button.dataset.walkinType === selected));
-    document.getElementById('walkinSupplementPanel').classList.toggle('hidden', selected !== 'Supplement');
-    document.getElementById('walkinMerchPanel').classList.toggle('hidden', selected !== 'Merch');
-}
-
 function switchSalesView(view) {
     currentSalesView = view === 'products' ? 'products' : 'membership';
     currentSalesTransactionType = currentSalesView;
@@ -2339,71 +2332,18 @@ function switchSalesView(view) {
     renderSales();
 }
 
-function getWalkinProductDetails(sale) {
-    if (sale.source === 'walk-in' && sale.category) return {
-        ...sale,
-        productName: sale.productName || sale.lineItems?.[0]?.name || sale.items || 'Product',
-        quantity: Number(sale.quantity) || Number(sale.lineItems?.[0]?.quantity) || 0
-    };
-    // Older POS records predate explicit product metadata; infer them only when
-    // their single sold item matches a product currently in inventory.
-    const item = sale.lineItems?.length === 1 ? sale.lineItems[0] : null;
-    if (!item) return null;
-    const matches = products.filter(product => product.name === item.name);
-    const categories = [...new Set(matches.map(product => product.category))];
-    if (categories.length !== 1) return null;
-    const product = matches[0];
-    return {
-        ...sale,
-        productId: product.id,
-        productName: item.name,
-        category: product.category,
-        quantity: Number(item.quantity) || 0,
-        quantityUnit: product.category === 'Supplement' ? 'g' : 'item'
-    };
-}
-
 function renderWalkinSalesReport() {
     const dateInput = document.getElementById('walkinSalesDate');
     if (!dateInput) return;
     if (!dateInput.value) dateInput.value = todayStr();
-    const daySales = sales.filter(sale => sale.date === dateInput.value && sale.status === 'Paid')
-        .map(getWalkinProductDetails).filter(Boolean);
-    const supplementSales = daySales.filter(sale => sale.category === 'Supplement');
-    const merchSales = daySales.filter(sale => sale.category === 'Merch');
+    const daySales = sales.filter(sale => sale.date === dateInput.value && sale.status === 'Paid'
+        && getSaleProductCategory(sale));
+    const supplementSales = daySales.filter(sale => getSaleProductCategory(sale) === 'Supplement');
+    const merchSales = daySales.filter(sale => getSaleProductCategory(sale) === 'Merchandise');
     const sumIncome = items => items.reduce((sum, sale) => sum + Number(sale.total || 0), 0);
     document.getElementById('walkinTotalIncome').textContent = formatPeso(sumIncome(daySales));
     document.getElementById('walkinSupplementIncome').textContent = formatPeso(sumIncome(supplementSales));
     document.getElementById('walkinMerchIncome').textContent = formatPeso(sumIncome(merchSales));
-
-    const aggregate = items => {
-        const byProduct = new Map();
-        items.forEach(sale => {
-            const key = sale.productId || sale.productName || sale.items;
-            const existing = byProduct.get(key) || {
-                name: sale.productName || sale.items || 'Product',
-                quantity: 0,
-                income: 0,
-                grams: 0
-            };
-            const quantity = Number(sale.quantity) || Number(sale.lineItems?.[0]?.quantity) || 0;
-            existing.quantity += quantity;
-            existing.income += Number(sale.total || 0);
-            if (items === supplementSales) {
-                existing.grams += quantity;
-            }
-            byProduct.set(key, existing);
-        });
-        return [...byProduct.values()].sort((a, b) => a.name.localeCompare(b.name));
-    };
-    const supplements = aggregate(supplementSales);
-    const merchandise = aggregate(merchSales);
-    document.getElementById('walkinSupplementTable').innerHTML = supplements.length
-        ? `<div class="table-scroll"><table class="attendance-table"><thead><tr><th>Supplement</th><th>Grams Sold</th><th>Income</th></tr></thead><tbody>${supplements.map(item => `<tr><td>${escapeHTML(item.name)}</td><td>${item.grams.toLocaleString('en-PH')} g</td><td>${formatPeso(item.income)}</td></tr>`).join('')}</tbody></table></div>`
-        : '<div class="empty-state">No supplement sales for this date.</div>';
-    document.getElementById('walkinMerchTable').innerHTML = merchandise.length
-        ? `<div class="table-scroll"><table class="attendance-table"><thead><tr><th>Merchandise</th><th>Quantity Sold</th><th>Income</th></tr></thead><tbody>${merchandise.map(item => `<tr><td>${escapeHTML(item.name)}</td><td>${item.quantity}</td><td>${formatPeso(item.income)}</td></tr>`).join('')}</tbody></table></div>`
-        : '<div class="empty-state">No merchandise sales for this date.</div>';
 }
 
 function isWalkinProductSale(sale) {
