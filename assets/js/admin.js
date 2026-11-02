@@ -2690,6 +2690,8 @@ function renderReports() {
             </section>
         `).join('')}
     `;
+    const monthInput = document.getElementById('reportsExportMonth');
+    if (monthInput && !monthInput.value) monthInput.value = localDateStr().slice(0, 7);
 }
 
 function isRenewalSale(sale) {
