@@ -263,7 +263,6 @@ function showAdminSection(section, event) {
     if (section === 'membership') switchMemberTab(currentMemberTab);
     if (section === 'attendance') renderAttendance();
     if (section === 'sales') {
-        renderSales();
         switchSalesView(currentSalesView);
     }
     if (section === 'reports') renderReports();
@@ -2328,17 +2327,16 @@ function switchWalkinSalesType(type) {
 }
 
 function switchSalesView(view) {
-    currentSalesView = ['membership', 'products', 'walkin'].includes(view) ? view : 'membership';
-    if (currentSalesView !== 'walkin') currentSalesTransactionType = currentSalesView;
+    currentSalesView = view === 'products' ? 'products' : 'membership';
+    currentSalesTransactionType = currentSalesView;
     currentSalesSubType = 'all';
     currentSalesProductName = 'all';
     document.querySelectorAll('[data-sales-view]').forEach(button =>
         button.classList.toggle('active', button.dataset.salesView === currentSalesView)
     );
-    document.getElementById('salesTransactionsPanel').classList.toggle('hidden', currentSalesView === 'walkin');
-    document.getElementById('walkinSalesPanel').classList.toggle('hidden', currentSalesView !== 'walkin');
-    if (currentSalesView === 'walkin') renderWalkinSalesReport();
-    else renderSales();
+    document.getElementById('salesTransactionsPanel').classList.remove('hidden');
+    document.getElementById('walkinSalesPanel').classList.toggle('hidden', currentSalesView !== 'products');
+    renderSales();
 }
 
 function getWalkinProductDetails(sale) {
@@ -2459,10 +2457,9 @@ function renderSales() {
     const membershipSales = sales.filter(isMembershipSale);
     const monthMembershipSales = membershipSales.filter(sale => reportDateBelongsToMonth(sale.date || sale.createdAt, currentMembershipSalesMonth));
     const productSales = sales.filter(sale => !isMembershipSale(sale) && Boolean(getSaleProductCategory(sale)));
+    if (currentSalesView === 'products') renderWalkinSalesReport();
     const currentMonth = localDateStr().slice(0, 7);
     const currentMonthSales = sales.filter(sale => reportDateBelongsToMonth(sale.date || sale.createdAt, currentMonth));
-    const currentMonthMembershipCount = currentMonthSales.filter(isMembershipSale).length;
-    const currentMonthProductCount = currentMonthSales.filter(sale => !isMembershipSale(sale) && Boolean(getSaleProductCategory(sale))).length;
     const currentMonthPaidSales = currentMonthSales.filter(sale => sale.status === 'Paid');
     const currentMonthPaidMembershipCount = currentMonthPaidSales.filter(isMembershipSale).length;
     const currentMonthPaidProductCount = currentMonthPaidSales.filter(sale => !isMembershipSale(sale) && Boolean(getSaleProductCategory(sale))).length;
@@ -2470,9 +2467,6 @@ function renderSales() {
     const currentMonthLabel = new Intl.DateTimeFormat('en', { month: 'long', year: 'numeric' })
         .format(new Date(`${currentMonth}-01T00:00:00`));
     document.getElementById('salesMonthOverview').innerHTML = `<div class="sales-month-overview-copy"><span>This month · ${currentMonthLabel}</span><h3>Overall income</h3><p>Memberships: ${currentMonthPaidMembershipCount} paid sales · Products: ${currentMonthPaidProductCount} paid sales</p></div><strong class="sales-month-overview-total">${formatPeso(currentMonthIncome)}</strong>`;
-    document.getElementById('salesMonthlyCountSummary').innerHTML = `<span class="sales-monthly-count-title">${currentMonth} transaction count</span><strong>${currentMonthSales.length} total sales</strong><span>Memberships: ${currentMonthMembershipCount}</span><span>Products: ${currentMonthProductCount}</span>`;
-    document.getElementById('salesCountMembership').textContent = membershipSales.length;
-    document.getElementById('salesCountProducts').textContent = productSales.length;
     const salesByType = { membership: monthMembershipSales, products: productSales };
     const typedSales = salesByType[currentSalesTransactionType] || [];
     const planOptions = [...new Set(monthMembershipSales.map(getMembershipPlanFromSale))].sort((a, b) => {
