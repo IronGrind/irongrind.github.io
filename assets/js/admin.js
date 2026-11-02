@@ -1956,18 +1956,6 @@ async function checkOut(id) {
     toast(`${a.memberName} checked out at ${formatAttendanceClock(a.timeOut)}.`, 'success');
 }
 
-function exportAttendance() {
-    const csv = ['Member,Time In,Time Out,Status']
-        .concat(attendance.filter(a => a.date === todayStr()).map(a => `${a.memberName},${formatAttendanceClock(a.timeIn)},${formatAttendanceClock(a.timeOut)},${a.timeOut ? 'Checked Out' : 'Inside'}`))
-        .join('\n');
-    const blob = new Blob([csv], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = `attendance-${todayStr()}.csv`; a.click();
-    URL.revokeObjectURL(url);
-    toast('Exported.', 'success');
-}
-
 /* ========== STORE ========== */
 async function unlockStore() {
     const passwordInput = document.getElementById('storeAccessPassword');
