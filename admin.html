@@ -45,10 +45,7 @@
                 <i class="fas fa-store"></i> Store &amp; Inventory
             </button>
             <button class="nav-item" data-section="sales" onclick="showAdminSection('sales', event)">
-                <i class="fas fa-receipt"></i> Sales Transaction
-            </button>
-            <button class="nav-item" data-section="walkin-sales" onclick="showAdminSection('walkin-sales', event)">
-                <i class="fas fa-chart-line"></i> Walk-in Sales
+                <i class="fas fa-receipt"></i> Sales
             </button>
             <button class="nav-item" data-section="reports" onclick="showAdminSection('reports', event)">
                 <i class="fas fa-chart-bar"></i> Reports
@@ -108,6 +105,9 @@
                         <button class="admin-tab" data-tab="expired" onclick="switchMemberTab('expired')">
                             <i class="fas fa-user-clock"></i> Expired <span class="badge" id="expiredMembersCount">0</span>
                         </button>
+                        <button class="admin-tab" data-tab="inactive" onclick="switchMemberTab('inactive')">
+                            <i class="fas fa-user-slash"></i> Inactive <span class="badge" id="inactiveMembersCount">0</span>
+                        </button>
                         <button class="admin-tab" data-tab="approvals" onclick="switchMemberTab('approvals')">
                             <i class="fas fa-clock"></i> Approvals
                             <span class="badge" id="approvalsCount">0</span>
@@ -142,6 +142,21 @@
                             </div>
                         </div>
                         <div id="expiredMembersList"></div>
+                    </div>
+                    <div id="tab-inactive" class="hidden">
+                        <div class="membership-controls">
+                            <div class="search">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="inactiveMemberSearch" placeholder="Search inactive members by name..." oninput="renderMembers()">
+                            </div>
+                            <div class="plan-pills" id="inactivePlanPills">
+                                <span class="pill active" data-plan="all" onclick="filterPlan('all')">All</span>
+                                <span class="pill" data-plan="Monthly" onclick="filterPlan('Monthly')">Monthly</span>
+                                <span class="pill" data-plan="Half Month" onclick="filterPlan('Half Month')">Half Month</span>
+                                <span class="pill" data-plan="Walk-in" onclick="filterPlan('Walk-in')">Walk-in</span>
+                            </div>
+                        </div>
+                        <div id="inactiveMembersList"></div>
                     </div>
                     <div id="tab-approvals" class="hidden">
                         <p style="font-size:0.85rem; color:#8b95a9; margin-bottom:16px;">
@@ -208,21 +223,33 @@
             <div id="section-sales" class="admin-section hidden">
                 <div class="panel">
                     <div class="panel-header">
-                        <h2><i class="fas fa-receipt"></i> Sales Transactions</h2>
+                        <h2><i class="fas fa-receipt"></i> Sales</h2>
                         <button class="btn-primary" onclick="openNewSaleModal()"><i class="fas fa-plus"></i> New Sale</button>
                     </div>
-                    <div id="salesTable"></div>
-                </div>
-            </div>
+                    <div class="admin-tabs sales-section-tabs">
+                        <button class="admin-tab active" data-sales-view="transactions" onclick="switchSalesView('transactions')"><i class="fas fa-receipt"></i> All Transactions</button>
+                        <button class="admin-tab" data-sales-view="walkin" onclick="switchSalesView('walkin')"><i class="fas fa-store"></i> Walk-in Product Summary</button>
+                    </div>
+                    <div id="salesTransactionsPanel">
+                        <div class="transaction-filter-row">
+                            <p>Browse receipts by sale type.</p>
+                            <div class="admin-tabs transaction-filter-tabs" aria-label="Filter transactions">
+                                <button class="admin-tab active" data-sale-filter="all" onclick="switchSalesTransactionType('all')">All <span class="badge" id="salesCountAll">0</span></button>
+                                <button class="admin-tab" data-sale-filter="walkin" onclick="switchSalesTransactionType('walkin')">Walk-in Products <span class="badge" id="salesCountWalkin">0</span></button>
+                                <button class="admin-tab" data-sale-filter="other" onclick="switchSalesTransactionType('other')">Membership &amp; Other <span class="badge" id="salesCountOther">0</span></button>
+                            </div>
+                        </div>
+                        <div id="salesTable"></div>
+                    </div>
 
-            <div id="section-walkin-sales" class="admin-section hidden">
-                <div class="panel">
+            <div id="walkinSalesPanel" class="hidden">
+                <div class="walkin-sales-content">
                     <div class="panel-header">
                         <div>
                             <h2><i class="fas fa-chart-line"></i> Walk-in Product Sales</h2>
-                            <p class="modal-sub" style="margin-top:6px;">Record a walk-in purchase, print its receipt, and review daily grams, quantities, and income here.</p>
+                            <p class="modal-sub" style="margin-top:6px;">Review daily grams, quantities, and income from walk-in product sales.</p>
                         </div>
-                        <div class="walkin-sales-actions"><label class="walkin-date-filter">Sales date <input type="date" id="walkinSalesDate" onchange="renderWalkinSalesReport()"></label><button class="btn-primary" onclick="openNewSaleModal()"><i class="fas fa-cash-register"></i> Record Walk-in Sale</button></div>
+                        <div class="walkin-sales-actions"><label class="walkin-date-filter">Sales date <input type="date" id="walkinSalesDate" onchange="renderWalkinSalesReport()"></label></div>
                     </div>
                     <div class="stats-grid walkin-sales-summary">
                         <div class="stat-card"><div class="stat-label">Total Income</div><div class="stat-value" id="walkinTotalIncome">₱0</div><div class="stat-sub">All walk-in products</div></div>
@@ -237,18 +264,14 @@
                     <div id="walkinMerchPanel" class="hidden"><div id="walkinMerchTable"></div></div>
                 </div>
             </div>
+                </div>
+            </div>
 
             <div id="section-reports" class="admin-section hidden">
-                <div class="panel">
+                <div class="panel reports-panel">
                     <div class="panel-header">
                         <h2><i class="fas fa-chart-bar"></i> Reports</h2>
-                        <div class="report-export-controls">
-                            <label for="reportsExportMonth">Month</label>
-                            <input id="reportsExportMonth" type="month" aria-label="Choose a month for dated report records">
-                            <button class="btn-sm" onclick="exportAllReports()"><i class="fas fa-download"></i> Export All PDFs</button>
-                        </div>
                     </div>
-                    <p class="modal-sub">Export downloads one ZIP folder containing a PDF for each report. Dated records use the selected month; members and inventory show current snapshots.</p>
                     <div class="product-grid" id="reportsGrid"></div>
                 </div>
             </div>

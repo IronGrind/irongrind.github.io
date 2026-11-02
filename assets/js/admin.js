@@ -25,6 +25,7 @@ let membershipArchives = [];
 let currentPlanFilter = 'all';
 let currentMemberTab = 'members';
 let currentApprovalType = 'registration';
+let currentSalesView = 'transactions';
 let activeQRScanner = null;
 let qrScanHandled = false;
 let qrCameraHintTimer = null;
@@ -257,8 +258,10 @@ function showAdminSection(section, event) {
     }
     if (section === 'membership') switchMemberTab(currentMemberTab);
     if (section === 'attendance') renderAttendance();
-    if (section === 'sales') renderSales();
-    if (section === 'walkin-sales') renderWalkinSalesReport();
+    if (section === 'sales') {
+        renderSales();
+        switchSalesView(currentSalesView);
+    }
     if (section === 'reports') renderReports();
     if (section === 'dashboard') renderDashboard();
 }
@@ -269,8 +272,9 @@ function switchMemberTab(tab) {
     document.getElementById('tab-members').classList.toggle('hidden', tab !== 'members');
     document.getElementById('tab-approvals').classList.toggle('hidden', tab !== 'approvals');
     document.getElementById('tab-expired').classList.toggle('hidden', tab !== 'expired');
+    document.getElementById('tab-inactive').classList.toggle('hidden', tab !== 'inactive');
     if (tab === 'approvals') renderApprovals();
-    else if (tab === 'members' || tab === 'expired') renderMembers();
+    else if (tab === 'members' || tab === 'expired' || tab === 'inactive') renderMembers();
 }
 
 function switchApprovalType(type) {
@@ -293,7 +297,7 @@ function logout() {
 
 /* ========== RENDER: DASHBOARD ========== */
 function renderDashboard() {
-    const currentMemberships = members.filter(member => member.expiry && member.expiry >= todayStr());
+    const currentMemberships = members.filter(member => getMemberActivityStatus(member) === 'Active');
     document.getElementById('statTotalMembers').textContent = currentMemberships.length;
 
     const today = todayStr();
@@ -354,40 +358,51 @@ function isMembershipArchiveReady(record) {
     return Boolean(record?.renewedAt || (record?.expiry && todayStr() >= addDays(record.expiry, 10)));
 }
 
+function isInactiveMember(member, today = todayStr()) {
+    return String(member?.status || '').toLowerCase() === 'inactive'
+        || Boolean(member?.expiry && today >= addDays(member.expiry, 5));
+}
+
 function renderMembers() {
     const isExpiredTab = currentMemberTab === 'expired';
-    const searchEl = document.getElementById(isExpiredTab ? 'expiredMemberSearch' : 'memberSearch');
+    const isInactiveTab = currentMemberTab === 'inactive';
+    const searchEl = document.getElementById(isExpiredTab ? 'expiredMemberSearch' : isInactiveTab ? 'inactiveMemberSearch' : 'memberSearch');
     const query = searchEl ? searchEl.value.toLowerCase() : '';
     const today = todayStr();
-    let filtered = members.filter(m => isExpiredTab
-        ? Boolean(m.expiry && m.expiry < today)
-        : Boolean(m.expiry && m.expiry >= today)).filter(m => {
+    let filtered = members.filter(m => {
+        if (isInactiveTab) return isInactiveMember(m, today);
+        if (isExpiredTab) return Boolean(m.expiry && m.expiry < today && !isInactiveMember(m, today));
+        return Boolean(m.expiry && m.expiry >= today) && !isInactiveMember(m, today);
+    }).filter(m => {
         if (currentPlanFilter !== 'all' && m.plan !== currentPlanFilter) return false;
         if (query && !String(m.name || '').toLowerCase().includes(query)) return false;
         return true;
     });
 
-    const listEl = document.getElementById(isExpiredTab ? 'expiredMembersList' : 'membersList');
-    document.getElementById('expiredMembersCount').textContent = members.filter(m => m.expiry && m.expiry < today).length;
+    const listId = isInactiveTab ? 'inactiveMembersList' : isExpiredTab ? 'expiredMembersList' : 'membersList';
+    const listEl = document.getElementById(listId);
+    document.getElementById('expiredMembersCount').textContent = members.filter(m => m.expiry && m.expiry < today && !isInactiveMember(m, today)).length;
+    document.getElementById('inactiveMembersCount').textContent = members.filter(m => isInactiveMember(m, today)).length;
     if (filtered.length === 0) {
-        listEl.innerHTML = `<div class="empty-state">No ${isExpiredTab ? 'expired' : 'active'} members match these filters.</div>`;
+        const groupName = isInactiveTab ? 'inactive' : isExpiredTab ? 'recently expired' : 'active';
+        listEl.innerHTML = `<div class="empty-state">No ${groupName} members match these filters.</div>`;
         return;
     }
 
     listEl.innerHTML = filtered.map(m => {
-        const statusClass = isExpiredTab ? 'expired' : (m.paid ? '' : 'pending');
-        const statusText = isExpiredTab ? 'Expired' : (m.paid ? 'Paid' : 'Pending');
+        const statusClass = isInactiveTab || isExpiredTab ? 'expired' : (m.paid ? '' : 'pending');
+        const statusText = isInactiveTab ? 'Inactive' : isExpiredTab ? 'Expired' : (m.paid ? 'Paid' : 'Pending');
         return `
             <div class="member-row">
                 <div class="member-info">
                     <div class="member-avatar">${initials(m.name)}</div>
                     <div class="member-details">
                         <h4>${m.name}</h4>
-                        <p>${m.plan} · Expires ${m.expiry}${isExpiredTab ? ' · EXPIRED' : ''}</p>
+                        <p>${m.plan} · Expires ${m.expiry}${isInactiveTab ? ' · INACTIVE' : isExpiredTab ? ' · EXPIRED' : ''}</p>
                     </div>
                 </div>
                 <div class="member-actions">
-                    ${isExpiredTab ? '' : `<button class="renew-btn" onclick="openChangePlanModal('${m.id}')"><i class="fas fa-exchange-alt"></i> Change Plan</button>`}
+                    ${isExpiredTab || isInactiveTab ? '' : `<button class="renew-btn" onclick="openChangePlanModal('${m.id}')"><i class="fas fa-exchange-alt"></i> Change Plan</button>`}
                     <button class="renew-btn" onclick="renewMember('${m.id}')"><i class="fas fa-sync-alt"></i> Renew</button>
                     <span class="approve-badge ${statusClass}">${statusText}</span>
                 </div>
@@ -397,7 +412,7 @@ function renderMembers() {
 
 function filterPlan(plan) {
     currentPlanFilter = plan;
-    document.querySelectorAll('#planPills .pill, #expiredPlanPills .pill').forEach(p => p.classList.toggle('active', p.dataset.plan === plan));
+    document.querySelectorAll('#planPills .pill, #expiredPlanPills .pill, #inactivePlanPills .pill').forEach(p => p.classList.toggle('active', p.dataset.plan === plan));
     renderMembers();
 }
 
@@ -876,6 +891,8 @@ function mapSupabaseMember(row, username = '', email = '') {
 async function loadSupabaseMembershipData() {
     const supabaseClient = window.ironGrindSupabase;
     if (!supabaseClient) return;
+    const { error: inactiveError } = await supabaseClient.rpc('admin_mark_members_inactive');
+    if (inactiveError) console.error('Could not update expired members to inactive:', inactiveError);
     const [applicationsResult, membersResult] = await Promise.all([
         supabaseClient.from('membership_applications').select('*').eq('status', 'pending'),
         supabaseClient.from('members').select('*')
@@ -2314,6 +2331,16 @@ function switchWalkinSalesType(type) {
     document.getElementById('walkinMerchPanel').classList.toggle('hidden', selected !== 'Merch');
 }
 
+function switchSalesView(view) {
+    currentSalesView = view === 'walkin' ? 'walkin' : 'transactions';
+    document.querySelectorAll('[data-sales-view]').forEach(button =>
+        button.classList.toggle('active', button.dataset.salesView === currentSalesView)
+    );
+    document.getElementById('salesTransactionsPanel').classList.toggle('hidden', currentSalesView !== 'transactions');
+    document.getElementById('walkinSalesPanel').classList.toggle('hidden', currentSalesView !== 'walkin');
+    if (currentSalesView === 'walkin') renderWalkinSalesReport();
+}
+
 function getWalkinProductDetails(sale) {
     if (sale.source === 'walk-in' && sale.category) return {
         ...sale,
@@ -2528,26 +2555,72 @@ function captureExpiredMemberships() {
 }
 
 function renderReports() {
-    const reports = [
-        { id: 'membership', name: 'Membership Report' },
-        { id: 'member-status', name: 'Active / Inactive Members' },
-        { id: 'archives', name: 'Archives' },
-        { id: 'payment', name: 'Payment Report' },
-        { id: 'attendance', name: 'Attendance Report' },
-        { id: 'renewals', name: 'Membership Renewal Report' },
-        { id: 'inventory', name: 'Inventory Report' },
-        { id: 'sales', name: 'Sales Report' }
+    const groups = [
+        {
+            name: 'Membership',
+            description: 'Member status, renewals, and record history.',
+            reports: [
+                { id: 'membership', name: 'Membership Report', icon: 'fa-id-card', description: 'Current member plans and expiry dates.' },
+                { id: 'member-status', name: 'Member Status', icon: 'fa-user-check', description: 'Active and inactive member records.' },
+                { id: 'renewals', name: 'Renewal Report', icon: 'fa-rotate', description: 'Completed renewals and their receipts.' },
+                { id: 'archives', name: 'Archives', icon: 'fa-box-archive', description: 'Expired memberships, plan changes, and archived products.' }
+            ]
+        },
+        {
+            name: 'Daily Operations',
+            description: 'Attendance and inventory activity.',
+            reports: [
+                { id: 'attendance', name: 'Attendance Report', icon: 'fa-clipboard-user', description: 'Member check-ins and check-outs.' },
+                { id: 'inventory', name: 'Inventory Report', icon: 'fa-boxes-stacked', description: 'Product stock and inventory details.' }
+            ]
+        },
+        {
+            name: 'Payments & Sales',
+            description: 'Transaction and payment records.',
+            reports: [
+                { id: 'payment', name: 'Payment Report', icon: 'fa-money-bill-wave', description: 'Recorded membership and customer payments.' },
+                { id: 'sales', name: 'Sales Report', icon: 'fa-receipt', description: 'Sales transactions and line items.' }
+            ]
+        }
     ];
-    document.getElementById('reportsGrid').innerHTML = reports.map(r => `
-        <div class="product-card">
-            <span class="cat">Report</span>
-            <h4>${r.name}</h4>
-            <div class="report-card-actions">
-                <button class="btn-sm" onclick="viewReport('${r.id}')"><i class="fas fa-eye"></i> View</button>
-                <button class="btn-sm" onclick="printReportPDF('${r.id}')"><i class="fas fa-file-pdf"></i> Print / Save PDF</button>
+    const grid = document.getElementById('reportsGrid');
+    grid.className = 'reports-content';
+    grid.innerHTML = `
+        <div class="reports-toolbar">
+            <div class="reports-toolbar-copy">
+                <strong>Export all reports</strong>
+                <span>Dated reports use the selected month. Membership and inventory reports show current records.</span>
+            </div>
+            <div class="report-export-controls">
+                <label for="reportsExportMonth">Report month</label>
+                <input id="reportsExportMonth" type="month" aria-label="Choose a month for dated report records">
+                <button class="btn-primary" onclick="exportAllReports()"><i class="fas fa-file-zipper"></i> Export all PDFs</button>
             </div>
         </div>
-    `).join('');
+        ${groups.map(group => `
+            <section class="report-group" aria-label="${group.name} reports">
+                <div class="report-group-heading">
+                    <h3>${group.name}</h3>
+                    <p>${group.description}</p>
+                </div>
+                <div class="report-grid">
+                    ${group.reports.map(report => `
+                        <article class="report-card">
+                            <div class="report-card-icon"><i class="fas ${report.icon}" aria-hidden="true"></i></div>
+                            <div class="report-card-copy">
+                                <h4>${report.name}</h4>
+                                <p>${report.description}</p>
+                            </div>
+                            <div class="report-card-actions">
+                                <button class="btn-sm" onclick="viewReport('${report.id}')"><i class="fas fa-eye"></i> View</button>
+                                <button class="btn-sm" onclick="printReportPDF('${report.id}')"><i class="fas fa-file-pdf"></i> Print / Save</button>
+                            </div>
+                        </article>
+                    `).join('')}
+                </div>
+            </section>
+        `).join('')}
+    `;
 }
 
 function isRenewalSale(sale) {

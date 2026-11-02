@@ -92,6 +92,32 @@ body.dashboard-body .low-stock-item { background-color: rgba(13,18,25,0.64); bor
 .report-export-controls input[type="month"] { min-height: 36px; padding: 6px 9px; border: 1px solid #393939; border-radius: 6px; background: #161616; color: #f1f3f7; font: inherit; color-scheme: dark; }
 .report-card-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
 .report-card-actions .btn-sm { flex: 1 1 auto; justify-content: center; }
+.reports-content { display: flex; flex-direction: column; gap: 28px; margin-top: 4px; }
+.reports-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 18px 20px; border: 1px solid #303030; border-radius: 16px; background: #111; }
+.reports-toolbar-copy { display: grid; gap: 5px; }
+.reports-toolbar-copy strong { color: #f1f3f7; font-size: .95rem; }
+.reports-toolbar-copy span { max-width: 480px; color: #8b95a9; font-size: .8rem; line-height: 1.45; }
+.report-group { display: flex; flex-direction: column; gap: 12px; }
+.report-group-heading { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; padding-bottom: 9px; border-bottom: 1px solid #282828; }
+.report-group-heading h3 { color: #f1f3f7; font-size: .95rem; font-weight: 700; }
+.report-group-heading p { color: #737d91; font-size: .78rem; }
+.report-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 12px; }
+.report-card { display: grid; grid-template-columns: 40px minmax(0, 1fr); align-items: start; gap: 12px; min-width: 0; padding: 16px; border: 1px solid #282828; border-radius: 15px; background: #111; }
+.report-card-icon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: rgba(120,0,0,.18); color: #c34b4b; }
+.report-card-copy h4 { color: #f1f3f7; font-size: .9rem; font-weight: 650; }
+.report-card-copy p { margin-top: 5px; color: #8b95a9; font-size: .76rem; line-height: 1.45; }
+.report-card-actions { grid-column: 1 / -1; margin-top: 2px; }
+.report-card-actions .btn-sm { min-height: 36px; }
+.sales-section-tabs { margin-bottom: 18px; }
+.walkin-sales-content { padding-top: 4px; }
+@media (max-width: 760px) {
+    .reports-toolbar { align-items: stretch; flex-direction: column; }
+    .report-export-controls { justify-content: flex-start; }
+}
+@media (max-width: 460px) {
+    .report-export-controls { align-items: stretch; flex-direction: column; }
+    .report-export-controls input[type="month"], .report-export-controls .btn-primary { width: 100%; }
+}
 
 /* ========== BUTTONS ========== */
 .btn-sm { background: #282828; border: 1px solid #393939; color: #e8edf5; padding: 8px 16px; border-radius: 30px; font-size: 0.8rem; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; }
