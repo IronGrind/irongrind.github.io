@@ -267,6 +267,8 @@ function showAdminSection(section, event) {
     }
     if (section === 'reports') renderReports();
     if (section === 'dashboard') renderDashboard();
+    const content = document.querySelector('.main-content');
+    if (content) content.scrollTop = 0;
 }
 
 function switchMemberTab(tab) {

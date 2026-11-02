@@ -72,6 +72,19 @@ body.dashboard-body .low-stock-item { background-color: rgba(13,18,25,0.64); bor
 .dashboard-footer { width: 100%; margin-top: 4px; padding: 16px 8px 4px; border-top: 1px solid rgba(190,201,220,0.12); color: #737d91; font-size: 0.75rem; text-align: center; }
 .admin-section { display: flex; flex-direction: column; gap: 20px; min-width: 0; min-height: 560px; }
 
+/* Keep dashboard navigation and footer in place while section content scrolls. */
+body.dashboard-body { height: 100dvh; overflow: hidden; }
+body.dashboard-body .app { display: grid; grid-template-rows: auto minmax(0, 1fr) auto; height: 100%; min-height: 0; }
+body.dashboard-body .dashboard { min-height: 0; overflow: hidden; grid-template-rows: minmax(0, 1fr); }
+body.dashboard-body .dashboard-footer { margin-top: 0; }
+body.dashboard-body .sidebar { position: static; max-height: 100%; overflow-y: auto; }
+body.dashboard-body .main-content { height: 100%; min-height: 0; overflow-y: scroll; overflow-x: hidden; scrollbar-gutter: stable; overflow-anchor: none; overscroll-behavior-y: contain; }
+body.dashboard-body .admin-section { min-height: 100%; flex-shrink: 0; }
+@media (max-width: 1024px) {
+    body.dashboard-body .dashboard { grid-template-rows: auto minmax(0, 1fr); }
+    body.dashboard-body .sidebar { max-height: 26dvh; }
+}
+
 /* ========== STAT CARDS ========== */
 .stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
 .stat-card { min-width: 0; min-height: 136px; background: #161616; border: 1px solid #282828; border-radius: 20px; padding: 22px; }
@@ -177,6 +190,11 @@ body.dashboard-body .low-stock-item { background-color: rgba(13,18,25,0.64); bor
 }
 
 /* ========== BUTTONS ========== */
+.action-loading { cursor: progress !important; opacity: .85; }
+button.action-loading { position: relative; overflow: hidden; }
+button.action-loading::after { content: ''; position: absolute; bottom: 0; left: 0; height: 2px; width: 35%; background: currentColor; opacity: .6; animation: button-loading-progress 1.2s ease-in-out infinite; pointer-events: none; }
+@keyframes button-loading-progress { from { transform: translateX(-110%); } to { transform: translateX(390%); } }
+@media (prefers-reduced-motion: reduce) { button.action-loading::after { animation: none; width: 100%; } }
 .btn-sm { background: #282828; border: 1px solid #393939; color: #e8edf5; padding: 8px 16px; border-radius: 30px; font-size: 0.8rem; font-weight: 500; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; }
 .btn-sm:hover { background: #393939; }
 .btn-primary { background: #780000; border: none; color: #fff; padding: 8px 18px; border-radius: 30px; font-weight: 600; font-size: 0.8rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-family: inherit; }
