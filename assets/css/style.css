@@ -154,7 +154,7 @@ body.dashboard-body .low-stock-item { background-color: rgba(13,18,25,0.64); bor
 .membership-income-card small { color: #737d91; font-size: .68rem; }
 .membership-income-card.overall { border-color: rgba(195,75,75,.28); background: linear-gradient(135deg, rgba(120,0,0,.2), rgba(8,11,16,.5)); }
 .membership-income-card.overall strong { color: #ffdada; }
-#walkinSalesPanel { margin-top: 18px; padding-top: 18px; border-top: 1px solid rgba(190,201,220,.1); }
+#walkinSalesPanel { margin: 0 0 16px; padding: 0; border: 0; }
 .walkin-sales-summary .stat-card { min-height: 108px; padding: 16px 18px; }
 .walkin-sales-summary .stat-value { font-size: 1.55rem; }
 .progress-alert.notice { background: rgba(52,126,190,.12); border-color: rgba(52,126,190,.3); color: #8bc6f2; }

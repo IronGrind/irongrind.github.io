@@ -2324,11 +2324,16 @@ function switchSalesView(view) {
     currentSalesTransactionType = currentSalesView;
     currentSalesSubType = 'all';
     currentSalesProductName = 'all';
+    const transactionsPanel = document.getElementById('salesTransactionsPanel');
+    const productIncomeSummary = document.getElementById('walkinSalesPanel');
+    if (productIncomeSummary.parentElement !== transactionsPanel) {
+        transactionsPanel.insertBefore(productIncomeSummary, transactionsPanel.firstChild);
+    }
     document.querySelectorAll('[data-sales-view]').forEach(button =>
         button.classList.toggle('active', button.dataset.salesView === currentSalesView)
     );
-    document.getElementById('salesTransactionsPanel').classList.remove('hidden');
-    document.getElementById('walkinSalesPanel').classList.toggle('hidden', currentSalesView !== 'products');
+    transactionsPanel.classList.remove('hidden');
+    productIncomeSummary.classList.toggle('hidden', currentSalesView !== 'products');
     renderSales();
 }
 
