@@ -52,6 +52,8 @@ body.dashboard-body .low-stock-item { background-color: rgba(13,18,25,0.64); bor
 .btn-settings { display: grid; place-items: center; width: 40px; height: 40px; padding: 0; border: 1px solid #393939; border-radius: 10px; background: transparent; color: #e8edf5; font-size: 1rem; cursor: pointer; }
 .btn-settings:hover, .btn-settings:focus-visible { border-color: #780000; color: #780000; }
 .btn-settings:focus-visible, .settings-close:focus-visible { outline: 2px solid #780000; outline-offset: 3px; }
+.admin-activity-button { flex-shrink: 0; }
+.admin-activity-button.active { background: #780000; border-color: #a52c2c; color: #fff; }
 .btn-logout { background: transparent; border: 1px solid #393939; color: #e8edf5; padding: 8px 18px; border-radius: 30px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; font-family: inherit; }
 .btn-logout:hover { background: #780000; border-color: #780000; color: #fff; }
 

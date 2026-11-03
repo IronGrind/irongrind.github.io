@@ -253,7 +253,10 @@ function showAdminSection(section, event) {
     if (target) target.classList.remove('hidden');
 
     document.querySelectorAll('.sidebar .nav-item').forEach(el => el.classList.remove('active'));
-    const clicked = event?.target?.closest('.nav-item') || document.querySelector(`[data-section="${section}"]`);
+    const activityButton = document.getElementById('activityLogsButton');
+    activityButton?.classList.toggle('active', section === 'activity');
+    activityButton?.setAttribute('aria-pressed', String(section === 'activity'));
+    const clicked = event?.target?.closest('.nav-item') || document.querySelector(`.sidebar .nav-item[data-section="${section}"]`);
     if (clicked) clicked.classList.add('active');
 
     if (section === 'store') {

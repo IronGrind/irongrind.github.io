@@ -4,7 +4,7 @@
 
 Apply `supabase/migrations/20261103000000_activity_logs.sql` in the intended Supabase project's SQL Editor after the existing schema and membership migrations. Then serve the updated website and refresh the login and admin pages. No Edge Function redeployment is required.
 
-Open **Activity Logs** in the admin sidebar. Filters support account name, area, and inclusive Manila dates. Results show 50 events per page, with Refresh and pagination controls.
+Open **Activity Logs** using the history icon beside the admin's name in the header. Filters support account name, area, and inclusive Manila dates. Results show 50 events per page, with Refresh and pagination controls.
 
 The feature records successful database inserts, updates, and deletes for accounts, members, applications, attendance, products, sales, sale items, and membership history. Application decisions, attendance check-in/check-out, product archives, and membership history events receive specific action labels. One operation can produce several related events, such as a sale and its item lines.
 
