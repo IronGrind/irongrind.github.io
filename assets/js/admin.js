@@ -71,7 +71,7 @@ function manilaClock(date = new Date()) {
     }).format(date);
 }
 function uid(prefix) { return prefix + Math.floor(Math.random() * 9000 + 1000); }
-function nextSaleReceiptId() {
+function nextSaleReference() {
     const highest = sales.reduce((max, sale) => {
         const match = String(sale.id || '').match(/^IG-(\d+)$/);
         return match ? Math.max(max, Number(match[1])) : max;
@@ -149,10 +149,10 @@ function mapSupabaseSale(row) {
 
 function mapApprovedRenewalApplication(row) {
     const member = members.find(item => String(item.id) === String(row.member_id));
-    const receipt = `IG-R-${String(row.id).slice(0, 8).toUpperCase()}`;
+    const reference = `IG-R-${String(row.id).slice(0, 8).toUpperCase()}`;
     return {
         id: 'Not recorded',
-        expectedReceipt: receipt,
+        expectedSaleReference: reference,
         saleRecorded: false,
         customer: member?.name || row.full_name || 'Name not recorded',
         memberId: row.member_id,
@@ -555,7 +555,7 @@ function completeApproval(id) {
         saveDB('members', members);
         saveDB('membershipArchives', membershipArchives);
         sales.unshift({
-            id: nextSaleReceiptId(),
+            id: nextSaleReference(),
             customer: member.name,
             source: 'dashboard-renewal',
             items: member.plan + ' Renewal',
@@ -611,7 +611,7 @@ function completeApproval(id) {
     members.push(newMember);
     saveDB('members', members);
 
-    const registrationSaleId = nextSaleReceiptId();
+    const registrationSaleId = nextSaleReference();
     sales.unshift({
         id: registrationSaleId,
         customer: p.fullName,
@@ -629,7 +629,6 @@ function completeApproval(id) {
     renderApprovals();
     renderMembers();
     renderDashboard();
-    showSaleReceipt(registrationSaleId);
 }
 
 async function completeSupabaseRegistrationApproval(application) {
@@ -703,13 +702,13 @@ async function completeSupabaseRegistrationApproval(application) {
         memberRow = inserted.data;
     }
 
-    const registrationReceipt = `IG-REG-${String(appRow.id).slice(0, 8).toUpperCase()}`;
-    const { error: receiptError } = await supabaseClient.rpc('admin_record_registration_sale', {
+    const registrationReference = `IG-REG-${String(appRow.id).slice(0, 8).toUpperCase()}`;
+    const { error: saleError } = await supabaseClient.rpc('admin_record_registration_sale', {
         p_member_id: memberRow.id,
-        p_receipt_number: registrationReceipt
+        p_receipt_number: registrationReference
     });
-    if (receiptError) {
-        toast(`Member is saved, but the registration payment could not be recorded: ${receiptError.message}`, 'error');
+    if (saleError) {
+        toast(`Member is saved, but the registration payment could not be recorded: ${saleError.message}`, 'error');
         return;
     }
 
@@ -735,7 +734,6 @@ async function completeSupabaseRegistrationApproval(application) {
     renderMembers();
     renderDashboard();
     toast(`${member.name}'s membership was approved and saved to Supabase.`, 'success');
-    showSaleReceipt(registrationReceipt);
 }
 
 async function completeSupabaseRenewalApproval(application) {
@@ -767,21 +765,21 @@ async function completeSupabaseRenewalApproval(application) {
     const extensionAnchor = currentExpiry >= startDate ? currentExpiry : startDate;
     const endDate = addDays(extensionAnchor, getPlanDurationDays(plan));
     const reviewedAt = new Date().toISOString();
-    const receiptNumber = `IG-R-${String(appRow.id).slice(0, 8).toUpperCase()}`;
+    const transactionReference = `IG-R-${String(appRow.id).slice(0, 8).toUpperCase()}`;
     const historyNote = `Member portal renewal application ${appRow.id}`;
 
-    // Persist receipt records first; an unavailable sales schema must not
+    // Persist sales records first; an unavailable sales schema must not
     // reactivate the membership while leaving its approval pending.
     const { data: existingSale, error: saleLookupError } = await client
-        .from('sales').select('id').eq('receipt_number', receiptNumber).maybeSingle();
+        .from('sales').select('id').eq('receipt_number', transactionReference).maybeSingle();
     if (saleLookupError) {
-        toast(`Could not check the renewal receipt: ${saleLookupError.message}`, 'error');
+        toast(`Could not check the renewal payment: ${saleLookupError.message}`, 'error');
         return;
     }
     let saleId = existingSale?.id;
     if (!existingSale) {
         const { data: sale, error: saleError } = await client.from('sales').insert({
-            receipt_number: receiptNumber,
+            receipt_number: transactionReference,
             customer_type: 'member',
             customer_name: memberRow.full_name,
             member_id: memberId,
@@ -800,7 +798,7 @@ async function completeSupabaseRenewalApproval(application) {
     const { data: existingItem, error: itemLookupError } = await client
         .from('sale_items').select('id').eq('sale_id', saleId).eq('category', 'membership').limit(1).maybeSingle();
     if (itemLookupError) {
-        toast(`Could not check the renewal receipt details: ${itemLookupError.message}`, 'error');
+        toast(`Could not check the renewal payment details: ${itemLookupError.message}`, 'error');
         return;
     }
     if (!existingItem) {
@@ -814,7 +812,7 @@ async function completeSupabaseRenewalApproval(application) {
             line_total: price
         });
         if (itemError) {
-            toast(`Could not save the renewal receipt details: ${itemError.message}`, 'error');
+            toast(`Could not save the renewal payment details: ${itemError.message}`, 'error');
             return;
         }
     }
@@ -866,7 +864,7 @@ async function completeSupabaseRenewalApproval(application) {
         updated_at: reviewedAt
     }).eq('id', memberId);
     if (updateMemberError) {
-        toast(`Receipt is saved, but the member's renewal could not be updated: ${updateMemberError.message}`, 'error');
+        toast(`Payment is recorded, but the member's renewal could not be updated: ${updateMemberError.message}`, 'error');
         return;
     }
 
@@ -883,7 +881,6 @@ async function completeSupabaseRenewalApproval(application) {
     await loadSupabaseMembershipData();
     await loadSupabaseOperationalData();
     toast(`${memberRow.full_name}'s renewal was approved and saved to Supabase.`, 'success');
-    showSaleReceipt(receiptNumber);
 }
 
 function mapSupabaseMember(row, username = '', email = '') {
@@ -1437,7 +1434,7 @@ async function submitNewMember() {
     if (window.ironGrindSupabase) {
         const { data: authData, error: authError } = await window.ironGrindSupabase.auth.getUser();
         if (authError || !authData.user) { toast('Your Supabase session expired. Please sign in again.', 'error'); return; }
-        const { data: createdMember, error } = await window.ironGrindSupabase.functions.invoke('admin-create-member', {
+        const { error } = await window.ironGrindSupabase.functions.invoke('admin-create-member', {
             body: {
                 email, username, password, fullName: name, mobile: contact,
                 dateOfBirth: dob, age, sex, height, heightUnit: height ? 'cm' : null,
@@ -1463,7 +1460,6 @@ async function submitNewMember() {
         await loadSupabaseMembershipData();
         await loadSupabaseOperationalData();
         toast(`${name} was registered in Supabase and their membership payment was recorded.`, 'success');
-        if (createdMember?.receipt_number) showSaleReceipt(createdMember.receipt_number);
         return;
     }
 
@@ -1515,7 +1511,7 @@ async function submitMemberPlanChange(encodedId) {
     const nextExpiry = addDays(nextStartDate, duration);
     if (window.ironGrindSupabase) {
         if (!isUUID(member.id)) { toast('This member is not linked to a Supabase member record.', 'error'); return; }
-        const receiptNumber = `IG-PC-${crypto.randomUUID().toUpperCase()}`;
+        const transactionReference = `IG-PC-${crypto.randomUUID().toUpperCase()}`;
         const { error } = await window.ironGrindSupabase.rpc('admin_record_membership_change', {
             p_member_id: member.id,
             p_event_type: 'plan_change',
@@ -1525,14 +1521,13 @@ async function submitMemberPlanChange(encodedId) {
             p_new_expiry_date: nextExpiry,
             p_customer_name: member.name,
             p_mobile: member.contact || null,
-            p_receipt_number: receiptNumber
+            p_receipt_number: transactionReference
         });
         if (error) { toast(`Could not save plan change to Supabase: ${error.message}`, 'error'); return; }
         closeModal();
         await loadSupabaseMembershipData();
         await loadSupabaseOperationalData();
         toast(`${member.name}'s plan changed to ${newPlan}. Previous plan archived.`, 'success');
-        showSaleReceipt(receiptNumber);
         return;
     }
     const previous = {
@@ -1569,7 +1564,7 @@ async function submitMemberPlanChange(encodedId) {
     member.paid = true;
     member.status = 'active';
 
-    const saleId = nextSaleReceiptId();
+    const saleId = nextSaleReference();
     sales.unshift({
         id: saleId,
         customer: member.name,
@@ -1591,7 +1586,6 @@ async function submitMemberPlanChange(encodedId) {
     renderSales();
     renderReports();
     toast(`${member.name}'s plan changed to ${newPlan}. Previous plan archived.`, 'success');
-    showSaleReceipt(saleId);
 }
 
 function renewMember(id) {
@@ -1610,7 +1604,7 @@ function renewMember(id) {
             <option value="Half Month|400" ${selectedPlan === 'Half Month' ? 'selected' : ''}>Half Month — ₱400</option>
             <option value="Walk-in|80" ${selectedPlan === 'Walk-in' ? 'selected' : ''}>Walk-in — ₱80</option>
         </select></div>
-        <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="runWithButtonLoading(this, () => completeMemberRenewal('${member.id}'), 'Saving renewal…')"><i class="fas fa-receipt"></i> Complete Renewal</button></div>
+        <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="runWithButtonLoading(this, () => completeMemberRenewal('${member.id}'), 'Saving renewal…')"><i class="fas fa-coins"></i> Complete Renewal</button></div>
     `);
     setupPhMobileInput(document.getElementById('crContact'));
 }
@@ -1630,7 +1624,7 @@ async function completeMemberRenewal(id) {
     const expiry = addDays(startDate, getPlanDurationDays(plan));
     if (window.ironGrindSupabase) {
         if (!isUUID(member.id)) { toast('This member is not linked to a Supabase member record.', 'error'); return; }
-        const receiptNumber = `IG-CR-${crypto.randomUUID().toUpperCase()}`;
+        const transactionReference = `IG-CR-${crypto.randomUUID().toUpperCase()}`;
         const { error } = await window.ironGrindSupabase.rpc('admin_record_membership_change', {
             p_member_id: member.id,
             p_event_type: 'renewal',
@@ -1640,14 +1634,13 @@ async function completeMemberRenewal(id) {
             p_new_expiry_date: expiry,
             p_customer_name: name,
             p_mobile: contact,
-            p_receipt_number: receiptNumber
+            p_receipt_number: transactionReference
         });
         if (error) { toast(`Could not save renewal to Supabase: ${error.message}`, 'error'); return; }
         closeModal();
         await loadSupabaseMembershipData();
         await loadSupabaseOperationalData();
         toast(`${name}'s membership renewed until ${expiry}.`, 'success');
-        showSaleReceipt(receiptNumber);
         return;
     }
     const previous = {
@@ -1672,7 +1665,7 @@ async function completeMemberRenewal(id) {
     member.expiry = expiry;
     member.paid = true;
     member.status = 'active';
-    const saleId = nextSaleReceiptId();
+    const saleId = nextSaleReference();
     sales.unshift({
         id: saleId, customer: name, source: 'counter-renewal', items: `${plan} Membership Renewal`,
         lineItems: [{ name: `${plan} Membership Renewal`, quantity: 1, unitPrice: price, total: price }],
@@ -1688,7 +1681,6 @@ async function completeMemberRenewal(id) {
     renderSales();
     renderReports();
     toast(`${name}'s membership renewed until ${expiry}.`, 'success');
-    showSaleReceipt(saleId);
 }
 
 /* ========== ATTENDANCE ========== */
@@ -2280,7 +2272,7 @@ async function submitNewSale() {
     const supplement = p?.category === 'Supplement';
     if (!customer) { toast('Enter the walk-in customer name.', 'error'); document.getElementById('nsCustomer').focus(); return; }
     if (!p || !Number.isFinite(qty) || qty <= 0 || (!supplement && (!Number.isInteger(qty) || qty > p.stock))) { toast('Enter a valid amount within available stock.', 'error'); return; }
-    const saleId = nextSaleReceiptId();
+    const saleId = nextSaleReference();
     const quantityUnit = supplement ? 'g' : 'item';
     let sale;
     if (window.ironGrindSupabase) {
@@ -2347,7 +2339,6 @@ async function submitNewSale() {
     renderSales();
     renderDashboard();
     renderWalkinSalesReport();
-    showSaleReceipt(saleId);
     toast(`✅ Sale complete — ${formatPeso(sale.total)}.`, 'success');
 }
 
@@ -2517,101 +2508,10 @@ function renderSales() {
         return;
     }
     el.innerHTML = `<div class="table-scroll"><table class="attendance-table">
-        <thead><tr><th>Receipt</th><th>Customer</th><th>Items</th><th>Total</th><th>Date</th><th>Status</th><th>Action</th></tr></thead>
+        <thead><tr><th>Transaction reference</th><th>Customer</th><th>Items</th><th>Total</th><th>Date</th><th>Status</th></tr></thead>
         <tbody>${visibleSales.map(s => `<tr><td>#${escapeHTML(s.id)}</td><td>${escapeHTML(s.customer === 'Walk-in' ? 'Name not recorded' : (s.customer || 'Name not recorded'))}</td><td>${escapeHTML(s.items || '')}</td><td>${formatPeso(s.total)}</td><td>${escapeHTML(s.date || '')}</td>
             <td>${s.status === 'Paid' ? '<span class="badge-status paid">Paid</span>' : '<span class="badge-status reserved">Reserved</span>'}</td>
-            <td><button class="btn-sm" onclick="showSaleReceipt(decodeURIComponent('${encodeURIComponent(String(s.id))}'))" aria-label="View or print receipt"><i class="fas fa-receipt"></i> Receipt</button></td></tr>`).join('')}</tbody></table></div>`;
-}
-
-function getSaleReceiptMarkup(sale) {
-    const items = Array.isArray(sale.lineItems) && sale.lineItems.length
-        ? sale.lineItems
-        : [{ name: sale.items || 'Sale', quantity: 1, unitPrice: sale.total, total: sale.total }];
-    const created = sale.createdAt ? new Date(sale.createdAt) : null;
-    const timeLabel = created && !Number.isNaN(created.getTime())
-        ? created.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-        : '';
-
-    return `<article class="pos-receipt">
-        <header class="pos-receipt-header">
-            <img src="assets/images/iron-grind-mark.png" alt="">
-            <div class="pos-receipt-brand">IRON GRIND<span>FITNESS GYM</span></div>
-            <div class="pos-receipt-label">SALES RECEIPT</div>
-        </header>
-        <div class="pos-receipt-meta"><span>Receipt</span><strong>#${escapeHTML(sale.id)}</strong></div>
-        <div class="pos-receipt-meta"><span>Date</span><strong>${escapeHTML(sale.date || todayStr())}${timeLabel ? ` · ${escapeHTML(timeLabel)}` : ''}</strong></div>
-        <div class="pos-receipt-meta"><span>Customer</span><strong>${escapeHTML(sale.customer === 'Walk-in' ? 'Name not recorded' : (sale.customer || 'Name not recorded'))}</strong></div>
-        <div class="pos-receipt-rule"></div>
-        <div class="pos-receipt-items">${items.map(item => `<div class="pos-receipt-item">
-            <div><strong>${escapeHTML(item.name || 'Item')}</strong><span>${Number(item.quantity) || 1}${item.quantityUnit === 'g' ? ' g' : ''} × ${formatPeso(item.unitPrice ?? item.total ?? 0)}${item.quantityUnit === 'g' ? ' / g' : ''}</span></div>
-            <strong>${formatPeso(item.total ?? sale.total)}</strong>
-        </div>`).join('')}</div>
-        <div class="pos-receipt-rule"></div>
-        <div class="pos-receipt-total"><span>TOTAL PAID</span><strong>${formatPeso(sale.total)}</strong></div>
-        <div class="pos-receipt-paid"><i class="fas fa-check-circle"></i> ${escapeHTML(sale.status || 'Paid')}</div>
-        <footer class="pos-receipt-thanks">Thank you for choosing Iron Grind.<br>Train hard. Stay strong.</footer>
-    </article>`;
-}
-
-function showSaleReceipt(id) {
-    const sale = sales.find(item => String(item.id) === String(id));
-    if (!sale) { toast('Receipt could not be found.', 'error'); return; }
-    const needsCustomerName = isWalkinProductSale(sale) && (!sale.customer || sale.customer === 'Walk-in');
-    openModal(`<h3><i class="fas fa-receipt"></i> Sale Receipt</h3>
-        ${needsCustomerName ? `<div class="form-group"><label for="saleCustomerName">Customer name was not recorded on this older sale</label><input type="text" id="saleCustomerName" placeholder="Enter customer name" required><button class="btn-sm" style="margin-top:8px;" onclick="saveWalkinSaleCustomer('${encodeURIComponent(String(sale.id))}')">Save customer name</button></div>` : ''}
-        <div class="pos-receipt-preview">${getSaleReceiptMarkup(sale)}</div>
-        <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Close</button><button class="btn-primary" onclick="printSaleReceipt(decodeURIComponent('${encodeURIComponent(String(sale.id))}'))"><i class="fas fa-print"></i> Print Receipt</button></div>`);
-}
-
-function saveWalkinSaleCustomer(encodedId) {
-    const id = decodeURIComponent(encodedId);
-    const sale = sales.find(item => String(item.id) === String(id));
-    const customer = document.getElementById('saleCustomerName')?.value.trim();
-    if (!sale || !customer) { toast('Enter the customer name.', 'error'); return; }
-    sale.customer = customer;
-    saveDB('sales', sales);
-    renderSales();
-    renderWalkinSalesReport();
-    showSaleReceipt(id);
-}
-
-function printSaleReceipt(id) {
-    const sale = sales.find(item => String(item.id) === String(id));
-    if (!sale) { toast('Receipt could not be found.', 'error'); return; }
-    const printWindow = window.open('', '_blank');
-    if (!printWindow) {
-        toast('Allow pop-ups to print the receipt.', 'error');
-        return;
-    }
-
-    const logoURL = new URL('assets/images/iron-grind-mark.png', window.location.href).href;
-    const receiptMarkup = getSaleReceiptMarkup(sale).replace('src="assets/images/iron-grind-mark.png"', `src="${logoURL}"`);
-    printWindow.document.open();
-    printWindow.document.write(`<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Receipt ${escapeHTML(sale.id)}</title>
-        <style>
-            @page { size: 80mm auto; margin: 4mm; }
-            * { box-sizing: border-box; }
-            body { width: 72mm; margin: 0 auto; padding: 0; color: #171a20; font: 11px Arial, sans-serif; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-            .pos-receipt { width: 100%; padding: 3mm 1mm; background: #fff; }
-            .pos-receipt-header { display: flex; flex-direction: column; align-items: center; text-align: center; padding-bottom: 12px; border-bottom: 2px solid #d31212; }
-            .pos-receipt-header img { width: 42px; height: 42px; margin-bottom: 5px; object-fit: contain; }
-            .pos-receipt-brand { color: #151922; font-size: 16px; font-weight: 900; letter-spacing: 1.2px; }
-            .pos-receipt-brand span { display: block; margin-top: 2px; color: #737987; font-size: 8px; letter-spacing: 3px; }
-            .pos-receipt-label { margin-top: 9px; color: #d31212; font-size: 9px; font-weight: 800; letter-spacing: 2px; }
-            .pos-receipt-meta { display: flex; justify-content: space-between; gap: 8px; margin-top: 8px; font-size: 9px; }
-            .pos-receipt-meta span { color: #666d79; }
-            .pos-receipt-meta strong { text-align: right; }
-            .pos-receipt-rule { margin: 11px 0; border-top: 1px dashed #aeb3bc; }
-            .pos-receipt-item { display: flex; justify-content: space-between; gap: 8px; margin: 9px 0; font-size: 10px; }
-            .pos-receipt-item > div { display: flex; flex-direction: column; gap: 3px; }
-            .pos-receipt-item span { color: #666d79; font-size: 9px; }
-            .pos-receipt-total { display: flex; justify-content: space-between; align-items: baseline; font-size: 10px; font-weight: 800; }
-            .pos-receipt-total strong { color: #d31212; font-size: 16px; }
-            .pos-receipt-paid { margin-top: 10px; color: #287a4b; font-size: 9px; font-weight: 700; text-align: center; text-transform: uppercase; }
-            .pos-receipt-thanks { margin-top: 17px; padding-top: 10px; border-top: 1px solid #e1e3e8; color: #555d69; font-size: 9px; line-height: 1.6; text-align: center; }
-        </style></head><body>${receiptMarkup}</body></html>`);
-    printWindow.document.close();
-    window.setTimeout(() => { printWindow.focus(); printWindow.print(); }, 350);
+            </tr>`).join('')}</tbody></table></div>`;
 }
 
 function getMemberActivityStatus(member) {
@@ -2662,7 +2562,7 @@ function renderReports() {
             reports: [
                 { id: 'membership', name: 'Membership Report', icon: 'fa-id-card', description: 'Monthly member records, plan counts, and paid income.' },
                 { id: 'member-status', name: 'Member Status', icon: 'fa-user-check', description: 'Active, recently expired, and inactive member records.' },
-                { id: 'renewals', name: 'Renewal Report', icon: 'fa-rotate', description: 'Completed renewals and their receipts.' },
+                { id: 'renewals', name: 'Renewal Report', icon: 'fa-rotate', description: 'Completed renewals and their payment records.' },
                 { id: 'archives', name: 'Archives', icon: 'fa-box-archive', description: 'Expired memberships, plan changes, and archived products.' }
             ]
         },
@@ -2679,7 +2579,7 @@ function renderReports() {
             description: 'Transaction and payment records.',
             reports: [
                 { id: 'payment', name: 'Payment Report', icon: 'fa-money-bill-wave', description: 'Recorded membership and customer payments.' },
-                { id: 'sales', name: 'Sales Report', icon: 'fa-receipt', description: 'Sales transactions and line items.' }
+                { id: 'sales', name: 'Sales Report', icon: 'fa-coins', description: 'Sales transactions and line items.' }
             ]
         }
     ];
@@ -2750,15 +2650,15 @@ function getRenewalPlan(sale) {
 }
 
 function getRenewalReportRows() {
-    const salesByReceipt = new Map(sales.map(sale => [String(sale.id), sale]));
+    const salesByReference = new Map(sales.map(sale => [String(sale.id), sale]));
     const approvedPortalRenewals = approvedRenewalApplications.map(application => {
-        const recordedSale = salesByReceipt.get(String(application.expectedReceipt));
+        const recordedSale = salesByReference.get(String(application.expectedSaleReference));
         return recordedSale ? { ...recordedSale, source: 'dashboard-renewal', saleRecorded: true } : application;
     });
-    const approvedReceiptIds = new Set(approvedPortalRenewals
+    const approvedSaleReferences = new Set(approvedPortalRenewals
         .filter(sale => sale.saleRecorded !== false).map(sale => String(sale.id)));
     const otherRenewalSales = sales.filter(sale =>
-        isRenewalSale(sale) && !approvedReceiptIds.has(String(sale.id))
+        isRenewalSale(sale) && !approvedSaleReferences.has(String(sale.id))
     );
     return [...approvedPortalRenewals, ...otherRenewalSales]
         .sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
@@ -2812,14 +2712,14 @@ function viewReport(type) {
             : '<div class="empty-state">No products have been archived.</div>';
         body = `<section><h4>Expired Subscriptions (${expiredMembers.length})</h4>${expiredTable}</section><section style="margin-top:24px;"><h4>Plan Changes (${archivedPlans.length})</h4><p class="modal-sub">No refunds are issued for unused time on the previous plan.</p>${planTable}</section><section style="margin-top:24px;"><h4>Archived Products (${archivedProductRows.length})</h4>${productTable}</section>`;
     } else if (type === 'payment' || type === 'sales') {
-        body = `<table class="attendance-table"><thead><tr><th>Receipt</th><th>Customer</th><th>Total</th><th>Date</th><th>Status</th></tr></thead><tbody>
+        body = `<table class="attendance-table"><thead><tr><th>Transaction reference</th><th>Customer</th><th>Total</th><th>Date</th><th>Status</th></tr></thead><tbody>
             ${sales.map(s => `<tr><td>#${escapeHTML(s.id || '—')}</td><td>${escapeHTML(s.customer || 'Name not recorded')}</td><td>${formatPeso(s.total)}</td><td>${escapeHTML(s.date || '—')}</td><td>${escapeHTML(s.status || 'Unknown')}</td></tr>`).join('') || '<tr><td colspan="5">No payment records.</td></tr>'}</tbody></table>`;
     } else if (type === 'renewals') {
         const renewals = getRenewalReportRows();
         const income = renewals.reduce((total, sale) => total + (sale.saleRecorded === false ? 0 : Number(sale.total || 0)), 0);
         body = `<p class="modal-sub">${renewals.length} completed renewal${renewals.length === 1 ? '' : 's'} · Total collected: <strong>${formatPeso(income)}</strong></p>
-            ${renewals.length ? `<div class="table-scroll"><table class="attendance-table"><thead><tr><th>Receipt</th><th>Member</th><th>Renewed Plan</th><th>Channel</th><th>Amount</th><th>Date</th><th>Receipt Status</th></tr></thead><tbody>
-                ${renewals.map(sale => `<tr><td>${sale.saleRecorded === false ? 'Not recorded' : `#${escapeHTML(sale.id)}`}</td><td>${escapeHTML(sale.customer || 'Name not recorded')}</td><td>${escapeHTML(getRenewalPlan(sale))}</td><td>${escapeHTML(getRenewalChannel(sale))}</td><td>${formatPeso(sale.total)}</td><td>${escapeHTML(sale.date || '—')}</td><td>${sale.saleRecorded === false ? 'Missing receipt' : 'Recorded'}</td></tr>`).join('')}
+            ${renewals.length ? `<div class="table-scroll"><table class="attendance-table"><thead><tr><th>Transaction reference</th><th>Member</th><th>Renewed Plan</th><th>Channel</th><th>Amount</th><th>Date</th><th>Payment record</th></tr></thead><tbody>
+                ${renewals.map(sale => `<tr><td>${sale.saleRecorded === false ? 'Not recorded' : `#${escapeHTML(sale.id)}`}</td><td>${escapeHTML(sale.customer || 'Name not recorded')}</td><td>${escapeHTML(getRenewalPlan(sale))}</td><td>${escapeHTML(getRenewalChannel(sale))}</td><td>${formatPeso(sale.total)}</td><td>${escapeHTML(sale.date || '—')}</td><td>${sale.saleRecorded === false ? 'Missing payment record' : 'Recorded'}</td></tr>`).join('')}
             </tbody></table></div>` : '<div class="empty-state">No completed membership renewals recorded.</div>'}`;
     } else if (type === 'attendance') {
         const attendanceGroups = groupAttendanceByMonth(attendance);
@@ -2958,13 +2858,13 @@ function printReportPDF(type, inAppPreview = false) {
         ];
         dateForRow = row => row.date;
     } else if (type === 'payment' || type === 'sales') {
-        columns = ['Receipt', 'Customer', 'Total', 'Date', 'Status'];
+        columns = ['Transaction reference', 'Customer', 'Total', 'Date', 'Status'];
         rows = sales.map(sale => ({ cells: [sale.id, sale.customer || 'Name not recorded', formatPeso(sale.total), sale.date || '—', sale.status || 'Unknown'], date: sale.date }));
         dateForRow = row => row.date;
     } else if (type === 'renewals') {
-        columns = ['Receipt', 'Member', 'Renewed Plan', 'Channel', 'Amount', 'Date', 'Receipt Status'];
+        columns = ['Transaction reference', 'Member', 'Renewed Plan', 'Channel', 'Amount', 'Date', 'Payment record'];
         rows = getRenewalReportRows().map(sale => ({
-            cells: [sale.saleRecorded === false ? 'Not recorded' : sale.id, sale.customer || 'Name not recorded', getRenewalPlan(sale), getRenewalChannel(sale), formatPeso(sale.total), sale.date || '—', sale.saleRecorded === false ? 'Missing receipt' : 'Recorded'],
+            cells: [sale.saleRecorded === false ? 'Not recorded' : sale.id, sale.customer || 'Name not recorded', getRenewalPlan(sale), getRenewalChannel(sale), formatPeso(sale.total), sale.date || '—', sale.saleRecorded === false ? 'Missing payment record' : 'Recorded'],
             date: sale.date
         }));
         dateForRow = row => row.date;
@@ -3132,20 +3032,20 @@ function createMonthlyReportPDF(type, month) {
         sections.push(rowsFor(['Record Type', 'Member / Product', 'Username / Details', 'Plan / Previous Expiry', 'Archived / Changed'], archivedRows));
     } else if (type === 'payment' || type === 'sales') {
         const filteredSales = sales.filter(sale => reportDateBelongsToMonth(sale.date || sale.createdAt, month));
-        sections.push(rowsFor(['Receipt', 'Customer', 'Total', 'Date', 'Status'], filteredSales.map(sale => [sale.id || '-', sale.customer || 'Name not recorded', `PHP ${Number(sale.total || 0).toFixed(2)}`, sale.date || '-', sale.status || 'Unknown'])));
+        sections.push(rowsFor(['Transaction reference', 'Customer', 'Total', 'Date', 'Status'], filteredSales.map(sale => [sale.id || '-', sale.customer || 'Name not recorded', `PHP ${Number(sale.total || 0).toFixed(2)}`, sale.date || '-', sale.status || 'Unknown'])));
     } else if (type === 'attendance') {
         const filteredAttendance = attendance.filter(record => reportDateBelongsToMonth(record.date, month));
         sections.push(rowsFor(['Member', 'Date', 'Time in', 'Time out'], filteredAttendance.map(record => [record.memberName, record.date || '-', formatAttendanceClock(record.timeIn), formatAttendanceClock(record.timeOut)])));
     } else if (type === 'renewals') {
         const renewals = getRenewalReportRows().filter(record => reportDateBelongsToMonth(record.date, month));
-        sections.push(rowsFor(['Receipt', 'Member', 'Renewed Plan', 'Channel', 'Amount', 'Date', 'Receipt Status'], renewals.map(record => [
+        sections.push(rowsFor(['Transaction reference', 'Member', 'Renewed Plan', 'Channel', 'Amount', 'Date', 'Payment record'], renewals.map(record => [
             record.saleRecorded === false ? 'Not recorded' : record.id || '-',
             record.customer || 'Name not recorded',
             getRenewalPlan(record),
             getRenewalChannel(record),
             `PHP ${Number(record.total || 0).toFixed(2)}`,
             record.date || '-',
-            record.saleRecorded === false ? 'Missing receipt' : 'Recorded'
+            record.saleRecorded === false ? 'Missing payment record' : 'Recorded'
         ])));
     } else if (type === 'inventory') {
         sections.push(rowsFor(['Product', 'Category', 'Price', 'Stock'], products.map(product => [

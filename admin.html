@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IronGrind · Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261104-registration-notice">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261104-sales-records">
 </head>
 <body class="dashboard-body admin-dashboard">
 <div id="page-loader" class="page-loader" aria-label="Loading dashboard" role="status"><div class="loader-content"><img class="loader-mark" src="assets/images/iron-grind-mark.png" alt=""><div class="loader-brand">Iron<span>Grind</span></div><div class="loader-track"><span></span></div></div></div>
@@ -48,7 +48,7 @@
                 <i class="fas fa-store"></i> Store &amp; Inventory
             </button>
             <button class="nav-item" data-section="sales" onclick="showAdminSection('sales', event)">
-                <i class="fas fa-receipt"></i> Sales
+                <i class="fas fa-coins"></i> Sales
             </button>
             <button class="nav-item" data-section="reports" onclick="showAdminSection('reports', event)">
                 <i class="fas fa-chart-bar"></i> Reports
@@ -76,7 +76,7 @@
                     <div class="stat-card">
                         <div class="stat-label">Today's Sales</div>
                         <div class="stat-value" id="statSales">₱0</div>
-                        <div class="stat-sub"><i class="fas fa-receipt"></i> Completed transactions</div>
+                        <div class="stat-sub"><i class="fas fa-coins"></i> Completed transactions</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-label">Low Stock Items</div>
@@ -212,7 +212,7 @@
             <div id="section-sales" class="admin-section hidden">
                 <div class="panel">
                     <div class="panel-header">
-                        <h2><i class="fas fa-receipt"></i> Sales</h2>
+                        <h2><i class="fas fa-coins"></i> Sales</h2>
                         <button class="btn-primary" onclick="openNewSaleModal()"><i class="fas fa-plus"></i> New Sale</button>
                     </div>
                     <div id="salesMonthOverview" class="sales-month-overview" aria-live="polite"></div>
@@ -231,7 +231,7 @@
                     <div class="panel-header">
                         <div>
                             <h2><i class="fas fa-chart-line"></i> Daily Product Income</h2>
-                            <p class="modal-sub" style="margin-top:6px;">Totals for the selected date. Individual receipts are listed above.</p>
+                            <p class="modal-sub" style="margin-top:6px;">Totals for the selected date. Use the transaction list for individual sales.</p>
                         </div>
                         <div class="walkin-sales-actions"><label class="walkin-date-filter">Sales date <input type="date" id="walkinSalesDate" onchange="renderWalkinSalesReport()"></label></div>
                     </div>
@@ -287,6 +287,6 @@
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script src="assets/js/signature.js"></script>
 <script src="assets/js/activity-logs.js?v=20261104-responsive"></script>
-<script src="assets/js/admin.js?v=20261104-registration-notice"></script>
+<script src="assets/js/admin.js?v=20261104-sales-records"></script>
 </body>
 </html>
