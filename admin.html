@@ -185,7 +185,7 @@
                 <div id="storeLocked" class="store-lock">
                     <i class="fas fa-lock"></i>
                     <h3>Store &amp; Inventory is Locked</h3>
-                    <p>Enter the Store password to view inventory. Contact the administrator if you need access.</p>
+                    <p>Enter the Store password once for this sign-in. Store &amp; Inventory stays unlocked until you log out.</p>
                     <form class="password-input-group" onsubmit="event.preventDefault(); runWithButtonLoading(this.querySelector('button'), unlockStore, 'Checking…');">
                         <input type="password" id="storeAccessPassword" placeholder="Store password" autocomplete="current-password" aria-label="Store password" required>
                         <button type="submit" class="btn-primary"><i class="fas fa-unlock"></i> Open Store</button>

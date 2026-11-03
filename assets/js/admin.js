@@ -11,6 +11,12 @@
     document.getElementById('currentUserName').textContent = session.fullName || session.username;
 })();
 
+function adminStoreUnlockKey() {
+    const session = JSON.parse(localStorage.getItem('irongrind_session') || sessionStorage.getItem('irongrind_session') || 'null');
+    const account = String(session?.username || '').trim().toLowerCase();
+    return account ? `ig_store_unlocked:${encodeURIComponent(account)}` : '';
+}
+
 /* ========== STATE ========== */
 let members = [];
 let products = [];
@@ -113,7 +119,7 @@ function productStockInGrams(product) {
 }
 function formatProductStock(product) {
     const amount = Number(product.stock || 0);
-    const formatted = Number.isInteger(amount) ? amount.toLocaleString('en-PH') : amount.toLocaleString('en-PH', { maximumFractionDigits: 3 });
+    const formatted = Number.isInteger(amount) ? amount.toLocaleString('en-PH') : amount.toLocaleString('en-PH', { maximumFractionDigits: 6 });
     return `${formatted} ${stockUnitLabel(product.stockUnit || (product.category === 'Supplement' ? 'gram' : 'item'))}`;
 }
 
@@ -274,8 +280,10 @@ function showAdminSection(section, event) {
     if (clicked) clicked.classList.add('active');
 
     if (section === 'store') {
-        document.getElementById('storeLocked').classList.remove('hidden');
-        document.getElementById('storeUnlocked').classList.add('hidden');
+        const unlocked = Boolean(adminStoreUnlockKey() && localStorage.getItem(adminStoreUnlockKey()) === 'true');
+        document.getElementById('storeLocked').classList.toggle('hidden', unlocked);
+        document.getElementById('storeUnlocked').classList.toggle('hidden', !unlocked);
+        if (unlocked) renderStore();
     }
     if (section === 'membership') switchMemberTab(currentMemberTab);
     if (section === 'attendance') renderAttendance();
@@ -309,6 +317,8 @@ function switchApprovalType(type) {
 
 function logout() {
     askConfirmation('Log out?', 'Are you sure you want to log out?', 'Log out', async () => {
+        const storeUnlockKey = adminStoreUnlockKey();
+        if (storeUnlockKey) localStorage.removeItem(storeUnlockKey);
         try {
             const result = await window.ironGrindSupabase?.rpc('admin_log_session_event', { p_event: 'sign_out_requested' });
             if (result?.error) console.error('Could not record sign-out request:', result.error);
@@ -2022,6 +2032,8 @@ async function unlockStore() {
 
     status.textContent = '';
     passwordInput.value = '';
+    const storeUnlockKey = adminStoreUnlockKey();
+    if (storeUnlockKey) localStorage.setItem(storeUnlockKey, 'true');
     document.getElementById('storeLocked').classList.add('hidden');
     document.getElementById('storeUnlocked').classList.remove('hidden');
     renderStore();
@@ -2262,7 +2274,7 @@ async function completeProductArchive(id) {
 }
 
 function openNewSaleModal() {
-    const available = products.filter(p => p.category === 'Supplement' || p.stock > 0);
+    const available = products.filter(p => p.stock > 0);
     if (available.length === 0) {
         toast('No stock.', 'error');
         return;
@@ -2289,9 +2301,9 @@ function updateSaleQuantityMode() {
     document.getElementById('nsQtyLabel').textContent = byGram ? 'Amount to sell (grams)' : 'Quantity';
     quantityInput.min = byGram ? '0.01' : '1';
     quantityInput.step = byGram ? '0.01' : '1';
-    if (byGram) quantityInput.removeAttribute('max');
+    if (byGram) quantityInput.max = productStockInGrams(product);
     else quantityInput.max = product.stock;
-    quantityInput.value = byGram ? '100' : '1';
+    quantityInput.value = byGram ? String(Math.min(100, productStockInGrams(product))) : '1';
     document.getElementById('nsPriceHint').textContent = byGram
         ? `${formatPeso(product.price)} per gram`
         : `${formatPeso(product.price)} per item · ${product.stock} available`;
@@ -2312,7 +2324,8 @@ async function submitNewSale() {
     const p = products.find(x => x.id === pid);
     const supplement = p?.category === 'Supplement';
     if (!customer) { toast('Enter the walk-in customer name.', 'error'); document.getElementById('nsCustomer').focus(); return; }
-    if (!p || !Number.isFinite(qty) || qty <= 0 || (!supplement && (!Number.isInteger(qty) || qty > p.stock))) { toast('Enter a valid amount within available stock.', 'error'); return; }
+    const stockLimit = supplement ? productStockInGrams(p || {}) : Number(p?.stock || 0);
+    if (!p || !Number.isFinite(qty) || qty <= 0 || qty > stockLimit || (!supplement && !Number.isInteger(qty))) { toast('Enter a valid amount within available stock.', 'error'); return; }
     const saleId = nextSaleReference();
     const quantityUnit = supplement ? 'g' : 'item';
     let sale;
@@ -2353,7 +2366,7 @@ async function submitNewSale() {
             status: 'Paid'
         };
     } else {
-        if (!supplement) p.stock -= qty;
+        p.stock -= supplement ? qty / (SUPPLEMENT_STOCK_UNITS[p.stockUnit || 'gram'] || 1) : qty;
         const total = p.price * qty;
         sale = {
             id: saleId,
@@ -2775,7 +2788,7 @@ function viewReport(type) {
             </section>`).join('') : '<div class="empty-state">No attendance records.</div>';
     } else if (type === 'inventory') {
         body = `<table class="attendance-table"><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th></tr></thead><tbody>
-            ${products.map(p => `<tr><td>${escapeHTML(p.name)}${p.category === 'Merch' && p.size ? ` (${escapeHTML(p.size)})` : ''}</td><td>${p.category === 'Supplement' ? 'Supplement' : 'Merchandise'}</td><td>${formatPeso(p.price)}${p.category === 'Supplement' ? ' / g' : ' / item'}</td><td>${p.category === 'Supplement' ? 'Not tracked' : escapeHTML(p.stock)}</td></tr>`).join('') || '<tr><td colspan="4">No active products.</td></tr>'}</tbody></table>`;
+            ${products.map(p => `<tr><td>${escapeHTML(p.name)}${p.category === 'Merch' && p.size ? ` (${escapeHTML(p.size)})` : ''}</td><td>${p.category === 'Supplement' ? 'Supplement' : 'Merchandise'}</td><td>${formatPeso(p.price)}${p.category === 'Supplement' ? ' / g' : ' / item'}</td><td>${escapeHTML(formatProductStock(p))}</td></tr>`).join('') || '<tr><td colspan="4">No active products.</td></tr>'}</tbody></table>`;
     }
     const title = type === 'member-status'
         ? 'Active / Inactive Members Report'
@@ -2923,7 +2936,7 @@ function printReportPDF(type, inAppPreview = false) {
                 `${product.name}${product.size ? ` (${product.size})` : ''}`,
                 product.category === 'Supplement' ? 'Supplement' : 'Merchandise',
                 `${formatPeso(product.price)}${product.category === 'Supplement' ? ' / g' : ' / item'}`,
-                product.category === 'Supplement' ? 'Not tracked' : product.stock
+                formatProductStock(product)
             ]
         }));
     }
@@ -3093,7 +3106,7 @@ function createMonthlyReportPDF(type, month) {
             `${product.name}${product.size ? ` (${product.size})` : ''}`,
             product.category === 'Supplement' ? 'Supplement' : 'Merchandise',
             `PHP ${Number(product.price || 0).toFixed(2)}${product.category === 'Supplement' ? ' / g' : ' / item'}`,
-            product.category === 'Supplement' ? 'Not tracked' : String(product.stock ?? 0)
+            formatProductStock(product)
         ])));
     }
 
@@ -3250,13 +3263,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     if (!localStorage.getItem('ig_products')) {
         saveDB('products', [
-            { id: 'P001', name: 'Whey Protein — Chocolate', category: 'Supplement', price: 2450, stock: 3, size: '' },
-            { id: 'P002', name: 'Creatine Monohydrate', category: 'Supplement', price: 1200, stock: 2, size: '' },
-            { id: 'P003', name: 'Pre-Workout — Fruit Punch', category: 'Supplement', price: 1850, stock: 4, size: '' },
-            { id: 'P004', name: 'Multivitamins', category: 'Supplement', price: 850, stock: 24, size: '' },
-            { id: 'P005', name: 'IronGrind Shirt', category: 'Merch', price: 650, stock: 1, size: 'Large' },
-            { id: 'P006', name: 'IronGrind Shirt', category: 'Merch', price: 650, stock: 12, size: 'Medium' },
-            { id: 'P007', name: 'IronGrind Shirt', category: 'Merch', price: 650, stock: 8, size: 'Small' }
+            { id: 'P001', name: 'Whey Protein — Chocolate', category: 'Supplement', price: 2450, stock: 3, stockUnit: 'kilogram', size: '' },
+            { id: 'P002', name: 'Creatine Monohydrate', category: 'Supplement', price: 1200, stock: 2, stockUnit: 'kilogram', size: '' },
+            { id: 'P003', name: 'Pre-Workout — Fruit Punch', category: 'Supplement', price: 1850, stock: 4, stockUnit: 'kilogram', size: '' },
+            { id: 'P004', name: 'Multivitamins', category: 'Supplement', price: 850, stock: 24, stockUnit: 'kilogram', size: '' },
+            { id: 'P005', name: 'IronGrind Shirt', category: 'Merch', price: 650, stock: 1, stockUnit: 'item', size: 'Large' },
+            { id: 'P006', name: 'IronGrind Shirt', category: 'Merch', price: 650, stock: 12, stockUnit: 'item', size: 'Medium' },
+            { id: 'P007', name: 'IronGrind Shirt', category: 'Merch', price: 650, stock: 8, stockUnit: 'item', size: 'Small' }
         ]);
     }
     if (!localStorage.getItem('ig_sales')) {

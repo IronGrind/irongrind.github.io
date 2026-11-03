@@ -270,6 +270,10 @@ async function handleLogin(event) {
 }
 
 function saveLoginSession(session, remember) {
+    if (session.role === 'admin' && session.username) {
+        const storeUnlockKey = `ig_store_unlocked:${encodeURIComponent(String(session.username).trim().toLowerCase())}`;
+        localStorage.removeItem(storeUnlockKey);
+    }
     localStorage.removeItem('irongrind_session');
     sessionStorage.removeItem('irongrind_session');
     (remember ? localStorage : sessionStorage).setItem('irongrind_session', JSON.stringify(session));
