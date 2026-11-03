@@ -132,6 +132,15 @@ function productClassification(product) {
         ? `${supplementTypeLabel(product.supplementType || 'other')} · ${supplementFormLabel(product.supplementForm || 'powder')}`
         : merchandiseTypeLabel(product.merchType || (product.size ? 'apparel' : 'other'));
 }
+function lowStockThreshold(product) {
+    if (product.category === 'Merch') return 4;
+    if (product.inventoryUnit === 'milliliter') return 1000;
+    if (product.inventoryUnit === 'item') return 30;
+    return 1000;
+}
+function productIsLowStock(product) {
+    return productStockInSaleUnits(product) <= lowStockThreshold(product);
+}
 function formatProductStock(product) {
     const amount = Number(product.stock || 0);
     const formatted = Number.isInteger(amount) ? amount.toLocaleString('en-PH') : amount.toLocaleString('en-PH', { maximumFractionDigits: 6 });
@@ -364,7 +373,7 @@ function renderDashboard() {
     const total = todaySales.reduce((sum, s) => sum + Number(s.total), 0);
     document.getElementById('statSales').textContent = formatPeso(total);
 
-    const low = products.filter(p => p.category === 'Merch' ? p.stock <= 4 : productStockInSaleUnits(p) <= (p.inventoryUnit === 'item' ? 4 : p.inventoryUnit === 'milliliter' ? 250 : 100));
+    const low = products.filter(productIsLowStock);
     document.getElementById('statLowStock').textContent = low.length;
 
     const attTable = document.getElementById('dashboardAttendanceTable');
@@ -380,7 +389,7 @@ function renderDashboard() {
 
     const lowList = document.getElementById('lowStockList');
     if (low.length === 0) lowList.innerHTML = '<div class="empty-state">All items are well-stocked.</div>';
-    else lowList.innerHTML = low.map(p => `<div class="low-stock-item"><span class="name">${escapeHTML(p.name)}${p.category === 'Merch' && p.size ? ' — ' + escapeHTML(p.size) : ''}</span><span class="qty">${formatProductStock(p)} left</span></div>`).join('');
+    else lowList.innerHTML = low.map(p => `<div class="low-stock-item" role="status" aria-label="Low stock: ${escapeHTML(p.name)}, ${escapeHTML(formatProductStock(p))} remaining"><div class="low-stock-info"><span class="name">${escapeHTML(p.name)}${p.category === 'Merch' && p.size ? ' — ' + escapeHTML(p.size) : ''}</span><span class="low-stock-badge"><i class="fas fa-triangle-exclamation" aria-hidden="true"></i> LOW STOCK</span></div><span class="qty"><strong>${escapeHTML(formatProductStock(p))}</strong><small>remaining</small></span></div>`).join('');
 
     const pending = pendingApprovals.filter(p => p.status === 'pending');
     document.getElementById('pendingBadge').textContent = pending.length;
@@ -2105,7 +2114,7 @@ function productCard(p) {
     const supplement = p.category === 'Supplement';
     const merchType = p.merchType || (p.size ? 'apparel' : 'other');
     const productType = supplement ? `${supplementTypeLabel(p.supplementType || 'other')} · ${supplementFormLabel(p.supplementForm || 'powder')}` : merchandiseTypeLabel(merchType);
-    const low = supplement ? productStockInSaleUnits(p) <= (p.inventoryUnit === 'item' ? 4 : p.inventoryUnit === 'milliliter' ? 250 : 100) : p.stock <= 4;
+    const low = productIsLowStock(p);
     const stockLabel = `${formatProductStock(p)} in stock`;
     return `
         <div class="product-card">
