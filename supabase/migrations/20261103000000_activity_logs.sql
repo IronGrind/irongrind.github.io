@@ -1,5 +1,8 @@
 -- Apply after the existing membership and sales migrations.
 -- Logs begin when this migration is applied; old actions are not reconstructed.
+-- Discard any SET ROLE left by SQL Editor permission tests. This restores only
+-- the connected session user's own privileges; run setup as the project owner.
+reset role;
 begin;
 
 create schema if not exists private;

@@ -1,4 +1,5 @@
 -- Private username login throttling. No username/email lookup is exposed to clients.
+reset role;
 begin;
 create schema if not exists private;
 create table if not exists private.admin_login_attempts (
