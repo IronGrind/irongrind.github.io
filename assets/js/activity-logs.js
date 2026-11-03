@@ -47,7 +47,14 @@
                     ? 'Activity logging needs setup. Apply the activity_logs migration in Supabase, then refresh.'
                     : 'Could not load activity logs. Check your admin session and connection, then refresh.');
             }
-            table.innerHTML = data.length ? `<table class="attendance-table"><thead><tr><th>Time (Manila)</th><th>Account</th><th>Action</th><th>Area</th><th>Record</th><th>Fields changed</th></tr></thead><tbody>${data.map(log => `<tr><td>${escape(dateFormat.format(new Date(log.occurred_at)))}</td><td><strong>${escape(log.actor_name)}</strong><small>${escape(log.actor_role)}${log.actor_id ? ` · ${escape(log.actor_id)}` : ''}</small></td><td>${escape(actions[log.action] || log.action)}</td><td>${escape(areas[log.entity_type] || log.entity_type)}</td><td>${escape(log.record_label || '—')}<small>${escape(log.entity_id || '')}</small></td><td>${escape((log.changed_fields || []).join(', ') || '—')}</td></tr>`).join('')}</tbody></table>` : '<div class="empty-state">No activity matches these filters. Logs begin after activity logging is enabled.</div>';
+            table.innerHTML = data.length ? `<table class="attendance-table" role="table"><thead role="rowgroup"><tr role="row"><th role="columnheader">Time (Manila)</th><th role="columnheader">Account</th><th role="columnheader">Action</th><th role="columnheader">Area</th><th role="columnheader">Record</th><th role="columnheader">Fields changed</th></tr></thead><tbody role="rowgroup">${data.map(log => `<tr role="row">
+                <td role="cell" data-label="Time (Manila)">${escape(dateFormat.format(new Date(log.occurred_at)))}</td>
+                <td role="cell" data-label="Account"><strong>${escape(log.actor_name)}</strong><small>${escape(log.actor_role)}${log.actor_id ? ` · ${escape(log.actor_id)}` : ''}</small></td>
+                <td role="cell" data-label="Action">${escape(actions[log.action] || log.action)}</td>
+                <td role="cell" data-label="Area">${escape(areas[log.entity_type] || log.entity_type)}</td>
+                <td role="cell" data-label="Record">${escape(log.record_label || '—')}<small>${escape(log.entity_id || '')}</small></td>
+                <td role="cell" data-label="Fields changed">${escape((log.changed_fields || []).join(', ') || '—')}</td>
+            </tr>`).join('')}</tbody></table>` : '<div class="empty-state">No activity matches these filters. Logs begin after activity logging is enabled.</div>';
             status.textContent = `${count || 0} events found. Record changes are captured automatically; sign-in and sign-out entries describe app activity.`;
             document.getElementById('activityPage').textContent = `Page ${page + 1} of ${Math.max(1, Math.ceil((count || 0) / pageSize))}`;
             previous.disabled = page === 0;

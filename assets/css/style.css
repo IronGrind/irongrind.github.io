@@ -90,13 +90,36 @@ body.admin-dashboard .admin-section { min-height: 100%; flex-shrink: 0; }
 .activity-filters { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
 .activity-filters label { display: grid; gap: 6px; color: #a4adc2; font-size: .75rem; flex: 1 1 140px; }
 .activity-filters input, .activity-filters select { width: 100%; min-height: 38px; border: 1px solid #393939; border-radius: 9px; padding: 8px 10px; background: #111; color: #f1f3f7; color-scheme: dark; font: inherit; }
-.activity-table { max-height: 55dvh; overflow: auto; border: 1px solid rgba(190,201,220,.12); border-radius: 12px; }
-.activity-table table { min-width: 880px; }
+.activity-panel { container: activity / inline-size; }
+.activity-filters label { min-width: 0; }
+.activity-table { max-height: 55dvh; overflow: auto; overscroll-behavior: contain; border: 1px solid rgba(190,201,220,.12); border-radius: 12px; }
+.activity-table table { min-width: 0; width: 100%; table-layout: fixed; }
+.activity-table th:nth-child(1) { width: 15%; }
+.activity-table th:nth-child(2) { width: 20%; }
+.activity-table th:nth-child(3) { width: 12%; }
+.activity-table th:nth-child(4) { width: 13%; }
+.activity-table th:nth-child(5) { width: 22%; }
+.activity-table th:nth-child(6) { width: 18%; }
 .activity-table th { position: sticky; top: 0; z-index: 1; background: #1b202a; }
 .activity-table td { overflow-wrap: anywhere; max-width: 260px; }
+.activity-table td[data-label="Action"], .activity-table td[data-label="Area"] { overflow-wrap: normal; word-break: normal; }
 .activity-table small { display: block; color: #8b95a9; font-size: .7rem; margin-top: 5px; }
 .activity-pagination { display: flex; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 12px; margin-top: 14px; color: #a4adc2; font-size: .8rem; }
 .activity-panel button:disabled { opacity: .5; cursor: default; }
+@container activity (max-width: 850px) {
+    .activity-table table, .activity-table tbody { display: block; width: 100%; }
+    .activity-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+    .activity-table tbody tr { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 16px; padding: 16px; border-bottom: 1px solid rgba(190,201,220,.12); }
+    .activity-table tbody tr:last-child { border-bottom: 0; }
+    .activity-table tbody td { display: block; min-width: 0; max-width: none; padding: 0; border: 0; font-size: .82rem; }
+    .activity-table tbody td::before { content: attr(data-label); display: block; margin-bottom: 5px; color: #8b95a9; font-size: .65rem; font-weight: 600; letter-spacing: .04em; text-transform: uppercase; }
+    .activity-table td[data-label="Action"] { white-space: nowrap; }
+}
+@container activity (max-width: 360px) {
+    .activity-table tbody tr { grid-template-columns: minmax(0, 1fr); }
+    .activity-filters label { flex-basis: 100%; }
+    .activity-pagination { justify-content: space-between; gap: 8px; }
+}
 .stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; }
 .stat-card { min-width: 0; min-height: 136px; background: #161616; border: 1px solid #282828; border-radius: 20px; padding: 22px; }
 .stat-card:hover { border-color: #393939; }
