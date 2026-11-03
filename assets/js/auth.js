@@ -259,7 +259,13 @@ async function handleLogin(event) {
 
         if (error) await supabaseClient.auth.signOut();
 
-        showError(loginMode === 'admin' ? 'Invalid username or password.' : 'Invalid email or password. If you recently registered, your application must be approved before you can access the member portal.');
+        if (loginMode === 'member' && (error?.code === 'email_not_confirmed' || /email not confirmed/i.test(error?.message || ''))) {
+            showError('Please confirm the member account email first. Open the confirmation email, then sign in with that email and password.');
+            return;
+        }
+        showError(loginMode === 'admin'
+            ? 'Invalid admin username or password. Members must sign in with the email used for registration.'
+            : 'Invalid member email or password. Use the email used for registration and the account password. Approval does not change the password.');
     } catch (error) {
         console.error('Login failed:', error);
         showError('Unable to connect to the login service. Please try again.');

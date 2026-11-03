@@ -802,6 +802,12 @@ body.member-dashboard .dashboard-footer { margin-top: 0; }
 .gram-setup-notice { margin: 10px 0 14px; padding: 11px 13px; border: 1px solid rgba(241,196,15,0.3); border-radius: 12px; background: rgba(241,196,15,0.08); color: #e4c566; font-size: 0.78rem; line-height: 1.5; }
 .sale-total-preview { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; padding: 13px 15px; border: 1px solid #393939; border-radius: 12px; background: #101010; color: #a4adc2; font-size: 0.85rem; }
 .sale-total-preview strong { color: #fff; font-size: 1.1rem; }
+.member-detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-top: 16px; }
+.member-detail-field { min-width: 0; display: flex; flex-direction: column; gap: 5px; padding: 11px 12px; border: 1px solid #282828; border-radius: 12px; background: #101010; }
+.member-detail-field span, .member-detail-signature > span { color: #8b95a9; font-size: 0.67rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+.member-detail-field strong { color: #e8edf5; font-size: 0.82rem; font-weight: 500; overflow-wrap: anywhere; }
+.member-detail-signature { margin-top: 14px; padding: 14px; border: 1px solid #282828; border-radius: 12px; background: #101010; }
+.member-detail-signature img { display: block; max-width: 100%; width: 360px; height: 120px; margin-top: 8px; object-fit: contain; background: #fff; border-radius: 8px; }
 
 @media (max-width: 640px) {
     .progress-stats { grid-template-columns: repeat(2, 1fr); }

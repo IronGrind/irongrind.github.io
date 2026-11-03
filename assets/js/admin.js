@@ -452,6 +452,7 @@ function renderMembers() {
                 <div class="member-actions">
                     ${isExpiredTab ? '' : `<button class="renew-btn" onclick="openChangePlanModal('${m.id}')"><i class="fas fa-exchange-alt"></i> Change Plan</button>`}
                     <button class="renew-btn" onclick="renewMember('${m.id}')"><i class="fas fa-sync-alt"></i> Renew</button>
+                    <button class="renew-btn" onclick="viewMemberDetails('${m.id}')"><i class="fas fa-user"></i> Details</button>
                     <span class="approve-badge ${statusClass}">${statusText}</span>
                 </div>
             </div>`;
@@ -462,6 +463,35 @@ function filterPlan(plan) {
     currentPlanFilter = plan;
     document.querySelectorAll('#planPills .pill, #expiredPlanPills .pill').forEach(p => p.classList.toggle('active', p.dataset.plan === plan));
     renderMembers();
+}
+
+function viewMemberDetails(id) {
+    const member = members.find(item => String(item.id) === String(id));
+    if (!member) return;
+    const field = (label, value) => `<div class="member-detail-field"><span>${escapeHTML(label)}</span><strong>${escapeHTML(value || '—')}</strong></div>`;
+    const emergency = member.emergencyContact && typeof member.emergencyContact === 'object'
+        ? [member.emergencyContact.name, member.emergencyContact.relationship, member.emergencyContact.contact].filter(Boolean).join(' · ')
+        : member.emergencyContact || '—';
+    const healthConditions = Array.isArray(member.healthConditions) && member.healthConditions.length
+        ? member.healthConditions.join(', ')
+        : 'None reported';
+    const fitnessGoals = Array.isArray(member.goals) && member.goals.length
+        ? member.goals.join(', ')
+        : member.goal || 'General Fitness';
+    const signature = member.signature
+        ? `<div class="member-detail-signature"><span>Member signature</span><img src="${escapeHTML(member.signature)}" alt="${escapeHTML(member.name)}'s signature"></div>`
+        : '';
+
+    openModal(`<h3><i class="fas fa-user"></i> Member Details</h3>
+        <p class="modal-sub">${escapeHTML(member.name)} · ${escapeHTML(member.registrationSource || 'Member record')}</p>
+        <div class="member-detail-grid">
+            ${field('Email', member.email)}${field('Username', member.username)}${field('Mobile', member.contact)}
+            ${field('Date of birth', member.dob)}${field('Age', member.age ? String(member.age) : '')}${field('Sex', member.sex)}
+            ${field('Height', member.height ? `${member.height} ${member.heightUnit || 'cm'}` : '')}${field('Weight', member.weight ? `${member.weight} kg` : '')}${field('Emergency contact', emergency)}
+            ${field('Plan', member.plan)}${field('Plan price', member.planPrice ? formatPeso(member.planPrice) : '')}${field('Membership status', member.status)}
+            ${field('Start date', member.startDate)}${field('Expiry date', member.expiry)}${field('Fitness goals', fitnessGoals)}
+            ${field('Health conditions', healthConditions)}${field('Other medical conditions', member.otherMedicalConditions || 'None reported')}
+        </div>${signature}<div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Close</button></div>`);
 }
 
 /* ========== RENDER: APPROVALS ========== */
@@ -912,6 +942,9 @@ function mapSupabaseMember(row, username = '', email = '') {
         id: row.id,
         authUserId: row.auth_user_id,
         name: row.full_name,
+        dob: row.date_of_birth,
+        age: row.age,
+        sex: row.sex,
         plan: row.plan,
         planPrice: Number(row.plan_price) || (typeof paidValue === 'number' ? paidValue : 0),
         startDate: row.start_date,
@@ -919,12 +952,16 @@ function mapSupabaseMember(row, username = '', email = '') {
         status: row.status,
         paid: typeof paidValue === 'boolean' ? paidValue : Number(paidValue) > 0,
         goal: (row.fitness_goals || [])[0] || 'General Fitness',
+        goals: row.fitness_goals || [],
         contact: row.mobile,
         email: row.email || email,
         username: row.username || username,
         height: row.height,
         heightUnit: row.height_unit,
         weight: row.weight_kg ?? row.weight,
+        emergencyContact: row.emergency_contact && typeof row.emergency_contact === 'object'
+            ? row.emergency_contact
+            : { name: row.emergency_name, relationship: row.emergency_relationship, contact: row.emergency_contact },
         healthConditions: row.health_conditions || [],
         otherMedicalConditions: row.other_medical_conditions || '',
         signature: row.signature_path || row.signature_data || null,
