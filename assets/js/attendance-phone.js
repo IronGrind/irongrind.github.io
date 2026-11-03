@@ -3,6 +3,8 @@ let phoneScanBusy = false;
 let deferredPhoneInstallPrompt = null;
 let phoneScannerMode = 'pair';
 let activePhoneSession = null;
+const PHONE_PAIRING_STORAGE_KEY = 'ig_remembered_attendance_phone_pairing';
+const TEMP_PHONE_PAIRING_STORAGE_KEY = 'ig_temporary_attendance_phone_pairing';
 
 function setPhoneAttendanceStatus(message, isError = false) {
     const status = document.getElementById('phoneQrStatus');
@@ -31,7 +33,30 @@ function createPhoneQrScanner() {
 
 function setPhoneCameraButton(running) {
     const button = document.getElementById('phoneCameraButton');
-    if (button) button.textContent = running ? 'Stop camera' : 'Start camera';
+    if (button) button.textContent = running ? 'Stop camera' : phoneScannerMode === 'member' && activePhoneSession ? 'Open camera' : 'Open pairing camera';
+}
+
+function savePhonePairing(sessionId, token, remember, expiresAt = '') {
+    const value = JSON.stringify({ sessionId, token, expiresAt });
+    const destination = remember ? localStorage : sessionStorage;
+    const other = remember ? sessionStorage : localStorage;
+    destination.setItem(remember ? PHONE_PAIRING_STORAGE_KEY : TEMP_PHONE_PAIRING_STORAGE_KEY, value);
+    other.removeItem(remember ? TEMP_PHONE_PAIRING_STORAGE_KEY : PHONE_PAIRING_STORAGE_KEY);
+}
+
+function readPhonePairing() {
+    for (const [storage, key] of [[localStorage, PHONE_PAIRING_STORAGE_KEY], [sessionStorage, TEMP_PHONE_PAIRING_STORAGE_KEY]]) {
+        try {
+            const value = JSON.parse(storage.getItem(key) || 'null');
+            if (value?.sessionId && value?.token) return value;
+        } catch { storage.removeItem(key); }
+    }
+    return null;
+}
+
+function clearPhonePairing() {
+    localStorage.removeItem(PHONE_PAIRING_STORAGE_KEY);
+    sessionStorage.removeItem(TEMP_PHONE_PAIRING_STORAGE_KEY);
 }
 
 async function startPhonePairingScanner(statusMessage = '') {
@@ -57,6 +82,7 @@ async function startPhonePairingScanner(statusMessage = '') {
                 const sessionId = pairingUrl.searchParams.get('session');
                 const token = pairingUrl.searchParams.get('token');
                 if (!sessionId || !token) return;
+                savePhonePairing(sessionId, token, pairingUrl.searchParams.get('remember') === '1', pairingUrl.searchParams.get('expires') || '');
                 phoneScanBusy = true;
                 setPhoneAttendanceStatus('Admin pairing QR detected. Connecting…');
                 await stopPhoneAttendanceScanner();
@@ -77,7 +103,7 @@ async function startPhonePairingScanner(statusMessage = '') {
     }
 }
 
-async function startPhoneMemberScanner(sessionId, token) {
+async function startPhoneMemberScanner(sessionId, token, openCamera = true) {
     phoneScannerMode = 'member';
     activePhoneSession = { sessionId, token };
     setPhoneCameraButton(false);
@@ -91,7 +117,13 @@ async function startPhoneMemberScanner(sessionId, token) {
         p_token: token
     });
     if (sessionError || sessionValid !== true) {
+        clearPhonePairing();
         await startPhonePairingScanner('Pairing expired or invalid. Scan a new pairing QR from the admin page.');
+        return;
+    }
+    if (!openCamera) {
+        setPhoneCameraButton(false);
+        setPhoneAttendanceStatus('This phone is paired. Tap Open camera when you are ready to scan members.');
         return;
     }
     let scanner;
@@ -119,6 +151,7 @@ async function startPhoneMemberScanner(sessionId, token) {
                             : `Could not send the scan: ${error.message}`, true);
                         if (expired) {
                             await stopPhoneAttendanceScanner();
+                            clearPhonePairing();
                             await startPhonePairingScanner('Pairing expired. Scan a new pairing QR from the admin page.');
                             return;
                         }
@@ -221,10 +254,13 @@ async function startPhoneAttendanceApp() {
     const sessionId = params.get('session');
     const token = params.get('token');
     if (sessionId && token) {
+        savePhonePairing(sessionId, token, params.get('remember') === '1', params.get('expires') || '');
         window.history.replaceState(null, '', window.location.pathname);
         await startPhoneMemberScanner(sessionId, token);
     } else {
-        await startPhonePairingScanner();
+        const savedPairing = readPhonePairing();
+        if (savedPairing) await startPhoneMemberScanner(savedPairing.sessionId, savedPairing.token, false);
+        else await startPhonePairingScanner();
     }
 }
 

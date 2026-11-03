@@ -40,6 +40,7 @@ let activeQRScanner = null;
 let qrScanHandled = false;
 let qrCameraHintTimer = null;
 let activeMobileAttendanceSessionId = null;
+let activeMobileAttendancePersistent = false;
 let mobileAttendancePollTimer = null;
 let mobileAttendancePollBusy = false;
 let mobileAttendanceProcessedScanIds = new Set();
@@ -356,6 +357,7 @@ function logout() {
     askConfirmation('Log out?', 'Are you sure you want to log out?', 'Log out', async () => {
         const storeUnlockKey = adminStoreUnlockKey();
         if (storeUnlockKey) localStorage.removeItem(storeUnlockKey);
+        if (activeMobileAttendanceSessionId) await endMobileAttendanceSession(activeMobileAttendanceSessionId);
         try {
             const result = await window.ironGrindSupabase?.rpc('admin_log_session_event', { p_event: 'sign_out_requested' });
             if (result?.error) console.error('Could not record sign-out request:', result.error);
@@ -1233,6 +1235,7 @@ async function initializeSupabaseAdminData() {
     subscribeAdminRealtimeUpdates();
     await loadSupabaseMembershipData();
     await loadSupabaseOperationalData();
+    await restoreMobileAttendancePairing();
     startAdminMembershipRefresh();
 }
 
@@ -1804,32 +1807,40 @@ function startQRScanner() {
     openModal(`<div class="qr-camera-modal">
         <h3><i class="fas fa-qrcode"></i> Choose a Camera</h3>
         <p class="modal-sub">Scan with a camera connected to this device or pair a phone camera.</p>
-        <div class="modal-actions"><button class="btn-primary" onclick="startLocalQRScanner()"><i class="fas fa-laptop"></i> This device</button><button class="btn-primary" onclick="startPhoneQRPairing()"><i class="fas fa-mobile-screen-button"></i> Phone camera</button><button class="btn-sm" onclick="closeModal()">Cancel</button></div>
+        <label class="phone-pair-remember"><input id="rememberPhoneScanner" type="checkbox" checked> Remember this phone for 30 days</label>
+        <div class="modal-actions"><button class="btn-primary" onclick="startLocalQRScanner()"><i class="fas fa-laptop"></i> This device</button><button class="btn-primary" onclick="startPhoneQRPairing(document.getElementById('rememberPhoneScanner').checked)"><i class="fas fa-mobile-screen-button"></i> Phone camera</button><button class="btn-sm" onclick="closeModal()">Cancel</button></div>
     </div>`);
 }
 
-async function startPhoneQRPairing() {
+async function startPhoneQRPairing(rememberPhone = false) {
     if (!window.ironGrindSupabase) {
         toast('Phone scanning needs an active Supabase connection.', 'error');
         return;
     }
-    const { data, error } = await window.ironGrindSupabase.rpc('create_mobile_attendance_scan_session');
+    if (activeMobileAttendanceSessionId) await endMobileAttendanceSession(activeMobileAttendanceSessionId);
+    const { data, error } = await window.ironGrindSupabase.rpc('create_mobile_attendance_scan_session', {
+        p_remember_phone: rememberPhone
+    });
     if (error || !data?.session_id || !data?.token) {
         toast(`Could not connect a phone scanner${error?.message ? `: ${error.message}` : '.'}`, 'error');
         return;
     }
     activeMobileAttendanceSessionId = data.session_id;
+    activeMobileAttendancePersistent = Boolean(data.remember_phone);
+    if (activeMobileAttendancePersistent) localStorage.setItem('ig_mobile_attendance_session_id', data.session_id);
     const phoneUrl = new URL('attendance-phone.html', window.location.href);
     phoneUrl.searchParams.set('session', data.session_id);
     phoneUrl.searchParams.set('token', data.token);
+    phoneUrl.searchParams.set('remember', activeMobileAttendancePersistent ? '1' : '0');
+    phoneUrl.searchParams.set('expires', data.expires_at || '');
     const localOnly = ['localhost', '127.0.0.1', '::1'].includes(phoneUrl.hostname);
     openModal(`<div class="qr-camera-modal">
         <h3><i class="fas fa-mobile-screen-button"></i> Connect Phone Camera</h3>
-        <p class="modal-sub">Scan this pairing QR with your phone. The phone scanner stays connected for 10 minutes.</p>
+        <p class="modal-sub">Scan this pairing QR with your phone. ${activeMobileAttendancePersistent ? 'This phone stays paired for 30 days.' : 'This one-time pairing expires in 10 minutes.'}</p>
         ${localOnly ? '<p class="qr-camera-status">This address uses localhost, which a phone cannot reach. Open the hosted HTTPS site on the admin computer to pair a phone.</p>' : ''}
         <div id="phonePairQr" class="phone-pair-qr" aria-label="Phone scanner pairing QR code"></div>
         <p id="phonePairStatus" class="qr-camera-status" role="status">Waiting for phone scans…</p>
-        <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Close scanner</button></div>
+        <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Close window</button>${activeMobileAttendancePersistent ? `<button class="btn-delete" onclick="endMobileAttendanceSession('${data.session_id}')">End phone pairing</button>` : ''}</div>
     </div>`);
     if (typeof QRCode !== 'undefined') {
         new QRCode(document.getElementById('phonePairQr'), {
@@ -1848,6 +1859,37 @@ function startMobileAttendancePolling(sessionId) {
     mobileAttendanceProcessedScanIds = new Set();
     mobileAttendancePollTimer = window.setInterval(() => pollMobileAttendanceScans(sessionId), 1200);
     pollMobileAttendanceScans(sessionId);
+}
+
+async function restoreMobileAttendancePairing() {
+    const sessionId = localStorage.getItem('ig_mobile_attendance_session_id');
+    if (!sessionId || !window.ironGrindSupabase) return;
+    const { data: isActive, error } = await window.ironGrindSupabase.rpc('is_admin_mobile_attendance_scan_session_active', {
+        p_session_id: sessionId
+    });
+    if (error || isActive !== true) {
+        localStorage.removeItem('ig_mobile_attendance_session_id');
+        return;
+    }
+    activeMobileAttendanceSessionId = sessionId;
+    activeMobileAttendancePersistent = true;
+    startMobileAttendancePolling(sessionId);
+}
+
+async function endMobileAttendanceSession(sessionId = activeMobileAttendanceSessionId) {
+    if (!sessionId || !window.ironGrindSupabase) return;
+    const { error } = await window.ironGrindSupabase.rpc('close_mobile_attendance_scan_session', { p_session_id: sessionId });
+    if (error) { toast(`Could not end phone pairing: ${error.message}`, 'error'); return; }
+    if (activeMobileAttendanceSessionId === sessionId) {
+        clearInterval(mobileAttendancePollTimer);
+        mobileAttendancePollTimer = null;
+        mobileAttendancePollBusy = false;
+        activeMobileAttendanceSessionId = null;
+        activeMobileAttendancePersistent = false;
+    }
+    if (localStorage.getItem('ig_mobile_attendance_session_id') === sessionId) localStorage.removeItem('ig_mobile_attendance_session_id');
+    closeModal();
+    toast('Phone attendance pairing ended.', 'success');
 }
 
 async function pollMobileAttendanceScans(sessionId) {
@@ -2045,14 +2087,16 @@ function getQRScannerErrorMessage(error) {
 function stopQRScanner() {
     clearTimeout(qrCameraHintTimer);
     qrCameraHintTimer = null;
-    clearInterval(mobileAttendancePollTimer);
-    mobileAttendancePollTimer = null;
-    mobileAttendancePollBusy = false;
-    const mobileSessionId = activeMobileAttendanceSessionId;
-    activeMobileAttendanceSessionId = null;
-    if (mobileSessionId && window.ironGrindSupabase) {
-        window.ironGrindSupabase.rpc('close_mobile_attendance_scan_session', { p_session_id: mobileSessionId })
-            .then(({ error }) => { if (error) console.warn('Could not close phone attendance session:', error); });
+    if (!activeMobileAttendancePersistent) {
+        clearInterval(mobileAttendancePollTimer);
+        mobileAttendancePollTimer = null;
+        mobileAttendancePollBusy = false;
+        const mobileSessionId = activeMobileAttendanceSessionId;
+        activeMobileAttendanceSessionId = null;
+        if (mobileSessionId && window.ironGrindSupabase) {
+            window.ironGrindSupabase.rpc('close_mobile_attendance_scan_session', { p_session_id: mobileSessionId })
+                .then(({ error }) => { if (error) console.warn('Could not close phone attendance session:', error); });
+        }
     }
     const scanner = activeQRScanner;
     activeQRScanner = null;
