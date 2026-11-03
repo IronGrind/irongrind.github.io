@@ -20,6 +20,7 @@ create index if not exists activity_logs_actor_idx on public.activity_logs (acto
 alter table public.activity_logs enable row level security;
 revoke all on public.activity_logs from public, anon, authenticated;
 grant select on public.activity_logs to authenticated;
+drop policy if exists activity_logs_admin_read on public.activity_logs;
 create policy activity_logs_admin_read on public.activity_logs
     for select to authenticated using ((select private.is_admin()));
 
@@ -49,7 +50,7 @@ begin
     -- This context is set only inside the service-only member creation RPC.
     if actor is null and auth.role() = 'service_role' then
         actor := nullif(current_setting('irongrind.activity_actor', true), '')::uuid;
-        if actor is null then
+        if actor is null and tg_op = 'INSERT' then
             actor := nullif(coalesce(record_data ->> 'processed_by', record_data ->> 'recorded_by', record_data ->> 'reviewed_by'), '')::uuid;
         end if;
     end if;
@@ -84,6 +85,7 @@ do $$
 declare table_name text;
 begin
     foreach table_name in array array['profiles', 'members', 'membership_applications', 'attendance', 'products', 'sales', 'sale_items', 'membership_history'] loop
+        execute format('drop trigger if exists capture_activity on public.%I', table_name);
         execute format('create trigger capture_activity after insert or update or delete on public.%I for each row execute function private.capture_activity()', table_name);
     end loop;
 end;
@@ -94,7 +96,7 @@ create or replace function public.admin_log_session_event(p_event text)
 returns void language plpgsql security definer set search_path = '' as $$
 declare actor_display text;
 begin
-    if not (select private.is_admin()) then raise exception 'Admin access required'; end if;
+    if (select private.is_admin()) is distinct from true then raise exception 'Admin access required'; end if;
     if p_event not in ('signed_in', 'sign_out_requested') then raise exception 'Unsupported session event'; end if;
     select coalesce(nullif(full_name, ''), username, email, id::text) into actor_display
     from public.profiles where id = auth.uid();
