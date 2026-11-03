@@ -1868,8 +1868,37 @@ function startMobileAttendancePolling(sessionId) {
     clearInterval(mobileAttendancePollTimer);
     mobileAttendancePollBusy = false;
     mobileAttendanceProcessedScanIds = new Set();
+    setAttendancePhoneStatus('Pairing QR ready. Waiting for a phone to connect…');
     mobileAttendancePollTimer = window.setInterval(() => pollMobileAttendanceScans(sessionId), 1200);
     pollMobileAttendanceScans(sessionId);
+}
+
+function setAttendancePhoneStatus(message, connected = false) {
+    const status = document.getElementById('attendancePhoneStatus');
+    if (!status) return;
+    status.textContent = message;
+    status.classList.toggle('connected', connected);
+}
+
+async function refreshAttendancePhoneStatus(sessionId) {
+    const { data, error } = await window.ironGrindSupabase.rpc('get_admin_mobile_attendance_device', {
+        p_session_id: sessionId
+    });
+    if (error) {
+        setAttendancePhoneStatus(`Phone pairing status unavailable: ${error.message}. Apply migration 20261104000011.`);
+        return;
+    }
+    if (!data?.paired) {
+        setAttendancePhoneStatus('Pairing QR ready. Waiting for a phone to connect…');
+        return;
+    }
+    const pairedTime = data.paired_at
+        ? new Date(data.paired_at).toLocaleTimeString('en-PH', { timeZone: 'Asia/Manila', hour: 'numeric', minute: '2-digit' })
+        : '';
+    const message = `Paired phone: ${data.device || 'Phone'}${pairedTime ? ` · connected ${pairedTime}` : ''}`;
+    setAttendancePhoneStatus(message, true);
+    const modalStatus = document.getElementById('phonePairStatus');
+    if (modalStatus && !modalStatus.textContent.startsWith('Last scan processed')) modalStatus.textContent = message;
 }
 
 async function restoreMobileAttendancePairing() {
@@ -1899,6 +1928,7 @@ async function endMobileAttendanceSession(sessionId = activeMobileAttendanceSess
         activeMobileAttendancePersistent = false;
     }
     if (localStorage.getItem('ig_mobile_attendance_session_id') === sessionId) localStorage.removeItem('ig_mobile_attendance_session_id');
+    setAttendancePhoneStatus('No phone camera paired.');
     closeModal();
     toast('Phone attendance pairing ended.', 'success');
 }
@@ -1907,6 +1937,7 @@ async function pollMobileAttendanceScans(sessionId) {
     if (mobileAttendancePollBusy || activeMobileAttendanceSessionId !== sessionId || !window.ironGrindSupabase) return;
     mobileAttendancePollBusy = true;
     try {
+        await refreshAttendancePhoneStatus(sessionId);
         const { data: scans, error } = await window.ironGrindSupabase
             .from('mobile_attendance_scan_events')
             .select('id, qr_payload')

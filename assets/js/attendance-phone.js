@@ -3,6 +3,7 @@ let phoneScanBusy = false;
 let deferredPhoneInstallPrompt = null;
 let phoneScannerMode = 'pair';
 let activePhoneSession = null;
+let phoneCameraPausedForNextMember = false;
 const PHONE_PAIRING_STORAGE_KEY = 'ig_remembered_attendance_phone_pairing';
 const TEMP_PHONE_PAIRING_STORAGE_KEY = 'ig_temporary_attendance_phone_pairing';
 
@@ -34,6 +35,33 @@ function createPhoneQrScanner() {
 function setPhoneCameraButton(running) {
     const button = document.getElementById('phoneCameraButton');
     if (button) button.textContent = running ? 'Stop camera' : phoneScannerMode === 'member' && activePhoneSession ? 'Open camera' : 'Open pairing camera';
+}
+
+function setPhoneNextScanButton(visible, label = 'Scan next member') {
+    const button = document.getElementById('phoneNextScanButton');
+    if (!button) return;
+    button.hidden = !visible;
+    button.textContent = label;
+}
+
+function getPhoneDeviceLabel() {
+    const ua = navigator.userAgent || '';
+    const browser = /Edg\//.test(ua) ? 'Edge' : /Firefox\//.test(ua) ? 'Firefox' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : 'Browser';
+    if (/Android/i.test(ua)) {
+        const model = ua.match(/Android[^;)]*;\s*([^;)]+?)(?:\s+Build\/|[;)])/i)?.[1]?.trim();
+        return `${model || 'Android phone'} · ${browser}`;
+    }
+    if (/iPhone/i.test(ua)) return `iPhone · ${browser}`;
+    if (/iPad/i.test(ua)) return `iPad · ${browser}`;
+    return `Phone · ${browser}`;
+}
+
+async function registerPhoneAttendanceDevice(sessionId, token) {
+    return window.ironGrindSupabase.rpc('register_mobile_attendance_device', {
+        p_session_id: sessionId,
+        p_token: token,
+        p_device_label: getPhoneDeviceLabel()
+    });
 }
 
 function savePhonePairing(sessionId, token, remember, expiresAt = '') {
@@ -101,10 +129,15 @@ async function startPhonePairingScanner(statusMessage = '') {
                             ? `Could not validate pairing: ${error.message}`
                             : 'Supabase rejected this pairing. It may have expired, or the pairing migrations may not be applied. Create a fresh QR on the admin page.', true);
                     } else {
+                        const { error: deviceError } = await registerPhoneAttendanceDevice(sessionId, token);
                         phoneScannerMode = 'member';
                         activePhoneSession = { sessionId, token };
+                        phoneCameraPausedForNextMember = true;
+                        setPhoneNextScanButton(true, 'Scan member QR');
                         setPhoneAttendanceMode('scan');
-                        setPhoneAttendanceStatus('Phone paired. Camera is ready for member QR codes.');
+                        setPhoneAttendanceStatus(deviceError
+                            ? 'Phone paired, but the admin page cannot show this device name yet. Apply migration 20261104000011.'
+                            : `Phone paired as ${getPhoneDeviceLabel()}. Remove the pairing QR, then tap Scan member QR.`);
                     }
                 } catch (error) {
                     clearPhonePairing();
@@ -113,7 +146,13 @@ async function startPhonePairingScanner(statusMessage = '') {
                 window.setTimeout(() => {
                     if (phoneAttendanceScanner === scanner) {
                         phoneScanBusy = false;
-                        try { scanner.resume(); } catch {}
+                        if (phoneScannerMode === 'member' && activePhoneSession) {
+                            phoneCameraPausedForNextMember = true;
+                            setPhoneCameraButton(true);
+                            setPhoneNextScanButton(true, 'Scan member QR');
+                        } else {
+                            try { scanner.resume(); } catch {}
+                        }
                     }
                 }, 1200);
             },
@@ -134,6 +173,8 @@ async function startPhonePairingScanner(statusMessage = '') {
 async function startPhoneMemberScanner(sessionId, token, openCamera = true) {
     phoneScannerMode = 'member';
     activePhoneSession = { sessionId, token };
+    phoneCameraPausedForNextMember = false;
+    setPhoneNextScanButton(false);
     setPhoneCameraButton(false);
     setPhoneAttendanceMode('scan');
     if (!isPhoneCameraAvailable()) {
@@ -151,9 +192,13 @@ async function startPhoneMemberScanner(sessionId, token, openCamera = true) {
             : 'Supabase rejected this pairing. It may have expired, or the pairing migrations may not be applied. Scan a fresh QR from the admin page.');
         return;
     }
+    const { error: deviceError } = await registerPhoneAttendanceDevice(sessionId, token);
+    if (deviceError) console.warn('Could not register the paired attendance phone:', deviceError.message);
     if (!openCamera) {
         setPhoneCameraButton(false);
-        setPhoneAttendanceStatus('This phone is paired. Tap Open camera when you are ready to scan members.');
+        setPhoneAttendanceStatus(deviceError
+            ? 'This phone is paired, but its device name cannot be shared until migration 20261104000011 is applied.'
+            : `This phone is paired as ${getPhoneDeviceLabel()}. Tap Open camera when ready.`);
         return;
     }
     let scanner;
@@ -207,18 +252,23 @@ async function submitPhoneMemberScan(decodedText, scanner, session) {
     } catch (error) {
         setPhoneAttendanceStatus(`Connection issue: ${error.message || 'Scan could not be sent.'}`, true);
     }
-    window.setTimeout(() => {
-        if (phoneAttendanceScanner === scanner) {
-            phoneScanBusy = false;
-            try { scanner.resume(); } catch {}
+    if (phoneAttendanceScanner === scanner) {
+        phoneCameraPausedForNextMember = true;
+        phoneScanBusy = false;
+        setPhoneCameraButton(true);
+        setPhoneNextScanButton(true, 'Scan next member');
+        if (!document.getElementById('phoneQrStatus')?.classList.contains('error')) {
+            setPhoneAttendanceStatus('Scan sent. Remove the QR from view, then tap Scan next member.');
         }
-    }, 1200);
+    }
 }
 
 async function stopPhoneAttendanceScanner() {
     const scanner = phoneAttendanceScanner;
     phoneAttendanceScanner = null;
     phoneScanBusy = false;
+    phoneCameraPausedForNextMember = false;
+    setPhoneNextScanButton(false);
     setPhoneCameraButton(false);
     if (scanner) {
         const track = scanner.getRunningTrack?.();
@@ -239,6 +289,16 @@ async function togglePhoneAttendanceCamera() {
     } else {
         await startPhonePairingScanner();
     }
+}
+
+function resumePhoneAttendanceScanner() {
+    if (!phoneAttendanceScanner || !phoneCameraPausedForNextMember) return;
+    phoneCameraPausedForNextMember = false;
+    phoneScanBusy = false;
+    setPhoneNextScanButton(false);
+    try { phoneAttendanceScanner.resume(); } catch {}
+    setPhoneCameraButton(true);
+    setPhoneAttendanceStatus('Camera is on. Point it at the next member QR code.');
 }
 
 async function installPhoneAttendanceApp() {
@@ -276,7 +336,7 @@ window.addEventListener('pagehide', () => {
 async function startPhoneAttendanceApp() {
     configurePhoneAppInstall();
     if ('serviceWorker' in navigator && window.isSecureContext) {
-        navigator.serviceWorker.register('attendance-phone-sw.js?v=20261104-phone-pairing-fix').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
+        navigator.serviceWorker.register('attendance-phone-sw.js?v=20261104-phone-device-status').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
     }
     if (!window.ironGrindSupabase) {
         setPhoneAttendanceStatus('The attendance service could not load. Check your connection and reload.', true);

@@ -22,6 +22,7 @@
         #phoneQrStatus.error { color: #fecaca; background: rgba(127,29,29,.35); }
         .phone-scanner-button { width: 100%; margin-top: 12px; padding: 12px; border: 0; border-radius: 10px; background: #760000; color: white; font-weight: 700; }
         .phone-install-button { display: none; width: 100%; margin-top: 10px; padding: 12px; border: 1px solid #565656; border-radius: 10px; background: #222; color: white; font-weight: 700; }
+        .phone-next-scan-button { width: 100%; margin-top: 10px; padding: 12px; border: 1px solid #565656; border-radius: 10px; background: #222; color: white; font-weight: 700; }
         .phone-install-help { display: none; margin-top: 12px; padding: 12px; border: 1px solid #444; border-radius: 10px; font-size: .9rem; }
     </style>
 </head>
@@ -33,11 +34,12 @@
         <p id="phoneQrStatus" role="status" aria-live="polite">Checking this pairing link…</p>
         <button id="phoneInstallButton" class="phone-install-button" type="button" onclick="installPhoneAttendanceApp()">Install attendance app</button>
         <p id="phoneInstallHelp" class="phone-install-help">To add this app: open your browser menu, then choose <strong>Add to Home Screen</strong> or <strong>Install app</strong>.</p>
+        <button id="phoneNextScanButton" class="phone-next-scan-button" type="button" onclick="resumePhoneAttendanceScanner()" hidden>Scan next member</button>
         <button id="phoneCameraButton" class="phone-scanner-button" type="button" onclick="togglePhoneAttendanceCamera()">Open camera</button>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/supabase-client.js"></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-    <script src="assets/js/attendance-phone.js?v=20261104-phone-pairing-fix"></script>
+    <script src="assets/js/attendance-phone.js?v=20261104-phone-device-status"></script>
 </body>
 </html>

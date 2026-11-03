@@ -269,6 +269,8 @@ button.action-loading::after { content: ''; position: absolute; bottom: 0; left:
 /* ========== TABLES ========== */
 .attendance-table { width: 100%; border-collapse: collapse; }
 .attendance-log-controls { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 6px 0 12px; }
+.attendance-phone-status { margin: -8px 0 18px; padding: 10px 13px; border: 1px solid rgba(139,149,169,.24); border-radius: 10px; color: #aeb7c8; background: rgba(17,22,31,.58); font-size: .84rem; }
+.attendance-phone-status.connected { border-color: rgba(34,197,94,.35); color: #86efac; background: rgba(20,83,45,.16); }
 .attendance-log-controls h3 { display: flex; align-items: center; gap: 8px; font-size: 0.95rem; font-weight: 600; }
 .attendance-log-controls h3 i { color: #8b0000; }
 .attendance-date-filter { display: flex; align-items: center; gap: 9px; color: #c2c9d5; font-size: 0.8rem; }
