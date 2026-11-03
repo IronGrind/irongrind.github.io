@@ -4,6 +4,7 @@ let deferredPhoneInstallPrompt = null;
 let phoneScannerMode = 'pair';
 let activePhoneSession = null;
 let phoneCameraPausedForNextMember = false;
+let phoneCameraTransition = false;
 const PHONE_PAIRING_STORAGE_KEY = 'ig_remembered_attendance_phone_pairing';
 const TEMP_PHONE_PAIRING_STORAGE_KEY = 'ig_temporary_attendance_phone_pairing';
 
@@ -27,6 +28,7 @@ function isPhoneCameraAvailable() {
 
 function createPhoneQrScanner() {
     if (typeof Html5Qrcode === 'undefined') throw new Error('The scanner library could not load. Check your internet connection.');
+    document.getElementById('phoneQrReader')?.replaceChildren();
     const scanner = new Html5Qrcode('phoneQrReader');
     phoneAttendanceScanner = scanner;
     return scanner;
@@ -276,23 +278,44 @@ async function stopPhoneAttendanceScanner() {
         try { track?.stop(); } catch {}
         try { scanner.clear(); } catch {}
     }
-    setPhoneAttendanceStatus('Camera stopped. You can close this page.');
+    setPhoneAttendanceStatus(activePhoneSession
+        ? `Camera stopped. ${getPhoneDeviceLabel()} is still paired. Tap Open camera to continue scanning.`
+        : 'Camera stopped. You can close this page.');
 }
 
 async function togglePhoneAttendanceCamera() {
-    if (phoneAttendanceScanner) {
-        await stopPhoneAttendanceScanner();
-        return;
-    }
-    if (phoneScannerMode === 'member' && activePhoneSession) {
-        await startPhoneMemberScanner(activePhoneSession.sessionId, activePhoneSession.token);
-    } else {
-        await startPhonePairingScanner();
+    if (phoneCameraTransition) return;
+    phoneCameraTransition = true;
+    const cameraButton = document.getElementById('phoneCameraButton');
+    const nextButton = document.getElementById('phoneNextScanButton');
+    if (cameraButton) cameraButton.disabled = true;
+    if (nextButton) nextButton.disabled = true;
+    try {
+        if (phoneAttendanceScanner) {
+            await stopPhoneAttendanceScanner();
+            return;
+        }
+        if (!activePhoneSession) {
+            const savedPairing = readPhonePairing();
+            if (savedPairing) {
+                activePhoneSession = { sessionId: savedPairing.sessionId, token: savedPairing.token };
+                phoneScannerMode = 'member';
+            }
+        }
+        if (phoneScannerMode === 'member' && activePhoneSession) {
+            await startPhoneMemberScanner(activePhoneSession.sessionId, activePhoneSession.token);
+        } else {
+            await startPhonePairingScanner();
+        }
+    } finally {
+        phoneCameraTransition = false;
+        if (cameraButton) cameraButton.disabled = false;
+        if (nextButton) nextButton.disabled = false;
     }
 }
 
 function resumePhoneAttendanceScanner() {
-    if (!phoneAttendanceScanner || !phoneCameraPausedForNextMember) return;
+    if (phoneCameraTransition || !phoneAttendanceScanner || !phoneCameraPausedForNextMember) return;
     phoneCameraPausedForNextMember = false;
     phoneScanBusy = false;
     setPhoneNextScanButton(false);
@@ -336,7 +359,7 @@ window.addEventListener('pagehide', () => {
 async function startPhoneAttendanceApp() {
     configurePhoneAppInstall();
     if ('serviceWorker' in navigator && window.isSecureContext) {
-        navigator.serviceWorker.register('attendance-phone-sw.js?v=20261104-phone-device-status').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
+        navigator.serviceWorker.register('attendance-phone-sw.js?v=20261104-camera-restart-fix').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
     }
     if (!window.ironGrindSupabase) {
         setPhoneAttendanceStatus('The attendance service could not load. Check your connection and reload.', true);
