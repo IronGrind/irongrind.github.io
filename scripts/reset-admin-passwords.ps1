@@ -13,6 +13,8 @@ $secrets = @{}
 $headers = $null
 $serviceKey = $null
 $failed = $false
+$stage = 'reading the service_role key'
+$safeFailureReason = $null
 
 function Convert-SecretToText([Security.SecureString]$Secret) {
     $buffer = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($Secret)
@@ -20,30 +22,49 @@ function Convert-SecretToText([Security.SecureString]$Secret) {
     finally { [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($buffer) }
 }
 
+function Get-RequestFailureHint($Failure) {
+    $response = $Failure.Exception.Response
+    if ($null -ne $response) {
+        $httpStatus = [int]$response.StatusCode
+        switch ($httpStatus) {
+            401 { return 'HTTP 401: Supabase rejected the key. Copy the service_role key from this exact project and try again.' }
+            403 { return 'HTTP 403: The supplied key does not have permission for this operation. Use this project''s service_role key.' }
+            404 { return 'HTTP 404: The requested account or API resource was not found in this project.' }
+            429 { return 'HTTP 429: Too many requests. Wait a few minutes before retrying.' }
+            default { return "HTTP $httpStatus. Check the project status and Supabase Auth logs. The request contents have been hidden." }
+        }
+    }
+    return "Request or script failure ($($Failure.Exception.GetType().Name), line $($Failure.InvocationInfo.ScriptLineNumber)). Check the connection and project settings."
+}
+
 try {
     Write-Host 'Project: nttsrdassmzvtaamyogi (IronGrind)'
     Write-Host 'This changes the passwords of the ADMIN and Jamaica admin accounts.'
     $keyInput = Read-Host 'Enter this project''s service_role key (hidden)' -AsSecureString
-    try { $serviceKey = Convert-SecretToText $keyInput } finally { $keyInput.Dispose() }
-    if ([string]::IsNullOrWhiteSpace($serviceKey)) { throw 'No service_role key was entered.' }
+    try { $serviceKey = (Convert-SecretToText $keyInput).Trim() } finally { $keyInput.Dispose() }
+    if ([string]::IsNullOrWhiteSpace($serviceKey)) { $safeFailureReason = 'No service_role key was entered.'; throw $safeFailureReason }
     $headers = @{ apikey = $serviceKey; Authorization = "Bearer $serviceKey" }
 
     # Check both identities before making either password change.
+    $stage = 'loading the two admin profiles'
     $idFilter = $adminIds -join ','
-    $profiles = @(Invoke-RestMethod -Uri "$projectUrl/rest/v1/profiles?select=id,full_name,username,role&id=in.($idFilter)" -Headers $headers -TimeoutSec 30)
+    $profileResponse = Invoke-RestMethod -Uri "$projectUrl/rest/v1/profiles?select=id,full_name,username,role&id=in.($idFilter)" -Headers $headers -TimeoutSec 30
+    $profiles = @($profileResponse | ForEach-Object { $_ })
     foreach ($accountId in $adminIds) {
-        $matches = @($profiles | Where-Object { $_.id -eq $accountId -and $_.role -eq 'admin' })
-        if ($matches.Count -ne 1) { throw "Account $accountId is missing or is not an admin. No passwords changed." }
+        $stage = "verifying admin account $accountId"
+        $matchedProfiles = @($profiles | Where-Object { $_.id -eq $accountId -and $_.role -eq 'admin' })
+        if ($matchedProfiles.Count -ne 1) { $safeFailureReason = "Account $accountId is missing or is not an admin. No passwords changed."; throw $safeFailureReason }
         $authAccount = Invoke-RestMethod -Uri "$projectUrl/auth/v1/admin/users/$accountId" -Headers $headers -TimeoutSec 30
-        if ($authAccount.id -ne $accountId) { throw 'Auth account verification failed. No passwords changed.' }
-        $label = $matches[0].full_name
-        $username = $matches[0].username
+        if ($authAccount.id -ne $accountId) { $safeFailureReason = 'Auth account verification failed. No passwords changed.'; throw $safeFailureReason }
+        $label = $matchedProfiles[0].full_name
+        $username = $matchedProfiles[0].username
         if ([string]::IsNullOrWhiteSpace($username)) { $username = '(no username assigned)' }
         Write-Host "Verified: $label / $username / $accountId"
     }
 
     foreach ($accountId in $adminIds) {
         $profile = $profiles | Where-Object { $_.id -eq $accountId }
+        $stage = "checking the new password for $($profile.full_name)"
         $password = Read-Host "New password for $($profile.full_name) (hidden)" -AsSecureString
         $confirmation = Read-Host 'Enter it again (hidden)' -AsSecureString
         $plainPassword = $null
@@ -51,8 +72,8 @@ try {
         try {
             $plainPassword = Convert-SecretToText $password
             $plainConfirmation = Convert-SecretToText $confirmation
-            if ($plainPassword.Length -lt 12) { throw 'Use at least 12 characters. No passwords changed.' }
-            if ($plainPassword -cne $plainConfirmation) { throw 'Passwords did not match. No passwords changed.' }
+            if ($plainPassword.Length -lt 12) { $safeFailureReason = 'Use at least 12 characters. No passwords changed.'; throw $safeFailureReason }
+            if ($plainPassword -cne $plainConfirmation) { $safeFailureReason = 'Passwords did not match. No passwords changed.'; throw $safeFailureReason }
             $secrets[$accountId] = $password.Copy()
         } finally {
             $password.Dispose()
@@ -67,19 +88,21 @@ try {
         $requestBody = $null
         $newPassword = $null
         try {
+            $stage = "updating the password for $($profile.full_name)"
             $newPassword = Convert-SecretToText $secrets[$accountId]
             $requestBody = @{ password = $newPassword } | ConvertTo-Json -Compress
             Invoke-RestMethod -Method Put -Uri "$projectUrl/auth/v1/admin/users/$accountId" -Headers $headers -ContentType 'application/json; charset=utf-8' -Body ([Text.Encoding]::UTF8.GetBytes($requestBody)) -TimeoutSec 30 | Out-Null
             Write-Host "Password updated: $($profile.full_name)"
         } catch {
             $failed = $true
-            Write-Warning "Could not confirm password update for $($profile.full_name). Check Supabase Auth logs and password requirements. Other updates are reported separately."
+            Write-Warning "Could not confirm password update for $($profile.full_name). $(Get-RequestFailureHint $_) Other updates are reported separately."
         } finally { $newPassword = $null; $requestBody = $null }
     }
 } catch {
     $failed = $true
     # Avoid printing HTTP exceptions or request objects that might contain secrets.
-    Write-Warning 'Stopped. Verify the project service_role key, both admin accounts, and matching passwords of at least 12 characters. If updates began, use the per-account results above.'
+    $hint = if ($safeFailureReason) { $safeFailureReason } else { Get-RequestFailureHint $_ }
+    Write-Warning "Stopped while $stage. $hint"
 } finally {
     foreach ($secret in $secrets.Values) { $secret.Dispose() }
     $secrets.Clear()
