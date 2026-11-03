@@ -49,6 +49,7 @@ let mobileAttendanceSessionPersistence = new Map();
 let pairedPhoneListRefreshBusy = false;
 let pairedPhoneListLastRefreshAt = 0;
 let lifetimePhonePairingCount = null;
+let adminPasswordPromptResolver = null;
 let adminRealtimeChannel = null;
 let adminMembershipRefreshTimer = null;
 let adminMembershipRefreshBusy = false;
@@ -276,6 +277,11 @@ async function runWithButtonLoading(button, action, loadingLabel = 'Working…')
     }
 }
 function closeModal() {
+    if (adminPasswordPromptResolver) {
+        const resolve = adminPasswordPromptResolver;
+        adminPasswordPromptResolver = null;
+        resolve(false);
+    }
     document.getElementById('modalOverlay').classList.add('hidden');
     document.getElementById('modalContent').classList.remove('report-pdf-modal');
     stopQRScanner();
@@ -360,9 +366,13 @@ function switchApprovalType(type) {
 
 function logout() {
     askConfirmation('Log out?', 'Are you sure you want to log out?', 'Log out', async () => {
+        if (mobileAttendanceSessionIds.size) {
+            const verified = await requestAdminPassword('Confirm pairing shutdown', 'Enter the admin password to end active phone pairings and sign out.');
+            if (!verified) return;
+            for (const sessionId of [...mobileAttendanceSessionIds]) await endMobileAttendanceSession(sessionId, true, true);
+        }
         const storeUnlockKey = adminStoreUnlockKey();
         if (storeUnlockKey) localStorage.removeItem(storeUnlockKey);
-        for (const sessionId of [...mobileAttendanceSessionIds]) await endMobileAttendanceSession(sessionId, true);
         try {
             const result = await window.ironGrindSupabase?.rpc('admin_log_session_event', { p_event: 'sign_out_requested' });
             if (result?.error) console.error('Could not record sign-out request:', result.error);
@@ -1812,12 +1822,19 @@ function startQRScanner() {
     openModal(`<div class="qr-camera-modal">
         <h3><i class="fas fa-qrcode"></i> Choose a Camera</h3>
         <p class="modal-sub">Scan with a camera connected to this device or pair a phone camera.</p>
+        <p id="phonePairingLimitSummary" class="qr-camera-status">Loading phone pairing limit…</p>
         <label class="phone-pair-remember"><input id="rememberPhoneScanner" type="checkbox" checked> Remember this phone for 30 days</label>
-        <div class="modal-actions"><button class="btn-primary" onclick="startLocalQRScanner()"><i class="fas fa-laptop"></i> This device</button><button class="btn-primary" onclick="startPhoneQRPairing(document.getElementById('rememberPhoneScanner').checked)"><i class="fas fa-mobile-screen-button"></i> Phone camera</button><button class="btn-sm" onclick="closeModal()">Cancel</button></div>
+        <div class="modal-actions"><button class="btn-primary" onclick="startLocalQRScanner()"><i class="fas fa-laptop"></i> This device</button><button class="btn-primary" onclick="startPhoneQRPairing(document.getElementById('rememberPhoneScanner').checked)"><i class="fas fa-mobile-screen-button"></i> Phone camera</button><button class="btn-sm" onclick="changePhonePairingLimit()">Change phone limit</button><button class="btn-sm" onclick="closeModal()">Cancel</button></div>
     </div>`);
+    refreshPhonePairingLimitSummary();
 }
 
 async function startPhoneQRPairing(rememberPhone = false) {
+    if (!await requestAdminPassword('Verify admin password', 'Enter the admin password to open phone camera pairing.')) return;
+    await createPhonePairingSession(rememberPhone);
+}
+
+async function createPhonePairingSession(rememberPhone = false) {
     if (!window.ironGrindSupabase) {
         toast('Phone scanning needs an active Supabase connection.', 'error');
         return;
@@ -1856,7 +1873,7 @@ async function startPhoneQRPairing(rememberPhone = false) {
         <div id="phonePairQr" class="phone-pair-qr" aria-label="Phone scanner pairing QR code"></div>
         <p id="phonePairStatus" class="qr-camera-status" role="status">Waiting for phone scans…</p>
         <section class="paired-phones-section" aria-labelledby="pairedPhonesHeading">
-            <h4 id="pairedPhonesHeading">Total phones paired <span id="pairedPhonesCount" class="paired-phone-count">0</span><small class="paired-phone-period">all time</small></h4>
+            <h4 id="pairedPhonesHeading">Phones paired <span id="pairedPhonesCount" class="paired-phone-count">0</span><small id="pairedPhonesLimit" class="paired-phone-period">of 2 active limit</small></h4>
             <p class="paired-phone-list-label">Currently paired phones</p>
             <div id="pairedPhonesList" class="paired-phone-list"><p class="paired-phone-empty">Loading paired phones…</p></div>
         </section>
@@ -1872,6 +1889,90 @@ async function startPhoneQRPairing(rememberPhone = false) {
     }
     startMobileAttendancePolling(data.session_id);
     refreshPairedAttendancePhones(true);
+    refreshPhonePairingLimitSummary();
+}
+
+function requestAdminPassword(title, description) {
+    if (adminPasswordPromptResolver) adminPasswordPromptResolver(false);
+    return new Promise(resolve => {
+        adminPasswordPromptResolver = resolve;
+        openModal(`<form class="qr-camera-modal" onsubmit="verifyAdminPairingPassword(event)">
+            <h3><i class="fas fa-lock"></i> ${escapeDialogText(title)}</h3>
+            <p class="modal-sub">${escapeDialogText(description)} Only the signed-in admin account can authorize this action.</p>
+            <label for="adminPairingPassword">Admin password</label>
+            <input id="adminPairingPassword" type="password" autocomplete="current-password" required autofocus>
+            <p id="adminPairingPasswordError" class="qr-camera-status hidden" role="alert"></p>
+            <div class="modal-actions"><button class="btn-primary" type="submit">Verify and continue</button><button class="btn-sm" type="button" onclick="cancelAdminPasswordPrompt()">Cancel</button></div>
+        </form>`);
+        document.getElementById('adminPairingPassword')?.focus();
+    });
+}
+
+async function verifyAdminPairingPassword(event) {
+    event.preventDefault();
+    const input = document.getElementById('adminPairingPassword');
+    const errorEl = document.getElementById('adminPairingPasswordError');
+    const password = input?.value || '';
+    const client = window.ironGrindSupabase;
+    const { data: userData, error: userError } = await client.auth.getUser();
+    if (userError || !userData?.user?.email) {
+        if (errorEl) { errorEl.textContent = 'Could not verify the signed-in admin account. Sign in again and retry.'; errorEl.classList.remove('hidden'); }
+        return;
+    }
+    const { data, error } = await client.auth.signInWithPassword({ email: userData.user.email, password });
+    if (error || data?.user?.id !== userData.user.id) {
+        if (errorEl) { errorEl.textContent = 'Password was not accepted for this admin account.'; errorEl.classList.remove('hidden'); }
+        if (input) { input.value = ''; input.focus(); }
+        return;
+    }
+    const resolve = adminPasswordPromptResolver;
+    adminPasswordPromptResolver = null;
+    closeModal();
+    resolve?.(true);
+}
+
+function cancelAdminPasswordPrompt() {
+    const resolve = adminPasswordPromptResolver;
+    adminPasswordPromptResolver = null;
+    closeModal();
+    resolve?.(false);
+}
+
+async function refreshPhonePairingLimitSummary() {
+    const target = document.getElementById('phonePairingLimitSummary');
+    if (!target || !window.ironGrindSupabase) return;
+    const { data, error } = await window.ironGrindSupabase.rpc('get_mobile_attendance_pairing_settings');
+    if (!document.getElementById('phonePairingLimitSummary')) return;
+    target.textContent = error ? 'Phone pairing limit could not be loaded.' : `${data.active_count} of ${data.max_pairs} phone pairing slots are in use.`;
+    const pairedLimit = document.getElementById('pairedPhonesLimit');
+    if (pairedLimit && !error) pairedLimit.textContent = `of ${data.max_pairs} active limit · ${data.active_count} active`;
+}
+
+async function changePhonePairingLimit() {
+    openModal(`<form class="qr-camera-modal" onsubmit="authorizePhonePairingLimit(event)">
+        <h3><i class="fas fa-mobile-screen-button"></i> Phone pairing limit</h3>
+        <p class="modal-sub">Choose the maximum active pairings. The default is two; the limit can be set from 2 to 50.</p>
+        <label for="phonePairingLimitInput">Maximum paired phones</label>
+        <input id="phonePairingLimitInput" type="number" min="2" max="50" step="1" value="2" required>
+        <div class="modal-actions"><button class="btn-primary" type="submit">Continue</button><button class="btn-sm" type="button" onclick="closeModal()">Cancel</button></div>
+    </form>`);
+    const { data } = await window.ironGrindSupabase.rpc('get_mobile_attendance_pairing_settings');
+    const input = document.getElementById('phonePairingLimitInput');
+    if (input && Number.isInteger(data?.max_pairs)) input.value = data.max_pairs;
+}
+
+async function authorizePhonePairingLimit(event) {
+    event.preventDefault();
+    const desired = Number(document.getElementById('phonePairingLimitInput')?.value);
+    if (!Number.isInteger(desired) || desired < 2 || desired > 50) {
+        toast('Choose a whole number from 2 to 50.', 'error');
+        return;
+    }
+    if (!await requestAdminPassword('Verify admin password', 'Enter the admin password to change the phone pairing limit.')) return;
+    const { error } = await window.ironGrindSupabase.rpc('set_mobile_attendance_pairing_limit', { p_max_pairs: desired });
+    if (error) { toast(`Could not change phone limit: ${error.message}`, 'error'); return; }
+    toast(`Phone pairing limit set to ${desired}.`, 'success');
+    refreshPhonePairingLimitSummary();
 }
 
 function startMobileAttendancePolling(sessionId) {
@@ -2009,8 +2110,9 @@ async function restoreMobileAttendancePairing() {
     if (!mobileAttendanceSessionIds.size) localStorage.removeItem('ig_mobile_attendance_session_id');
 }
 
-async function endMobileAttendanceSession(sessionId = activeMobileAttendanceSessionId, keepModalOpen = false) {
+async function endMobileAttendanceSession(sessionId = activeMobileAttendanceSessionId, keepModalOpen = false, passwordVerified = false) {
     if (!sessionId || !window.ironGrindSupabase) return;
+    if (!passwordVerified && !await requestAdminPassword('Verify admin password', 'Enter the admin password to end this phone pairing.')) return;
     const { error } = await window.ironGrindSupabase.rpc('close_mobile_attendance_scan_session', { p_session_id: sessionId });
     if (error) { toast(`Could not end phone pairing: ${error.message}`, 'error'); return; }
     mobileAttendanceSessionIds.delete(sessionId);
@@ -2032,6 +2134,7 @@ async function endMobileAttendanceSession(sessionId = activeMobileAttendanceSess
     if (keepModalOpen && activeMobileAttendanceSessionId !== sessionId) await refreshPairedAttendancePhones(true);
     else closeModal();
     toast('Phone attendance pairing ended.', 'success');
+    refreshPhonePairingLimitSummary();
 }
 
 async function pollMobileAttendanceScans(sessionId) {

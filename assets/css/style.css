@@ -348,6 +348,8 @@ label:has(input[name="wiPlan"]:checked) {
 .qr-scanner-box p { font-size: 0.8rem; color: #6a748b; }
 .qr-camera-modal { text-align: center; }
 .qr-camera-modal > h3 { justify-content: center; }
+.qr-camera-modal > label { display: block; margin: 14px 0 6px; color: #d6dae2; font-size: 0.85rem; text-align: left; }
+.qr-camera-modal > input { display: block; width: 100%; padding: 12px 14px; background: #101010; border: 1px solid #393939; border-radius: 10px; color: #f1f3f7; font: inherit; }
 .qr-reader-frame { position: relative; width: 100%; max-width: 420px; margin: 0 auto; overflow: hidden; border: 1px solid #393939; border-radius: 16px; background: #05070a; }
 .qr-reader { width: 100%; overflow: hidden; background: #05070a; }
 .qr-reader video { border-radius: 14px; object-fit: cover; }
