@@ -46,24 +46,39 @@ function setPhoneNextScanButton(visible, label = 'Scan next member') {
     button.textContent = label;
 }
 
-function getPhoneDeviceLabel() {
+async function getPhoneDeviceLabel() {
     const ua = navigator.userAgent || '';
-    const browser = /Edg\//.test(ua) ? 'Edge' : /Firefox\//.test(ua) ? 'Firefox' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : 'Browser';
+    let platform = navigator.userAgentData?.platform || '';
+    let model = '';
+    let brand = navigator.userAgentData?.brands?.find(item => !/not.?a.?brand|chromium/i.test(item.brand))?.brand || '';
+    try {
+        const hints = await navigator.userAgentData?.getHighEntropyValues?.(['model', 'platform']);
+        model = String(hints?.model || '').trim();
+        platform = hints?.platform || platform;
+    } catch {}
+    const browser = /Edg\//.test(ua) || /Edge/i.test(brand) ? 'Edge'
+        : /Firefox\//.test(ua) || /Firefox/i.test(brand) ? 'Firefox'
+        : /Chrome\//.test(ua) || /Chrome/i.test(brand) ? 'Chrome'
+        : /Safari\//.test(ua) ? 'Safari' : 'Browser';
+    if (model && model.toLowerCase() !== 'unknown') return `${model} · ${browser}`;
     if (/Android/i.test(ua)) {
-        const model = ua.match(/Android[^;)]*;\s*([^;)]+?)(?:\s+Build\/|[;)])/i)?.[1]?.trim();
-        return `${model || 'Android phone'} · ${browser}`;
+        const uaModel = ua.match(/Android[^;)]*;\s*([^;)]+?)(?:\s+Build\/|[;)])/i)?.[1]?.trim();
+        const usefulModel = uaModel && !/^(?:K|wv|Linux|Android|Mobile)$/i.test(uaModel) ? uaModel : '';
+        return `${usefulModel || (platform ? `${platform} phone` : 'Android phone')} · ${browser}`;
     }
-    if (/iPhone/i.test(ua)) return `iPhone · ${browser}`;
+    if (/iPhone/i.test(ua) || /iOS/i.test(platform)) return `iPhone · ${browser}`;
     if (/iPad/i.test(ua)) return `iPad · ${browser}`;
     return `Phone · ${browser}`;
 }
 
 async function registerPhoneAttendanceDevice(sessionId, token) {
-    return window.ironGrindSupabase.rpc('register_mobile_attendance_device', {
+    const deviceLabel = await getPhoneDeviceLabel();
+    const result = await window.ironGrindSupabase.rpc('register_mobile_attendance_device', {
         p_session_id: sessionId,
         p_token: token,
-        p_device_label: getPhoneDeviceLabel()
+        p_device_label: deviceLabel
     });
+    return { ...result, deviceLabel };
 }
 
 function savePhonePairing(sessionId, token, remember, expiresAt = '') {
@@ -131,7 +146,7 @@ async function startPhonePairingScanner(statusMessage = '') {
                             ? `Could not validate pairing: ${error.message}`
                             : 'Supabase rejected this pairing. It may have expired, or the pairing migrations may not be applied. Create a fresh QR on the admin page.', true);
                     } else {
-                        const { error: deviceError } = await registerPhoneAttendanceDevice(sessionId, token);
+                        const { error: deviceError, deviceLabel } = await registerPhoneAttendanceDevice(sessionId, token);
                         phoneScannerMode = 'member';
                         activePhoneSession = { sessionId, token };
                         phoneCameraPausedForNextMember = true;
@@ -139,7 +154,7 @@ async function startPhonePairingScanner(statusMessage = '') {
                         setPhoneAttendanceMode('scan');
                         setPhoneAttendanceStatus(deviceError
                             ? 'Phone paired, but the admin page cannot show this device name yet. Apply migration 20261104000011.'
-                            : `Phone paired as ${getPhoneDeviceLabel()}. Remove the pairing QR, then tap Scan member QR.`);
+                            : `Phone paired as ${deviceLabel}. Remove the pairing QR, then tap Scan member QR.`);
                     }
                 } catch (error) {
                     clearPhonePairing();
@@ -194,13 +209,13 @@ async function startPhoneMemberScanner(sessionId, token, openCamera = true) {
             : 'Supabase rejected this pairing. It may have expired, or the pairing migrations may not be applied. Scan a fresh QR from the admin page.');
         return;
     }
-    const { error: deviceError } = await registerPhoneAttendanceDevice(sessionId, token);
+    const { error: deviceError, deviceLabel } = await registerPhoneAttendanceDevice(sessionId, token);
     if (deviceError) console.warn('Could not register the paired attendance phone:', deviceError.message);
     if (!openCamera) {
         setPhoneCameraButton(false);
         setPhoneAttendanceStatus(deviceError
             ? 'This phone is paired, but its device name cannot be shared until migration 20261104000011 is applied.'
-            : `This phone is paired as ${getPhoneDeviceLabel()}. Tap Open camera when ready.`);
+            : `This phone is paired as ${deviceLabel}. Tap Open camera when ready.`);
         return;
     }
     let scanner;
@@ -278,8 +293,9 @@ async function stopPhoneAttendanceScanner() {
         try { track?.stop(); } catch {}
         try { scanner.clear(); } catch {}
     }
+    const deviceLabel = activePhoneSession ? await getPhoneDeviceLabel() : '';
     setPhoneAttendanceStatus(activePhoneSession
-        ? `Camera stopped. ${getPhoneDeviceLabel()} is still paired. Tap Open camera to continue scanning.`
+        ? `Camera stopped. ${deviceLabel} is still paired. Tap Open camera to continue scanning.`
         : 'Camera stopped. You can close this page.');
 }
 
@@ -359,7 +375,7 @@ window.addEventListener('pagehide', () => {
 async function startPhoneAttendanceApp() {
     configurePhoneAppInstall();
     if ('serviceWorker' in navigator && window.isSecureContext) {
-        navigator.serviceWorker.register('attendance-phone-sw.js?v=20261104-camera-restart-fix').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
+        navigator.serviceWorker.register('attendance-phone-sw.js?v=20261104-phone-model').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
     }
     if (!window.ironGrindSupabase) {
         setPhoneAttendanceStatus('The attendance service could not load. Check your connection and reload.', true);
