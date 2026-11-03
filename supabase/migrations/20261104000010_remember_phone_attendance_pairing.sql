@@ -3,6 +3,7 @@
 begin;
 
 drop function if exists public.create_mobile_attendance_scan_session();
+drop function if exists public.create_mobile_attendance_scan_session(boolean);
 
 create function public.create_mobile_attendance_scan_session(p_remember_phone boolean default false)
 returns jsonb
