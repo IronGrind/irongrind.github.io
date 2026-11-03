@@ -39,23 +39,18 @@
         }
 
         client.auth.onAuthStateChange((event, session) => {
-            if (event === 'PASSWORD_RECOVERY' || session) enablePasswordForm();
+            if (event === 'PASSWORD_RECOVERY' && session) enablePasswordForm();
         });
 
-        const { data, error } = await client.auth.getSession();
+        const { error } = await client.auth.getSession();
         if (error) {
             showRecoveryError('We could not verify this reset link. Request a new one and try again.');
             return;
         }
-        if (data.session) {
-            enablePasswordForm();
-            return;
-        }
-
-        // Auth may still be exchanging the recovery code for a session on a
-        // slower connection. Give the auth-state listener time to receive it.
+        // A regular signed-in session is not proof that this reset link is
+        // valid. Wait for Supabase to confirm a PASSWORD_RECOVERY session.
         window.setTimeout(() => {
-            if (!recoveryReady) showRecoveryError('This reset link is invalid or expired. Request a new password reset email and try again.');
+            if (!recoveryReady) showRecoveryError('This link did not start a password recovery session. Request a new reset email, then open the newest link in this browser.');
         }, 10000);
     }
 
@@ -91,7 +86,8 @@
             }
         } catch (error) {
             console.error('Password reset failed:', error);
-            statusText.textContent = 'We could not update your password. The link may have expired; request a new one and try again.';
+            const reason = error instanceof Error && error.message ? ` ${error.message}` : '';
+            statusText.textContent = `We could not update your password.${reason} If this is a recovery link, request a new one and open the newest email.`;
             statusBox.classList.remove('hidden');
             saveButton.disabled = false;
             saveButton.innerHTML = '<i class="fas fa-lock"></i> Save New Password';

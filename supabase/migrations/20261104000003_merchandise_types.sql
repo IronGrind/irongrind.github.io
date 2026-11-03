@@ -10,7 +10,8 @@ set merch_type = case
     when category = 'merchandise' and nullif(btrim(size), '') is not null then 'apparel'
     when category = 'merchandise' then 'other'
     else null
-end;
+end
+where merch_type is null;
 
 alter table public.products drop constraint if exists products_merch_type_check;
 alter table public.products

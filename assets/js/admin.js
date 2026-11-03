@@ -2049,12 +2049,13 @@ function renderStore() {
 
 function productCard(p) {
     const supplement = p.category === 'Supplement';
+    const merchType = p.merchType || (p.size ? 'apparel' : 'other');
     const low = supplement ? productStockInGrams(p) <= 100 : p.stock <= 4;
     const stockLabel = `${formatProductStock(p)} in stock`;
     return `
         <div class="product-card">
             ${p.image ? `<div class="product-img-wrap"><img src="${p.image}" alt="${escapeHTML(p.name)}" loading="lazy"></div>` : ''}
-            <span class="cat">${p.category}</span>
+            <span class="cat">${p.category}${!supplement ? ` · ${merchandiseTypeLabel(merchType)}` : ''}</span>
             <h4>${p.name}${!supplement && p.size ? ' — ' + p.size : ''}</h4>
             <div class="price">${formatPeso(p.price)}${supplement ? ' / g' : ''}</div>
             <div class="stock ${low ? 'low' : ''}">${low ? '⚠ ' : ''}${stockLabel}</div>
@@ -2104,7 +2105,6 @@ function toggleAddProductSize() {
     const unitSelect = document.getElementById('apStockUnit');
     const priceUnit = document.getElementById('apPriceUnit');
     const hint = document.getElementById('apStockHint');
-    if (group) group.style.display = isMerch ? '' : 'none';
     if (typeGroup) typeGroup.style.display = isMerch ? '' : 'none';
     if (group) group.style.display = isMerch && isApparel ? '' : 'none';
     if (unitSelect) {
@@ -2825,8 +2825,8 @@ function viewReport(type) {
                 </tbody></table>
             </section>`).join('') : '<div class="empty-state">No attendance records.</div>';
     } else if (type === 'inventory') {
-        body = `<table class="attendance-table"><thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th></tr></thead><tbody>
-            ${products.map(p => `<tr><td>${escapeHTML(p.name)}${p.category === 'Merch' && p.size ? ` (${escapeHTML(p.size)})` : ''}</td><td>${p.category === 'Supplement' ? 'Supplement' : 'Merchandise'}</td><td>${formatPeso(p.price)}${p.category === 'Supplement' ? ' / g' : ' / item'}</td><td>${escapeHTML(formatProductStock(p))}</td></tr>`).join('') || '<tr><td colspan="4">No active products.</td></tr>'}</tbody></table>`;
+        body = `<table class="attendance-table"><thead><tr><th>Product</th><th>Category</th><th>Type</th><th>Price</th><th>Stock</th></tr></thead><tbody>
+            ${products.map(p => `<tr><td>${escapeHTML(p.name)}${p.category === 'Merch' && p.size ? ` (${escapeHTML(p.size)})` : ''}</td><td>${p.category === 'Supplement' ? 'Supplement' : 'Merchandise'}</td><td>${p.category === 'Merch' ? merchandiseTypeLabel(p.merchType || (p.size ? 'apparel' : 'other')) : '—'}</td><td>${formatPeso(p.price)}${p.category === 'Supplement' ? ' / g' : ' / item'}</td><td>${escapeHTML(formatProductStock(p))}</td></tr>`).join('') || '<tr><td colspan="5">No active products.</td></tr>'}</tbody></table>`;
     }
     const title = type === 'member-status'
         ? 'Active / Inactive Members Report'
@@ -2968,11 +2968,12 @@ function printReportPDF(type, inAppPreview = false) {
         }));
         dateForRow = row => row.date;
     } else if (type === 'inventory') {
-        columns = ['Product', 'Category', 'Price', 'Stock'];
+        columns = ['Product', 'Category', 'Type', 'Price', 'Stock'];
         rows = products.map(product => ({
             cells: [
                 `${product.name}${product.size ? ` (${product.size})` : ''}`,
                 product.category === 'Supplement' ? 'Supplement' : 'Merchandise',
+                product.category === 'Merch' ? merchandiseTypeLabel(product.merchType || (product.size ? 'apparel' : 'other')) : '—',
                 `${formatPeso(product.price)}${product.category === 'Supplement' ? ' / g' : ' / item'}`,
                 formatProductStock(product)
             ]
@@ -3140,9 +3141,10 @@ function createMonthlyReportPDF(type, month) {
             record.saleRecorded === false ? 'Missing payment record' : 'Recorded'
         ])));
     } else if (type === 'inventory') {
-        sections.push(rowsFor(['Product', 'Category', 'Price', 'Stock'], products.map(product => [
+        sections.push(rowsFor(['Product', 'Category', 'Type', 'Price', 'Stock'], products.map(product => [
             `${product.name}${product.size ? ` (${product.size})` : ''}`,
             product.category === 'Supplement' ? 'Supplement' : 'Merchandise',
+            product.category === 'Merch' ? merchandiseTypeLabel(product.merchType || (product.size ? 'apparel' : 'other')) : '—',
             `PHP ${Number(product.price || 0).toFixed(2)}${product.category === 'Supplement' ? ' / g' : ' / item'}`,
             formatProductStock(product)
         ])));
@@ -3305,9 +3307,9 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 'P002', name: 'Creatine Monohydrate', category: 'Supplement', price: 1200, stock: 2, stockUnit: 'kilogram', size: '' },
             { id: 'P003', name: 'Pre-Workout — Fruit Punch', category: 'Supplement', price: 1850, stock: 4, stockUnit: 'kilogram', size: '' },
             { id: 'P004', name: 'Multivitamins', category: 'Supplement', price: 850, stock: 24, stockUnit: 'kilogram', size: '' },
-            { id: 'P005', name: 'IronGrind Shirt', category: 'Merch', price: 650, stock: 1, stockUnit: 'item', size: 'Large' },
-            { id: 'P006', name: 'IronGrind Shirt', category: 'Merch', price: 650, stock: 12, stockUnit: 'item', size: 'Medium' },
-            { id: 'P007', name: 'IronGrind Shirt', category: 'Merch', price: 650, stock: 8, stockUnit: 'item', size: 'Small' }
+            { id: 'P005', name: 'IronGrind Shirt', category: 'Merch', merchType: 'apparel', price: 650, stock: 1, stockUnit: 'item', size: 'Large' },
+            { id: 'P006', name: 'IronGrind Shirt', category: 'Merch', merchType: 'apparel', price: 650, stock: 12, stockUnit: 'item', size: 'Medium' },
+            { id: 'P007', name: 'IronGrind Shirt', category: 'Merch', merchType: 'apparel', price: 650, stock: 8, stockUnit: 'item', size: 'Small' }
         ]);
     }
     if (!localStorage.getItem('ig_sales')) {
