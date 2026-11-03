@@ -1,6 +1,8 @@
 let phoneAttendanceScanner = null;
 let phoneScanBusy = false;
 let deferredPhoneInstallPrompt = null;
+let phoneScannerMode = 'pair';
+let activePhoneSession = null;
 
 function setPhoneAttendanceStatus(message, isError = false) {
     const status = document.getElementById('phoneQrStatus');
@@ -27,7 +29,15 @@ function createPhoneQrScanner() {
     return scanner;
 }
 
-async function startPhonePairingScanner() {
+function setPhoneCameraButton(running) {
+    const button = document.getElementById('phoneCameraButton');
+    if (button) button.textContent = running ? 'Stop camera' : 'Start camera';
+}
+
+async function startPhonePairingScanner(statusMessage = '') {
+    phoneScannerMode = 'pair';
+    activePhoneSession = null;
+    setPhoneCameraButton(false);
     setPhoneAttendanceMode('pair');
     if (!isPhoneCameraAvailable()) {
         setPhoneAttendanceStatus('Camera access requires the hosted HTTPS website. Open this app on your phone over HTTPS.', true);
@@ -55,9 +65,11 @@ async function startPhonePairingScanner() {
             },
             () => {}
         );
-        setPhoneAttendanceStatus('Camera is on. Scan the pairing QR shown on the admin page.');
+        setPhoneCameraButton(true);
+        setPhoneAttendanceStatus(statusMessage || 'Camera is on. Scan the pairing QR shown on the admin page.');
     } catch (error) {
         phoneAttendanceScanner = null;
+        setPhoneCameraButton(false);
         setPhoneAttendanceStatus(error?.name === 'NotAllowedError'
             ? 'Camera permission was denied. Allow camera access in your browser settings.'
             : `Could not start the camera: ${error.message || 'Check camera permissions.'}`, true);
@@ -66,6 +78,9 @@ async function startPhonePairingScanner() {
 }
 
 async function startPhoneMemberScanner(sessionId, token) {
+    phoneScannerMode = 'member';
+    activePhoneSession = { sessionId, token };
+    setPhoneCameraButton(false);
     setPhoneAttendanceMode('scan');
     if (!isPhoneCameraAvailable()) {
         setPhoneAttendanceStatus('Camera access requires the hosted HTTPS website.', true);
@@ -76,7 +91,7 @@ async function startPhoneMemberScanner(sessionId, token) {
         p_token: token
     });
     if (sessionError || sessionValid !== true) {
-        setPhoneAttendanceStatus('This pairing has expired or is invalid. Start Phone Camera again on the admin page.', true);
+        await startPhonePairingScanner('Pairing expired or invalid. Scan a new pairing QR from the admin page.');
         return;
     }
     let scanner;
@@ -104,6 +119,7 @@ async function startPhoneMemberScanner(sessionId, token) {
                             : `Could not send the scan: ${error.message}`, true);
                         if (expired) {
                             await stopPhoneAttendanceScanner();
+                            await startPhonePairingScanner('Pairing expired. Scan a new pairing QR from the admin page.');
                             return;
                         }
                     } else {
@@ -122,9 +138,11 @@ async function startPhoneMemberScanner(sessionId, token) {
             () => {}
         );
         phoneScanBusy = false;
+        setPhoneCameraButton(true);
         setPhoneAttendanceStatus('Camera is on. Point it at a member QR code.');
     } catch (error) {
         phoneAttendanceScanner = null;
+        setPhoneCameraButton(false);
         setPhoneAttendanceStatus(error?.name === 'NotAllowedError'
             ? 'Camera permission was denied. Allow camera access in your browser settings.'
             : `Could not start the camera: ${error.message || 'Check camera permissions.'}`, true);
@@ -136,11 +154,26 @@ async function stopPhoneAttendanceScanner() {
     const scanner = phoneAttendanceScanner;
     phoneAttendanceScanner = null;
     phoneScanBusy = false;
+    setPhoneCameraButton(false);
     if (scanner) {
+        const track = scanner.getRunningTrack?.();
         try { await scanner.stop(); } catch {}
+        try { track?.stop(); } catch {}
         try { scanner.clear(); } catch {}
     }
     setPhoneAttendanceStatus('Camera stopped. You can close this page.');
+}
+
+async function togglePhoneAttendanceCamera() {
+    if (phoneAttendanceScanner) {
+        await stopPhoneAttendanceScanner();
+        return;
+    }
+    if (phoneScannerMode === 'member' && activePhoneSession) {
+        await startPhoneMemberScanner(activePhoneSession.sessionId, activePhoneSession.token);
+    } else {
+        await startPhonePairingScanner();
+    }
 }
 
 async function installPhoneAttendanceApp() {
