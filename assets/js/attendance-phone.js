@@ -5,8 +5,10 @@ let phoneScannerMode = 'pair';
 let activePhoneSession = null;
 let phoneCameraPausedForNextMember = false;
 let phoneCameraTransition = false;
+let phoneModelSetupOpenCamera = true;
 const PHONE_PAIRING_STORAGE_KEY = 'ig_remembered_attendance_phone_pairing';
 const TEMP_PHONE_PAIRING_STORAGE_KEY = 'ig_temporary_attendance_phone_pairing';
+const PHONE_MODEL_STORAGE_KEY = 'ig_attendance_phone_model';
 
 function setPhoneAttendanceStatus(message, isError = false) {
     const status = document.getElementById('phoneQrStatus');
@@ -48,37 +50,87 @@ function setPhoneNextScanButton(visible, label = 'Scan next member') {
 
 async function getPhoneDeviceLabel() {
     const ua = navigator.userAgent || '';
-    let platform = navigator.userAgentData?.platform || '';
     let model = '';
-    let brand = navigator.userAgentData?.brands?.find(item => !/not.?a.?brand|chromium/i.test(item.brand))?.brand || '';
     try {
         const hints = await navigator.userAgentData?.getHighEntropyValues?.(['model', 'platform']);
         model = String(hints?.model || '').trim();
-        platform = hints?.platform || platform;
     } catch {}
-    const browser = /Edg\//.test(ua) || /Edge/i.test(brand) ? 'Edge'
-        : /Firefox\//.test(ua) || /Firefox/i.test(brand) ? 'Firefox'
-        : /Chrome\//.test(ua) || /Chrome/i.test(brand) ? 'Chrome'
-        : /Safari\//.test(ua) ? 'Safari' : 'Browser';
-    if (model && model.toLowerCase() !== 'unknown') return `${model} · ${browser}`;
-    if (/Android/i.test(ua)) {
+    if (!model) {
         const uaModel = ua.match(/Android[^;)]*;\s*([^;)]+?)(?:\s+Build\/|[;)])/i)?.[1]?.trim();
-        const usefulModel = uaModel && !/^(?:K|wv|Linux|Android|Mobile)$/i.test(uaModel) ? uaModel : '';
-        return `${usefulModel || (platform ? `${platform} phone` : 'Android phone')} · ${browser}`;
+        if (uaModel && !/^(?:K|wv|Linux|Android|Mobile)$/i.test(uaModel)) model = uaModel;
     }
-    if (/iPhone/i.test(ua) || /iOS/i.test(platform)) return `iPhone · ${browser}`;
-    if (/iPad/i.test(ua)) return `iPad · ${browser}`;
-    return `Phone · ${browser}`;
+    if (model && !/^(?:unknown|generic)$/i.test(model)) return model;
+    return String(localStorage.getItem(PHONE_MODEL_STORAGE_KEY) || '').trim();
 }
 
 async function registerPhoneAttendanceDevice(sessionId, token) {
     const deviceLabel = await getPhoneDeviceLabel();
+    if (!deviceLabel) return { error: null, deviceLabel: '' };
     const result = await window.ironGrindSupabase.rpc('register_mobile_attendance_device', {
         p_session_id: sessionId,
         p_token: token,
         p_device_label: deviceLabel
     });
     return { ...result, deviceLabel };
+}
+
+function requestPhoneModelSetup(openCamera = true) {
+    phoneModelSetupOpenCamera = openCamera;
+    const setup = document.getElementById('phoneModelSetup');
+    const input = document.getElementById('phoneModelInput');
+    if (input) input.value = localStorage.getItem(PHONE_MODEL_STORAGE_KEY) || '';
+    if (setup) setup.hidden = false;
+    const cameraButton = document.getElementById('phoneCameraButton');
+    if (cameraButton && !phoneAttendanceScanner) cameraButton.disabled = true;
+    setPhoneAttendanceStatus('Your browser hides the exact phone model. Enter it below to finish pairing.');
+    window.setTimeout(() => input?.focus(), 50);
+}
+
+async function savePhoneModelAndContinue() {
+    const input = document.getElementById('phoneModelInput');
+    const button = document.getElementById('phoneModelSaveButton');
+    const model = String(input?.value || '').trim().slice(0, 100);
+    if (!model) {
+        setPhoneAttendanceStatus('Enter the exact model name or number from Settings → About phone.', true);
+        input?.focus();
+        return;
+    }
+    if (!activePhoneSession) {
+        setPhoneAttendanceStatus('This pairing is no longer active. Start a new pairing from the admin page.', true);
+        return;
+    }
+    if (button) button.disabled = true;
+    localStorage.setItem(PHONE_MODEL_STORAGE_KEY, model);
+    try {
+        const { error } = await window.ironGrindSupabase.rpc('register_mobile_attendance_device', {
+            p_session_id: activePhoneSession.sessionId,
+            p_token: activePhoneSession.token,
+            p_device_label: model
+        });
+        if (error) throw error;
+        const setup = document.getElementById('phoneModelSetup');
+        if (setup) setup.hidden = true;
+        const cameraButton = document.getElementById('phoneCameraButton');
+        if (cameraButton) cameraButton.disabled = false;
+        if (phoneAttendanceScanner) {
+            try { phoneAttendanceScanner.pause(true); } catch {}
+            phoneCameraPausedForNextMember = true;
+            setPhoneCameraButton(true);
+            setPhoneNextScanButton(true, 'Scan member QR');
+            setPhoneAttendanceMode('scan');
+            setPhoneAttendanceStatus(`Paired phone: ${model}. Remove the pairing QR, then tap Scan member QR.`);
+        } else if (phoneModelSetupOpenCamera) {
+            await startPhoneMemberScanner(activePhoneSession.sessionId, activePhoneSession.token, true);
+        } else {
+            setPhoneCameraButton(false);
+            setPhoneAttendanceMode('scan');
+            setPhoneAttendanceStatus(`Paired phone: ${model}. Tap Open camera when ready.`);
+        }
+    } catch (error) {
+        setPhoneAttendanceStatus(`Could not save the phone model: ${error.message || 'Check the connection and try again.'}`, true);
+    } finally {
+        if (button) button.disabled = false;
+    }
 }
 
 function savePhonePairing(sessionId, token, remember, expiresAt = '') {
@@ -150,11 +202,17 @@ async function startPhonePairingScanner(statusMessage = '') {
                         phoneScannerMode = 'member';
                         activePhoneSession = { sessionId, token };
                         phoneCameraPausedForNextMember = true;
-                        setPhoneNextScanButton(true, 'Scan member QR');
                         setPhoneAttendanceMode('scan');
-                        setPhoneAttendanceStatus(deviceError
-                            ? 'Phone paired, but the admin page cannot show this device name yet. Apply migration 20261104000011.'
-                            : `Phone paired as ${deviceLabel}. Remove the pairing QR, then tap Scan member QR.`);
+                        if (deviceError) {
+                            setPhoneNextScanButton(false);
+                            setPhoneAttendanceStatus(`Pairing succeeded, but the phone model could not be saved: ${deviceError.message}`, true);
+                        } else if (!deviceLabel) {
+                            setPhoneNextScanButton(false);
+                            requestPhoneModelSetup(true);
+                        } else {
+                            setPhoneNextScanButton(true, 'Scan member QR');
+                            setPhoneAttendanceStatus(`Phone paired: ${deviceLabel}. Remove the pairing QR, then tap Scan member QR.`);
+                        }
                     }
                 } catch (error) {
                     clearPhonePairing();
@@ -166,7 +224,8 @@ async function startPhonePairingScanner(statusMessage = '') {
                         if (phoneScannerMode === 'member' && activePhoneSession) {
                             phoneCameraPausedForNextMember = true;
                             setPhoneCameraButton(true);
-                            setPhoneNextScanButton(true, 'Scan member QR');
+                            if (!document.getElementById('phoneModelSetup')?.hidden) setPhoneNextScanButton(false);
+                            else setPhoneNextScanButton(true, 'Scan member QR');
                         } else {
                             try { scanner.resume(); } catch {}
                         }
@@ -211,11 +270,15 @@ async function startPhoneMemberScanner(sessionId, token, openCamera = true) {
     }
     const { error: deviceError, deviceLabel } = await registerPhoneAttendanceDevice(sessionId, token);
     if (deviceError) console.warn('Could not register the paired attendance phone:', deviceError.message);
+    if (!deviceError && !deviceLabel) {
+        requestPhoneModelSetup(openCamera);
+        return;
+    }
     if (!openCamera) {
         setPhoneCameraButton(false);
         setPhoneAttendanceStatus(deviceError
             ? 'This phone is paired, but its device name cannot be shared until migration 20261104000011 is applied.'
-            : `This phone is paired as ${deviceLabel}. Tap Open camera when ready.`);
+            : `This phone is paired: ${deviceLabel}. Tap Open camera when ready.`);
         return;
     }
     let scanner;
@@ -325,7 +388,7 @@ async function togglePhoneAttendanceCamera() {
         }
     } finally {
         phoneCameraTransition = false;
-        if (cameraButton) cameraButton.disabled = false;
+        if (cameraButton) cameraButton.disabled = !phoneAttendanceScanner && !document.getElementById('phoneModelSetup')?.hidden;
         if (nextButton) nextButton.disabled = false;
     }
 }
@@ -375,7 +438,7 @@ window.addEventListener('pagehide', () => {
 async function startPhoneAttendanceApp() {
     configurePhoneAppInstall();
     if ('serviceWorker' in navigator && window.isSecureContext) {
-        navigator.serviceWorker.register('attendance-phone-sw.js?v=20261104-phone-model').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
+        navigator.serviceWorker.register('attendance-phone-sw.js?v=20261104-phone-model-ux').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
     }
     if (!window.ironGrindSupabase) {
         setPhoneAttendanceStatus('The attendance service could not load. Check your connection and reload.', true);

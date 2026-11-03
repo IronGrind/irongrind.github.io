@@ -13,17 +13,25 @@
     <link rel="manifest" href="attendance-app.webmanifest">
     <link rel="apple-touch-icon" href="assets/images/iron-grind-mark-192.png">
     <style>
-        body.phone-scanner-page { min-height: 100vh; display: grid; place-items: center; padding: 20px; background: #090909; color: #f3f4f6; }
-        .phone-scanner-card { width: min(100%, 520px); padding: 24px; background: #151515; border: 1px solid #343434; border-radius: 18px; }
-        .phone-scanner-card h1 { margin: 0 0 8px; font-size: 1.35rem; }
-        .phone-scanner-card p { color: #adb4c2; line-height: 1.5; }
-        #phoneQrReader { overflow: hidden; border-radius: 14px; background: #050505; }
-        #phoneQrStatus { min-height: 48px; padding: 12px; border-radius: 10px; background: #202020; color: #f3f4f6; }
+        * { box-sizing: border-box; }
+        body.phone-scanner-page { min-height: 100svh; display: grid; place-items: start center; padding: max(16px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom)); background: #090909; color: #f3f4f6; }
+        .phone-scanner-card { width: min(100%, 520px); margin: 0 auto; padding: clamp(18px, 5vw, 24px); background: #151515; border: 1px solid #343434; border-radius: 18px; }
+        .phone-scanner-card h1 { margin: 0 0 8px; font-size: clamp(1.25rem, 5vw, 1.55rem); }
+        .phone-scanner-card > p { color: #adb4c2; line-height: 1.45; font-size: clamp(.94rem, 3.8vw, 1.05rem); }
+        #phoneQrReader { width: 100%; min-height: 240px; max-height: 52svh; aspect-ratio: 4 / 3; overflow: hidden; border-radius: 14px; background: #050505; }
+        #phoneQrReader video { width: 100% !important; height: 100% !important; object-fit: cover; }
+        #phoneQrStatus { min-height: 46px; padding: 12px; border-radius: 10px; background: #202020; color: #f3f4f6; line-height: 1.4; font-size: .94rem !important; }
         #phoneQrStatus.error { color: #fecaca; background: rgba(127,29,29,.35); }
-        .phone-scanner-button { width: 100%; margin-top: 12px; padding: 12px; border: 0; border-radius: 10px; background: #760000; color: white; font-weight: 700; }
-        .phone-install-button { display: none; width: 100%; margin-top: 10px; padding: 12px; border: 1px solid #565656; border-radius: 10px; background: #222; color: white; font-weight: 700; }
-        .phone-next-scan-button { width: 100%; margin-top: 10px; padding: 12px; border: 1px solid #565656; border-radius: 10px; background: #222; color: white; font-weight: 700; }
+        .phone-scanner-button, .phone-install-button, .phone-next-scan-button, .phone-model-save-button { width: 100%; min-height: 48px; margin-top: 10px; padding: 12px 14px; border: 0; border-radius: 10px; background: #760000; color: white; font-size: 1rem; font-weight: 700; }
+        .phone-scanner-button:disabled, .phone-next-scan-button:disabled, .phone-model-save-button:disabled { opacity: .65; }
+        .phone-install-button { display: none; border: 1px solid #565656; background: #222; }
+        .phone-next-scan-button { border: 1px solid #565656; background: #222; }
+        .phone-model-setup { margin-top: 12px; padding: 14px; border: 1px solid #444; border-radius: 12px; background: #1c1c1c; }
+        .phone-model-setup label { display: block; margin-bottom: 8px; color: #f3f4f6; font-size: .95rem; font-weight: 700; }
+        .phone-model-setup input { width: 100%; min-height: 46px; padding: 10px 12px; border: 1px solid #555; border-radius: 9px; background: #0d0d0d; color: #fff; font: inherit; }
+        .phone-model-setup small { display: block; margin-top: 7px; color: #adb4c2; line-height: 1.4; }
         .phone-install-help { display: none; margin-top: 12px; padding: 12px; border: 1px solid #444; border-radius: 10px; font-size: .9rem; }
+        @media (min-height: 850px) and (min-width: 600px) { body.phone-scanner-page { place-items: center; } }
     </style>
 </head>
 <body class="phone-scanner-page">
@@ -34,12 +42,18 @@
         <p id="phoneQrStatus" role="status" aria-live="polite">Checking this pairing link…</p>
         <button id="phoneInstallButton" class="phone-install-button" type="button" onclick="installPhoneAttendanceApp()">Install attendance app</button>
         <p id="phoneInstallHelp" class="phone-install-help">To add this app: open your browser menu, then choose <strong>Add to Home Screen</strong> or <strong>Install app</strong>.</p>
+        <section id="phoneModelSetup" class="phone-model-setup" hidden>
+            <label for="phoneModelInput">Phone model</label>
+            <input id="phoneModelInput" type="text" maxlength="100" autocomplete="off" placeholder="Example: Samsung Galaxy A15" onkeydown="if(event.key==='Enter'){event.preventDefault();savePhoneModelAndContinue()}">
+            <small>Automatic model detection is unavailable in this browser. Find it in Settings → About phone → Model name or number.</small>
+            <button id="phoneModelSaveButton" class="phone-model-save-button" type="button" onclick="savePhoneModelAndContinue()">Save model and continue</button>
+        </section>
         <button id="phoneNextScanButton" class="phone-next-scan-button" type="button" onclick="resumePhoneAttendanceScanner()" hidden>Scan next member</button>
         <button id="phoneCameraButton" class="phone-scanner-button" type="button" onclick="togglePhoneAttendanceCamera()">Open camera</button>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/supabase-client.js"></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-    <script src="assets/js/attendance-phone.js?v=20261104-phone-model"></script>
+    <script src="assets/js/attendance-phone.js?v=20261104-phone-model-ux"></script>
 </body>
 </html>
