@@ -947,9 +947,8 @@ async function loadSupabaseMembershipData() {
             memberId: row.member_id || null,
             supabaseRecord: row
         }));
-        const localApps = pendingApprovals.filter(item => !item.supabaseRecord);
-        pendingApprovals = [...localApps, ...remoteApps];
-        saveDB('pendingApprovals', localApps);
+        pendingApprovals = remoteApps;
+        saveDB('pendingApprovals', []);
     }
 
     if (membersResult.error) {
@@ -957,9 +956,9 @@ async function loadSupabaseMembershipData() {
         toast(`Could not load online members: ${membersResult.error.message}`, 'error');
     } else {
         const remoteMembers = membersResult.data.map(row => mapSupabaseMember(row));
-        const localOnly = members.filter(local => !remoteMembers.some(remote => String(remote.id) === String(local.id))
-            && !local.authUserId);
-        members = [...localOnly, ...remoteMembers];
+        // Connected mode uses the database as the source of truth. An unlinked
+        // cached member must not resurrect a row deleted from public.members.
+        members = remoteMembers;
         saveDB('members', members);
     }
 
