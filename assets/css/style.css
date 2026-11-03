@@ -458,6 +458,14 @@ label:has(input[name="wiPlan"]:checked) {
 .modal-sub { color: #8b95a9; font-size: 0.85rem; margin-bottom: 20px; }
 .modal-actions { display: flex; gap: 10px; margin-top: 20px; }
 .modal-actions button { flex: 1; justify-content: center; }
+.phone-pair-end-button { flex: 1 1 0 !important; min-width: 0; white-space: normal; }
+.paired-phone-list { display: grid; gap: 8px; margin-top: 14px; text-align: left; }
+.paired-phone-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; border: 1px solid #30343d; border-radius: 12px; background: #11161f; }
+.paired-phone-meta { display: grid; gap: 3px; min-width: 0; }
+.paired-phone-meta strong { color: #e8edf5; font-size: .86rem; overflow-wrap: anywhere; }
+.paired-phone-meta small { color: #8b95a9; font-size: .75rem; }
+.paired-phone-row .btn-danger { flex: 0 0 auto; padding: 7px 12px; font-size: .75rem; }
+.paired-phone-empty { margin: 10px 0 0; color: #8b95a9; font-size: .82rem; }
 #forgotPasswordModal .modal-actions .btn-secondary { background: #282828; border: 1px solid #393939; color: #e8edf5; padding: 8px 18px; border-radius: 30px; font-family: inherit; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: background 0.2s ease, border-color 0.2s ease; }
 #forgotPasswordModal .modal-actions .btn-secondary:hover { background: #393939; border-color: #555555; }
 #forgotPasswordModal .modal-actions .btn-secondary:focus-visible { outline: 2px solid #8b0000; outline-offset: 3px; }

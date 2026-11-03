@@ -42,8 +42,12 @@ let qrCameraHintTimer = null;
 let activeMobileAttendanceSessionId = null;
 let activeMobileAttendancePersistent = false;
 let mobileAttendancePollTimer = null;
-let mobileAttendancePollBusy = false;
+let mobileAttendancePollBusy = new Set();
 let mobileAttendanceProcessedScanIds = new Set();
+let mobileAttendanceSessionIds = new Set();
+let mobileAttendanceSessionPersistence = new Map();
+let pairedPhoneListRefreshBusy = false;
+let pairedPhoneListLastRefreshAt = 0;
 let adminRealtimeChannel = null;
 let adminMembershipRefreshTimer = null;
 let adminMembershipRefreshBusy = false;
@@ -357,7 +361,7 @@ function logout() {
     askConfirmation('Log out?', 'Are you sure you want to log out?', 'Log out', async () => {
         const storeUnlockKey = adminStoreUnlockKey();
         if (storeUnlockKey) localStorage.removeItem(storeUnlockKey);
-        if (activeMobileAttendanceSessionId) await endMobileAttendanceSession(activeMobileAttendanceSessionId);
+        for (const sessionId of [...mobileAttendanceSessionIds]) await endMobileAttendanceSession(sessionId, true);
         try {
             const result = await window.ironGrindSupabase?.rpc('admin_log_session_event', { p_event: 'sign_out_requested' });
             if (result?.error) console.error('Could not record sign-out request:', result.error);
@@ -1817,7 +1821,6 @@ async function startPhoneQRPairing(rememberPhone = false) {
         toast('Phone scanning needs an active Supabase connection.', 'error');
         return;
     }
-    if (activeMobileAttendanceSessionId) await endMobileAttendanceSession(activeMobileAttendanceSessionId);
     const { data, error } = await window.ironGrindSupabase.rpc('create_mobile_attendance_scan_session', {
         p_remember_phone: rememberPhone
     });
@@ -1838,7 +1841,7 @@ async function startPhoneQRPairing(rememberPhone = false) {
     }
     activeMobileAttendanceSessionId = data.session_id;
     activeMobileAttendancePersistent = Boolean(data.remember_phone);
-    if (activeMobileAttendancePersistent) localStorage.setItem('ig_mobile_attendance_session_id', data.session_id);
+    mobileAttendanceSessionPersistence.set(data.session_id, activeMobileAttendancePersistent);
     const phoneUrl = new URL('attendance-phone.html', window.location.href);
     phoneUrl.searchParams.set('session', data.session_id);
     phoneUrl.searchParams.set('token', data.token);
@@ -1851,7 +1854,11 @@ async function startPhoneQRPairing(rememberPhone = false) {
         ${localOnly ? '<p class="qr-camera-status">This address uses localhost, which a phone cannot reach. Open the hosted HTTPS site on the admin computer to pair a phone.</p>' : ''}
         <div id="phonePairQr" class="phone-pair-qr" aria-label="Phone scanner pairing QR code"></div>
         <p id="phonePairStatus" class="qr-camera-status" role="status">Waiting for phone scans…</p>
-        <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Close window</button>${activeMobileAttendancePersistent ? `<button class="btn-delete" onclick="endMobileAttendanceSession('${data.session_id}')">End phone pairing</button>` : ''}</div>
+        <section class="paired-phones-section" aria-labelledby="pairedPhonesHeading">
+            <h4 id="pairedPhonesHeading">Paired phones</h4>
+            <div id="pairedPhonesList" class="paired-phone-list"><p class="paired-phone-empty">Loading paired phones…</p></div>
+        </section>
+        <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Close window</button><button class="btn-danger phone-pair-end-button" onclick="endMobileAttendanceSession('${data.session_id}')">End this pairing</button></div>
     </div>`);
     if (typeof QRCode !== 'undefined') {
         new QRCode(document.getElementById('phonePairQr'), {
@@ -1862,15 +1869,26 @@ async function startPhoneQRPairing(rememberPhone = false) {
         document.getElementById('phonePairStatus').textContent = 'The pairing QR could not load. Reload the admin page while connected to the internet.';
     }
     startMobileAttendancePolling(data.session_id);
+    refreshPairedAttendancePhones(true);
 }
 
 function startMobileAttendancePolling(sessionId) {
-    clearInterval(mobileAttendancePollTimer);
-    mobileAttendancePollBusy = false;
-    mobileAttendanceProcessedScanIds = new Set();
+    mobileAttendanceSessionIds.add(sessionId);
+    savePersistentMobileAttendanceSessions();
     setAttendancePhoneStatus('Pairing QR ready. Waiting for a phone to connect…');
-    mobileAttendancePollTimer = window.setInterval(() => pollMobileAttendanceScans(sessionId), 1200);
+    if (!mobileAttendancePollTimer) {
+        mobileAttendancePollTimer = window.setInterval(() => {
+            for (const activeSessionId of mobileAttendanceSessionIds) pollMobileAttendanceScans(activeSessionId);
+        }, 1200);
+    }
     pollMobileAttendanceScans(sessionId);
+}
+
+function savePersistentMobileAttendanceSessions() {
+    const ids = [...mobileAttendanceSessionIds].filter(id => mobileAttendanceSessionPersistence.get(id));
+    if (ids.length) localStorage.setItem('ig_mobile_attendance_session_ids', JSON.stringify(ids));
+    else localStorage.removeItem('ig_mobile_attendance_session_ids');
+    localStorage.removeItem('ig_mobile_attendance_session_id');
 }
 
 function setAttendancePhoneStatus(message, connected = false) {
@@ -1880,10 +1898,48 @@ function setAttendancePhoneStatus(message, connected = false) {
     status.classList.toggle('connected', connected);
 }
 
+async function refreshPairedAttendancePhones(force = false) {
+    const list = document.getElementById('pairedPhonesList');
+    if (!list || !window.ironGrindSupabase || pairedPhoneListRefreshBusy) return;
+    if (!force && Date.now() - pairedPhoneListLastRefreshAt < 5000) return;
+    pairedPhoneListRefreshBusy = true;
+    let data;
+    let error;
+    try {
+        ({ data, error } = await window.ironGrindSupabase.rpc('list_admin_mobile_attendance_devices'));
+    } catch (requestError) {
+        error = requestError;
+    } finally {
+        pairedPhoneListRefreshBusy = false;
+        pairedPhoneListLastRefreshAt = Date.now();
+    }
+    if (!document.getElementById('pairedPhonesList')) return;
+    if (error) {
+        list.innerHTML = `<p class="paired-phone-empty">Could not load paired phones: ${escapeHTML(error.message)}. Apply migration 20261104000012.</p>`;
+        return;
+    }
+    const phones = Array.isArray(data) ? data : [];
+    if (!phones.length) {
+        list.innerHTML = '<p class="paired-phone-empty">No phones are paired yet.</p>';
+        return;
+    }
+    list.innerHTML = phones.map(phone => {
+        const connectedAt = phone.paired_at
+            ? new Date(phone.paired_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila', dateStyle: 'medium', timeStyle: 'short' })
+            : 'Connected';
+        return `<div class="paired-phone-row">
+            <div class="paired-phone-meta"><strong>${escapeHTML(phone.device || 'Phone')}</strong><small>Paired ${escapeHTML(connectedAt)}</small></div>
+            <button class="btn-danger" onclick="endMobileAttendanceSession('${phone.session_id}', true)">End pairing</button>
+        </div>`;
+    }).join('');
+}
+
 async function refreshAttendancePhoneStatus(sessionId) {
     const { data, error } = await window.ironGrindSupabase.rpc('get_admin_mobile_attendance_device', {
         p_session_id: sessionId
     });
+    refreshPairedAttendancePhones();
+    if (sessionId !== activeMobileAttendanceSessionId) return;
     if (error) {
         setAttendancePhoneStatus(`Phone pairing status unavailable: ${error.message}. Apply migration 20261104000011.`);
         return;
@@ -1902,40 +1958,57 @@ async function refreshAttendancePhoneStatus(sessionId) {
 }
 
 async function restoreMobileAttendancePairing() {
-    const sessionId = localStorage.getItem('ig_mobile_attendance_session_id');
-    if (!sessionId || !window.ironGrindSupabase) return;
-    const { data: isActive, error } = await window.ironGrindSupabase.rpc('is_admin_mobile_attendance_scan_session_active', {
-        p_session_id: sessionId
-    });
-    if (error || isActive !== true) {
-        localStorage.removeItem('ig_mobile_attendance_session_id');
-        return;
+    if (!window.ironGrindSupabase) return;
+    let savedIds = [];
+    try {
+        savedIds = JSON.parse(localStorage.getItem('ig_mobile_attendance_session_ids') || '[]');
+    } catch {}
+    const legacyId = localStorage.getItem('ig_mobile_attendance_session_id');
+    if (legacyId) savedIds.push(legacyId);
+    for (const sessionId of [...new Set(savedIds.filter(Boolean))]) {
+        const { data: isActive, error } = await window.ironGrindSupabase.rpc('is_admin_mobile_attendance_scan_session_active', {
+            p_session_id: sessionId
+        });
+        if (error || isActive !== true) continue;
+        mobileAttendanceSessionPersistence.set(sessionId, true);
+        if (!activeMobileAttendanceSessionId) {
+            activeMobileAttendanceSessionId = sessionId;
+            activeMobileAttendancePersistent = true;
+        }
+        startMobileAttendancePolling(sessionId);
     }
-    activeMobileAttendanceSessionId = sessionId;
-    activeMobileAttendancePersistent = true;
-    startMobileAttendancePolling(sessionId);
+    savePersistentMobileAttendanceSessions();
+    if (!mobileAttendanceSessionIds.size) localStorage.removeItem('ig_mobile_attendance_session_id');
 }
 
-async function endMobileAttendanceSession(sessionId = activeMobileAttendanceSessionId) {
+async function endMobileAttendanceSession(sessionId = activeMobileAttendanceSessionId, keepModalOpen = false) {
     if (!sessionId || !window.ironGrindSupabase) return;
     const { error } = await window.ironGrindSupabase.rpc('close_mobile_attendance_scan_session', { p_session_id: sessionId });
     if (error) { toast(`Could not end phone pairing: ${error.message}`, 'error'); return; }
+    mobileAttendanceSessionIds.delete(sessionId);
+    mobileAttendanceSessionPersistence.delete(sessionId);
+    mobileAttendancePollBusy.delete(sessionId);
+    savePersistentMobileAttendanceSessions();
     if (activeMobileAttendanceSessionId === sessionId) {
+        activeMobileAttendanceSessionId = mobileAttendanceSessionIds.values().next().value || null;
+        activeMobileAttendancePersistent = Boolean(activeMobileAttendanceSessionId && mobileAttendanceSessionPersistence.get(activeMobileAttendanceSessionId));
+    }
+    if (!mobileAttendanceSessionIds.size) {
         clearInterval(mobileAttendancePollTimer);
         mobileAttendancePollTimer = null;
-        mobileAttendancePollBusy = false;
-        activeMobileAttendanceSessionId = null;
-        activeMobileAttendancePersistent = false;
+        mobileAttendancePollBusy.clear();
+        setAttendancePhoneStatus('No phone camera paired.');
+    } else if (activeMobileAttendanceSessionId) {
+        refreshAttendancePhoneStatus(activeMobileAttendanceSessionId);
     }
-    if (localStorage.getItem('ig_mobile_attendance_session_id') === sessionId) localStorage.removeItem('ig_mobile_attendance_session_id');
-    setAttendancePhoneStatus('No phone camera paired.');
-    closeModal();
+    if (keepModalOpen && activeMobileAttendanceSessionId !== sessionId) await refreshPairedAttendancePhones(true);
+    else closeModal();
     toast('Phone attendance pairing ended.', 'success');
 }
 
 async function pollMobileAttendanceScans(sessionId) {
-    if (mobileAttendancePollBusy || activeMobileAttendanceSessionId !== sessionId || !window.ironGrindSupabase) return;
-    mobileAttendancePollBusy = true;
+    if (mobileAttendancePollBusy.has(sessionId) || !mobileAttendanceSessionIds.has(sessionId) || !window.ironGrindSupabase) return;
+    mobileAttendancePollBusy.add(sessionId);
     try {
         await refreshAttendancePhoneStatus(sessionId);
         const { data: scans, error } = await window.ironGrindSupabase
@@ -1945,7 +2018,7 @@ async function pollMobileAttendanceScans(sessionId) {
             .order('created_at', { ascending: true });
         if (error) throw error;
         for (const scan of scans || []) {
-            if (activeMobileAttendanceSessionId !== sessionId) break;
+            if (!mobileAttendanceSessionIds.has(sessionId)) break;
             if (mobileAttendanceProcessedScanIds.has(scan.id)) continue;
             mobileAttendanceProcessedScanIds.add(scan.id);
             try {
@@ -1966,7 +2039,7 @@ async function pollMobileAttendanceScans(sessionId) {
         const status = document.getElementById('phonePairStatus');
         if (status && activeMobileAttendanceSessionId === sessionId) status.textContent = `Phone connection issue: ${error.message || 'Could not check for scans.'}`;
     } finally {
-        mobileAttendancePollBusy = false;
+        mobileAttendancePollBusy.delete(sessionId);
     }
 }
 
@@ -2129,17 +2202,6 @@ function getQRScannerErrorMessage(error) {
 function stopQRScanner() {
     clearTimeout(qrCameraHintTimer);
     qrCameraHintTimer = null;
-    if (!activeMobileAttendancePersistent) {
-        clearInterval(mobileAttendancePollTimer);
-        mobileAttendancePollTimer = null;
-        mobileAttendancePollBusy = false;
-        const mobileSessionId = activeMobileAttendanceSessionId;
-        activeMobileAttendanceSessionId = null;
-        if (mobileSessionId && window.ironGrindSupabase) {
-            window.ironGrindSupabase.rpc('close_mobile_attendance_scan_session', { p_session_id: mobileSessionId })
-                .then(({ error }) => { if (error) console.warn('Could not close phone attendance session:', error); });
-        }
-    }
     const scanner = activeQRScanner;
     activeQRScanner = null;
     if (!scanner) return;
