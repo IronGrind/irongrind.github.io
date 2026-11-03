@@ -69,5 +69,6 @@ revoke all on function public.is_admin_mobile_attendance_scan_session_active(uui
 grant execute on function public.is_admin_mobile_attendance_scan_session_active(uuid) to authenticated;
 revoke all on function public.close_mobile_attendance_scan_session(uuid) from public, anon;
 grant execute on function public.close_mobile_attendance_scan_session(uuid) to authenticated;
+notify pgrst, 'reload schema';
 
 commit;

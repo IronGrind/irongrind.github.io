@@ -76,18 +76,46 @@ async function startPhonePairingScanner(statusMessage = '') {
             { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1 },
             async decodedText => {
                 if (phoneScanBusy || phoneAttendanceScanner !== scanner) return;
+                if (phoneScannerMode === 'member' && activePhoneSession) {
+                    await submitPhoneMemberScan(decodedText, scanner, activePhoneSession);
+                    return;
+                }
                 let pairingUrl;
                 try { pairingUrl = new URL(decodedText.trim()); } catch { return; }
                 if (pairingUrl.origin !== window.location.origin || !pairingUrl.pathname.endsWith('/attendance-phone.html')) return;
                 const sessionId = pairingUrl.searchParams.get('session');
                 const token = pairingUrl.searchParams.get('token');
                 if (!sessionId || !token) return;
-                savePhonePairing(sessionId, token, pairingUrl.searchParams.get('remember') === '1', pairingUrl.searchParams.get('expires') || '');
                 phoneScanBusy = true;
+                try { scanner.pause(true); } catch {}
                 setPhoneAttendanceStatus('Admin pairing QR detected. Connecting…');
-                await stopPhoneAttendanceScanner();
-                window.history.replaceState(null, '', window.location.pathname);
-                await startPhoneMemberScanner(sessionId, token);
+                savePhonePairing(sessionId, token, pairingUrl.searchParams.get('remember') === '1', pairingUrl.searchParams.get('expires') || '');
+                try {
+                    const { data: sessionValid, error } = await window.ironGrindSupabase.rpc('validate_mobile_attendance_scan_session', {
+                        p_session_id: sessionId,
+                        p_token: token
+                    });
+                    if (error || sessionValid !== true) {
+                        clearPhonePairing();
+                        setPhoneAttendanceStatus(error
+                            ? `Could not validate pairing: ${error.message}`
+                            : 'Pairing expired or invalid. Create a fresh pairing QR on the admin page.', true);
+                    } else {
+                        phoneScannerMode = 'member';
+                        activePhoneSession = { sessionId, token };
+                        setPhoneAttendanceMode('scan');
+                        setPhoneAttendanceStatus('Phone paired. Camera is ready for member QR codes.');
+                    }
+                } catch (error) {
+                    clearPhonePairing();
+                    setPhoneAttendanceStatus(`Could not validate pairing: ${error.message || 'Check your connection.'}`, true);
+                }
+                window.setTimeout(() => {
+                    if (phoneAttendanceScanner === scanner) {
+                        phoneScanBusy = false;
+                        try { scanner.resume(); } catch {}
+                    }
+                }, 1200);
             },
             () => {}
         );
@@ -118,7 +146,9 @@ async function startPhoneMemberScanner(sessionId, token, openCamera = true) {
     });
     if (sessionError || sessionValid !== true) {
         clearPhonePairing();
-        await startPhonePairingScanner('Pairing expired or invalid. Scan a new pairing QR from the admin page.');
+        await startPhonePairingScanner(sessionError
+            ? `Could not validate pairing: ${sessionError.message}`
+            : 'Pairing expired or invalid. Scan a new pairing QR from the admin page.');
         return;
     }
     if (!openCamera) {
@@ -132,42 +162,7 @@ async function startPhoneMemberScanner(sessionId, token, openCamera = true) {
         await scanner.start(
             { facingMode: 'environment' },
             { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1 },
-            async decodedText => {
-                if (phoneScanBusy || phoneAttendanceScanner !== scanner) return;
-                phoneScanBusy = true;
-                try { scanner.pause(true); } catch {}
-                setPhoneAttendanceStatus('QR detected. Sending attendance scan…');
-                try {
-                    const { error } = await window.ironGrindSupabase.rpc('submit_mobile_attendance_scan', {
-                        p_session_id: sessionId,
-                        p_token: token,
-                        p_qr_payload: decodedText.trim()
-                    });
-                    if (phoneAttendanceScanner !== scanner) return;
-                    if (error) {
-                        const expired = error.message?.includes('expired') || error.message?.includes('invalid');
-                        setPhoneAttendanceStatus(expired
-                            ? 'This pairing has expired. Start Phone Camera again on the admin page and rescan its QR.'
-                            : `Could not send the scan: ${error.message}`, true);
-                        if (expired) {
-                            await stopPhoneAttendanceScanner();
-                            clearPhonePairing();
-                            await startPhonePairingScanner('Pairing expired. Scan a new pairing QR from the admin page.');
-                            return;
-                        }
-                    } else {
-                        setPhoneAttendanceStatus('Scan sent. Ready for the next member.');
-                    }
-                } catch (error) {
-                    setPhoneAttendanceStatus(`Connection issue: ${error.message || 'Scan could not be sent.'}`, true);
-                }
-                window.setTimeout(() => {
-                    if (phoneAttendanceScanner === scanner) {
-                        phoneScanBusy = false;
-                        try { scanner.resume(); } catch {}
-                    }
-                }, 1200);
-            },
+            decodedText => submitPhoneMemberScan(decodedText, scanner, { sessionId, token }),
             () => {}
         );
         phoneScanBusy = false;
@@ -181,6 +176,43 @@ async function startPhoneMemberScanner(sessionId, token, openCamera = true) {
             : `Could not start the camera: ${error.message || 'Check camera permissions.'}`, true);
         try { scanner?.clear(); } catch {}
     }
+}
+
+async function submitPhoneMemberScan(decodedText, scanner, session) {
+    if (phoneScanBusy || phoneAttendanceScanner !== scanner) return;
+    phoneScanBusy = true;
+    try { scanner.pause(true); } catch {}
+    setPhoneAttendanceStatus('QR detected. Sending attendance scan…');
+    try {
+        const { error } = await window.ironGrindSupabase.rpc('submit_mobile_attendance_scan', {
+            p_session_id: session.sessionId,
+            p_token: session.token,
+            p_qr_payload: decodedText.trim()
+        });
+        if (phoneAttendanceScanner !== scanner) return;
+        if (error) {
+            const expired = error.message?.includes('expired') || error.message?.includes('invalid');
+            if (expired) {
+                clearPhonePairing();
+                activePhoneSession = null;
+                phoneScannerMode = 'pair';
+                setPhoneAttendanceMode('pair');
+                setPhoneAttendanceStatus('Pairing expired. Scan a new pairing QR from the admin page.', true);
+            } else {
+                setPhoneAttendanceStatus(`Could not send the scan: ${error.message}`, true);
+            }
+        } else {
+            setPhoneAttendanceStatus('Scan sent. Ready for the next member.');
+        }
+    } catch (error) {
+        setPhoneAttendanceStatus(`Connection issue: ${error.message || 'Scan could not be sent.'}`, true);
+    }
+    window.setTimeout(() => {
+        if (phoneAttendanceScanner === scanner) {
+            phoneScanBusy = false;
+            try { scanner.resume(); } catch {}
+        }
+    }, 1200);
 }
 
 async function stopPhoneAttendanceScanner() {
@@ -244,7 +276,7 @@ window.addEventListener('pagehide', () => {
 async function startPhoneAttendanceApp() {
     configurePhoneAppInstall();
     if ('serviceWorker' in navigator && window.isSecureContext) {
-        navigator.serviceWorker.register('attendance-phone-sw.js').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
+        navigator.serviceWorker.register('attendance-phone-sw.js?v=20261104-paired-camera-stream').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
     }
     if (!window.ironGrindSupabase) {
         setPhoneAttendanceStatus('The attendance service could not load. Check your connection and reload.', true);
