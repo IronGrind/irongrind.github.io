@@ -460,6 +460,7 @@ label:has(input[name="wiPlan"]:checked) {
 .modal-actions button { flex: 1; justify-content: center; }
 .phone-pair-end-button { flex: 1 1 0 !important; min-width: 0; white-space: normal; }
 .paired-phone-list { display: grid; gap: 8px; margin-top: 14px; text-align: left; }
+.paired-phone-count { display: inline-grid; place-items: center; min-width: 23px; height: 23px; margin-left: 5px; padding: 0 6px; border-radius: 999px; background: rgba(139,0,0,.2); color: #f3a0a0; font-size: .75rem; vertical-align: middle; }
 .paired-phone-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 10px 12px; border: 1px solid #30343d; border-radius: 12px; background: #11161f; }
 .paired-phone-meta { display: grid; gap: 3px; min-width: 0; }
 .paired-phone-meta strong { color: #e8edf5; font-size: .86rem; overflow-wrap: anywhere; }

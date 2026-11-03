@@ -1855,7 +1855,7 @@ async function startPhoneQRPairing(rememberPhone = false) {
         <div id="phonePairQr" class="phone-pair-qr" aria-label="Phone scanner pairing QR code"></div>
         <p id="phonePairStatus" class="qr-camera-status" role="status">Waiting for phone scans…</p>
         <section class="paired-phones-section" aria-labelledby="pairedPhonesHeading">
-            <h4 id="pairedPhonesHeading">Paired phones</h4>
+            <h4 id="pairedPhonesHeading">Paired phones <span id="pairedPhonesCount" class="paired-phone-count">0</span></h4>
             <div id="pairedPhonesList" class="paired-phone-list"><p class="paired-phone-empty">Loading paired phones…</p></div>
         </section>
         <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Close window</button><button class="btn-danger phone-pair-end-button" onclick="endMobileAttendanceSession('${data.session_id}')">End this pairing</button></div>
@@ -1915,10 +1915,25 @@ async function refreshPairedAttendancePhones(force = false) {
     }
     if (!document.getElementById('pairedPhonesList')) return;
     if (error) {
+        const count = document.getElementById('pairedPhonesCount');
+        if (count) count.textContent = '—';
         list.innerHTML = `<p class="paired-phone-empty">Could not load paired phones: ${escapeHTML(error.message)}. Apply migration 20261104000012.</p>`;
         return;
     }
     const phones = Array.isArray(data) ? data : [];
+    const count = document.getElementById('pairedPhonesCount');
+    if (count) count.textContent = String(phones.length);
+    const modalStatus = document.getElementById('phonePairStatus');
+    if (modalStatus && !modalStatus.textContent.startsWith('Last scan processed') && !modalStatus.textContent.startsWith('Phone connection issue')) {
+        const currentPhone = phones.find(phone => phone.session_id === activeMobileAttendanceSessionId);
+        if (currentPhone) {
+            modalStatus.textContent = `Paired phone: ${currentPhone.device || 'Phone'}. Ready for attendance scans.`;
+        } else if (phones.length) {
+            modalStatus.textContent = `Waiting for this QR to pair. ${phones.length} other phone${phones.length === 1 ? ' is' : 's are'} already paired.`;
+        } else {
+            modalStatus.textContent = 'Waiting for a phone to scan this pairing QR.';
+        }
+    }
     if (!phones.length) {
         list.innerHTML = '<p class="paired-phone-empty">No phones are paired yet.</p>';
         return;
