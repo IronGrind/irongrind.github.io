@@ -39,6 +39,9 @@ let currentSalesProductName = 'all';
 let activeQRScanner = null;
 let qrScanHandled = false;
 let qrCameraHintTimer = null;
+let activeMobileAttendanceSessionId = null;
+let mobileAttendancePollTimer = null;
+let mobileAttendancePollBusy = false;
 let adminRealtimeChannel = null;
 let adminMembershipRefreshTimer = null;
 let adminMembershipRefreshBusy = false;
@@ -1797,6 +1800,88 @@ function renderAttendance() {
 }
 
 function startQRScanner() {
+    openModal(`<div class="qr-camera-modal">
+        <h3><i class="fas fa-qrcode"></i> Choose a Camera</h3>
+        <p class="modal-sub">Scan with a camera connected to this device or pair a phone camera.</p>
+        <div class="modal-actions"><button class="btn-primary" onclick="startLocalQRScanner()"><i class="fas fa-laptop"></i> This device</button><button class="btn-primary" onclick="startPhoneQRPairing()"><i class="fas fa-mobile-screen-button"></i> Phone camera</button><button class="btn-sm" onclick="closeModal()">Cancel</button></div>
+    </div>`);
+}
+
+async function startPhoneQRPairing() {
+    if (!window.ironGrindSupabase) {
+        toast('Phone scanning needs an active Supabase connection.', 'error');
+        return;
+    }
+    const { data, error } = await window.ironGrindSupabase.rpc('create_mobile_attendance_scan_session');
+    if (error || !data?.session_id || !data?.token) {
+        toast(`Could not connect a phone scanner${error?.message ? `: ${error.message}` : '.'}`, 'error');
+        return;
+    }
+    activeMobileAttendanceSessionId = data.session_id;
+    const phoneUrl = new URL('attendance-phone.html', window.location.href);
+    phoneUrl.searchParams.set('session', data.session_id);
+    phoneUrl.searchParams.set('token', data.token);
+    const localOnly = ['localhost', '127.0.0.1', '::1'].includes(phoneUrl.hostname);
+    openModal(`<div class="qr-camera-modal">
+        <h3><i class="fas fa-mobile-screen-button"></i> Connect Phone Camera</h3>
+        <p class="modal-sub">Scan this pairing QR with your phone. The phone scanner stays connected for 10 minutes.</p>
+        ${localOnly ? '<p class="qr-camera-status">This address uses localhost, which a phone cannot reach. Open the hosted HTTPS site on the admin computer to pair a phone.</p>' : ''}
+        <div id="phonePairQr" class="phone-pair-qr" aria-label="Phone scanner pairing QR code"></div>
+        <p id="phonePairStatus" class="qr-camera-status" role="status">Waiting for phone scans…</p>
+        <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Close scanner</button></div>
+    </div>`);
+    if (typeof QRCode !== 'undefined') {
+        new QRCode(document.getElementById('phonePairQr'), {
+            text: phoneUrl.toString(), width: 230, height: 230,
+            colorDark: '#101010', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M
+        });
+    } else {
+        document.getElementById('phonePairStatus').textContent = 'The pairing QR could not load. Reload the admin page while connected to the internet.';
+    }
+    startMobileAttendancePolling(data.session_id);
+}
+
+function startMobileAttendancePolling(sessionId) {
+    clearInterval(mobileAttendancePollTimer);
+    mobileAttendancePollBusy = false;
+    mobileAttendancePollTimer = window.setInterval(() => pollMobileAttendanceScans(sessionId), 1200);
+    pollMobileAttendanceScans(sessionId);
+}
+
+async function pollMobileAttendanceScans(sessionId) {
+    if (mobileAttendancePollBusy || activeMobileAttendanceSessionId !== sessionId || !window.ironGrindSupabase) return;
+    mobileAttendancePollBusy = true;
+    try {
+        const { data: scans, error } = await window.ironGrindSupabase
+            .from('mobile_attendance_scan_events')
+            .select('id, qr_payload')
+            .eq('session_id', sessionId)
+            .order('created_at', { ascending: true });
+        if (error) throw error;
+        for (const scan of scans || []) {
+            if (activeMobileAttendanceSessionId !== sessionId) break;
+            try {
+                const member = await resolveMemberFromQR(String(scan.qr_payload || ''));
+                if (!member) toast('Phone scan received, but the member QR was not recognized.', 'error');
+                else await recordMemberAttendanceScan(member);
+            } catch (scanError) {
+                toast(`Could not process phone scan: ${scanError.message || 'Please try again.'}`, 'error');
+            }
+            await window.ironGrindSupabase.from('mobile_attendance_scan_events').delete().eq('id', scan.id);
+            const status = document.getElementById('phonePairStatus');
+            if (status && activeMobileAttendanceSessionId === sessionId) {
+                status.textContent = `Last scan processed${scans.length > 1 ? ` · ${scans.length - 1} more queued` : ''}. Ready for the next member.`;
+            }
+        }
+    } catch (error) {
+        const status = document.getElementById('phonePairStatus');
+        if (status && activeMobileAttendanceSessionId === sessionId) status.textContent = `Phone connection issue: ${error.message || 'Could not check for scans.'}`;
+    } finally {
+        mobileAttendancePollBusy = false;
+    }
+}
+
+function startLocalQRScanner() {
     if (typeof Html5Qrcode === 'undefined') {
         toast('The QR scanner could not load. Check your internet connection and reload.', 'error');
         return;
@@ -1955,6 +2040,15 @@ function getQRScannerErrorMessage(error) {
 function stopQRScanner() {
     clearTimeout(qrCameraHintTimer);
     qrCameraHintTimer = null;
+    clearInterval(mobileAttendancePollTimer);
+    mobileAttendancePollTimer = null;
+    mobileAttendancePollBusy = false;
+    const mobileSessionId = activeMobileAttendanceSessionId;
+    activeMobileAttendanceSessionId = null;
+    if (mobileSessionId && window.ironGrindSupabase) {
+        window.ironGrindSupabase.rpc('close_mobile_attendance_scan_session', { p_session_id: mobileSessionId })
+            .then(({ error }) => { if (error) console.warn('Could not close phone attendance session:', error); });
+    }
     const scanner = activeQRScanner;
     activeQRScanner = null;
     if (!scanner) return;
