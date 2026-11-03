@@ -115,7 +115,13 @@ function isUUID(value) { return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab
 const INVENTORY_UNIT_TO_BASE = { gram: 1, kilogram: 1000, ounce: 28.349523125, pound: 453.59237, milliliter: 1, liter: 1000, fluid_ounce: 29.5735295625, item: 1 };
 const SUPPLEMENT_FORM_UNITS = { powder: 'gram', drinkable: 'milliliter', capsule: 'item', tablet: 'item', other: 'item' };
 function stockUnitLabel(unit) { return ({ gram: 'g', kilogram: 'kg', ounce: 'oz', pound: 'lb', milliliter: 'ml', liter: 'L', fluid_ounce: 'fl oz', item: 'items' })[unit] || unit; }
-function saleUnitLabel(unit) { return ({ gram: 'g', milliliter: 'ml', item: 'item' })[unit] || unit; }
+function saleUnitLabel(unit) { return ({ gram: 'g', kilogram: 'kg', ounce: 'oz', pound: 'lb', milliliter: 'ml', liter: 'L', fluid_ounce: 'fl oz', item: 'item' })[unit] || unit; }
+function saleUnitsForProduct(product) {
+    const baseUnit = product.inventoryUnit || 'item';
+    if (baseUnit === 'gram') return [['gram', 'g'], ['kilogram', 'kg'], ['ounce', 'oz'], ['pound', 'lb']];
+    if (baseUnit === 'milliliter') return [['milliliter', 'ml'], ['liter', 'L'], ['fluid_ounce', 'fl oz']];
+    return [['item', 'item']];
+}
 function productStockInSaleUnits(product) {
     const stockUnit = product.stockUnit || 'item';
     const saleUnit = product.inventoryUnit || 'item';
@@ -2520,7 +2526,7 @@ function openNewSaleModal() {
         <div class="form-group" style="margin-bottom:14px;"><label>Product</label><select id="nsProduct" onchange="updateSaleQuantityMode()">
             ${available.map(p => `<option value="${p.id}">${p.name}${p.category === 'Merch' && p.size ? ' (' + p.size + ')' : ''} — ${formatPeso(p.price)} / ${productSaleUnitLabel(p)}</option>`).join('')}
         </select></div>
-        <div class="form-group" style="margin-bottom:14px;"><label id="nsQtyLabel">Quantity</label><input type="number" id="nsQty" value="1" min="0.01" step="0.01" oninput="updateSaleTotalPreview()"></div>
+        <div class="form-row" style="margin-bottom:14px;"><div class="form-group"><label id="nsQtyLabel" for="nsQty">Quantity</label><input type="number" id="nsQty" value="1" min="0.01" step="0.01" oninput="updateSaleTotalPreview()"></div><div class="form-group"><label for="nsUnit">Sell by</label><select id="nsUnit" onchange="updateSaleQuantityMode()"></select></div></div>
         <p class="modal-sub" id="nsPriceHint"></p>
         <div class="sale-total-preview">Sale total <strong id="nsTotalPreview">₱0</strong></div>
         <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="runWithButtonLoading(this, submitNewSale, 'Recording sale…')">Complete</button></div>
@@ -2531,17 +2537,37 @@ function openNewSaleModal() {
 function updateSaleQuantityMode() {
     const product = products.find(item => item.id === document.getElementById('nsProduct')?.value);
     const quantityInput = document.getElementById('nsQty');
-    if (!product || !quantityInput) return;
-    const saleUnit = product.inventoryUnit || 'item';
-    const fractional = saleUnit === 'gram' || saleUnit === 'milliliter';
-    const available = productStockInSaleUnits(product);
+    const unitSelect = document.getElementById('nsUnit');
+    if (!product || !quantityInput || !unitSelect) return;
+    const productChanged = unitSelect.dataset.productId !== String(product.id);
+    const previousUnit = unitSelect.dataset.previousUnit;
+    const previousQuantity = Number(quantityInput.value);
+    const options = saleUnitsForProduct(product);
+    if (productChanged) {
+        unitSelect.innerHTML = options.map(([value, label]) => `<option value="${value}">${label}</option>`).join('');
+        unitSelect.value = product.inventoryUnit || 'item';
+        unitSelect.dataset.productId = String(product.id);
+    }
+    const saleUnit = unitSelect.value || product.inventoryUnit || 'item';
+    const factor = INVENTORY_UNIT_TO_BASE[saleUnit] || 1;
+    const available = productStockInSaleUnits(product) / factor;
     const unitLabel = saleUnitLabel(saleUnit);
-    document.getElementById('nsQtyLabel').textContent = fractional ? `Amount to sell (${unitLabel})` : 'Quantity';
-    quantityInput.min = fractional ? '0.01' : '1';
-    quantityInput.step = fractional ? '0.01' : '1';
+    const fractional = saleUnit !== 'item';
+    quantityInput.min = fractional ? '0.001' : '1';
+    quantityInput.step = fractional ? (['kilogram', 'pound', 'liter'].includes(saleUnit) ? '0.001' : '0.01') : '1';
     quantityInput.max = available;
-    quantityInput.value = fractional ? String(Math.min(saleUnit === 'milliliter' ? 100 : 100, available)) : '1';
-    document.getElementById('nsPriceHint').textContent = `${formatPeso(product.price)} per ${unitLabel} · ${available.toLocaleString('en-PH')} ${unitLabel}${available === 1 ? '' : 's'} available`;
+    if (productChanged) {
+        const baseUnit = product.inventoryUnit || 'item';
+        quantityInput.value = baseUnit === 'item' ? '1' : String(Math.min(baseUnit === 'milliliter' ? 100 : 100, productStockInSaleUnits(product)));
+    } else if (previousUnit && previousUnit !== saleUnit && Number.isFinite(previousQuantity)) {
+        const converted = previousQuantity * (INVENTORY_UNIT_TO_BASE[previousUnit] || 1) / factor;
+        quantityInput.value = String(Math.min(available, Number(converted.toFixed(3))));
+    }
+    quantityInput.value = String(Math.min(Number(quantityInput.value) || 0, available));
+    unitSelect.dataset.previousUnit = saleUnit;
+    const unitPrice = product.price * factor;
+    document.getElementById('nsQtyLabel').textContent = fractional ? `Amount to sell (${unitLabel})` : 'Quantity';
+    document.getElementById('nsPriceHint').textContent = `${formatPeso(unitPrice)} per ${unitLabel} · ${available.toLocaleString('en-PH')} ${unitLabel} available`;
     updateSaleTotalPreview();
 }
 
@@ -2549,7 +2575,8 @@ function updateSaleTotalPreview() {
     const product = products.find(item => item.id === document.getElementById('nsProduct')?.value);
     const quantity = Number(document.getElementById('nsQty')?.value);
     const output = document.getElementById('nsTotalPreview');
-    if (output) output.textContent = formatPeso(product && Number.isFinite(quantity) ? product.price * quantity : 0);
+    const unit = document.getElementById('nsUnit')?.value || product?.inventoryUnit || 'item';
+    if (output) output.textContent = formatPeso(product && Number.isFinite(quantity) ? product.price * (INVENTORY_UNIT_TO_BASE[unit] || 1) * quantity : 0);
 }
 
 async function submitNewSale() {
@@ -2557,13 +2584,14 @@ async function submitNewSale() {
     const pid = document.getElementById('nsProduct').value;
     const qty = Number(document.getElementById('nsQty').value);
     const p = products.find(x => x.id === pid);
-    const saleUnit = p?.inventoryUnit || 'item';
-    const fractional = saleUnit === 'gram' || saleUnit === 'milliliter';
+    const saleUnit = document.getElementById('nsUnit')?.value || p?.inventoryUnit || 'item';
+    const fractional = saleUnit !== 'item';
     if (!customer) { toast('Enter the walk-in customer name.', 'error'); document.getElementById('nsCustomer').focus(); return; }
-    const stockLimit = p ? productStockInSaleUnits(p) : 0;
+    const stockLimit = p ? productStockInSaleUnits(p) / (INVENTORY_UNIT_TO_BASE[saleUnit] || 1) : 0;
     if (!p || !Number.isFinite(qty) || qty <= 0 || qty > stockLimit || (!fractional && !Number.isInteger(qty))) { toast('Enter a valid amount within available stock.', 'error'); return; }
     const saleId = nextSaleReference();
     const quantityUnit = saleUnitLabel(saleUnit);
+    const unitPrice = p.price * (INVENTORY_UNIT_TO_BASE[saleUnit] || 1);
     let sale;
     if (window.ironGrindSupabase) {
         if (!isUUID(p.id)) { toast('This product is not stored in Supabase and cannot be sold yet.', 'error'); return; }
@@ -2571,7 +2599,8 @@ async function submitNewSale() {
             p_receipt_number: saleId,
             p_customer_name: customer,
             p_product_id: p.id,
-            p_quantity: qty
+            p_quantity: qty,
+            p_quantity_unit: saleUnit
         });
         if (error) { toast(`Could not record sale in Supabase: ${error.message}`, 'error'); return; }
         const line = {
@@ -2602,8 +2631,8 @@ async function submitNewSale() {
             status: 'Paid'
         };
     } else {
-        p.stock -= stockDeductionForSale(p, qty);
-        const total = p.price * qty;
+        p.stock -= stockDeductionForSale({ ...p, inventoryUnit: saleUnit }, qty);
+        const total = unitPrice * qty;
         sale = {
             id: saleId,
             customer,
@@ -2614,7 +2643,7 @@ async function submitNewSale() {
             quantity: qty,
             quantityUnit,
             items: `${p.name} x${qty} ${quantityUnit}`,
-            lineItems: [{ name: p.name, productId: p.id, category: p.category, quantity: qty, quantityUnit, unitPrice: p.price, total }],
+            lineItems: [{ name: p.name, productId: p.id, category: p.category, quantity: qty, quantityUnit, unitPrice, total }],
             total,
             date: todayStr(),
             createdAt: new Date().toISOString(),
