@@ -1,5 +1,6 @@
 -- One-time cleanup approved for these nine old, unlinked memberships.
 -- Run the whole file as postgres in Supabase SQL Editor.
+-- Apply 20261104000001_members_inactive_status.sql first on legacy projects.
 -- Sales, attendance, membership history, and Auth users are not deleted.
 reset role;
 begin;
