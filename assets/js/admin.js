@@ -1825,6 +1825,17 @@ async function startPhoneQRPairing(rememberPhone = false) {
         toast(`Could not connect a phone scanner${error?.message ? `: ${error.message}` : '.'}`, 'error');
         return;
     }
+    const { data: pairingValid, error: validationError } = await window.ironGrindSupabase.rpc('validate_mobile_attendance_scan_session', {
+        p_session_id: data.session_id,
+        p_token: data.token
+    });
+    if (validationError || pairingValid !== true) {
+        await window.ironGrindSupabase.rpc('close_mobile_attendance_scan_session', { p_session_id: data.session_id });
+        toast(validationError
+            ? `Supabase could not validate the new phone pairing: ${validationError.message}. Apply migrations 20261104000009 and 20261104000010.`
+            : 'Supabase rejected the new phone pairing. Apply migrations 20261104000009 and 20261104000010, then try again.', 'error');
+        return;
+    }
     activeMobileAttendanceSessionId = data.session_id;
     activeMobileAttendancePersistent = Boolean(data.remember_phone);
     if (activeMobileAttendancePersistent) localStorage.setItem('ig_mobile_attendance_session_id', data.session_id);

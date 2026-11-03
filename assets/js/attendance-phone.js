@@ -99,7 +99,7 @@ async function startPhonePairingScanner(statusMessage = '') {
                         clearPhonePairing();
                         setPhoneAttendanceStatus(error
                             ? `Could not validate pairing: ${error.message}`
-                            : 'Pairing expired or invalid. Create a fresh pairing QR on the admin page.', true);
+                            : 'Supabase rejected this pairing. It may have expired, or the pairing migrations may not be applied. Create a fresh QR on the admin page.', true);
                     } else {
                         phoneScannerMode = 'member';
                         activePhoneSession = { sessionId, token };
@@ -148,7 +148,7 @@ async function startPhoneMemberScanner(sessionId, token, openCamera = true) {
         clearPhonePairing();
         await startPhonePairingScanner(sessionError
             ? `Could not validate pairing: ${sessionError.message}`
-            : 'Pairing expired or invalid. Scan a new pairing QR from the admin page.');
+            : 'Supabase rejected this pairing. It may have expired, or the pairing migrations may not be applied. Scan a fresh QR from the admin page.');
         return;
     }
     if (!openCamera) {
@@ -276,7 +276,7 @@ window.addEventListener('pagehide', () => {
 async function startPhoneAttendanceApp() {
     configurePhoneAppInstall();
     if ('serviceWorker' in navigator && window.isSecureContext) {
-        navigator.serviceWorker.register('attendance-phone-sw.js?v=20261104-paired-camera-stream').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
+        navigator.serviceWorker.register('attendance-phone-sw.js?v=20261104-phone-pairing-fix').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
     }
     if (!window.ironGrindSupabase) {
         setPhoneAttendanceStatus('The attendance service could not load. Check your connection and reload.', true);
