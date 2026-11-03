@@ -3,7 +3,7 @@
     const pageSize = 50;
     let page = 0;
     let requestNumber = 0;
-    const areas = { profiles: 'Accounts', members: 'Members', membership_applications: 'Applications', attendance: 'Attendance', products: 'Products', sales: 'Sales', sale_items: 'Sale items', membership_history: 'Membership history', session: 'Session' };
+    const areas = { profiles: 'Accounts', members: 'Members', membership_applications: 'Applications', attendance: 'Attendance', products: 'Products', sales: 'Sales', sale_items: 'Sale items', membership_history: 'Membership history', session: 'Session', mobile_attendance_scan_sessions: 'Phone pairings' };
     const actions = { insert: 'Created', update: 'Updated', delete: 'Deleted', check_in: 'Checked in', check_out: 'Checked out', signed_in: 'Signed in', sign_out_requested: 'Requested sign-out', approved: 'Approved', rejected: 'Rejected', archived: 'Archived', restored: 'Restored', renewal: 'Renewed', expired: 'Expired', plan_change: 'Changed plan' };
     const escape = value => String(value ?? '').replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
     const dateFormat = new Intl.DateTimeFormat('en-PH', { timeZone: 'Asia/Manila', dateStyle: 'medium', timeStyle: 'short' });
