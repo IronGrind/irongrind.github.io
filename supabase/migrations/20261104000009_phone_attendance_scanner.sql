@@ -47,7 +47,9 @@ declare
     session_token text := gen_random_uuid()::text || gen_random_uuid()::text;
     session_expiry timestamptz := now() + interval '10 minutes';
 begin
-    if not (select private.is_admin()) then raise exception 'Admin access required'; end if;
+    if (select private.is_admin()) is distinct from true then raise exception 'Admin access required'; end if;
+
+    delete from public.mobile_attendance_scan_sessions where expires_at <= now();
 
     insert into public.mobile_attendance_scan_sessions (id, token_hash, created_by, expires_at)
     values (session_id, md5(session_token), (select auth.uid()), session_expiry);
@@ -94,6 +96,24 @@ begin
 end;
 $$;
 
+create or replace function public.validate_mobile_attendance_scan_session(
+    p_session_id uuid,
+    p_token text
+)
+returns boolean
+language sql
+security definer
+set search_path = ''
+as $$
+    select p_token is not null and exists (
+        select 1
+        from public.mobile_attendance_scan_sessions
+        where id = p_session_id
+          and token_hash = md5(p_token)
+          and expires_at > now()
+    );
+$$;
+
 create or replace function public.close_mobile_attendance_scan_session(p_session_id uuid)
 returns void
 language plpgsql
@@ -101,7 +121,7 @@ security definer
 set search_path = ''
 as $$
 begin
-    if not (select private.is_admin()) then raise exception 'Admin access required'; end if;
+    if (select private.is_admin()) is distinct from true then raise exception 'Admin access required'; end if;
     delete from public.mobile_attendance_scan_sessions where id = p_session_id;
 end;
 $$;
@@ -110,6 +130,8 @@ revoke all on function public.create_mobile_attendance_scan_session() from publi
 grant execute on function public.create_mobile_attendance_scan_session() to authenticated;
 revoke all on function public.submit_mobile_attendance_scan(uuid, text, text) from public;
 grant execute on function public.submit_mobile_attendance_scan(uuid, text, text) to anon, authenticated;
+revoke all on function public.validate_mobile_attendance_scan_session(uuid, text) from public;
+grant execute on function public.validate_mobile_attendance_scan_session(uuid, text) to anon, authenticated;
 revoke all on function public.close_mobile_attendance_scan_session(uuid) from public, anon;
 grant execute on function public.close_mobile_attendance_scan_session(uuid) to authenticated;
 

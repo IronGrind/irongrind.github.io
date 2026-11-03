@@ -42,6 +42,7 @@ let qrCameraHintTimer = null;
 let activeMobileAttendanceSessionId = null;
 let mobileAttendancePollTimer = null;
 let mobileAttendancePollBusy = false;
+let mobileAttendanceProcessedScanIds = new Set();
 let adminRealtimeChannel = null;
 let adminMembershipRefreshTimer = null;
 let adminMembershipRefreshBusy = false;
@@ -1844,6 +1845,7 @@ async function startPhoneQRPairing() {
 function startMobileAttendancePolling(sessionId) {
     clearInterval(mobileAttendancePollTimer);
     mobileAttendancePollBusy = false;
+    mobileAttendanceProcessedScanIds = new Set();
     mobileAttendancePollTimer = window.setInterval(() => pollMobileAttendanceScans(sessionId), 1200);
     pollMobileAttendanceScans(sessionId);
 }
@@ -1860,6 +1862,8 @@ async function pollMobileAttendanceScans(sessionId) {
         if (error) throw error;
         for (const scan of scans || []) {
             if (activeMobileAttendanceSessionId !== sessionId) break;
+            if (mobileAttendanceProcessedScanIds.has(scan.id)) continue;
+            mobileAttendanceProcessedScanIds.add(scan.id);
             try {
                 const member = await resolveMemberFromQR(String(scan.qr_payload || ''));
                 if (!member) toast('Phone scan received, but the member QR was not recognized.', 'error');
@@ -1867,7 +1871,8 @@ async function pollMobileAttendanceScans(sessionId) {
             } catch (scanError) {
                 toast(`Could not process phone scan: ${scanError.message || 'Please try again.'}`, 'error');
             }
-            await window.ironGrindSupabase.from('mobile_attendance_scan_events').delete().eq('id', scan.id);
+            const { error: deleteError } = await window.ironGrindSupabase.from('mobile_attendance_scan_events').delete().eq('id', scan.id);
+            if (deleteError) console.error('Could not clear processed phone attendance scan:', deleteError);
             const status = document.getElementById('phonePairStatus');
             if (status && activeMobileAttendanceSessionId === sessionId) {
                 status.textContent = `Last scan processed${scans.length > 1 ? ` · ${scans.length - 1} more queued` : ''}. Ready for the next member.`;
