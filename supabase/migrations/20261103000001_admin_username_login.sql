@@ -7,6 +7,7 @@ create table if not exists private.admin_login_attempts (
     window_start timestamptz not null,
     attempts integer not null
 );
+alter table private.admin_login_attempts enable row level security;
 revoke all on private.admin_login_attempts from public, anon, authenticated;
 
 create or replace function public.consume_admin_login_attempt(p_bucket text, p_limit integer)
