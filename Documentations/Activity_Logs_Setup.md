@@ -2,11 +2,11 @@
 
 ## Enable logging
 
-Apply `supabase/migrations/20261103000000_activity_logs.sql` in the intended Supabase project's SQL Editor after the existing schema and membership migrations. Then serve the updated website and refresh the login and admin pages. No Edge Function redeployment is required.
+Apply `supabase/migrations/20261103000000_activity_logs.sql` in the intended Supabase project's SQL Editor after the existing schema and membership migrations. Then apply `supabase/migrations/20261104000002_activity_log_sale_descriptions.sql` to add readable sale descriptions. Serve the updated website and refresh the login and admin pages. No Edge Function redeployment is required.
 
 Open **Activity Logs** using the history icon beside the admin's name in the header. Filters support account name, area, and inclusive Manila dates. Results show 50 events per page, with Refresh and pagination controls.
 
-The feature records successful database inserts, updates, and deletes for accounts, members, applications, attendance, products, sales, sale items, and membership history. Application decisions, attendance check-in/check-out, product archives, and membership history events receive specific action labels. One operation can produce several related events, such as a sale and its item lines.
+The feature records successful database inserts, updates, and deletes for accounts, members, applications, attendance, products, sales, sale items, and membership history. Application decisions, attendance check-in/check-out, product archives, and membership history events receive specific action labels. Sale entries describe the product, quantity, and customer (for example, “Sold 10 g of Creatine to Maria”). One operation can produce several related events, such as a sale and its item lines.
 
 Database triggers save the authenticated account ID and a snapshot of its name and role. The service-only member creation function supplies its verified administrator for the same transaction. Service operations without a known initiating account appear as **System / service**; an old staff reference is not reused as the actor of an unrelated update. Member changes are labeled with the member's account role.
 

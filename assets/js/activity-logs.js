@@ -50,7 +50,7 @@
             table.innerHTML = data.length ? `<table class="attendance-table" role="table"><thead role="rowgroup"><tr role="row"><th role="columnheader">Time (Manila)</th><th role="columnheader">Account</th><th role="columnheader">Action</th><th role="columnheader">Area</th><th role="columnheader">Record</th><th role="columnheader">Fields changed</th></tr></thead><tbody role="rowgroup">${data.map(log => `<tr role="row">
                 <td role="cell" data-label="Time (Manila)">${escape(dateFormat.format(new Date(log.occurred_at)))}</td>
                 <td role="cell" data-label="Account"><strong>${escape(log.actor_name)}</strong><small>${escape(log.actor_role)}${log.actor_id ? ` · ${escape(log.actor_id)}` : ''}</small></td>
-                <td role="cell" data-label="Action">${escape(actions[log.action] || log.action)}</td>
+                <td role="cell" data-label="Action">${escape(log.details || actions[log.action] || log.action)}</td>
                 <td role="cell" data-label="Area">${escape(areas[log.entity_type] || log.entity_type)}</td>
                 <td role="cell" data-label="Record">${escape(log.record_label || '—')}<small>${escape(log.entity_id || '')}</small></td>
                 <td role="cell" data-label="Fields changed">${escape((log.changed_fields || []).join(', ') || '—')}</td>
