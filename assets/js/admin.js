@@ -2115,10 +2115,71 @@ function productCard(p) {
             <div class="price">${formatPeso(p.price)} / ${productSaleUnitLabel(p)}</div>
             <div class="stock ${low ? 'low' : ''}">${low ? '⚠ ' : ''}${stockLabel}</div>
             <div class="product-actions">
+                <button class="btn-restock" onclick="restockProduct('${p.id}')">Restock</button>
                 <button class="btn-edit" onclick="editProduct('${p.id}')">Edit</button>
                 <button class="btn-delete" aria-label="Archive ${escapeHTML(p.name)}" title="Archive product" onclick="archiveProduct('${p.id}')"><i class="fas fa-box-archive"></i></button>
             </div>
         </div>`;
+}
+
+function restockProduct(id) {
+    const product = products.find(item => item.id === id);
+    if (!product) return;
+    const currentUnit = product.stockUnit || 'item';
+    const unitLabel = stockUnitLabel(currentUnit);
+    const compatibleUnits = product.category === 'Merch' || product.inventoryUnit === 'item'
+        ? [['item', 'items']]
+        : product.inventoryUnit === 'milliliter'
+            ? [['milliliter', 'ml'], ['liter', 'L'], ['fluid_ounce', 'fl oz']]
+            : [['gram', 'g'], ['kilogram', 'kg'], ['ounce', 'oz'], ['pound', 'lb']];
+    openModal(`
+        <h3><i class="fas fa-boxes-stacked"></i> Restock ${escapeHTML(product.name)}</h3>
+        <p class="modal-sub">Current stock: ${escapeHTML(formatProductStock(product))}. Choose the unit for the quantity being added.</p>
+        <div class="form-row" style="margin-bottom:14px;"><div class="form-group"><label for="rsQuantity">Quantity to add</label><input type="number" id="rsQuantity" min="0.001" step="${currentUnit === 'item' ? '1' : '0.001'}" placeholder="Enter quantity"></div><div class="form-group"><label for="rsUnit">Unit</label><select id="rsUnit" onchange="updateRestockQuantityInput()">${compatibleUnits.map(([value, label]) => `<option value="${value}"${value === currentUnit ? ' selected' : ''}>${label}</option>`).join('')}</select></div></div>
+        <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="runWithButtonLoading(this, () => submitRestock('${product.id}'), 'Adding stock…')">Add stock</button></div>
+    `);
+}
+
+function updateRestockQuantityInput() {
+    const unit = document.getElementById('rsUnit')?.value;
+    const quantity = document.getElementById('rsQuantity');
+    if (!quantity) return;
+    quantity.step = unit === 'item' ? '1' : '0.001';
+    quantity.min = unit === 'item' ? '1' : '0.001';
+}
+
+async function submitRestock(id) {
+    const product = products.find(item => item.id === id);
+    const quantity = Number(document.getElementById('rsQuantity')?.value);
+    const quantityUnit = document.getElementById('rsUnit')?.value || product?.stockUnit || 'item';
+    const unit = product?.stockUnit || 'item';
+    if (!product || !Number.isFinite(quantity) || quantity <= 0 || (quantityUnit === 'item' && !Number.isInteger(quantity))) {
+        toast(quantityUnit === 'item' ? 'Enter a positive whole number of items.' : 'Enter a positive stock quantity.', 'error');
+        return;
+    }
+    if (window.ironGrindSupabase) {
+        if (!isUUID(id)) { toast('This product is not stored in Supabase and cannot be restocked yet.', 'error'); return; }
+        const { data, error } = await window.ironGrindSupabase.rpc('restock_product', {
+            p_product_id: id,
+            p_quantity: quantity,
+            p_quantity_unit: quantityUnit
+        });
+        if (error) { toast(`Could not restock in Supabase: ${error.message}`, 'error'); return; }
+        product.stock = Number(data);
+    } else {
+        product.stock = Number(product.stock || 0) + stockDeductionForSale({ ...product, inventoryUnit: quantityUnit, stockUnit: unit }, quantity);
+        try { saveDB('products', products); }
+        catch { product.stock -= quantity; toast('Could not save the updated stock.', 'error'); return; }
+    }
+    closeModal();
+    renderStore();
+    renderDashboard();
+    toast(`Added ${quantity} ${unitLabelPlural(quantityUnit, quantity)} to ${product.name}.`, 'success');
+}
+
+function unitLabelPlural(unit, quantity) {
+    if (unit === 'item') return quantity === 1 ? 'item' : 'items';
+    return stockUnitLabel(unit);
 }
 
 function merchandiseSizeOptions(selected = '') {
