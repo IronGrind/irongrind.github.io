@@ -358,7 +358,9 @@ async function stopPhoneAttendanceScanner() {
     }
     const deviceLabel = activePhoneSession ? await getPhoneDeviceLabel() : '';
     setPhoneAttendanceStatus(activePhoneSession
-        ? `Camera stopped. ${deviceLabel} is still paired. Tap Open camera to continue scanning.`
+        ? deviceLabel
+            ? `Camera stopped. ${deviceLabel} is still paired. Tap Open camera to continue scanning.`
+            : 'Camera stopped. Your pairing is still active. Tap Open camera to continue scanning.'
         : 'Camera stopped. You can close this page.');
 }
 
