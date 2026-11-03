@@ -48,6 +48,7 @@ let mobileAttendanceSessionIds = new Set();
 let mobileAttendanceSessionPersistence = new Map();
 let pairedPhoneListRefreshBusy = false;
 let pairedPhoneListLastRefreshAt = 0;
+let lifetimePhonePairingCount = null;
 let adminRealtimeChannel = null;
 let adminMembershipRefreshTimer = null;
 let adminMembershipRefreshBusy = false;
@@ -1855,7 +1856,8 @@ async function startPhoneQRPairing(rememberPhone = false) {
         <div id="phonePairQr" class="phone-pair-qr" aria-label="Phone scanner pairing QR code"></div>
         <p id="phonePairStatus" class="qr-camera-status" role="status">Waiting for phone scans…</p>
         <section class="paired-phones-section" aria-labelledby="pairedPhonesHeading">
-            <h4 id="pairedPhonesHeading">Paired phones <span id="pairedPhonesCount" class="paired-phone-count">0</span></h4>
+            <h4 id="pairedPhonesHeading">Total phones paired <span id="pairedPhonesCount" class="paired-phone-count">0</span><small class="paired-phone-period">all time</small></h4>
+            <p class="paired-phone-list-label">Currently paired phones</p>
             <div id="pairedPhonesList" class="paired-phone-list"><p class="paired-phone-empty">Loading paired phones…</p></div>
         </section>
         <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Close window</button><button class="btn-danger phone-pair-end-button" onclick="endMobileAttendanceSession('${data.session_id}')">End this pairing</button></div>
@@ -1922,7 +1924,18 @@ async function refreshPairedAttendancePhones(force = false) {
     }
     const phones = Array.isArray(data) ? data : [];
     const count = document.getElementById('pairedPhonesCount');
-    if (count) count.textContent = String(phones.length);
+    let totalPaired = phones.length;
+    const { count: pairingCount, error: countError } = await window.ironGrindSupabase
+        .from('activity_logs')
+        .select('id', { count: 'exact', head: true })
+        .eq('entity_type', 'mobile_attendance_scan_sessions')
+        .eq('action', 'phone_paired');
+    if (!countError && Number.isInteger(pairingCount)) {
+        lifetimePhonePairingCount = Math.max(lifetimePhonePairingCount || 0, pairingCount, phones.length);
+    } else {
+        lifetimePhonePairingCount = Math.max(lifetimePhonePairingCount || 0, phones.length);
+    }
+    if (count) count.textContent = String(lifetimePhonePairingCount);
     const modalStatus = document.getElementById('phonePairStatus');
     if (modalStatus && !modalStatus.textContent.startsWith('Last scan processed') && !modalStatus.textContent.startsWith('Phone connection issue')) {
         const currentPhone = phones.find(phone => phone.session_id === activeMobileAttendanceSessionId);
