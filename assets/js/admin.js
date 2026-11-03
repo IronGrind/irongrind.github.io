@@ -132,6 +132,7 @@ function mapSupabaseProduct(row) {
         stock: Number(row.stock) || 0,
         stockUnit: row.stock_unit || (row.category === 'supplement' ? 'gram' : 'item'),
         size: row.size || '',
+        merchType: row.merch_type || (row.category === 'merchandise' ? (row.size ? 'apparel' : 'other') : ''),
         inventoryUnit: row.unit === 'gram' ? 'gram' : 'item',
         image: row.image_path || '',
         isActive: row.is_active !== false,
@@ -2064,13 +2065,29 @@ function productCard(p) {
         </div>`;
 }
 
+function merchandiseSizeOptions(selected = '') {
+    const sizes = ['XS', 'Small', 'Medium', 'Large', 'XL', 'XXL', 'XXXL', 'One Size'];
+    const current = String(selected || '');
+    if (current && !sizes.includes(current)) sizes.push(current);
+    return `<option value="">Select size</option>${sizes.map(size => `<option value="${escapeHTML(size)}">${escapeHTML(size)}</option>`).join('')}`;
+}
+
+function merchandiseTypeOptions() {
+    return '<option value="apparel">Apparel</option><option value="accessories">Accessories</option><option value="drinkware">Drinkware</option><option value="gym_gear">Gym gear</option><option value="other">Other</option>';
+}
+
+function merchandiseTypeLabel(type) {
+    return ({ apparel: 'Apparel', accessories: 'Accessories', drinkware: 'Drinkware', gym_gear: 'Gym gear', other: 'Other' })[type] || 'Other';
+}
+
 function openAddProductModal() {
     openModal(`
         <h3><i class="fas fa-plus"></i> Add Product</h3>
         <div class="form-group product-photo-field"><label for="apImage">Product photo (optional)</label><input type="file" id="apImage" accept="image/*" onchange="previewProductPhoto(this, 'apImagePreview')"><div id="apImagePreview" class="product-photo-preview"><span>No photo selected</span></div><small>Images are resized before saving.</small></div>
         <div class="form-group" style="margin-bottom:14px;"><label>Name</label><input type="text" id="apName" placeholder="Whey Protein — Vanilla"></div>
         <div class="form-group" style="margin-bottom:14px;"><label>Category</label><select id="apCat" onchange="toggleAddProductSize()"><option value="Supplement">Supplement</option><option value="Merch">Merchandise</option></select></div>
-        <div id="apSizeGroup" class="form-group" style="margin-bottom:14px;display:none"><label>Size (optional, merchandise)</label><input type="text" id="apSize" placeholder="Large"></div>
+        <div id="apMerchTypeGroup" class="form-group" style="margin-bottom:14px;display:none"><label for="apMerchType">Merchandise type</label><select id="apMerchType" onchange="toggleAddProductSize()">${merchandiseTypeOptions()}</select></div>
+        <div id="apSizeGroup" class="form-group" style="margin-bottom:14px;display:none"><label for="apSize">Apparel size (optional)</label><select id="apSize">${merchandiseSizeOptions()}</select></div>
         <div class="form-row">
             <div class="form-group"><label>Price (<span id="apPriceUnit">per gram</span>) ₱</label><input type="number" id="apPrice" min="0" step="0.01" placeholder="Price per gram"></div>
             <div class="form-group"><label>Starting stock</label><div class="form-row"><input type="number" id="apStock" min="0" step="0.001" placeholder="Enter available stock"><select id="apStockUnit" aria-label="Stock unit" onchange="convertInventoryUnit(this, 'apStock')"><option value="gram">g</option><option value="kilogram">kg</option><option value="ounce">oz</option><option value="pound">lb</option></select></div><small id="apStockHint">Stock is tracked and deducted in grams sold.</small></div>
@@ -2082,10 +2099,14 @@ function openAddProductModal() {
 function toggleAddProductSize() {
     const group = document.getElementById('apSizeGroup');
     const isMerch = document.getElementById('apCat')?.value === 'Merch';
+    const typeGroup = document.getElementById('apMerchTypeGroup');
+    const isApparel = document.getElementById('apMerchType')?.value === 'apparel';
     const unitSelect = document.getElementById('apStockUnit');
     const priceUnit = document.getElementById('apPriceUnit');
     const hint = document.getElementById('apStockHint');
     if (group) group.style.display = isMerch ? '' : 'none';
+    if (typeGroup) typeGroup.style.display = isMerch ? '' : 'none';
+    if (group) group.style.display = isMerch && isApparel ? '' : 'none';
     if (unitSelect) {
         unitSelect.innerHTML = isMerch ? '<option value="item">items</option>' : '<option value="gram">g</option><option value="kilogram">kg</option><option value="ounce">oz</option><option value="pound">lb</option>';
         unitSelect.dataset.previousUnit = unitSelect.value;
@@ -2111,14 +2132,15 @@ function convertInventoryUnit(select, inputId) {
 async function submitAddProduct() {
     const name = document.getElementById('apName').value.trim();
     const category = document.getElementById('apCat').value;
-    const size = document.getElementById('apSize').value.trim();
+    const merchType = category === 'Merch' ? document.getElementById('apMerchType').value : '';
+    const size = category === 'Merch' && merchType === 'apparel' ? document.getElementById('apSize').value.trim() : '';
     const price = Number(document.getElementById('apPrice').value);
     const stock = Number(document.getElementById('apStock').value);
     const stockUnit = document.getElementById('apStockUnit').value;
     if (!name || !Number.isFinite(price) || price <= 0 || !Number.isFinite(stock) || stock < 0 || (category === 'Merch' && !Number.isInteger(stock))) { toast('Enter a name, a valid price, and a valid stock amount.', 'error'); return; }
     const image = await getProductPhoto('apImage');
     if (image === false) return;
-    const product = { name, category, price, stock, stockUnit, ...(category === 'Merch' && size ? { size } : {}), inventoryUnit: category === 'Supplement' ? 'gram' : 'item', ...(image ? { image } : {}) };
+    const product = { name, category, price, stock, stockUnit, ...(category === 'Merch' ? { merchType } : {}), ...(category === 'Merch' && size ? { size } : {}), inventoryUnit: category === 'Supplement' ? 'gram' : 'item', ...(image ? { image } : {}) };
     if (window.ironGrindSupabase) {
         const { data, error } = await window.ironGrindSupabase.from('products').insert({
             name,
@@ -2126,6 +2148,7 @@ async function submitAddProduct() {
             price_per_unit: price,
             unit: category === 'Supplement' ? 'gram' : 'item',
             stock_unit: stockUnit,
+            merch_type: category === 'Merch' ? merchType : null,
             size: category === 'Merch' ? (size || null) : null,
             stock,
             image_path: image || null,
@@ -2153,7 +2176,7 @@ function editProduct(id) {
         <p class="modal-sub">Supplement prices are recorded per gram. Supabase checks admin access when saving.</p>
         <div class="form-group product-photo-field"><label for="epImage">Product photo (optional)</label><input type="file" id="epImage" accept="image/*" onchange="previewProductPhoto(this, 'epImagePreview')"><div id="epImagePreview" class="product-photo-preview">${p.image ? `<img src="${p.image}" alt="Current product photo">` : '<span>No photo selected</span>'}</div><label class="product-photo-remove"><input type="checkbox" id="epRemoveImage"> Remove current photo</label><small>Choose a new image to replace the current one.</small></div>
         <div class="form-group" style="margin-bottom:14px;"><label>Name</label><input type="text" id="epName" value="${p.name}"></div>
-        ${p.category === 'Merch' ? `<div class="form-group" style="margin-bottom:14px;"><label>Size (optional)</label><input type="text" id="epSize" value="${p.size || ''}"></div>` : ''}
+        ${p.category === 'Merch' ? `<div class="form-group" style="margin-bottom:14px;"><label for="epMerchType">Merchandise type</label><select id="epMerchType" onchange="toggleEditProductSize('${p.id}')">${merchandiseTypeOptions()}</select></div><div id="epSizeGroup" class="form-group" style="margin-bottom:14px;"><label for="epSize">Apparel size (optional)</label><select id="epSize">${merchandiseSizeOptions(p.size)}</select></div>` : ''}
         <div class="form-row">
             <div class="form-group"><label>Price (<span id="epPriceUnit">${p.category === 'Supplement' ? 'per gram' : 'per item'}</span>) ₱</label><input type="number" id="epPrice" min="0" step="0.01" value="${p.price}"></div>
             <div class="form-group"><label>Current stock</label><div class="form-row"><input type="number" id="epStock" min="0" step="${p.category === 'Supplement' ? '0.001' : '1'}" value="${Number(p.stock) || 0}"><select id="epStockUnit" aria-label="Stock unit" onchange="convertInventoryUnit(this, 'epStock')">${p.category === 'Supplement' ? '<option value="gram">g</option><option value="kilogram">kg</option><option value="ounce">oz</option><option value="pound">lb</option>' : '<option value="item">items</option>'}</select></div><small>${p.category === 'Supplement' ? 'Sales are deducted by the gram.' : 'Each sale deducts one item.'}</small></div>
@@ -2163,6 +2186,18 @@ function editProduct(id) {
     const stockUnit = document.getElementById('epStockUnit');
     stockUnit.value = p.stockUnit || (p.category === 'Supplement' ? 'gram' : 'item');
     stockUnit.dataset.previousUnit = stockUnit.value;
+    if (p.category === 'Merch') {
+        const merchType = document.getElementById('epMerchType');
+        merchType.value = p.merchType || (p.size ? 'apparel' : 'other');
+        document.getElementById('epSize').value = p.size || '';
+        toggleEditProductSize(p.id);
+    }
+}
+
+function toggleEditProductSize() {
+    const type = document.getElementById('epMerchType')?.value;
+    const group = document.getElementById('epSizeGroup');
+    if (group) group.style.display = type === 'apparel' ? '' : 'none';
 }
 
 async function submitEditProduct(id) {
@@ -2171,13 +2206,15 @@ async function submitEditProduct(id) {
     const newPrice = Number(document.getElementById('epPrice').value);
     const stockInput = document.getElementById('epStock').value.trim();
     const stockUnit = document.getElementById('epStockUnit').value;
+    const merchType = p.category === 'Merch' ? document.getElementById('epMerchType').value : '';
     if (!Number.isFinite(newPrice) || newPrice <= 0 || !Number.isFinite(Number(stockInput)) || Number(stockInput) < 0 || (p.category === 'Merch' && !Number.isInteger(Number(stockInput)))) { toast('Enter a valid price and stock amount.', 'error'); return; }
     const image = await getProductPhoto('epImage');
     if (image === false) return;
     const oldProduct = { ...p };
     const updatedProduct = { ...p, name: document.getElementById('epName').value.trim(), price: newPrice };
     if (p.category === 'Merch') {
-        updatedProduct.size = document.getElementById('epSize').value.trim();
+        updatedProduct.merchType = merchType;
+        updatedProduct.size = merchType === 'apparel' ? document.getElementById('epSize').value.trim() : '';
     } else delete updatedProduct.size;
     updatedProduct.stock = Number(stockInput);
     updatedProduct.stockUnit = stockUnit;
@@ -2192,6 +2229,7 @@ async function submitEditProduct(id) {
             price_per_unit: updatedProduct.price,
             unit: p.category === 'Supplement' ? 'gram' : 'item',
             stock_unit: stockUnit,
+            merch_type: p.category === 'Merch' ? merchType : null,
             size: p.category === 'Merch' ? (updatedProduct.size || null) : null,
             stock: updatedProduct.stock,
             image_path: updatedProduct.image || null,
