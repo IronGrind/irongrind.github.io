@@ -164,6 +164,7 @@ async function submitRegistration(event) {
     };
 
     const submitButton = document.querySelector('#registrationForm button[type="submit"]');
+    if (submitButton.disabled) return;
     submitButton.disabled = true;
     submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account…';
     try {
@@ -263,10 +264,10 @@ async function insertSupabaseApplication(draft) {
     const { data, error } = await window.ironGrindSupabase
         .from('membership_applications')
         .insert(row)
-        .select('id')
+        .select('id, status, auth_user_id')
         .single();
 
-    if (error) {
+    if (error || !data?.id || data.auth_user_id !== userId || data.status !== 'pending') {
         console.error('Application save failed:', error);
         showError('Your account was created, but we could not submit your application. Your form is saved in this browser. Please try again or contact the gym for help.');
         return false;

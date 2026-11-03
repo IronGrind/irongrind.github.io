@@ -88,6 +88,11 @@ body.admin-dashboard .admin-section { min-height: 100%; flex-shrink: 0; }
 }
 
 /* ========== STAT CARDS ========== */
+.registration-notice { display: flex; align-items: center; flex-wrap: wrap; gap: 14px; padding: 16px 18px; border: 1px solid rgba(195,75,75,.35); border-radius: 16px; background: rgba(120,0,0,.12); }
+.registration-notice > i { color: #e3a0a0; }
+.registration-notice > div { flex: 1 1 180px; }
+.registration-notice strong { font-size: .9rem; }
+.registration-notice p { margin-top: 4px; color: #a4adc2; font-size: .8rem; }
 .activity-help { color: #a4adc2; font-size: .8rem; line-height: 1.5; margin-bottom: 14px; }
 .activity-filters { display: flex; align-items: flex-end; flex-wrap: wrap; gap: 10px; margin-bottom: 16px; }
 .activity-filters label { display: grid; gap: 6px; color: #a4adc2; font-size: .75rem; flex: 1 1 140px; }

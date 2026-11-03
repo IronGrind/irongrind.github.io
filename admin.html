@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IronGrind · Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261104-header-activity">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261104-registration-notice">
 </head>
 <body class="dashboard-body admin-dashboard">
 <div id="page-loader" class="page-loader" aria-label="Loading dashboard" role="status"><div class="loader-content"><img class="loader-mark" src="assets/images/iron-grind-mark.png" alt=""><div class="loader-brand">Iron<span>Grind</span></div><div class="loader-track"><span></span></div></div></div>
@@ -57,6 +57,11 @@
 
         <main class="main-content">
             <div id="section-dashboard" class="admin-section">
+                <div id="dashboardRegistrationNotice" class="registration-notice hidden" role="status" aria-live="polite">
+                    <i class="fas fa-user-plus" aria-hidden="true"></i>
+                    <div><strong>Registration requests</strong><p id="dashboardRegistrationNoticeText"></p></div>
+                    <button class="btn-primary" type="button" onclick="showAdminSection('membership'); switchMemberTab('approvals'); switchApprovalType('registration')">Review requests</button>
+                </div>
                 <div class="stats-grid">
                     <div class="stat-card">
                         <div class="stat-label">Current Members</div>
@@ -282,6 +287,6 @@
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script src="assets/js/signature.js"></script>
 <script src="assets/js/activity-logs.js?v=20261104-responsive"></script>
-<script src="assets/js/admin.js?v=20261104-header-activity"></script>
+<script src="assets/js/admin.js?v=20261104-registration-notice"></script>
 </body>
 </html>

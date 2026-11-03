@@ -34,6 +34,8 @@ let activeQRScanner = null;
 let qrScanHandled = false;
 let qrCameraHintTimer = null;
 let adminRealtimeChannel = null;
+let adminMembershipRefreshTimer = null;
+let adminMembershipRefreshBusy = false;
 let realtimeRefreshTimer = null;
 let realtimeRefreshBusy = false;
 let realtimeRefreshPending = false;
@@ -345,6 +347,10 @@ function renderDashboard() {
     document.getElementById('approvalsCount').textContent = pending.length;
     document.getElementById('registrationApprovalsCount').textContent = pending.filter(p => p.source !== 'dashboard-renewal').length;
     document.getElementById('renewalApprovalsCount').textContent = pending.filter(p => p.source === 'dashboard-renewal').length;
+    const registrationCount = pending.filter(p => p.source !== 'dashboard-renewal').length;
+    document.getElementById('dashboardRegistrationNotice')?.classList.toggle('hidden', registrationCount === 0);
+    const registrationNoticeText = document.getElementById('dashboardRegistrationNoticeText');
+    if (registrationNoticeText) registrationNoticeText.textContent = `${registrationCount} ${registrationCount === 1 ? 'application is' : 'applications are'} waiting for approval.`;
 }
 
 /* ========== RENDER: MEMBERS ========== */
@@ -1134,6 +1140,23 @@ async function initializeSupabaseAdminData() {
     subscribeAdminRealtimeUpdates();
     await loadSupabaseMembershipData();
     await loadSupabaseOperationalData();
+    startAdminMembershipRefresh();
+}
+
+function startAdminMembershipRefresh() {
+    if (adminMembershipRefreshTimer) return;
+    const refresh = async () => {
+        if (document.hidden || adminMembershipRefreshBusy || !window.ironGrindSupabase) return;
+        adminMembershipRefreshBusy = true;
+        try { await loadSupabaseMembershipData(); }
+        catch (error) { console.error('Could not refresh membership applications:', error); }
+        finally { adminMembershipRefreshBusy = false; }
+    };
+    // Realtime is the primary path. Polling covers missed events or a tab that
+    // was asleep when a registration was submitted on another device.
+    adminMembershipRefreshTimer = window.setInterval(refresh, 30000);
+    window.addEventListener('focus', refresh);
+    document.addEventListener('visibilitychange', refresh);
 }
 
 function rejectApplication(id) {
