@@ -37,7 +37,6 @@ function setup(role, unavailable = false) {
 }
 for (const [mode, role, target] of [['admin', 'admin', 'admin.html'], ['member', 'member', 'customer.html']]) {
     const test = setup(role);
-    vm.runInContext(`setLoginMode('${mode}')`, test.context);
     test.element('loginEmail').value = mode === 'admin' ? 'staff' : 'member@example.test';
     test.element('loginPassword').value = 'password';
     await vm.runInContext('handleLogin({preventDefault(){}})', test.context);
@@ -49,12 +48,11 @@ for (const [mode, role, target] of [['admin', 'admin', 'admin.html'], ['member',
 }
 for (const [role, unavailable] of [['member', false], ['admin', true]]) {
     const test = setup(role, unavailable);
-    vm.runInContext("setLoginMode('admin')", test.context);
     test.element('loginEmail').value = 'staff';
     test.element('loginPassword').value = 'password';
     await vm.runInContext('handleLogin({preventDefault(){}})', test.context);
     assert.equal(test.destination(), undefined);
-    assert.equal(test.element('adminLoginTab').disabled, false);
+    assert.equal(test.element('submit').disabled, false);
     assert.ok(test.element('loginErrorText').textContent);
 }
 console.log('Passed: admin endpoint/session flow, unchanged member email flow, activity attribution call, non-admin rejection, unavailable-function recovery.');

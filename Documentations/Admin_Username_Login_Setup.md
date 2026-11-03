@@ -1,6 +1,6 @@
 # Admin username sign-in
 
-The login page has Member and Admin options. Members enter an email and password; admins enter their own username and password. `index.html?role=admin` opens the Admin option directly. Password recovery still asks for the email linked to the Auth account.
+The login page has one Email or username field and one password field. Email addresses use member sign-in; usernames use admin sign-in. There is no account-type selector. Database profile roles are checked after authentication to determine dashboard access. Password recovery still asks for the email linked to the Auth account.
 
 ## Deployment
 
@@ -22,7 +22,7 @@ The login page has Member and Admin options. Members enter an email and password
    returning id, full_name, username, role;
    ```
 
-4. Serve the updated website and refresh the login page. Use Admin, username, and the existing account password. Verify that Member email sign-in still works and that admin activity is attributed to the signed-in account.
+4. Serve the updated website and refresh the login page. Enter the admin username and existing account password in the same form members use. Verify that member email sign-in still works and that admin activity is attributed to the signed-in account.
 
 Deploy the database migration and function before publishing the updated login page; Admin username sign-in cannot work until both are available.
 
