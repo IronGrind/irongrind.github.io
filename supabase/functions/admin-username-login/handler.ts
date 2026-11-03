@@ -45,11 +45,18 @@ export async function handleAdminLogin(request: Request) {
     const pattern = username.replace(/[\\%_]/g, '\\$&');
     const { data: profile, error: profileError } = await admin.from('profiles')
       .select('id').eq('role', 'admin').ilike('username', pattern).maybeSingle();
-    if (profileError) return respond({ error: invalidCredentials }, 401);
+    if (profileError) {
+      console.error('Admin username lookup failed:', profileError.code);
+      return respond({ error: 'Username sign-in is unavailable. Contact the gym administrator.' }, 503);
+    }
     // Unknown usernames use the same Auth password check and failure response.
-    const { data: account } = profile
+    const { data: account, error: accountError } = profile
       ? await admin.auth.admin.getUserById(profile.id)
-      : { data: { user: null } };
+      : { data: { user: null }, error: null };
+    if (accountError) {
+      console.error('Admin Auth account lookup failed:', accountError.code);
+      return respond({ error: 'Username sign-in is unavailable. Contact the gym administrator.' }, 503);
+    }
     const email = account?.user?.email || 'invalid-admin-login@example.invalid';
     const { data, error } = await login.auth.signInWithPassword({ email, password });
     if (error || !data.session || !profile || data.user?.id !== profile.id) {
@@ -60,6 +67,10 @@ export async function handleAdminLogin(request: Request) {
       .select('role').eq('id', data.user.id).single();
     if (roleError || verified?.role !== 'admin') {
       await login.auth.signOut();
+      if (roleError) {
+        console.error('Admin role lookup failed:', roleError.code);
+        return respond({ error: 'Username sign-in is unavailable. Contact the gym administrator.' }, 503);
+      }
       return respond({ error: invalidCredentials }, 401);
     }
     return respond({ session: { access_token: data.session.access_token, refresh_token: data.session.refresh_token } });

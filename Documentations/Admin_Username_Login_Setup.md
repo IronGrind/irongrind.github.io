@@ -4,7 +4,7 @@ The login page has one Email or username field and one password field. Email add
 
 ## Deployment
 
-1. Apply `supabase/migrations/20261103000001_admin_username_login.sql` in the intended Supabase project's SQL Editor.
+1. Apply `supabase/migrations/20261103000001_admin_username_login.sql`, then `supabase/migrations/20261104000000_admin_login_profile_read_access.sql` in the intended Supabase project's SQL Editor. The second migration grants the server role the profile-column access needed for username lookup; bypassing RLS alone does not grant table access.
 2. Deploy the new function from the project root:
 
    ```powershell

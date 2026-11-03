@@ -26,6 +26,9 @@ Deno.test('admin username endpoint validates credentials, role, privacy, and thr
       payload = scenario !== 'limited';
       if (scenario === 'setup-error') { payload = { code: 'PGRST202' }; status = 404; }
     } else if (url.pathname.endsWith('/profiles')) {
+      if (scenario === 'profile-permission-error') {
+        return Promise.resolve(new Response(JSON.stringify({ code: '42501', message: 'permission denied for table profiles' }), { status: 403, headers: { 'Content-Type': 'application/json' } }));
+      }
       if (url.searchParams.get('select') === 'id') {
         receivedPattern = url.searchParams.get('username') || '';
         assert(url.searchParams.get('role') === 'eq.admin', 'Lookup restricts admin roles');
@@ -68,6 +71,10 @@ Deno.test('admin username endpoint validates credentials, role, privacy, and thr
     scenario = 'setup-error';
     response = await attempt();
     assert(response.status === 503, 'Missing migration fails closed');
+    scenario = 'profile-permission-error';
+    const passwordChecksBeforePermissionError = passwordChecks;
+    response = await attempt();
+    assert(response.status === 503 && passwordChecks === passwordChecksBeforePermissionError, 'Profile permission failures report service unavailability before checking passwords');
     response = await attempt('staff@example.test');
     assert(response.status === 400, 'Admin form endpoint rejects email identifiers');
     response = await handleAdminLogin(new Request('https://example.invalid/login', { method: 'OPTIONS' }));
