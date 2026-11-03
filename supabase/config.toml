@@ -1,0 +1,4 @@
+# Login must accept requests before a user has a session. The function itself
+# verifies the password and admin role, and throttles attempts server-side.
+[functions.admin-username-login]
+verify_jwt = false

@@ -1,3 +1,19 @@
+let loginMode = 'member';
+
+function setLoginMode(mode) {
+    loginMode = mode === 'admin' ? 'admin' : 'member';
+    const isAdmin = loginMode === 'admin';
+    const identifier = document.getElementById('loginEmail');
+    identifier.value = '';
+    identifier.placeholder = isAdmin ? 'Enter your admin username' : 'Enter your email address';
+    identifier.autocomplete = isAdmin ? 'username' : 'email';
+    identifier.inputMode = isAdmin ? 'text' : 'email';
+    document.getElementById('loginIdentifierLabel').textContent = isAdmin ? 'Admin Username' : 'Email Address';
+    document.getElementById('adminLoginTab').setAttribute('aria-pressed', String(isAdmin));
+    document.getElementById('memberLoginTab').setAttribute('aria-pressed', String(!isAdmin));
+    hideError();
+}
+
 function togglePassword() {
     const input = document.getElementById('loginPassword');
     const icon = document.getElementById('togglePwIcon');
@@ -20,7 +36,7 @@ function showForgotPassword() {
     const modal = document.getElementById('forgotPasswordModal');
     const emailInput = document.getElementById('recoveryEmail');
     const loginEmail = document.getElementById('loginEmail');
-    if (emailInput && loginEmail && loginEmail.value.trim()) emailInput.value = loginEmail.value.trim();
+    if (emailInput && loginEmail && loginMode === 'member' && loginEmail.value.trim()) emailInput.value = loginEmail.value.trim();
     const status = document.getElementById('recoveryStatus');
     if (status) {
         status.textContent = '';
@@ -150,15 +166,35 @@ async function handleLogin(event) {
     }
 
     const submitButton = document.querySelector('#loginForm button[type="submit"]');
+    if (submitButton.disabled) return;
     submitButton.disabled = true;
+    document.getElementById('memberLoginTab').disabled = true;
+    document.getElementById('adminLoginTab').disabled = true;
     submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Signing in…';
 
     try {
         const supabaseClient = window.ironGrindSupabase;
-        const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+        let result;
+        if (loginMode === 'admin') {
+            const { data: response, error: loginError } = await supabaseClient.functions.invoke('admin-username-login', {
+                body: { username: email, password }
+            });
+            if (loginError || !response?.session) {
+                let message = response?.error;
+                if (loginError?.context) {
+                    try { message = (await loginError.context.json()).error; } catch { /* Network failure without a JSON response. */ }
+                }
+                showError(message || 'Admin username sign-in is unavailable. Contact the gym administrator.');
+                return;
+            }
+            result = await supabaseClient.auth.setSession(response.session);
+        } else {
+            result = await supabaseClient.auth.signInWithPassword({ email, password });
+        }
+        const { data, error } = result;
 
         if (!error && data.user) {
-            const recovery = await recoverConfirmedRegistration(supabaseClient, data.user);
+            const recovery = loginMode === 'admin' ? { recovered: false } : await recoverConfirmedRegistration(supabaseClient, data.user);
             if (recovery.error) {
                 await supabaseClient.auth.signOut();
                 console.error('Could not complete saved registration:', recovery.error);
@@ -184,6 +220,11 @@ async function handleLogin(event) {
             }
 
             const role = profile.role === 'admin' ? 'admin' : 'customer';
+            if ((loginMode === 'admin') !== (role === 'admin')) {
+                await supabaseClient.auth.signOut();
+                showError(loginMode === 'admin' ? 'Invalid admin username or password.' : 'Select Admin and sign in using your admin username.');
+                return;
+            }
             if (role === 'customer') {
                 const { data: member, error: memberError } = await supabaseClient
                     .from('members')
@@ -235,15 +276,19 @@ async function handleLogin(event) {
 
         if (error) await supabaseClient.auth.signOut();
 
-        showError('Invalid email or password. If you recently registered, your application must be approved before you can access the member portal.');
+        showError(loginMode === 'admin' ? 'Invalid admin username or password.' : 'Invalid email or password. If you recently registered, your application must be approved before you can access the member portal.');
     } catch (error) {
         console.error('Login failed:', error);
         showError('Unable to connect to the login service. Please try again.');
     } finally {
         submitButton.disabled = false;
+        document.getElementById('memberLoginTab').disabled = false;
+        document.getElementById('adminLoginTab').disabled = false;
         submitButton.innerHTML = '<i class="fas fa-sign-in-alt"></i> Sign In';
     }
 }
+
+setLoginMode(new URLSearchParams(window.location.search).get('role') === 'admin' ? 'admin' : 'member');
 
 function saveLoginSession(session, remember) {
     localStorage.removeItem('irongrind_session');
