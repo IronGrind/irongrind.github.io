@@ -266,6 +266,7 @@ function showAdminSection(section, event) {
         switchSalesView(currentSalesView);
     }
     if (section === 'reports') renderReports();
+    if (section === 'activity') loadActivityLogs();
     if (section === 'dashboard') renderDashboard();
     const content = document.querySelector('.main-content');
     if (content) content.scrollTop = 0;
@@ -291,6 +292,10 @@ function switchApprovalType(type) {
 
 function logout() {
     askConfirmation('Log out?', 'Are you sure you want to log out?', 'Log out', async () => {
+        try {
+            const result = await window.ironGrindSupabase?.rpc('admin_log_session_event', { p_event: 'sign_out_requested' });
+            if (result?.error) console.error('Could not record sign-out request:', result.error);
+        } catch (error) { console.error('Could not record sign-out request:', error); }
         await window.ironGrindSupabase?.auth.signOut();
         localStorage.removeItem('irongrind_session');
         sessionStorage.removeItem('irongrind_session');

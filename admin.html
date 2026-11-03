@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IronGrind · Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261102-member-scroll-fix">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261103-activity-logs">
 </head>
 <body class="dashboard-body admin-dashboard">
 <div id="page-loader" class="page-loader" aria-label="Loading dashboard" role="status"><div class="loader-content"><img class="loader-mark" src="assets/images/iron-grind-mark.png" alt=""><div class="loader-brand">Iron<span>Grind</span></div><div class="loader-track"><span></span></div></div></div>
@@ -49,6 +49,9 @@
             </button>
             <button class="nav-item" data-section="reports" onclick="showAdminSection('reports', event)">
                 <i class="fas fa-chart-bar"></i> Reports
+            </button>
+            <button class="nav-item" data-section="activity" onclick="showAdminSection('activity', event)">
+                <i class="fas fa-clock-rotate-left"></i> Activity Logs
             </button>
         </aside>
 
@@ -245,6 +248,22 @@
                     <div class="product-grid" id="reportsGrid"></div>
                 </div>
             </div>
+            <div id="section-activity" class="admin-section hidden">
+                <div class="panel activity-panel">
+                    <div class="panel-header"><h2><i class="fas fa-clock-rotate-left"></i> Activity Logs</h2><button id="activityRefresh" class="btn-sm" type="button" onclick="loadActivityLogs()"><i class="fas fa-rotate"></i> Refresh</button></div>
+                    <p class="activity-help">See which account changed a record and when. Times are shown in Manila time. Each staff member should use their own admin account.</p>
+                    <form id="activityFilters" class="activity-filters">
+                        <label>Account name<input id="activityActor" type="search" placeholder="Search staff or member name" maxlength="150"></label>
+                        <label>Area<select id="activityArea"><option value="">All areas</option><option value="members">Members</option><option value="membership_applications">Applications</option><option value="attendance">Attendance</option><option value="products">Products</option><option value="sales">Sales</option><option value="sale_items">Sale items</option><option value="membership_history">Membership history</option><option value="profiles">Accounts</option><option value="session">Sign-in / sign-out</option></select></label>
+                        <label>From<input id="activityFrom" type="date"></label>
+                        <label>To<input id="activityTo" type="date"></label>
+                        <button class="btn-primary" type="submit">Apply</button><button class="btn-sm" type="reset">Clear</button>
+                    </form>
+                    <p id="activityStatus" class="activity-help" role="status" aria-live="polite"></p>
+                    <div id="activityTable" class="table-scroll activity-table"></div>
+                    <div class="activity-pagination"><button id="activityPrevious" class="btn-sm" type="button" disabled>Previous</button><span id="activityPage">Page 1</span><button id="activityNext" class="btn-sm" type="button" disabled>Next</button></div>
+                </div>
+            </div>
         </main>
     </div>
     <footer class="dashboard-footer">© 2026 Iron Grind Fitness Gym · Dapitan City</footer>
@@ -262,6 +281,7 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script src="assets/js/signature.js"></script>
-<script src="assets/js/admin.js?v=20261102-stable-dashboard"></script>
+<script src="assets/js/activity-logs.js?v=20261103"></script>
+<script src="assets/js/admin.js?v=20261103-activity-logs"></script>
 </body>
 </html>
