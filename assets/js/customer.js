@@ -157,10 +157,53 @@ function renewalFormMessage(message, type = '') {
 }
 function openMemberSettings() {
     const dialog = document.getElementById('memberSettingsDialog');
-    if (dialog && !dialog.open) dialog.showModal();
+    if (dialog && !dialog.open) {
+        showMemberSettingsSection('personal', false);
+        dialog.showModal();
+    }
 }
 function closeMemberSettings() {
     document.getElementById('memberSettingsDialog')?.close();
+}
+function setMemberAccountMenu(open) {
+    const menu = document.getElementById('memberAccountMenu');
+    const button = document.querySelector('.member-menu-button');
+    if (!menu || !button) return;
+    menu.hidden = !open;
+    button.setAttribute('aria-expanded', String(open));
+}
+function toggleMemberAccountMenu(event) {
+    event?.stopPropagation();
+    const menu = document.getElementById('memberAccountMenu');
+    if (!menu) return;
+    const shouldOpen = menu.hidden;
+    setMemberAccountMenu(shouldOpen);
+    if (shouldOpen) menu.querySelector('[role="menuitem"]')?.focus();
+}
+function closeMemberAccountMenu() {
+    setMemberAccountMenu(false);
+}
+function openMemberProfileFromMenu() {
+    closeMemberAccountMenu();
+    openMemberSettings();
+}
+function showMemberSettingsSection(section, focus = true) {
+    const profileSections = ['personal', 'emergency', 'health'];
+    const profileForm = document.getElementById('memberSettingsForm');
+    if (profileForm) profileForm.hidden = !profileSections.includes(section);
+    document.querySelectorAll('[data-settings-target]').forEach(button => {
+        const active = button.dataset.settingsTarget === section;
+        button.classList.toggle('active', active);
+        button.setAttribute('aria-selected', String(active));
+    });
+    document.querySelectorAll('[data-settings-panel]').forEach(panel => {
+        const active = panel.dataset.settingsPanel === section;
+        panel.hidden = !active;
+        panel.classList.toggle('active', active);
+        if (active && focus) panel.focus({ preventScroll: true });
+    });
+    const dialog = document.getElementById('memberSettingsDialog');
+    if (dialog) dialog.scrollTop = 0;
 }
 function settingsFormMessage(message, type = '') {
     setSettingsStatus('memberSettingsStatus', message, type);
@@ -909,6 +952,15 @@ function populateMemberSettings(member) {
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('click', event => {
+        if (!event.target.closest('.member-account-menu-wrap')) closeMemberAccountMenu();
+    });
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeMemberAccountMenu();
+    });
+    document.querySelectorAll('[data-settings-target]').forEach(button => {
+        button.addEventListener('click', () => showMemberSettingsSection(button.dataset.settingsTarget));
+    });
     ['settingsMobile', 'settingsEmergencyMobile'].forEach(id => {
         const input = document.getElementById(id);
         if (!input) return;

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IronGrind · Member Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261105-compact-header">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261105-member-account-menu">
 </head>
 <body class="dashboard-body member-dashboard">
 <div id="page-loader" class="page-loader" aria-label="Loading dashboard" role="status"><div class="loader-content"><img class="loader-mark" src="assets/images/iron-grind-mark.png" alt=""><div class="loader-brand">Iron<span>Grind</span></div><div class="loader-track"><span></span></div></div></div>
@@ -14,8 +14,13 @@
         <div class="logo-area"><img class="logo-icon logo-image" src="assets/images/iron-grind-mark.png" alt="Iron Grind Fitness Gym logo"><div class="logo-text"><h1>Iron<span>Grind</span></h1></div></div>
         <div class="header-actions">
             <div class="user-chip"><i class="fas fa-user"></i><span id="currentUserName">Member</span></div>
-            <button class="btn-logout" onclick="logout()" aria-label="Logout" title="Logout"><i class="fas fa-sign-out-alt"></i> Logout</button>
-            <button class="btn-settings" type="button" onclick="openMemberSettings()" aria-label="Account settings" title="Account settings"><i class="fas fa-gear" aria-hidden="true"></i></button>
+            <div class="member-account-menu-wrap">
+                <button class="btn-settings member-menu-button" type="button" onclick="toggleMemberAccountMenu(event)" aria-label="Open member account menu" title="Member menu" aria-haspopup="menu" aria-controls="memberAccountMenu" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
+                <div class="member-account-menu" id="memberAccountMenu" role="menu" aria-label="Member account options" hidden>
+                    <button class="member-account-menu-item" type="button" role="menuitem" onclick="openMemberProfileFromMenu()"><i class="fas fa-user-pen" aria-hidden="true"></i><span>Update Profile</span></button>
+                    <button class="member-account-menu-item member-account-menu-logout" type="button" role="menuitem" onclick="closeMemberAccountMenu(); logout()"><i class="fas fa-sign-out-alt" aria-hidden="true"></i><span>Logout</span></button>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -67,11 +72,21 @@
 
         <dialog class="member-settings-dialog" id="memberSettingsDialog" aria-labelledby="memberSettingsTitle" onclick="if(event.target===this) closeMemberSettings()">
             <div class="member-settings-heading">
-                <h2 id="memberSettingsTitle"><i class="fas fa-gear" aria-hidden="true"></i> Account Settings</h2>
-                <button class="settings-close" type="button" onclick="closeMemberSettings()" aria-label="Close account settings" title="Close"><i class="fas fa-xmark" aria-hidden="true"></i></button>
+                <h2 id="memberSettingsTitle"><i class="fas fa-bars" aria-hidden="true"></i> Member Menu</h2>
+                <button class="settings-close" type="button" onclick="closeMemberSettings()" aria-label="Close member menu" title="Close"><i class="fas fa-xmark" aria-hidden="true"></i></button>
             </div>
+            <div class="member-settings-layout">
+                <nav class="member-settings-nav" aria-label="Member settings sections">
+                    <button type="button" class="member-settings-nav-item active" data-settings-target="personal" aria-selected="true"><i class="fas fa-user" aria-hidden="true"></i><span>Personal Info</span></button>
+                    <button type="button" class="member-settings-nav-item" data-settings-target="emergency" aria-selected="false"><i class="fas fa-phone" aria-hidden="true"></i><span>Emergency Contact</span></button>
+                    <button type="button" class="member-settings-nav-item" data-settings-target="health" aria-selected="false"><i class="fas fa-heart-pulse" aria-hidden="true"></i><span>Health &amp; Fitness</span></button>
+                    <button type="button" class="member-settings-nav-item" data-settings-target="email" aria-selected="false"><i class="fas fa-envelope" aria-hidden="true"></i><span>Login Email</span></button>
+                    <button type="button" class="member-settings-nav-item" data-settings-target="password" aria-selected="false"><i class="fas fa-key" aria-hidden="true"></i><span>Password</span></button>
+                </nav>
+                <div class="member-settings-content">
                 <form id="memberSettingsForm">
-                    <h3 class="settings-section-title">Personal Information</h3>
+                    <section class="member-settings-panel active" data-settings-panel="personal" tabindex="-1">
+                    <h3 class="settings-section-title"><i class="fas fa-user" aria-hidden="true"></i> Personal Information</h3>
                     <div class="form-row">
                         <div class="form-group"><label for="settingsFullName">Full Name</label><input type="text" id="settingsFullName" autocomplete="name" required></div>
                         <div class="form-group"><label for="settingsDob">Date of Birth</label><input type="date" id="settingsDob" required></div>
@@ -85,15 +100,19 @@
                         <div class="form-group"><label for="settingsHeight">Height</label><div class="settings-height-input"><input type="number" id="settingsHeight" min="0.01" step="any" placeholder="170"><select id="settingsHeightUnit" aria-label="Height unit"><option value="cm">cm</option><option value="ft">ft</option><option value="in">inches</option></select></div></div>
                         <div class="form-group"><label for="settingsWeight">Weight (kg)</label><input type="number" id="settingsWeight" min="0.01" step="any" placeholder="65"></div>
                     </div>
+                    </section>
 
-                    <h3 class="settings-section-title">Emergency Contact</h3>
+                    <section class="member-settings-panel" data-settings-panel="emergency" tabindex="-1" hidden>
+                    <h3 class="settings-section-title"><i class="fas fa-phone" aria-hidden="true"></i> Emergency Contact</h3>
                     <div class="form-row form-row-three">
                         <div class="form-group"><label for="settingsEmergencyName">Name</label><input type="text" id="settingsEmergencyName"></div>
                         <div class="form-group"><label for="settingsEmergencyRelationship">Relationship</label><input type="text" id="settingsEmergencyRelationship"></div>
                         <div class="form-group"><label for="settingsEmergencyMobile">Contact Number</label><input type="tel" id="settingsEmergencyMobile" inputmode="numeric" maxlength="11" pattern="09[0-9]{9}" placeholder="09171234567" autocomplete="tel"></div>
                     </div>
+                    </section>
 
-                    <h3 class="settings-section-title">Health and Fitness</h3>
+                    <section class="member-settings-panel" data-settings-panel="health" tabindex="-1" hidden>
+                    <h3 class="settings-section-title"><i class="fas fa-heart-pulse" aria-hidden="true"></i> Health and Fitness</h3>
                     <div class="settings-choice-list">
                         <label><input type="checkbox" name="settingsGoal" value="Weight Loss"> Weight Loss</label>
                         <label><input type="checkbox" name="settingsGoal" value="Muscle Gain"> Muscle Gain</label>
@@ -108,19 +127,22 @@
                         <label><input type="checkbox" id="settingsOtherMedicalChoice"> Other Medical Conditions</label>
                     </div>
                     <div class="form-group" id="settingsOtherMedicalGroup" hidden><label for="settingsOtherMedical">Other medical condition details</label><textarea id="settingsOtherMedical" rows="3" maxlength="500"></textarea></div>
+                    </section>
+                    <div class="member-settings-save-bar">
                     <button type="submit" class="btn-submit"><i class="fas fa-floppy-disk"></i> Save Information</button>
                     <p id="memberSettingsStatus" role="status" aria-live="polite" style="min-height:1.25em; margin:10px 0 0; font-size:13px;"></p>
+                    </div>
                 </form>
 
-                <form id="memberEmailForm" class="settings-credential-form">
-                    <h3 class="settings-section-title">Login Email</h3>
+                <form id="memberEmailForm" class="settings-credential-form member-settings-panel" data-settings-panel="email" tabindex="-1" hidden>
+                    <h3 class="settings-section-title"><i class="fas fa-envelope" aria-hidden="true"></i> Login Email</h3>
                     <div class="form-group"><label for="settingsEmail">Email Address</label><input type="email" id="settingsEmail" autocomplete="email" required></div>
                     <button type="submit" class="btn-submit"><i class="fas fa-envelope"></i> Update Email</button>
                     <p id="memberEmailStatus" role="status" aria-live="polite" class="settings-form-status"></p>
                 </form>
 
-                <form id="memberPasswordForm" class="settings-credential-form">
-                    <h3 class="settings-section-title">Change Password</h3>
+                <form id="memberPasswordForm" class="settings-credential-form member-settings-panel" data-settings-panel="password" tabindex="-1" hidden>
+                    <h3 class="settings-section-title"><i class="fas fa-key" aria-hidden="true"></i> Change Password</h3>
                     <div class="form-row">
                         <div class="form-group"><label for="settingsPassword">New Password</label><input type="password" id="settingsPassword" autocomplete="new-password" minlength="8" required></div>
                         <div class="form-group"><label for="settingsPasswordConfirm">Confirm New Password</label><input type="password" id="settingsPasswordConfirm" autocomplete="new-password" minlength="8" required></div>
@@ -128,6 +150,8 @@
                     <button type="submit" class="btn-submit"><i class="fas fa-key"></i> Update Password</button>
                     <p id="memberPasswordStatus" role="status" aria-live="polite" class="settings-form-status"></p>
                 </form>
+                </div>
+            </div>
         </dialog>
 
         <!-- STORE (VIEW ONLY) -->
@@ -156,6 +180,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/supabase-client.js"></script>
 <script src="assets/js/button-feedback.js?v=20261102-navigation-paint"></script>
-<script src="assets/js/customer.js?v=20261102-welcome-once"></script>
+<script src="assets/js/customer.js?v=20261105-member-account-menu"></script>
 </body>
 </html>
