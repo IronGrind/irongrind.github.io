@@ -1,0 +1,23 @@
+.staff-main { padding: 12px 0; }
+.staff-heading { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 12px 0 4px; }
+.staff-heading h1 { font-size: clamp(1.5rem, 3vw, 2rem); letter-spacing: -.6px; margin: 4px 0 8px; }
+.staff-heading p, .staff-help { color: #a4adc2; font-size: .88rem; line-height: 1.65; }
+.staff-heading .staff-eyebrow { color: #c2c9d5; font-size: .7rem; text-transform: uppercase; letter-spacing: 1.4px; }
+.staff-access-label { display: inline-flex; align-items: center; gap: 8px; border: 1px solid #393939; border-radius: 30px; padding: 8px 12px; color: #a4adc2; font-size: .75rem; white-space: nowrap; }
+.staff-workspace { display: grid; grid-template-columns: minmax(280px, .8fr) minmax(0, 1.6fr); gap: 24px; align-items: start; }
+.staff-camera-area { display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 28px 12px; margin: 20px 0; border: 1px dashed #393939; border-radius: 16px; background: rgba(0,0,0,.15); }
+.staff-camera-icon { font-size: 2.6rem; color: #a4adc2; }
+#staffCamera { width: 100%; max-width: 360px; }
+#staffCamera:empty { display: none; }
+#staffScanForm { display: flex; flex-direction: column; gap: 16px; }
+#staffScanForm .btn-primary { align-self: flex-start; }
+.staff-status { color: #d5dce8; font-size: .85rem; line-height: 1.6; margin-top: 16px; overflow-wrap: anywhere; }
+.staff-status:empty { display: none; }
+.staff-table-scroll { margin-top: 18px; overflow: auto; max-height: 65vh; }
+.staff-history .attendance-table { min-width: 550px; }
+.staff-history .attendance-table th { position: sticky; top: 0; background: #161616; padding-top: 12px; padding-bottom: 12px; }
+.staff-history .attendance-table td { line-height: 1.6; font-variant-numeric: tabular-nums; }
+.staff-history .attendance-table tbody tr:hover { background: rgba(255,255,255,.025); }
+.staff-history .staff-visit-open { color: #91d8a2; }
+@media (max-width: 1050px) { .staff-workspace { grid-template-columns: 1fr; } .staff-table-scroll { max-height: 520px; } }
+@media (max-width: 600px) { .staff-heading { align-items: flex-start; flex-direction: column; gap: 12px; } .staff-workspace { gap: 16px; } .staff-workspace .panel { padding: 18px; } .staff-dashboard .header-actions { justify-content: space-between; } }

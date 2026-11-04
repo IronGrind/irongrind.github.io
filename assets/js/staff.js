@@ -8,11 +8,20 @@ async function refreshStaffAttendance() {
     if (error) throw error;
     const rows = document.getElementById('staffAttendanceRows');
     rows.replaceChildren();
+    if (!data?.length) {
+        const row = rows.insertRow();
+        const cell = row.insertCell();
+        cell.colSpan = 3;
+        cell.textContent = 'No attendance records yet.';
+    }
     for (const visit of data || []) {
         const row = document.createElement('tr');
-        for (const value of [visit.member_name, visit.time_in, visit.time_out]) {
+        for (const [index, value] of [visit.member_name, visit.time_in, visit.time_out].entries()) {
             const cell = document.createElement('td');
-            cell.textContent = value && value !== visit.member_name ? new Date(value).toLocaleString('en-PH', { timeZone: 'Asia/Manila' }) : value || '—';
+            cell.textContent = index === 0 ? value || 'Unknown member' : value
+                ? new Date(value).toLocaleString('en-PH', { timeZone: 'Asia/Manila', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })
+                : 'Still checked in';
+            if (index === 2 && !value) cell.classList.add('staff-visit-open');
             row.append(cell);
         }
         rows.append(row);
@@ -22,20 +31,11 @@ async function recordStaffAttendance(value) {
     if (staffBusy || !staffUser) return;
     staffBusy = true;
     try {
-        const identifier = value.trim().replace(/^IRONGRIND\|/i, '');
-        const { data: member, error } = await staffClient.rpc('staff_resolve_attendance_member', { p_identifier: identifier });
+        const { data, error } = await staffClient.rpc('record_attendance_scan', {
+            p_identifier: value.trim(), p_request_id: crypto.randomUUID()
+        });
         if (error) throw error;
-        if (!member) throw new Error('Member not found.');
-        const { data: visits, error: visitError } = await staffClient.from('attendance').select('id').eq('member_id', member.id).is('time_out', null).order('time_in', { ascending: false }).limit(1);
-        if (visitError) throw visitError;
-        const now = new Date();
-        const today = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Manila', year: 'numeric', month: '2-digit', day: '2-digit' }).format(now);
-        if (!visits.length && member.expiry_date && member.expiry_date < today) throw new Error('Membership has expired.');
-        const result = visits.length
-            ? await staffClient.from('attendance').update({ time_out: now.toISOString() }).eq('id', visits[0].id).is('time_out', null)
-            : await staffClient.from('attendance').insert({ member_id: member.id, time_in: now.toISOString(), recorded_by: staffUser.id });
-        if (result.error) throw result.error;
-        staffStatus.textContent = `${member.full_name} checked ${visits.length ? 'out' : 'in'}.`;
+        staffStatus.textContent = data.member_name + (data.action === 'duplicate' ? ' was already scanned just now.' : data.action === 'check_out' ? ' checked out.' : ' checked in.');
         document.getElementById('staffIdentifier').value = '';
         await refreshStaffAttendance();
     } catch (error) { staffStatus.textContent = error.message; }

@@ -1,10 +1,30 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Staff Attendance | Iron Grind</title><link rel="stylesheet" href="assets/css/style.css"></head>
-<body class="dashboard-body"><main class="main-content">
-<h1>Staff Attendance</h1><p id="staffIdentity"></p><button id="staffLogout" class="btn-logout">Logout</button>
-<div class="card"><h2>Member check-in / check-out</h2><p>Scan a member QR again to check them out.</p>
-<button id="startStaffCamera" class="btn-primary">Scan QR with camera</button><div id="staffCamera"></div>
-<form id="staffScanForm"><div class="form-group"><label for="staffIdentifier">Member QR or username</label><input id="staffIdentifier" required autocomplete="off"></div><button class="btn-primary">Record attendance</button></form>
-<p id="staffStatus" role="status" aria-live="polite"></p></div>
-<div class="card"><h2>Attendance</h2><button id="refreshStaffAttendance">Refresh</button><div class="table-scroll"><table><thead><tr><th>Member</th><th>In</th><th>Out</th></tr></thead><tbody id="staffAttendanceRows"></tbody></table></div></div>
-</main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/supabase-client.js"></script><script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script><script src="assets/js/staff.js"></script></body></html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>IronGrind ? Staff Attendance</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<link rel="stylesheet" href="assets/css/style.css">
+<link rel="stylesheet" href="assets/css/staff.css?v=20261104-layout">
+</head>
+<body class="dashboard-body staff-dashboard"><div class="app">
+<header class="app-header">
+<div class="logo-area"><img class="logo-icon logo-image" src="assets/images/iron-grind-mark.png" alt="Iron Grind logo"><div class="logo-text"><h1>Iron<span>Grind</span></h1><p>Staff workspace ? Attendance</p></div></div>
+<div class="header-actions"><div class="user-chip"><i class="fas fa-user" aria-hidden="true"></i><span id="staffIdentity">Verifying account?</span></div><button id="staffLogout" class="btn-logout"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Logout</button></div>
+</header>
+<main class="main-content staff-main">
+<div class="staff-heading"><div><p class="staff-eyebrow">Staff workspace</p><h1>Attendance &amp; QR</h1><p>Record member visits and check attendance.</p></div><span class="staff-access-label"><i class="fas fa-lock" aria-hidden="true"></i> Attendance access</span></div>
+<div class="staff-workspace">
+<section class="panel staff-checkin" aria-labelledby="staffCheckinTitle">
+<div class="panel-header"><h2 id="staffCheckinTitle"><i class="fas fa-qrcode" aria-hidden="true"></i> Check-in / check-out</h2></div>
+<p class="staff-help">Scan a member?s QR to check them in. Scan it again when they leave to check them out.</p>
+<div class="staff-camera-area"><div class="staff-camera-icon"><i class="fas fa-qrcode" aria-hidden="true"></i></div><button id="startStaffCamera" class="btn-primary" type="button"><i class="fas fa-camera" aria-hidden="true"></i> Scan QR with camera</button><div id="staffCamera"></div></div>
+<form id="staffScanForm"><div class="form-group"><label for="staffIdentifier">Member QR or username</label><input id="staffIdentifier" required autocomplete="off" placeholder="Scan QR or enter a username"></div><button class="btn-primary" type="submit"><i class="fas fa-check" aria-hidden="true"></i> Record attendance</button></form>
+<p id="staffStatus" class="staff-status" role="status" aria-live="polite"></p>
+</section>
+<section class="panel staff-history" aria-labelledby="staffHistoryTitle"><div class="panel-header"><h2 id="staffHistoryTitle"><i class="fas fa-clock" aria-hidden="true"></i> Attendance history</h2><button id="refreshStaffAttendance" class="btn-logout" type="button"><i class="fas fa-rotate" aria-hidden="true"></i> Refresh</button></div>
+<p class="staff-help">Latest visits first. Times shown in Philippine time.</p>
+<div class="table-scroll staff-table-scroll"><table class="attendance-table"><thead><tr><th scope="col">Member</th><th scope="col">Check-in</th><th scope="col">Check-out</th></tr></thead><tbody id="staffAttendanceRows"><tr><td colspan="3">Loading attendance?</td></tr></tbody></table></div></section>
+</div></main><footer class="dashboard-footer">? 2026 Iron Grind Fitness Gym ? Staff Attendance</footer></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/supabase-client.js"></script><script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script><script src="assets/js/staff.js?v=20261104-layout"></script>
+</body></html>

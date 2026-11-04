@@ -381,11 +381,9 @@ function switchApprovalType(type) {
 
 function logout() {
     askConfirmation('Log out?', 'Are you sure you want to log out?', 'Log out', async () => {
-        if (mobileAttendanceSessionIds.size) {
-            const removalPin = await requestPairingRemovalPin('End phone pairings', 'Enter the four-digit admin PIN to end active pairings and sign out.');
-            if (!removalPin) return;
-            for (const sessionId of [...mobileAttendanceSessionIds]) await endMobileAttendanceSession(sessionId, true, removalPin, false);
-        }
+        // Signing out stops this dashboard, but trusted phone pairings remain active.
+        if (mobileAttendancePollTimer) clearInterval(mobileAttendancePollTimer);
+        mobileAttendancePollTimer = null;
         const storeUnlockKey = adminStoreUnlockKey();
         if (storeUnlockKey) localStorage.removeItem(storeUnlockKey);
         if (activeDashboardRole === 'admin') {
@@ -1845,7 +1843,7 @@ function startQRScanner() {
     </div>`);
 }
 
-async function startPhoneQRPairing(rememberPhone = false) {
+async function startPhoneQRPairing(rememberPhone = true) {
     const pairingPassword = await requestPairingPassword('Phone camera access', 'Enter the admin-only phone-pairing password to create a secure QR.');
     if (!pairingPassword) return;
     phoneCameraAuthorization = pairingPassword;
@@ -1864,7 +1862,7 @@ async function startPhoneQRPairing(rememberPhone = false) {
     await createPhonePairingSession(rememberPhone, pairingPassword);
 }
 
-async function createPhonePairingSession(rememberPhone = false, pairingPassword) {
+async function createPhonePairingSession(rememberPhone = true, pairingPassword) {
     if (!window.ironGrindSupabase) {
         toast('Phone scanning needs an active Supabase connection.', 'error');
         return;

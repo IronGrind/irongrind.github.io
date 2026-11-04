@@ -1,4 +1,54 @@
 let phoneAttendanceScanner = null;
+const phonePairingClient = window.supabase?.createClient(IRON_GRIND_SUPABASE_URL, IRON_GRIND_SUPABASE_PUBLISHABLE_KEY, { auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false, storageKey: 'ig_phone_pairing_transport' } });
+let phoneOperator = null;
+let phoneOperatorClient = null;
+let pendingPhoneScan = null;
+function requirePhoneOperator() {
+    if (phoneOperator) return true;
+    document.getElementById('phoneOperatorSetup').hidden = false;
+    setPhoneAttendanceStatus('Sign in with your assigned staff or admin username before opening the camera.');
+    return false;
+}
+async function signInPhoneOperator(event) {
+    event.preventDefault();
+    const button = document.getElementById('phoneOperatorSignIn');
+    button.disabled = true;
+    try {
+        phoneOperatorClient ||= window.supabase.createClient(IRON_GRIND_SUPABASE_URL, IRON_GRIND_SUPABASE_PUBLISHABLE_KEY, {
+            auth: { persistSession: false, detectSessionInUrl: false, autoRefreshToken: true, storageKey: 'ig_phone_operator_memory' }
+        });
+        const username = document.getElementById('phoneOperatorId').value.trim();
+        const password = document.getElementById('phoneOperatorPassword').value;
+        const { data, error } = await phoneOperatorClient.functions.invoke('admin-username-login', { body: { username, password } });
+        if (error) {
+            const detail = await error.context?.json?.().catch(() => null);
+            throw new Error(detail?.error || error.message);
+        }
+        if (!data?.session) throw new Error(data?.error || 'Sign-in failed.');
+        const { error: sessionError } = await phoneOperatorClient.auth.setSession(data.session);
+        if (sessionError) throw sessionError;
+        const { data: { user }, error: userError } = await phoneOperatorClient.auth.getUser();
+        if (userError || !user) throw new Error('Could not verify your sign-in.');
+        const { data: profile, error: profileError } = await phoneOperatorClient.from('profiles').select('role,full_name,is_active').eq('id', user.id).single();
+        if (profileError || !profile?.is_active || !['staff', 'admin'].includes(profile.role)) throw new Error('Active staff or admin account required.');
+        phoneOperator = { id: user.id, name: profile.full_name || username };
+        document.getElementById('phoneOperatorSetup').hidden = true;
+        document.getElementById('phoneOperatorIdentity').hidden = false;
+        document.getElementById('phoneOperatorName').textContent = 'Operator: ' + phoneOperator.name;
+        const pairing = readPhonePairing();
+        if (pairing) await startPhoneMemberScanner(pairing.sessionId, pairing.token, false);
+        else setPhoneAttendanceStatus('Signed in. Tap Open pairing camera to pair this phone once.');
+    } catch (error) { setPhoneAttendanceStatus(error.message || 'Could not sign in.', true); }
+    finally { document.getElementById('phoneOperatorPassword').value = ''; button.disabled = false; }
+}
+async function changePhoneOperator() {
+    await stopPhoneAttendanceScanner();
+    await phoneOperatorClient?.auth.signOut();
+    phoneOperator = null;
+    pendingPhoneScan = null;
+    document.getElementById('phoneOperatorIdentity').hidden = true;
+    requirePhoneOperator();
+}
 let phoneScanBusy = false;
 let deferredPhoneInstallPrompt = null;
 let phoneScannerMode = 'pair';
@@ -89,7 +139,7 @@ async function getPhoneDeviceLabel() {
 async function registerPhoneAttendanceDevice(sessionId, token) {
     const deviceLabel = await getPhoneDeviceLabel();
     if (!deviceLabel) return { error: null, deviceLabel: '' };
-    const result = await window.ironGrindSupabase.rpc('register_mobile_attendance_device', {
+    const result = await phonePairingClient.rpc('register_mobile_attendance_device', {
         p_session_id: sessionId,
         p_token: token,
         p_device_label: deviceLabel
@@ -125,7 +175,7 @@ async function savePhoneModelAndContinue() {
     if (button) button.disabled = true;
     localStorage.setItem(PHONE_MODEL_STORAGE_KEY, model);
     try {
-        const { error } = await window.ironGrindSupabase.rpc('register_mobile_attendance_device', {
+        const { error } = await phonePairingClient.rpc('register_mobile_attendance_device', {
             p_session_id: activePhoneSession.sessionId,
             p_token: activePhoneSession.token,
             p_device_label: model
@@ -180,6 +230,7 @@ function clearPhonePairing() {
 }
 
 async function startPhonePairingScanner(statusMessage = '') {
+    if (!requirePhoneOperator()) return;
     phoneScannerMode = 'pair';
     activePhoneSession = null;
     setPhoneCameraButton(false);
@@ -211,12 +262,12 @@ async function startPhonePairingScanner(statusMessage = '') {
                 setPhoneAttendanceStatus('Admin pairing QR detected. Connecting…');
                 savePhonePairing(sessionId, token, pairingUrl.searchParams.get('remember') === '1', pairingUrl.searchParams.get('expires') || '');
                 try {
-                    const { data: sessionValid, error } = await window.ironGrindSupabase.rpc('validate_mobile_attendance_scan_session', {
+                    const { data: sessionValid, error } = await phonePairingClient.rpc('validate_mobile_attendance_scan_session', {
                         p_session_id: sessionId,
                         p_token: token
                     });
                     if (error || sessionValid !== true) {
-                        clearPhonePairing();
+                        if (!error) clearPhonePairing();
                         setPhoneAttendanceStatus(error
                             ? `Could not validate pairing: ${error.message}`
                             : 'Supabase rejected this pairing. It may have expired, or the pairing migrations may not be applied. Create a fresh QR on the admin page.', true);
@@ -238,7 +289,6 @@ async function startPhonePairingScanner(statusMessage = '') {
                         }
                     }
                 } catch (error) {
-                    clearPhonePairing();
                     setPhoneAttendanceStatus(`Could not validate pairing: ${error.message || 'Check your connection.'}`, true);
                 }
                 window.setTimeout(() => {
@@ -273,6 +323,7 @@ async function startPhonePairingScanner(statusMessage = '') {
 }
 
 async function startPhoneMemberScanner(sessionId, token, openCamera = true) {
+    if (!requirePhoneOperator()) return;
     phoneScannerMode = 'member';
     activePhoneSession = { sessionId, token };
     phoneCameraPausedForNextMember = false;
@@ -283,11 +334,15 @@ async function startPhoneMemberScanner(sessionId, token, openCamera = true) {
         setPhoneAttendanceStatus('Camera access requires the hosted HTTPS website.', true);
         return;
     }
-    const { data: sessionValid, error: sessionError } = await window.ironGrindSupabase.rpc('validate_mobile_attendance_scan_session', {
+    const { data: sessionValid, error: sessionError } = await phonePairingClient.rpc('validate_mobile_attendance_scan_session', {
         p_session_id: sessionId,
         p_token: token
     });
-    if (sessionError || sessionValid !== true) {
+    if (sessionError) {
+        setPhoneAttendanceStatus('Could not check pairing. Your saved connection was kept. Check your internet and tap Open camera to retry.', true);
+        return;
+    }
+    if (sessionValid !== true) {
         clearPhonePairing();
         await startPhonePairingScanner(sessionError
             ? `Could not validate pairing: ${sessionError.message}`
@@ -333,41 +388,35 @@ async function startPhoneMemberScanner(sessionId, token, openCamera = true) {
 }
 
 async function submitPhoneMemberScan(decodedText, scanner, session) {
-    if (phoneScanBusy || phoneAttendanceScanner !== scanner) return;
+    if (!requirePhoneOperator() || phoneScanBusy || phoneAttendanceScanner !== scanner) return;
     phoneScanBusy = true;
     try { scanner.pause(true); } catch {}
-    setPhoneAttendanceStatus('QR detected. Sending attendance scan…');
+    setPhoneAttendanceStatus('Saving attendance?');
     try {
-        const { error } = await window.ironGrindSupabase.rpc('submit_mobile_attendance_scan', {
-            p_session_id: session.sessionId,
-            p_token: session.token,
-            p_qr_payload: decodedText.trim()
+        const payload = decodedText.trim();
+        if (pendingPhoneScan && pendingPhoneScan.payload !== payload) throw new Error('The previous scan has not been confirmed. Scan that member again to retry safely.');
+        pendingPhoneScan ||= { payload, requestId: crypto.randomUUID() };
+        const { data, error } = await phoneOperatorClient.rpc('record_attendance_scan', {
+            p_identifier: payload, p_request_id: pendingPhoneScan.requestId,
+            p_session_id: session.sessionId, p_token: session.token
         });
-        if (phoneAttendanceScanner !== scanner) return;
         if (error) {
-            const expired = error.message?.includes('expired') || error.message?.includes('invalid');
-            if (expired) {
-                clearPhonePairing();
-                activePhoneSession = null;
-                phoneScannerMode = 'pair';
-                setPhoneAttendanceMode('pair');
-                setPhoneAttendanceStatus('Pairing expired. Scan a new pairing QR from the admin page.', true);
-            } else {
-                setPhoneAttendanceStatus(`Could not send the scan: ${error.message}`, true);
+            // Database rejections did not commit; connection failures retain the retry identifier.
+            if (error.code && error.code !== '') pendingPhoneScan = null;
+            if (/pairing is invalid or expired/i.test(error.message)) {
+                clearPhonePairing(); activePhoneSession = null; phoneScannerMode = 'pair';
             }
-        } else {
-            setPhoneAttendanceStatus('Scan sent. Ready for the next member.');
+            throw error;
         }
-    } catch (error) {
-        setPhoneAttendanceStatus(`Connection issue: ${error.message || 'Scan could not be sent.'}`, true);
-    }
-    if (phoneAttendanceScanner === scanner) {
-        phoneCameraPausedForNextMember = true;
-        phoneScanBusy = false;
-        setPhoneCameraButton(true);
-        setPhoneNextScanButton(true, 'Scan next member');
-        if (!document.getElementById('phoneQrStatus')?.classList.contains('error')) {
-            setPhoneAttendanceStatus('Scan sent. Remove the QR from view, then tap Scan next member.');
+        pendingPhoneScan = null;
+        const action = data.action === 'duplicate' ? 'was already scanned just now. No extra visit was recorded.'
+            : data.action === 'check_out' ? 'checked out.' : 'checked in.';
+        setPhoneAttendanceStatus(data.member_name + ' ' + action + ' Operator: ' + phoneOperator.name);
+    } catch (error) { setPhoneAttendanceStatus(error.message || 'Connection issue. Scan the same member again to retry safely.', true); }
+    finally {
+        if (phoneAttendanceScanner === scanner) {
+            phoneCameraPausedForNextMember = true; phoneScanBusy = false;
+            setPhoneCameraButton(true); setPhoneNextScanButton(true, pendingPhoneScan ? 'Retry member scan' : 'Scan next member');
         }
     }
 }
@@ -404,6 +453,7 @@ async function stopPhoneAttendanceScanner() {
 }
 
 async function togglePhoneAttendanceCamera() {
+    if (!requirePhoneOperator()) return;
     if (phoneCameraTransition) return;
     phoneCameraTransition = true;
     const cameraButton = document.getElementById('phoneCameraButton');
@@ -435,6 +485,7 @@ async function togglePhoneAttendanceCamera() {
 }
 
 function resumePhoneAttendanceScanner() {
+    if (!requirePhoneOperator()) return;
     if (phoneCameraTransition || !phoneAttendanceScanner || !phoneCameraPausedForNextMember) return;
     phoneCameraPausedForNextMember = false;
     phoneScanBusy = false;
@@ -488,7 +539,7 @@ window.addEventListener('pagehide', () => {
 async function startPhoneAttendanceApp() {
     configurePhoneAppInstall();
     if ('serviceWorker' in navigator && window.isSecureContext) {
-    navigator.serviceWorker.register('attendance-phone-sw.js?v=20261104-phone-camera-reopen').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
+    navigator.serviceWorker.register('attendance-phone-sw.js?v=20261104-operator-scans').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
     }
     if (!window.ironGrindSupabase) {
         setPhoneAttendanceStatus('The attendance service could not load. Check your connection and reload.', true);
@@ -500,11 +551,10 @@ async function startPhoneAttendanceApp() {
     if (sessionId && token) {
         savePhonePairing(sessionId, token, params.get('remember') === '1', params.get('expires') || '');
         window.history.replaceState(null, '', window.location.pathname);
-        await startPhoneMemberScanner(sessionId, token);
+        requirePhoneOperator();
     } else {
-        const savedPairing = readPhonePairing();
-        if (savedPairing) await startPhoneMemberScanner(savedPairing.sessionId, savedPairing.token, false);
-        else await startPhonePairingScanner();
+        requirePhoneOperator();
+        setPhoneCameraButton(false);
     }
 }
 

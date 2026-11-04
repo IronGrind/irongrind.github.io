@@ -1,4 +1,4 @@
-const CACHE_NAME = 'iron-grind-attendance-shell-v10';
+const CACHE_NAME = 'iron-grind-attendance-shell-v11';
 const APP_SHELL = [
     './attendance-phone.html',
     './attendance-app.webmanifest',
@@ -32,6 +32,12 @@ self.addEventListener('fetch', event => {
     }
 
     if (APP_SHELL.some(path => new URL(path, self.registration.scope).pathname === requestUrl.pathname)) {
-        event.respondWith(caches.match(event.request, { ignoreSearch: true }).then(cached => cached || fetch(event.request)));
+        event.respondWith(fetch(event.request).then(response => {
+            if (response.ok) {
+                const copy = response.clone();
+                event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.put(event.request, copy)));
+            }
+            return response;
+        }).catch(() => caches.match(event.request, { ignoreSearch: true })));
     }
 });
