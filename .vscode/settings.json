@@ -5,5 +5,11 @@
     "vscode-autoGit.syncAfterCommit": false,
     "vscode-autoGit.syncOnStartup": false,
     "vscode-autoGit.syncInterval": 10,
-    "vscode-autoGit.debounceIntervalSeconds": 30
+    "vscode-autoGit.debounceIntervalSeconds": 30,
+    "explorer.fileNesting.enabled": true,
+    "explorer.fileNesting.expand": false,
+    "explorer.fileNesting.patterns": {
+        "attendance-phone.html": "attendance-app.webmanifest, attendance-phone-sw.js",
+        "package.json": "package-lock.json"
+    }
 }

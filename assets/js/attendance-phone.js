@@ -5,9 +5,12 @@ let phoneOperatorClient = null;
 let pendingPhoneScan = null;
 function requirePhoneOperator() {
     if (phoneOperator) return true;
+    document.body.classList.remove('phone-operator-authenticated');
     document.getElementById('phoneOperatorSetup').hidden = false;
+    document.getElementById('phoneOperatorIdentity').hidden = true;
     document.getElementById('phoneCameraButton').hidden = true;
     document.getElementById('phoneQrReader').hidden = true;
+    document.getElementById('phoneNextScanButton').hidden = true;
     setPhoneAttendanceStatus('Sign in with your assigned staff or admin username before opening the camera.');
     return false;
 }
@@ -35,13 +38,14 @@ async function signInPhoneOperator(event) {
         if (profileError || !profile?.is_active || !['staff', 'admin'].includes(profile.role)) throw new Error('Active staff or admin account required.');
         phoneOperatorClient.auth.startAutoRefresh();
         phoneOperator = { id: user.id, name: profile.full_name || username };
+        document.body.classList.add('phone-operator-authenticated');
         document.getElementById('phoneOperatorSetup').hidden = true;
         document.getElementById('phoneOperatorIdentity').hidden = false;
         document.getElementById('phoneOperatorName').textContent = 'Operator: ' + phoneOperator.name;
         setPhoneCameraButton(false);
         const pairing = readPhonePairing();
         if (pairing) await startPhoneMemberScanner(pairing.sessionId, pairing.token, false);
-        else setPhoneAttendanceStatus('Signed in. Tap Open pairing camera to pair this phone once.');
+        else setPhoneAttendanceStatus('Signed in. Pair this phone to start scanning.');
     } catch (error) { setPhoneAttendanceStatus(error.message || 'Could not sign in.', true); }
     finally { document.getElementById('phoneOperatorPassword').value = ''; button.disabled = false; }
 }
@@ -117,7 +121,7 @@ function setPhoneCameraButton(running) {
     if (button) button.hidden = !phoneOperator;
     const reader = document.getElementById('phoneQrReader');
     if (reader && !running) reader.hidden = true;
-    if (button) button.textContent = running ? 'Stop camera' : phoneScannerMode === 'member' && activePhoneSession ? 'Open camera' : 'Open pairing camera';
+    if (button) button.textContent = running ? 'Stop camera' : phoneScannerMode === 'member' && activePhoneSession ? 'Open camera' : 'Pair this phone';
 }
 
 function setPhoneNextScanButton(visible, label = 'Scan next member') {
@@ -542,6 +546,7 @@ function configurePhoneAppInstall() {
 
 window.addEventListener('pagehide', () => {
     phoneOperator = null;
+    document.body.classList.remove('phone-operator-authenticated');
     phoneOperatorClient?.auth.stopAutoRefresh();
     document.getElementById('phoneOperatorIdentity').hidden = true;
     document.getElementById('phoneOperatorSetup').hidden = false;
@@ -562,7 +567,7 @@ window.addEventListener('pagehide', () => {
 async function startPhoneAttendanceApp() {
     configurePhoneAppInstall();
     if ('serviceWorker' in navigator && window.isSecureContext) {
-    navigator.serviceWorker.register('attendance-phone-sw.js?v=20261104-phone-login-layout').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
+    navigator.serviceWorker.register('attendance-phone-sw.js?v=20261105-phone-attendance-ui').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
     }
     if (!window.ironGrindSupabase) {
         setPhoneAttendanceStatus('The attendance service could not load. Check your connection and reload.', true);
@@ -575,9 +580,11 @@ async function startPhoneAttendanceApp() {
         savePhonePairing(sessionId, token, params.get('remember') === '1', params.get('expires') || '');
         window.history.replaceState(null, '', window.location.pathname);
         requirePhoneOperator();
+        setPhoneAttendanceStatus('Sign in to start scanning with this paired phone.');
     } else {
         requirePhoneOperator();
         setPhoneCameraButton(false);
+        setPhoneAttendanceStatus('Sign in, then pair this phone to begin.');
     }
 }
 
