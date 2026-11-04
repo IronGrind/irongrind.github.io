@@ -41,6 +41,9 @@
             <button class="nav-item" data-section="membership" onclick="showAdminSection('membership', event)">
                 <i class="fas fa-users"></i> Membership <span class="badge" id="pendingBadge">0</span>
             </button>
+            <button class="nav-item" data-section="staff" onclick="showAdminSection('staff', event)">
+                <i class="fas fa-user-group"></i> Staff Accounts
+            </button>
             <button class="nav-item" data-section="attendance" onclick="showAdminSection('attendance', event)">
                 <i class="fas fa-qrcode"></i> Attendance &amp; QR
             </button>
@@ -182,6 +185,21 @@
                 </div>
             </div>
 
+            <div id="section-staff" class="admin-section hidden">
+                <div class="panel">
+                    <div class="panel-header"><h2><i class="fas fa-user-group"></i> Staff Accounts</h2></div>
+                    <p class="activity-help">Each staff member gets an individual sign-in. Staff accounts can use attendance only; admins keep access to membership, inventory, sales, reports, and settings.</p>
+                    <form id="staffCreateForm" class="staff-create-form" onsubmit="createStaffAccount(event)">
+                        <label>Full name<input id="newStaffFullName" type="text" maxlength="150" autocomplete="name" required></label>
+                        <label>Username<input id="newStaffUsername" type="text" maxlength="30" pattern="[A-Za-z0-9_]{3,30}" autocomplete="off" required></label>
+                        <label>Email<input id="newStaffEmail" type="email" maxlength="254" autocomplete="email" required></label>
+                        <label>Initial password<input id="newStaffPassword" type="password" minlength="8" maxlength="72" autocomplete="new-password" required></label>
+                        <button class="btn-primary" type="submit"><i class="fas fa-user-plus"></i> Add staff account</button>
+                    </form>
+                    <div id="staffAccountsList" class="staff-accounts-list"><p class="empty-state">Loading staff accounts...</p></div>
+                </div>
+            </div>
+
             <div id="section-store" class="admin-section hidden">
                 <div id="storeLocked" class="store-lock">
                     <i class="fas fa-lock"></i>
@@ -286,6 +304,6 @@
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script src="assets/js/signature.js"></script>
 <script src="assets/js/activity-logs.js?v=20261104-phone-pairing-audit"></script>
-<script src="assets/js/admin.js?v=20261104-paired-phone-lifetime-count"></script>
+<script src="assets/js/admin.js?v=20261104-staff-attendance-role"></script>
 </body>
 </html>
