@@ -1763,3 +1763,106 @@ html[data-dashboard-theme="light"] body.admin-dashboard .membership-income-card 
 html[data-dashboard-theme="light"] body.admin-dashboard .membership-income-card.overall {
     background: linear-gradient(135deg, #f8e9ea, #f3f3f4) !important; border-color: #e3c4c6 !important;
 }
+html[data-dashboard-theme="light"] body.member-dashboard .progress-bar-track {
+    background: #e5e5e7 !important; border-color: #d2d3d7 !important;
+}
+html[data-dashboard-theme="light"] body.member-dashboard .progress-stats {
+    gap: 9px; padding: 10px; background: #f0f1f2 !important; border-color: #d7d9dd !important;
+}
+html[data-dashboard-theme="light"] body.member-dashboard .progress-stat {
+    padding: 10px 6px; border: 1px solid #e0e1e4; border-radius: 10px; background: #fff;
+}
+html[data-dashboard-theme="light"] body.member-dashboard .ps-value { color: #1c1c1e; }
+html[data-dashboard-theme="light"] body.member-dashboard .ps-label,
+html[data-dashboard-theme="light"] body.member-dashboard .progress-label { color: #5d626b !important; }
+html[data-dashboard-theme="light"] body.member-dashboard .progress-dates { color: #555b65 !important; }
+html[data-dashboard-theme="light"] body.member-dashboard .progress-dates i { color: #98151e !important; }
+
+/* Membership approval requests */
+.approval-card {
+    margin-bottom: 16px; padding: 20px; border: 1px solid #1e2533; border-left: 4px solid #f1c40f;
+    border-radius: 18px; color: #e8edf5; background: #0d1219;
+}
+.approval-card-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
+.approval-card-badges, .approval-actions { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.approval-detail-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr)); gap: 12px; margin-bottom: 16px; padding: 16px; border-radius: 14px; background: #11161f; }
+.approval-detail { display: flex; min-width: 0; flex-direction: column; gap: 4px; font-size: .82rem; overflow-wrap: anywhere; }
+.approval-detail-label { color: #8b95a9; font-size: .68rem; font-weight: 600; text-transform: uppercase; }
+.approval-username { color: #ff6b2b; }
+.approval-signature { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-bottom: 16px; padding: 16px; border-radius: 14px; background: #11161f; }
+.approval-signature img { display: block; width: min(360px, 100%); height: 120px; border-radius: 8px; object-fit: contain; background: #fff; }
+.approval-actions { justify-content: flex-end; gap: 10px; }
+html[data-dashboard-theme="light"] body.admin-dashboard .approval-card {
+    color: #252525 !important; background: #fff !important; border-color: #dedfe3 !important;
+    border-left: 4px solid #b52730 !important; box-shadow: 0 8px 22px rgba(24, 24, 27, .05);
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .approval-card .member-details h4 { color: #202020 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .approval-card .member-details p { color: #5b6069 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .approval-detail-grid,
+html[data-dashboard-theme="light"] body.admin-dashboard .approval-signature {
+    color: #292929 !important; background: #f0f1f2 !important; border: 1px solid #dedfe3;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .approval-detail-label { color: #62666e !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .approval-detail > span:not(.approval-detail-label) { color: #252525 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .approval-detail strong { color: #191919 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .approval-username { color: #921923 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .approval-card .member-avatar { color: #8e1820 !important; background: #f5e5e6 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .approval-card .badge-status.reserved { color: #735000; background: #f5eccf; }
+
+/* Small palette corrections for a more cohesive white, graphite, and red interface. */
+html[data-dashboard-theme="light"] body.admin-dashboard .report-group-heading,
+html[data-dashboard-theme="light"] body.admin-dashboard .member-row,
+html[data-dashboard-theme="light"] body.admin-dashboard .app-header,
+html[data-dashboard-theme="light"] body.member-dashboard .app-header,
+html[data-dashboard-theme="light"] body.staff-dashboard .app-header,
+html[data-dashboard-theme="light"] body.admin-dashboard .dashboard-footer,
+html[data-dashboard-theme="light"] body.member-dashboard .dashboard-footer,
+html[data-dashboard-theme="light"] body.staff-dashboard .dashboard-footer {
+    border-color: #dedfe3 !important;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .membership-sales-summary,
+html[data-dashboard-theme="light"] body.admin-dashboard #salesTransactionsPanel,
+html[data-dashboard-theme="light"] body.admin-dashboard .transaction-filter-row,
+html[data-dashboard-theme="light"] body.admin-dashboard .reports-toolbar,
+html[data-dashboard-theme="light"] body.member-dashboard .member-settings-nav,
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-camera-area {
+    background: #f2f2f3 !important; border-color: #dedfe3 !important;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .report-card-icon {
+    color: #a11b24 !important; background: #f2dddd !important;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .panel-header h2 i,
+html[data-dashboard-theme="light"] body.admin-dashboard .report-group-heading h3 i,
+html[data-dashboard-theme="light"] body.admin-dashboard .sales-transaction-group > h3 i,
+html[data-dashboard-theme="light"] body.member-dashboard .panel-header h2 i,
+html[data-dashboard-theme="light"] body.staff-dashboard .panel-header h2 i { color: #98151e !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .product-card > .product-img-wrap,
+html[data-dashboard-theme="light"] body.member-dashboard .product-card > .product-img-wrap,
+html[data-dashboard-theme="light"] body.admin-dashboard .product-photo-preview {
+    background: #eeeeef !important; border-color: #d7d8dc !important; color: #555b65 !important;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .member-account-menu,
+html[data-dashboard-theme="light"] body.member-dashboard .member-account-menu,
+html[data-dashboard-theme="light"] body.staff-dashboard .member-account-menu,
+html[data-dashboard-theme="light"] body.member-dashboard .member-settings-dialog,
+html[data-dashboard-theme="light"] body.admin-dashboard .modal-content,
+html[data-dashboard-theme="light"] body.staff-dashboard .modal-content {
+    color: #252525 !important; background: #fff !important; border-color: #dedfe3 !important;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .member-account-menu-item:hover,
+html[data-dashboard-theme="light"] body.member-dashboard .member-account-menu-item:hover,
+html[data-dashboard-theme="light"] body.staff-dashboard .member-account-menu-item:hover,
+html[data-dashboard-theme="light"] body.member-dashboard .member-settings-nav-item:not(.active):hover {
+    color: #72151c !important; background: #f8e9ea !important;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard input:focus,
+html[data-dashboard-theme="light"] body.admin-dashboard select:focus,
+html[data-dashboard-theme="light"] body.admin-dashboard textarea:focus,
+html[data-dashboard-theme="light"] body.member-dashboard input:focus,
+html[data-dashboard-theme="light"] body.member-dashboard select:focus,
+html[data-dashboard-theme="light"] body.member-dashboard textarea:focus,
+html[data-dashboard-theme="light"] body.staff-dashboard input:focus,
+html[data-dashboard-theme="light"] body.staff-dashboard select:focus,
+html[data-dashboard-theme="light"] body.staff-dashboard textarea:focus {
+    border-color: #b54a51 !important; box-shadow: 0 0 0 3px rgba(152, 21, 30, .11);
+}

@@ -623,8 +623,8 @@ function renderApprovals(type = currentApprovalType) {
     }
 
     el.innerHTML = pending.map(p => `
-        <div style="background:#0d1219; border:1px solid #1e2533; border-left:4px solid #f1c40f; border-radius:18px; padding:20px; margin-bottom:16px;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
+        <article class="approval-card">
+            <div class="approval-card-header">
                 <div class="member-info">
                     <div class="member-avatar">${initials(p.fullName)}</div>
                     <div class="member-details">
@@ -632,51 +632,49 @@ function renderApprovals(type = currentApprovalType) {
                         <p><strong>${p.source === 'dashboard-renewal' ? 'Renewal application' : 'New member registration'}</strong> · Applied ${new Date(p.submittedAt).toLocaleString()}</p>
                     </div>
                 </div>
-                <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;"><span class="badge-status reserved">${p.source === 'dashboard-renewal' ? 'Renewal' : 'Registration'}</span><span class="badge-status reserved">Pending</span></div>
+                <div class="approval-card-badges"><span class="badge-status reserved">${p.source === 'dashboard-renewal' ? 'Renewal' : 'Registration'}</span><span class="badge-status reserved">Pending</span></div>
             </div>
-            <div style="background:#11161f; border-radius:14px; padding:16px; margin-bottom:16px;">
-                <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px;">
-                    <div style="display:flex; flex-direction:column; gap:4px; font-size:0.82rem;">
-                        <span style="font-size:0.68rem; text-transform:uppercase; color:#6a748b; font-weight:600;">Age · Sex</span>
+            <div class="approval-detail-grid">
+                    <div class="approval-detail">
+                        <span class="approval-detail-label">Age · Sex</span>
                         <span>${p.age || '—'} · ${p.sex || '—'}</span>
                     </div>
-                    <div style="display:flex; flex-direction:column; gap:4px; font-size:0.82rem;">
-                        <span style="font-size:0.68rem; text-transform:uppercase; color:#6a748b; font-weight:600;">Mobile</span>
+                    <div class="approval-detail">
+                        <span class="approval-detail-label">Mobile</span>
                         <span>${p.mobile || p.contact || '—'}</span>
                     </div>
-                    <div style="display:flex; flex-direction:column; gap:4px; font-size:0.82rem;">
-                        <span style="font-size:0.68rem; text-transform:uppercase; color:#6a748b; font-weight:600;">Height</span>
+                    <div class="approval-detail">
+                        <span class="approval-detail-label">Height</span>
                         <span>${p.height !== null && p.height !== undefined && p.height !== '' ? `${p.height} ${p.heightUnit || 'cm'}` : 'Not provided'}</span>
                     </div>
-                    <div style="display:flex; flex-direction:column; gap:4px; font-size:0.82rem;">
-                        <span style="font-size:0.68rem; text-transform:uppercase; color:#6a748b; font-weight:600;">Plan</span>
+                    <div class="approval-detail">
+                        <span class="approval-detail-label">Plan</span>
                         <span><strong>${p.plan || 'Renewal'}</strong> — ₱${Number(p.planPrice || 0).toLocaleString('en-PH')}</span>
                     </div>
-                    <div style="display:flex; flex-direction:column; gap:4px; font-size:0.82rem;">
-                        <span style="font-size:0.68rem; text-transform:uppercase; color:#6a748b; font-weight:600;">Dates</span>
+                    <div class="approval-detail">
+                        <span class="approval-detail-label">Dates</span>
                         <span>${p.startDate || '—'} → ${p.endDate || '—'}</span>
                     </div>
-                    <div style="display:flex; flex-direction:column; gap:4px; font-size:0.82rem;">
-                        <span style="font-size:0.68rem; text-transform:uppercase; color:#6a748b; font-weight:600;">Emergency Contact</span>
+                    <div class="approval-detail">
+                        <span class="approval-detail-label">Emergency Contact</span>
                         <span>${p.emergencyContact ? `${p.emergencyContact.name} (${p.emergencyContact.relationship}) · ${p.emergencyContact.contact}` : 'Not provided for renewal'}</span>
                     </div>
-                    <div style="display:flex; flex-direction:column; gap:4px; font-size:0.82rem;">
-                        <span style="font-size:0.68rem; text-transform:uppercase; color:#6a748b; font-weight:600;">Username</span>
-                        <span><code style="color:#ff6b2b;">${p.username}</code></span>
+                    <div class="approval-detail">
+                        <span class="approval-detail-label">Username</span>
+                        <span><code class="approval-username">${p.username}</code></span>
                     </div>
-                    ${p.email ? `<div style="display:flex; flex-direction:column; gap:4px; font-size:0.82rem;"><span style="font-size:0.68rem; text-transform:uppercase; color:#6a748b; font-weight:600;">Email</span><span>${escapeHTML(p.email)}</span></div>` : ''}
-                    <div style="display:flex; flex-direction:column; gap:4px; font-size:0.82rem;">
-                        <span style="font-size:0.68rem; text-transform:uppercase; color:#6a748b; font-weight:600;">Other Medical Conditions</span>
+                    ${p.email ? `<div class="approval-detail"><span class="approval-detail-label">Email</span><span>${escapeHTML(p.email)}</span></div>` : ''}
+                    <div class="approval-detail">
+                        <span class="approval-detail-label">Other Medical Conditions</span>
                         <span>${p.otherMedicalConditions ? escapeHTML(p.otherMedicalConditions) : 'None reported'}</span>
                     </div>
-                </div>
             </div>
-            ${p.signature ? `<div style="background:#11161f; border-radius:14px; padding:16px; margin-bottom:16px;"><div style="font-size:0.68rem; text-transform:uppercase; color:#6a748b; font-weight:600; margin-bottom:8px;">Member Signature</div><img src="${p.signature}" alt="${p.fullName}'s digital signature" style="display:block; max-width:100%; width:360px; height:120px; object-fit:contain; background:#fff; border-radius:8px;"></div>` : ''}
-            <div style="display:flex; gap:10px; justify-content:flex-end; flex-wrap:wrap;">
+            ${p.signature ? `<div class="approval-signature"><span class="approval-detail-label">Member Signature</span><img src="${p.signature}" alt="${p.fullName}'s digital signature"></div>` : ''}
+            <div class="approval-actions">
                 <button class="btn-sm" onclick="rejectApplication('${p.id}')"><i class="fas fa-times"></i> Reject</button>
                     <button class="btn-primary" onclick="runWithButtonLoading(this, () => approveApplication('${p.id}'), 'Processing…')"><i class="fas fa-check-circle"></i> ${p.source === 'dashboard-renewal' ? 'Approve Renewal' : 'Approve &amp; Create Account'}</button>
             </div>
-        </div>
+        </article>
     `).join('');
 }
 
