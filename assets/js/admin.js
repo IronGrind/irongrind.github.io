@@ -53,6 +53,7 @@ let lifetimePhonePairingCount = null;
 let adminPasswordPromptResolver = null;
 let pairingPasswordPromptResolver = null;
 let pairingPasswordSetupOptions = null;
+let pendingPairingLimitPassword = null;
 let adminRealtimeChannel = null;
 let adminMembershipRefreshTimer = null;
 let adminMembershipRefreshBusy = false;
@@ -290,6 +291,7 @@ function closeModal() {
         pairingPasswordPromptResolver = null;
         resolve(null);
     }
+    pendingPairingLimitPassword = null;
     document.getElementById('modalOverlay').classList.add('hidden');
     document.getElementById('modalContent').classList.remove('report-pdf-modal');
     stopQRScanner();
@@ -2067,9 +2069,12 @@ async function refreshPhonePairingLimitSummary() {
 }
 
 async function changePhonePairingLimit() {
+    const pairingPassword = await requestPairingPassword('Authorize limit change', 'Enter the phone-camera password to change the maximum number of paired phones.');
+    if (!pairingPassword) return;
+    pendingPairingLimitPassword = pairingPassword;
     openModal(`<form class="qr-camera-modal" onsubmit="authorizePhonePairingLimit(event)">
         <h3><i class="fas fa-mobile-screen-button"></i> Phone pairing limit</h3>
-        <p class="modal-sub">Choose the maximum active pairings. The default is two; the limit can be set from 2 to 50.</p>
+        <p class="modal-sub">Choose the maximum number of active phone pairings. The default is two.</p>
         <label for="phonePairingLimitInput">Maximum paired phones</label>
         <input id="phonePairingLimitInput" type="number" min="2" max="50" step="1" value="2" required>
         <div class="modal-actions"><button class="btn-primary" type="submit">Continue</button><button class="btn-sm" type="button" onclick="closeModal()">Cancel</button></div>
@@ -2086,7 +2091,8 @@ async function authorizePhonePairingLimit(event) {
         toast('Choose a whole number from 2 to 50.', 'error');
         return;
     }
-    const pairingPassword = await requestPairingPassword('Authorize limit change', 'Enter the admin-only phone-pairing password to change the device limit.');
+    const pairingPassword = pendingPairingLimitPassword;
+    pendingPairingLimitPassword = null;
     if (!pairingPassword) return;
     const { error } = await window.ironGrindSupabase.rpc('set_mobile_attendance_pairing_limit', { p_max_pairs: desired, p_pairing_password: pairingPassword });
     if (error) { toast(`Could not change phone limit: ${error.message}`, 'error'); return; }
