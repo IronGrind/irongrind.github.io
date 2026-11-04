@@ -205,19 +205,8 @@ async function handleLogin(event) {
                 return;
             }
 
-            const role = profile.role === 'admin' ? 'admin' : profile.role === 'staff' ? 'staff' : 'customer';
-            let staffIsActive = true;
-            if (role === 'staff') {
-                const { data: staffStatus, error: staffStatusError } = await supabaseClient
-                    .from('profiles').select('is_active').eq('id', data.user.id).single();
-                if (staffStatusError) {
-                    await supabaseClient.auth.signOut();
-                    showError('Staff access is not ready yet. Ask the admin to apply the staff role migration.');
-                    return;
-                }
-                staffIsActive = staffStatus?.is_active === true;
-            }
-            if ((role === 'staff' && !staffIsActive) || (loginMode === 'admin') !== (role === 'admin' || role === 'staff')) {
+            const role = profile.role === 'admin' ? 'admin' : 'customer';
+            if ((loginMode === 'admin') !== (role === 'admin')) {
                 await supabaseClient.auth.signOut();
                 showError(loginMode === 'admin' ? 'Invalid username or password.' : 'Please sign in using your assigned username and password.');
                 return;
@@ -297,7 +286,7 @@ function saveLoginSession(session, remember) {
     localStorage.removeItem('irongrind_session');
     sessionStorage.removeItem('irongrind_session');
     (remember ? localStorage : sessionStorage).setItem('irongrind_session', JSON.stringify(session));
-            window.location.replace(['admin', 'staff'].includes(session.role) ? 'admin.html' : 'customer.html');
+            window.location.replace(session.role === 'admin' ? 'admin.html' : 'customer.html');
 }
 // Remove plaintext passwords written by the retired browser-only login flow.
 try {

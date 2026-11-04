@@ -5,34 +5,18 @@ let activeDashboardRole = 'admin';
         localStorage.getItem('irongrind_session') ||
         sessionStorage.getItem('irongrind_session') || 'null'
     );
-    if (!session || !['admin', 'staff'].includes(session.role)) {
+    if (!session || session.role !== 'admin') {
         window.location.href = 'index.html?role=admin';
         return;
     }
-    activeDashboardRole = session.role;
+    activeDashboardRole = 'admin';
     document.getElementById('currentUserName').textContent = session.fullName || session.username;
-    if (session.role === 'staff') {
-        document.querySelector('.user-chip i')?.classList.replace('fa-user-shield', 'fa-user');
-        document.querySelectorAll('.sidebar .nav-item, .sidebar .nav-section-label').forEach(element => {
-            if (element.dataset.section !== 'attendance') element.classList.add('hidden');
-        });
-        document.getElementById('activityLogsButton')?.classList.add('hidden');
-        document.querySelectorAll('.admin-section').forEach(section => section.classList.add('hidden'));
-        document.getElementById('section-attendance')?.classList.remove('hidden');
-    }
 })();
 
 function adminStoreUnlockKey() {
     const session = JSON.parse(localStorage.getItem('irongrind_session') || sessionStorage.getItem('irongrind_session') || 'null');
     const account = String(session?.username || '').trim().toLowerCase();
     return account ? `ig_store_unlocked:${encodeURIComponent(account)}` : '';
-}
-
-function clearCachedAdminDataForStaff() {
-    for (const key of [
-        'ig_members', 'ig_products', 'ig_archivedProducts', 'ig_sales',
-        'ig_pendingApprovals', 'ig_users', 'ig_planArchives', 'ig_membershipArchives'
-    ]) localStorage.removeItem(key);
 }
 
 /* ========== STATE ========== */
@@ -348,10 +332,6 @@ function runConfirmation() {
 
 /* ========== NAV ========== */
 function showAdminSection(section, event) {
-    if (activeDashboardRole === 'staff' && section !== 'attendance') {
-        toast('Your staff account can access attendance only.', 'error');
-        return;
-    }
     document.querySelectorAll('.admin-section').forEach(el => el.classList.add('hidden'));
     const target = document.getElementById('section-' + section);
     if (target) target.classList.remove('hidden');
@@ -376,78 +356,9 @@ function showAdminSection(section, event) {
     }
     if (section === 'reports') renderReports();
     if (section === 'activity') loadActivityLogs();
-    if (section === 'staff' && activeDashboardRole === 'admin') loadStaffAccounts();
     if (section === 'dashboard') renderDashboard();
     const content = document.querySelector('.main-content');
     if (content) content.scrollTop = 0;
-}
-
-async function loadStaffAccounts() {
-    const list = document.getElementById('staffAccountsList');
-    if (!list || activeDashboardRole !== 'admin') return;
-    const { data, error } = await window.ironGrindSupabase.from('profiles')
-        .select('id,full_name,username,email,is_active,created_at')
-        .eq('role', 'staff').order('full_name');
-    if (!document.getElementById('staffAccountsList')) return;
-    if (error) {
-        const message = /profiles\.is_active.*does not exist/i.test(error.message || '')
-            ? 'Staff account setup is not complete in this Supabase project. Apply migration 20261104000023_staff_attendance_role.sql, then reload.'
-            : `Could not load staff accounts: ${error.message}`;
-        list.innerHTML = `<p class="empty-state">${escapeHTML(message)}</p>`;
-        return;
-    }
-    const staff = Array.isArray(data) ? data : [];
-    list.innerHTML = staff.length ? staff.map(account => `
-        <div class="staff-account-row">
-            <div class="staff-account-info"><strong>${escapeHTML(account.full_name || account.username || 'Staff')}</strong>
-                <small>${escapeHTML(account.username || '')} · ${escapeHTML(account.email || '')} · ${account.is_active ? 'Active' : 'Inactive'}</small></div>
-            <button class="${account.is_active ? 'btn-danger' : 'btn-primary'}" type="button" onclick="setStaffAccountActive('${account.id}', ${!account.is_active})">${account.is_active ? 'Deactivate' : 'Reactivate'}</button>
-        </div>`).join('') : '<p class="empty-state">No staff accounts yet.</p>';
-}
-
-async function createStaffAccount(event) {
-    event.preventDefault();
-    if (activeDashboardRole !== 'admin') return;
-    const form = event.currentTarget;
-    const submit = form.querySelector('button[type="submit"]');
-    if (submit) submit.disabled = true;
-    const body = {
-        action: 'create',
-        fullName: document.getElementById('newStaffFullName')?.value.trim(),
-        username: document.getElementById('newStaffUsername')?.value.trim(),
-        email: document.getElementById('newStaffEmail')?.value.trim(),
-        password: document.getElementById('newStaffPassword')?.value
-    };
-    try {
-        const { data, error } = await window.ironGrindSupabase.functions.invoke('admin-manage-staff', { body });
-        if (error || data?.error) throw new Error(data?.error || error?.message || 'Could not create staff account.');
-        form.reset();
-        toast(`Staff account created for ${data.full_name}. They can sign in with their username and initial password.`, 'success');
-        await loadStaffAccounts();
-    } catch (error) {
-        const message = /failed to send a request to the edge function/i.test(error.message || '')
-            ? 'Could not reach the admin-manage-staff Edge Function. Deploy it to this Supabase project, then try again.'
-            : error.message || 'Please try again.';
-        toast(`Could not create staff account: ${message}`, 'error');
-    } finally {
-        if (submit) submit.disabled = false;
-    }
-}
-
-async function setStaffAccountActive(staffId, isActive) {
-    if (activeDashboardRole !== 'admin') return;
-    const action = isActive ? 'Reactivate' : 'Deactivate';
-    askConfirmation(`${action} staff account?`, `${action} this person's staff dashboard access?`, action, async () => {
-        const { data, error } = await window.ironGrindSupabase.functions.invoke('admin-manage-staff', {
-            body: { action: 'set_active', staffId, isActive }
-        });
-        if (error || data?.error) {
-            toast(`Could not ${action.toLowerCase()} staff account: ${data?.error || error?.message}`, 'error');
-            return;
-        }
-        toast(`Staff account ${isActive ? 'reactivated' : 'deactivated'}.`, 'success');
-        await loadStaffAccounts();
-    }, !isActive);
 }
 
 function switchMemberTab(tab) {
@@ -1282,36 +1193,6 @@ async function loadSupabaseOperationalData(options = {}) {
     renderWalkinSalesReport();
 }
 
-async function loadStaffAttendanceData() {
-    const { data, error } = await window.ironGrindSupabase.rpc('staff_list_attendance');
-    if (error) {
-        toast(`Could not load attendance: ${error.message}`, 'error');
-        return;
-    }
-    attendance = (Array.isArray(data) ? data : []).map(row => mapSupabaseAttendance({
-        ...row,
-        members: { full_name: row.member_name }
-    }));
-    renderAttendance();
-}
-
-function subscribeStaffRealtimeUpdates() {
-    if (adminRealtimeChannel || !window.ironGrindSupabase) return;
-    let refreshTimer = null;
-    adminRealtimeChannel = window.ironGrindSupabase.channel('staff-attendance-live-updates')
-        .on('postgres_changes', {
-            event: '*', schema: 'public', table: 'attendance'
-        }, () => {
-            window.clearTimeout(refreshTimer);
-            refreshTimer = window.setTimeout(() => loadStaffAttendanceData(), 250);
-        })
-        .subscribe(status => {
-            if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
-                console.error(`Staff attendance subscription status: ${status}`);
-            }
-        });
-}
-
 function scheduleAdminRealtimeRefresh(refreshMemberships) {
     if (refreshMemberships) realtimeRefreshPending = true;
     clearTimeout(realtimeRefreshTimer);
@@ -1375,37 +1256,15 @@ async function initializeSupabaseAdminData() {
         .select('role,full_name,username')
         .eq('id', user.id)
         .maybeSingle();
-    let staffIsActive = true;
-    let staffStatusError = null;
-    if (!profileError && profile?.role === 'staff') {
-        const result = await client.from('profiles').select('is_active').eq('id', user.id).maybeSingle();
-        staffIsActive = result.data?.is_active === true;
-        staffStatusError = result.error;
-    }
-    if (profileError || !['admin', 'staff'].includes(profile?.role || '') || (profile?.role === 'staff' && (!staffIsActive || staffStatusError))) {
-        console.error('Could not verify the Supabase dashboard profile:', profileError || 'Profile is not active admin/staff.');
-        toast(profileError || staffStatusError
-            ? `Could not verify your account: ${(profileError || staffStatusError).message}`
-            : 'This staff account is inactive. Ask an admin to reactivate it.', 'error');
+    if (profileError || profile?.role !== 'admin') {
+        console.error('Could not verify the Supabase dashboard profile:', profileError || 'Profile is not an admin.');
+        toast(profileError
+            ? `Could not verify your account: ${profileError.message}`
+            : 'This account is not an admin account.', 'error');
         return;
     }
 
-    activeDashboardRole = profile.role;
-    if (profile.role === 'staff') {
-        clearCachedAdminDataForStaff();
-        document.querySelectorAll('.sidebar .nav-item, .sidebar .nav-section-label').forEach(element => {
-            if (element.dataset.section !== 'attendance') element.classList.add('hidden');
-        });
-        document.getElementById('activityLogsButton')?.classList.add('hidden');
-        ['dashboard', 'membership', 'store', 'sales', 'reports', 'activity'].forEach(section => {
-            document.getElementById(`section-${section}`)?.classList.add('hidden');
-        });
-        await loadStaffAttendanceData();
-        showAdminSection('attendance');
-        subscribeStaffRealtimeUpdates();
-        return;
-    }
-
+    activeDashboardRole = 'admin';
     subscribeAdminRealtimeUpdates();
     await loadSupabaseMembershipData();
     await loadSupabaseOperationalData();
@@ -1978,10 +1837,6 @@ function renderAttendance() {
 }
 
 function startQRScanner() {
-    if (activeDashboardRole === 'staff') {
-        openModal(`<div class="qr-camera-modal"><h3><i class="fas fa-qrcode"></i> Scan Member QR Code</h3><p class="modal-sub">Use the camera connected to this device to check a member in or out.</p><div class="modal-actions"><button class="btn-primary" onclick="startLocalQRScanner()"><i class="fas fa-camera"></i> Open camera</button><button class="btn-sm" onclick="closeModal()">Cancel</button></div></div>`);
-        return;
-    }
     openModal(`<div class="qr-camera-modal">
         <h3><i class="fas fa-qrcode"></i> Choose a Camera</h3>
         <p class="modal-sub">Scan with a camera connected to this device or pair a phone camera.</p>
@@ -2731,28 +2586,14 @@ function findMemberFromQR(value) {
 }
 
 async function resolveMemberFromQR(value) {
-    if (activeDashboardRole !== 'staff') {
-        const cachedMember = findMemberFromQR(value);
-        if (cachedMember) return cachedMember;
-    }
+    const cachedMember = findMemberFromQR(value);
+    if (cachedMember) return cachedMember;
 
     const [prefix, ...identifierParts] = value.split('|');
     const identifier = identifierParts.join('|').trim();
     if (prefix?.toUpperCase() !== 'IRONGRIND' || !identifier || !window.ironGrindSupabase) return null;
 
     const client = window.ironGrindSupabase;
-    if (activeDashboardRole === 'staff') {
-        const { data, error } = await client.rpc('staff_resolve_attendance_member', { p_identifier: identifier });
-        if (error || !data) {
-            if (error) console.error('Could not resolve attendance member:', error);
-            return null;
-        }
-        return mapSupabaseMember({
-            id: data.id,
-            full_name: data.full_name,
-            expiry_date: data.expiry_date
-        });
-    }
     let result;
     if (isUUID(identifier)) {
         result = await client.from('members').select('*').eq('id', identifier).maybeSingle();
@@ -2826,8 +2667,7 @@ async function checkOut(id) {
             .update({ time_out: now.toISOString() }).eq('id', id).is('time_out', null).select('id').maybeSingle();
         if (error) { toast(`Could not save check-out: ${error.message}`, 'error'); return; }
         if (!data) {
-            if (activeDashboardRole === 'staff') await loadStaffAttendanceData();
-            else await loadSupabaseOperationalData({ captureExpiry: false });
+            await loadSupabaseOperationalData({ captureExpiry: false });
             toast('This visit was already checked out. Attendance has been updated.', 'error');
             return;
         }
@@ -4326,9 +4166,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!localStorage.getItem('ig_users')) saveDB('users', []);
     }
 
-    if (activeDashboardRole === 'staff' || window.ironGrindSupabase) {
-        // Never hydrate an attendance-only session from the shared browser's
-        // cached admin data.
+    if (window.ironGrindSupabase) {
         members = [];
         products = [];
         archivedProducts = [];
@@ -4338,7 +4176,6 @@ document.addEventListener('DOMContentLoaded', () => {
         users = [];
         planArchives = [];
         membershipArchives = [];
-        if (activeDashboardRole === 'staff') renderAttendance();
     } else {
         members = loadDB('members');
         products = loadDB('products').filter(product => product.isActive !== false);

@@ -476,16 +476,6 @@ label:has(input[name="wiPlan"]:checked) {
 .paired-phone-meta small { color: #8b95a9; font-size: .75rem; }
 .paired-phone-row .btn-danger { flex: 0 0 auto; padding: 7px 12px; font-size: .75rem; }
 .paired-phone-empty { margin: 10px 0 0; color: #8b95a9; font-size: .82rem; }
-.staff-create-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; max-width: 760px; margin: 18px 0 28px; }
-.staff-create-form label { display: grid; gap: 6px; color: #d6dae2; font-size: .84rem; }
-.staff-create-form input { min-height: 44px; padding: 10px 12px; border: 1px solid #393939; border-radius: 9px; background: #101010; color: #f1f3f7; font: inherit; }
-.staff-create-form button { grid-column: 1 / -1; justify-self: start; }
-.staff-accounts-list { display: grid; gap: 9px; max-width: 760px; }
-.staff-account-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border: 1px solid #30343d; border-radius: 12px; background: #11161f; }
-.staff-account-info { display: grid; gap: 4px; min-width: 0; }
-.staff-account-info strong { color: #e8edf5; overflow-wrap: anywhere; }
-.staff-account-info small { color: #8b95a9; overflow-wrap: anywhere; }
-@media (max-width: 600px) { .staff-create-form { grid-template-columns: 1fr; } .staff-create-form button { grid-column: auto; width: 100%; } .staff-account-row { align-items: flex-start; flex-direction: column; } }
 #forgotPasswordModal .modal-actions .btn-secondary { background: #282828; border: 1px solid #393939; color: #e8edf5; padding: 8px 18px; border-radius: 30px; font-family: inherit; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: background 0.2s ease, border-color 0.2s ease; }
 #forgotPasswordModal .modal-actions .btn-secondary:hover { background: #393939; border-color: #555555; }
 #forgotPasswordModal .modal-actions .btn-secondary:focus-visible { outline: 2px solid #8b0000; outline-offset: 3px; }
