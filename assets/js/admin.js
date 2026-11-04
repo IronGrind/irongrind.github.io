@@ -1833,7 +1833,7 @@ function startQRScanner() {
         <p class="modal-sub">Scan with a camera connected to this device or pair a phone camera.</p>
         <p id="phonePairingLimitSummary" class="qr-camera-status">Loading phone pairing limit…</p>
         <label class="phone-pair-remember"><input id="rememberPhoneScanner" type="checkbox" checked> Remember this phone for 30 days</label>
-        <div class="modal-actions"><button class="btn-primary" onclick="startLocalQRScanner()"><i class="fas fa-laptop"></i> This device</button><button class="btn-primary" onclick="startPhoneQRPairing(document.getElementById('rememberPhoneScanner').checked)"><i class="fas fa-mobile-screen-button"></i> Phone camera</button><button class="btn-sm" onclick="openPhonePairingManager()">Manage paired phones</button><button class="btn-sm" onclick="changePhonePairingLimit()">Change phone limit</button><button class="btn-sm" onclick="closeModal()">Cancel</button></div>
+        <div class="modal-actions"><button class="btn-primary" onclick="startLocalQRScanner()"><i class="fas fa-laptop"></i> This device</button><button class="btn-primary" onclick="startPhoneQRPairing(document.getElementById('rememberPhoneScanner').checked)"><i class="fas fa-mobile-screen-button"></i> Phone camera</button><button class="btn-sm" onclick="changePhonePairingLimit()">Change phone limit</button><button class="btn-sm" onclick="closeModal()">Cancel</button></div>
     </div>`);
     refreshPhonePairingLimitSummary();
 }
@@ -1842,8 +1842,7 @@ async function startPhoneQRPairing(rememberPhone = false) {
     const { data: settings, error } = await window.ironGrindSupabase.rpc('get_mobile_attendance_pairing_settings');
     if (error) { toast(`Could not check phone pairing setup: ${error.message}`, 'error'); return; }
     if (Number(settings?.active_count) >= Number(settings?.max_pairs)) {
-        toast(`Pairing limit reached (${settings.active_count} of ${settings.max_pairs}). End an existing pairing to continue.`, 'error');
-        openPhonePairingManager();
+        showMobileAttendancePairingModal(null, null, false, true);
         return;
     }
     if (!settings?.password_configured) {
@@ -1866,7 +1865,7 @@ async function createPhonePairingSession(rememberPhone = false, pairingPassword)
     });
     if (error || !data?.session_id || !data?.token) {
         toast(`Could not connect a phone scanner${error?.message ? `: ${error.message}` : '.'}`, 'error');
-        if (/pairing limit reached/i.test(error?.message || '')) openPhonePairingManager();
+        if (/pairing limit reached/i.test(error?.message || '')) showMobileAttendancePairingModal(null, null, false, true);
         return;
     }
     const { data: pairingValid, error: validationError } = await window.ironGrindSupabase.rpc('validate_mobile_attendance_scan_session', {
@@ -1898,14 +1897,14 @@ async function createPhonePairingSession(rememberPhone = false, pairingPassword)
     refreshPhonePairingLimitSummary();
 }
 
-function showMobileAttendancePairingModal(sessionId, pairingUrl, persistent) {
-    const localOnly = ['localhost', '127.0.0.1', '::1'].includes(new URL(pairingUrl).hostname);
+function showMobileAttendancePairingModal(sessionId, pairingUrl, persistent, capacityReached = false) {
+    const localOnly = pairingUrl && ['localhost', '127.0.0.1', '::1'].includes(new URL(pairingUrl).hostname);
     openModal(`<div class="qr-camera-modal">
         <h3><i class="fas fa-mobile-screen-button"></i> Connect Phone Camera</h3>
-        <p class="modal-sub">Scan this pairing QR with your phone. ${persistent ? 'This phone stays paired for 30 days.' : 'This one-time pairing expires in 10 minutes.'}</p>
+        <p class="modal-sub">${capacityReached ? 'The pairing limit is full. End an existing pairing below to free a slot.' : `Scan this pairing QR with your phone. ${persistent ? 'This phone stays paired for 30 days.' : 'This one-time pairing expires in 10 minutes.'}`}</p>
         ${localOnly ? '<p class="qr-camera-status">This address uses localhost, which a phone cannot reach. Open the hosted HTTPS site on the admin computer to pair a phone.</p>' : ''}
-        <div id="phonePairQr" class="phone-pair-qr" aria-label="Phone scanner pairing QR code"></div>
-        <p id="phonePairStatus" class="qr-camera-status" role="status">Waiting for phone scans…</p>
+        ${pairingUrl ? '<div id="phonePairQr" class="phone-pair-qr" aria-label="Phone scanner pairing QR code"></div>' : '<div class="qr-camera-status" role="status">No QR generated while the pairing limit is full.</div>'}
+        <p id="phonePairStatus" class="qr-camera-status" role="status">${capacityReached ? 'Remove a paired phone below, then try Phone camera again.' : 'Waiting for phone scans…'}</p>
         <div class="phone-pairing-limit-controls">
             <p id="phonePairingLimitSummary" class="qr-camera-status">Loading phone pairing limit…</p>
             <button class="btn-sm" onclick="changePhonePairingLimit()">Change phone limit</button>
@@ -1915,14 +1914,14 @@ function showMobileAttendancePairingModal(sessionId, pairingUrl, persistent) {
             <p class="paired-phone-list-label">Currently paired phones</p>
             <div id="pairedPhonesList" class="paired-phone-list"><p class="paired-phone-empty">Loading paired phones…</p></div>
         </section>
-        <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Close window</button><button class="btn-danger phone-pair-end-button" onclick="endMobileAttendanceSession('${sessionId}')">End this pairing</button></div>
+        <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Close window</button>${sessionId ? `<button class="btn-danger phone-pair-end-button" onclick="endMobileAttendanceSession('${sessionId}')">End this pairing</button>` : ''}</div>
     </div>`);
-    if (typeof QRCode !== 'undefined') {
+    if (pairingUrl && typeof QRCode !== 'undefined') {
         new QRCode(document.getElementById('phonePairQr'), {
             text: pairingUrl, width: 230, height: 230,
             colorDark: '#101010', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M
         });
-    } else {
+    } else if (pairingUrl) {
         document.getElementById('phonePairStatus').textContent = 'The pairing QR could not load. Reload the admin page while connected to the internet.';
     }
     refreshPairedAttendancePhones(true);
@@ -2026,21 +2025,6 @@ async function refreshPhonePairingLimitSummary() {
     if (pairedLimit && !error) pairedLimit.textContent = `of ${data.max_pairs} active limit · ${data.active_count} active`;
     const activeSessionCount = document.getElementById('activePhoneSessionCount');
     if (activeSessionCount && !error) activeSessionCount.textContent = String(data.active_count);
-}
-
-function openPhonePairingManager() {
-    openModal(`<div class="qr-camera-modal">
-        <h3><i class="fas fa-mobile-screen-button"></i> Manage paired phones</h3>
-        <p class="modal-sub">Review active phones and pending pairing QR sessions. Ending a pairing requires the four-digit admin PIN.</p>
-        <p id="phonePairingLimitSummary" class="qr-camera-status">Loading pairing limit…</p>
-        <section class="paired-phones-section" aria-labelledby="managePhonesHeading">
-            <h4 id="managePhonesHeading">Active sessions <span id="activePhoneSessionCount" class="paired-phone-count">0</span></h4>
-            <div id="pairedPhonesList" class="paired-phone-list"><p class="paired-phone-empty">Loading phones…</p></div>
-        </section>
-        <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Close</button><button class="btn-primary" onclick="startQRScanner()">Back to cameras</button></div>
-    </div>`);
-    refreshPairedAttendancePhones(true);
-    refreshPhonePairingLimitSummary();
 }
 
 async function changePhonePairingLimit() {
