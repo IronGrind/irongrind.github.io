@@ -8,6 +8,8 @@ let staffProducts = [];
 let staffProductGroups = [];
 let staffSignaturePad;
 let staffSaleBusy = false;
+let staffSelectedRenewalMember = null;
+let staffSelectedPlanChangeMember = null;
 
 function setStaffView(view) {
     document.querySelectorAll('[data-staff-view]').forEach(button => {
@@ -18,9 +20,100 @@ function setStaffView(view) {
     document.querySelectorAll('.staff-view').forEach(panel => {
         panel.hidden = panel.id !== `staff${view[0].toUpperCase()}${view.slice(1)}View`;
     });
-    if (view === 'walkin' && !staffSignaturePad) {
-        requestAnimationFrame(() => { staffSignaturePad = initDigitalSignature('staffSignatureCanvas', 'clearStaffSignature'); });
+    if (view === 'membership' && !staffSignaturePad && !document.getElementById('staffMembershipAddPane').hidden) {
+        requestAnimationFrame(() => {
+            if (!staffSignaturePad && !document.getElementById('staffMembershipAddPane').hidden) {
+                staffSignaturePad = initDigitalSignature('staffSignatureCanvas', 'clearStaffSignature');
+            }
+        });
     }
+}
+
+function setStaffMembershipAction(action) {
+    document.querySelectorAll('[data-staff-membership-action]').forEach(button => {
+        const active = button.dataset.staffMembershipAction === action;
+        button.classList.toggle('is-active', active);
+        button.setAttribute('aria-current', active ? 'page' : 'false');
+    });
+    document.querySelectorAll('.staff-membership-pane').forEach(pane => {
+        pane.hidden = pane.id !== ({ add: 'staffMembershipAddPane', renewal: 'staffRenewalPane', change: 'staffChangePlanPane' })[action];
+    });
+    if (action === 'add' && !staffSignaturePad) {
+        requestAnimationFrame(() => {
+            if (!staffSignaturePad && !document.getElementById('staffMembershipAddPane').hidden) {
+                staffSignaturePad = initDigitalSignature('staffSignatureCanvas', 'clearStaffSignature');
+            }
+        });
+    }
+}
+
+async function searchStaffMembers(query, resultsId, selectedId, onSelect) {
+    const results = document.getElementById(resultsId);
+    const selected = document.getElementById(selectedId);
+    selected.hidden = true;
+    selected.replaceChildren();
+    onSelect(null);
+    const normalized = query.trim();
+    if (normalized.length < 2) { results.textContent = 'Enter at least 2 characters to search.'; return; }
+    results.textContent = 'Searching members...';
+    const { data, error } = await staffClient.rpc('staff_search_members', { p_query: normalized });
+    if (error) { results.textContent = error.message; return; }
+    results.replaceChildren();
+    if (!data?.length) { results.textContent = 'No members found for this search.'; return; }
+    data.forEach(member => {
+        const button = document.createElement('button'); button.type = 'button'; button.className = 'staff-member-result';
+        const details = document.createElement('span');
+        const name = document.createElement('strong'); name.textContent = member.full_name;
+        const meta = document.createElement('small'); meta.textContent = `${member.plan || 'No plan'} · ${member.mobile || 'No mobile'} · Expires ${member.expiry_date || 'not set'}`;
+        details.append(name, meta);
+        const status = document.createElement('span'); status.className = `staff-member-status ${String(member.status || '').toLowerCase()}`; status.textContent = member.status || 'Unknown';
+        button.append(details, status);
+        button.addEventListener('click', () => {
+            onSelect(member);
+            const selected = document.getElementById(selectedId); selected.replaceChildren(); selected.hidden = false;
+            const title = document.createElement('strong'); title.textContent = member.full_name;
+            const info = document.createElement('span'); info.textContent = `${member.plan || 'No plan'} · ${formatStaffPeso(member.plan_price)} · Expires ${member.expiry_date || 'not set'}`;
+            selected.append(title, info);
+            results.querySelectorAll('.staff-member-result').forEach(item => item.classList.toggle('is-selected', item === button));
+        });
+        results.append(button);
+    });
+}
+
+async function submitStaffMembershipChange(eventType) {
+    const isRenewal = eventType === 'renewal';
+    const member = isRenewal ? staffSelectedRenewalMember : staffSelectedPlanChangeMember;
+    const status = document.getElementById(isRenewal ? 'staffRenewalStatus' : 'staffChangeStatus');
+    const select = document.getElementById(isRenewal ? 'staffRenewalPlan' : 'staffChangePlan');
+    if (!member) { status.textContent = 'Search for and select a member first.'; return; }
+    const [plan, priceText, daysText] = select.value.split('|');
+    const start = new Date(); start.setHours(0, 0, 0, 0);
+    const expiry = new Date(start); expiry.setDate(expiry.getDate() + Number(daysText));
+    const receipt = `IG-${isRenewal ? 'SR' : 'SC'}-${crypto.randomUUID().replaceAll('-', '').slice(0, 16).toUpperCase()}`;
+    status.textContent = isRenewal ? 'Recording renewal payment...' : 'Saving membership plan change...';
+    const button = document.getElementById(isRenewal ? 'staffRenewMembership' : 'staffSavePlanChange'); button.disabled = true;
+    try {
+        const { data, error } = await staffClient.rpc('admin_record_membership_change', {
+            p_member_id: member.id,
+            p_event_type: eventType,
+            p_new_plan: plan,
+            p_new_price: Number(priceText),
+            p_new_start_date: localDateString(start),
+            p_new_expiry_date: localDateString(expiry),
+            p_customer_name: member.full_name,
+            p_mobile: member.mobile,
+            p_receipt_number: receipt,
+        });
+        if (error) throw error;
+        status.textContent = isRenewal
+            ? `${member.full_name}'s membership renewed through ${data.expiry_date}. Receipt ${data.receipt_number}.`
+            : `${member.full_name}'s plan changed to ${plan}. Receipt ${data.receipt_number}.`;
+        if (isRenewal) staffSelectedRenewalMember = null; else staffSelectedPlanChangeMember = null;
+        document.getElementById(isRenewal ? 'staffRenewalSelected' : 'staffChangeSelected').hidden = true;
+        document.getElementById(isRenewal ? 'staffRenewalResults' : 'staffChangeResults').replaceChildren();
+        document.getElementById(isRenewal ? 'staffRenewalSearch' : 'staffChangeSearch').value = '';
+    } catch (error) { status.textContent = error.message || 'Could not save the membership transaction.'; }
+    finally { button.disabled = false; }
 }
 
 function staffSaleUnits(product) {
@@ -310,6 +403,17 @@ document.getElementById('staffLogout').onclick = async () => {
     location.replace('index.html');
 };
 document.querySelectorAll('[data-staff-view]').forEach(button => button.addEventListener('click', () => setStaffView(button.dataset.staffView)));
+document.querySelectorAll('[data-staff-membership-action]').forEach(button => button.addEventListener('click', () => setStaffMembershipAction(button.dataset.staffMembershipAction)));
+document.getElementById('staffRenewalSearchButton').addEventListener('click', () => searchStaffMembers(
+    document.getElementById('staffRenewalSearch').value, 'staffRenewalResults', 'staffRenewalSelected', member => { staffSelectedRenewalMember = member; }
+));
+document.getElementById('staffChangeSearchButton').addEventListener('click', () => searchStaffMembers(
+    document.getElementById('staffChangeSearch').value, 'staffChangeResults', 'staffChangeSelected', member => { staffSelectedPlanChangeMember = member; }
+));
+document.getElementById('staffRenewalSearch').addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); document.getElementById('staffRenewalSearchButton').click(); } });
+document.getElementById('staffChangeSearch').addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); document.getElementById('staffChangeSearchButton').click(); } });
+document.getElementById('staffRenewMembership').addEventListener('click', () => submitStaffMembershipChange('renewal'));
+document.getElementById('staffSavePlanChange').addEventListener('click', () => submitStaffMembershipChange('plan_change'));
 document.getElementById('staffSaleProduct').addEventListener('change', updateStaffSaleUnits);
 document.getElementById('staffSaleSize').addEventListener('change', updateStaffSaleSummary);
 document.getElementById('staffSaleQuantity').addEventListener('input', updateStaffSaleSummary);

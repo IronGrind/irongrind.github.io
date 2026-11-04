@@ -129,7 +129,7 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-registration-form
 .staff-stock-badge { display: inline-flex; align-items: center; gap: 5px; }
 .staff-stock-badge.available::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 .staff-stock-badge.unavailable::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
-.staff-walkin-panel { padding: clamp(18px, 3vw, 30px) !important; }
+.staff-membership-panel { padding: clamp(18px, 3vw, 30px) !important; }
 .staff-panel-hero { display: flex; align-items: center; gap: 17px; margin: -4px 0 22px; padding: 20px; border: 1px solid rgba(220,52,52,.24); border-radius: 17px; background: linear-gradient(110deg, rgba(169,0,0,.17), rgba(169,0,0,.035) 65%, transparent); }
 .staff-panel-hero-icon { display: grid; flex: 0 0 54px; place-items: center; width: 54px; height: 54px; border-radius: 16px; background: rgba(169,0,0,.24); color: #fa6767; font-size: 1.3rem; }
 .staff-panel-hero h2 { margin: 3px 0 5px; font-size: 1.25rem; }
@@ -180,4 +180,37 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-sale-entry .staff
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-sale-entry .staff-sale-total strong { color: #920e0e; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-catalog-heading { border-color: #cbd3df; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-product-card:hover { border-color: #aeb9ca; box-shadow: 0 9px 22px rgba(41,54,73,.1); }
+.staff-membership-pane[hidden] { display: none !important; }
+.staff-membership-tabs { display: flex; gap: 8px; margin: 0 0 20px; padding: 6px; border: 1px solid #303540; border-radius: 14px; background: #111419; }
+.staff-membership-tab { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 42px; padding: 9px 15px; border: 1px solid transparent; border-radius: 10px; background: transparent; color: #aeb7c7; font: inherit; font-size: .84rem; font-weight: 700; cursor: pointer; }
+.staff-membership-tab:hover { background: #1c2027; color: #fff; }
+.staff-membership-tab.is-active { background: #a90000; border-color: #c22b2b; color: #fff; box-shadow: 0 5px 14px rgba(169,0,0,.2); }
+.staff-member-search { display: grid; gap: 8px; margin-bottom: 12px; }
+.staff-member-search > label { font-size: .8rem; font-weight: 650; }
+.staff-member-search > div { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 9px; }
+.staff-member-search input { width: 100%; min-width: 0; }
+.staff-member-results { display: grid; gap: 8px; margin: 12px 0; }
+.staff-member-result { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 13px 14px; border: 1px solid #303540; border-radius: 12px; background: #191c22; color: #e9edf4; text-align: left; cursor: pointer; }
+.staff-member-result:hover, .staff-member-result.is-selected { border-color: #b93434; background: rgba(169,0,0,.12); }
+.staff-member-result > span:first-child { display: grid; gap: 4px; min-width: 0; }
+.staff-member-result small { overflow-wrap: anywhere; color: #aeb7c7; }
+.staff-member-status { flex: 0 0 auto; padding: 5px 9px; border-radius: 20px; background: #292e37; color: #d4dbe7; font-size: .7rem; font-weight: 700; text-transform: capitalize; }
+.staff-member-status.active { background: rgba(37,174,104,.15); color: #65d49a; }
+.staff-member-status.expired, .staff-member-status.inactive { background: rgba(220,60,60,.14); color: #ef8989; }
+.staff-selected-member { display: flex; justify-content: space-between; gap: 10px; margin: 12px 0; padding: 13px 15px; border: 1px solid rgba(45,180,116,.35); border-radius: 12px; background: rgba(37,174,104,.09); color: #e8f4ed; }
+.staff-selected-member span { color: #aeb7c7; font-size: .8rem; }
+.staff-member-action-form { align-items: end; }
+.staff-member-action-form .btn-primary { min-height: 48px; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-membership-tabs { border-color: #cbd3df; background: #e4e8ef; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-membership-tab { color: #3e4858; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-membership-tab:hover { background: #d6dde7; color: #202a39; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-membership-tab.is-active { background: #a90000; border-color: #900000; color: #fff; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-result { background: #f7f8fa; border-color: #d0d7e1; color: #202a39; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-result:hover,
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-result.is-selected { background: #f6e6e6; border-color: #d99b9b; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-result small,
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-selected-member span { color: #465267; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-status { background: #e2e7ee; color: #354052; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-selected-member { background: #e5f3eb; border-color: #b7ddc8; color: #233d2d; }
 @media (max-width: 700px) { .staff-catalog-heading { align-items: flex-start; flex-direction: column; gap: 5px; } .staff-plan-choice-wrap { grid-template-columns: 1fr; } .staff-form-section { padding: 15px; } }
+@media (max-width: 600px) { .staff-membership-tabs { display: grid; grid-template-columns: 1fr; } .staff-membership-tab { justify-content: flex-start; } .staff-member-action-form { grid-template-columns: 1fr; } .staff-selected-member { flex-direction: column; } }
