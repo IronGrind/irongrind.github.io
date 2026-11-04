@@ -9,6 +9,8 @@ create table if not exists public.profiles (
     email varchar(254) not null unique,
     username varchar(30) unique,
     full_name varchar(150) not null default '',
+    phone_number varchar(20),
+    gender varchar(40),
     role varchar(20) not null default 'member' check (role in ('admin', 'member')),
     created_at timestamptz not null default now()
 );
@@ -18,6 +20,8 @@ alter table public.profiles
     add column if not exists email text,
     add column if not exists username text,
     add column if not exists full_name text not null default '',
+    add column if not exists phone_number text,
+    add column if not exists gender text,
     add column if not exists role text not null default 'member',
     add column if not exists created_at timestamptz not null default now();
 

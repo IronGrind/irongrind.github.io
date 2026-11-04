@@ -21,7 +21,7 @@ Deno.serve(async request => {
     const admin = createClient(url, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false, autoRefreshToken: false } });
     if (action === 'list') {
       const { data: staff, error: listError } = await admin.from('profiles')
-        .select('id,username,full_name,is_active,created_at').eq('role', 'staff').order('created_at', { ascending: false });
+        .select('id,email,username,full_name,phone_number,gender,is_active,created_at').eq('role', 'staff').order('created_at', { ascending: false });
       if (listError) return reply({ error: 'Could not load staff accounts.' }, 500);
       return reply({ staff: staff || [] });
     }
@@ -37,16 +37,24 @@ Deno.serve(async request => {
     if (action !== 'create') return reply({ error: 'Unsupported staff account action.' }, 400);
     const username = typeof body.username === 'string' ? body.username.trim().toLowerCase() : '';
     const fullName = typeof body.fullName === 'string' ? body.fullName.trim() : '';
+    const email = typeof body.email === 'string' ? body.email.trim().toLowerCase() : '';
+    const phoneNumber = typeof body.phoneNumber === 'string' ? body.phoneNumber.replace(/\D/g, '') : '';
+    const gender = typeof body.gender === 'string' ? body.gender.trim() : '';
     const password = typeof body.password === 'string' ? body.password : '';
-    if (!/^[a-z0-9_]{3,30}$/.test(username) || !fullName || fullName.length > 150 || password.length < 12 || password.length > 128) {
-      return reply({ error: 'Enter a name, a 3–30 character username (letters, numbers, underscore), and a password of 12–128 characters.' }, 400);
+    if (!/^[a-z0-9_]{3,30}$/.test(username) || !fullName || fullName.length > 150 || password.length < 12 || password.length > 128 || !/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {
+      return reply({ error: 'Enter a name, a 3–30 character username, and a password of 12–128 characters containing at least one letter and one number.' }, 400);
     }
+    if (!/^[a-z0-9._%+-]+@gmail\.com$/.test(email)) return reply({ error: 'Enter a valid Gmail address ending in @gmail.com.' }, 400);
+    if (!/^9\d{9}$/.test(phoneNumber)) return reply({ error: 'Enter a 10-digit mobile number beginning with 9 after +63.' }, 400);
+    if (!['Female', 'Male', 'Prefer not to say'].includes(gender)) return reply({ error: 'Select a gender.' }, 400);
     const { data: created, error: createError } = await admin.auth.admin.createUser({
-      email: `${username}@staff.irongrind.invalid`, password, email_confirm: true,
-      user_metadata: { username, full_name: fullName },
+      email, password, email_confirm: true,
+      user_metadata: { username, full_name: fullName, phone_number: `+63${phoneNumber}`, gender },
     });
     if (createError || !created.user) return reply({ error: 'Could not create staff account. The username may already be in use.' }, 400);
-    const { data: saved, error: saveError } = await admin.from('profiles').update({ role: 'staff', is_active: true }).eq('id', created.user.id).select('id').single();
+    const { data: saved, error: saveError } = await admin.from('profiles').update({
+      role: 'staff', is_active: true, phone_number: `+63${phoneNumber}`, gender,
+    }).eq('id', created.user.id).select('id').single();
     if (saveError || !saved) {
       const { error: cleanupError } = await admin.auth.admin.deleteUser(created.user.id);
       if (cleanupError) console.error('Staff account cleanup failed:', created.user.id);

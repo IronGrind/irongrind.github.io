@@ -26,7 +26,13 @@ window.loadStaffAccounts = async function loadStaffAccounts() {
 window.viewStaffAccount = function viewStaffAccount(id) {
     const staff = managedStaffAccounts.find(account => account.id === id);
     if (!staff) return;
-    openModal(`<h3><i class="fas fa-id-badge"></i> Staff Account Details</h3><div class="member-detail-grid" style="margin-top:16px;"><div><span>Full name</span><strong>${escapeHTML(staff.full_name || 'Not recorded')}</strong></div><div><span>Username</span><strong>@${escapeHTML(staff.username || 'Not recorded')}</strong></div><div><span>Access</span><strong>Attendance only</strong></div><div><span>Status</span><strong>${staff.is_active ? 'Active' : 'Inactive'}</strong></div><div><span>Created</span><strong>${escapeHTML(new Date(staff.created_at).toLocaleString('en-PH'))}</strong></div></div><div class="modal-actions"><button class="btn-sm" type="button" onclick="closeModal()">Close</button></div>`);
+    const field = (label, value) => `<div class="member-detail-field"><span>${label}</span><strong>${escapeHTML(value || 'Not recorded')}</strong></div>`;
+    openModal(`<h3><i class="fas fa-id-badge"></i> Staff Account Details</h3><div class="member-detail-grid staff-detail-grid">
+        ${field('Full name', staff.full_name)}${field('Username', staff.username ? `@${staff.username}` : '')}
+        ${field('Gmail', staff.email)}${field('Mobile number', staff.phone_number)}${field('Gender', staff.gender)}
+        ${field('Access', 'Attendance only')}${field('Status', staff.is_active ? 'Active' : 'Inactive')}
+        ${field('Created', staff.created_at ? new Date(staff.created_at).toLocaleString('en-PH') : '')}
+    </div><div class="modal-actions"><button class="btn-sm" type="button" onclick="closeModal()">Close</button></div>`);
 };
 
 window.setStaffAccountActive = async function setStaffAccountActive(id, isActive) {
@@ -35,6 +41,18 @@ window.setStaffAccountActive = async function setStaffAccountActive(id, isActive
     try { await invokeStaffManager({ action: 'set_active', id, isActive }); await loadStaffAccounts(); }
     catch (error) { status.textContent = error.message || 'Could not update the staff account.'; }
 };
+
+document.getElementById('staffMobile')?.addEventListener('input', event => {
+    const input = event.currentTarget;
+    const digits = input.value.replace(/\D/g, '');
+    input.value = digits && !digits.startsWith('9') ? '' : digits.slice(0, 10);
+});
+
+document.getElementById('staffPassword')?.addEventListener('input', event => {
+    const input = event.currentTarget;
+    input.setCustomValidity(input.value && (!/[A-Za-z]/.test(input.value) || !/[0-9]/.test(input.value))
+        ? 'Include at least one letter and one number.' : '');
+});
 
 document.getElementById('staffAccountForm').addEventListener('submit', async event => {
     event.preventDefault();
@@ -46,6 +64,9 @@ document.getElementById('staffAccountForm').addEventListener('submit', async eve
         const { data, error } = await window.ironGrindSupabase.functions.invoke('admin-create-staff', { body: {
             fullName: document.getElementById('staffName').value.trim(),
             username: document.getElementById('staffUsername').value.trim(),
+            email: document.getElementById('staffEmail').value.trim().toLowerCase(),
+            phoneNumber: document.getElementById('staffMobile').value.replace(/\D/g, ''),
+            gender: document.getElementById('staffGender').value,
             password: document.getElementById('staffPassword').value
         } });
         if (error) {

@@ -63,7 +63,10 @@
             <form id="staffAccountForm">
                 <div class="form-group"><label for="staffName">Full name</label><input id="staffName" required maxlength="150" autocomplete="name"></div>
                 <div class="form-group"><label for="staffUsername">Username</label><input id="staffUsername" required pattern="[A-Za-z0-9_]{3,30}" maxlength="30" autocomplete="off"></div>
-                <div class="form-group"><label for="staffPassword">Temporary password (12+ characters)</label><input id="staffPassword" type="password" required minlength="12" maxlength="128" autocomplete="new-password"></div>
+                <div class="form-group"><label for="staffEmail">Gmail address</label><input id="staffEmail" type="email" required pattern="[A-Za-z0-9._%+-]+@gmail\.com" maxlength="254" autocomplete="email" placeholder="name@gmail.com" title="Enter a Gmail address ending in @gmail.com"></div>
+                <div class="form-group"><label for="staffMobile">Mobile number</label><div class="ph-phone-input"><span>+63</span><input id="staffMobile" type="tel" required inputmode="numeric" maxlength="10" pattern="9[0-9]{9}" placeholder="9171234567" autocomplete="tel-national" title="Enter 10 digits beginning with 9"></div></div>
+                <div class="form-group"><label for="staffGender">Gender</label><select id="staffGender" required><option value="">Select gender</option><option value="Female">Female</option><option value="Male">Male</option><option value="Prefer not to say">Prefer not to say</option></select></div>
+                <div class="form-group"><label for="staffPassword">Password</label><input id="staffPassword" type="password" required minlength="12" maxlength="128" autocomplete="new-password" aria-describedby="staffPasswordHint"><small id="staffPasswordHint" class="field-hint">Use at least 12 characters, including one letter and one number.</small></div>
                 <button class="btn-primary" type="submit"><i class="fas fa-user-plus"></i> Create Account</button><p id="staffAccountStatus" class="activity-help" role="status" aria-live="polite"></p>
             </form>
         </section>
