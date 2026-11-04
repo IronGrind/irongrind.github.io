@@ -5,6 +5,7 @@ let staffBusy = false;
 let staffScanner;
 let pendingStaffScan = null;
 let staffProducts = [];
+let staffProductGroups = [];
 let staffSignaturePad;
 let staffSaleBusy = false;
 
@@ -35,8 +36,53 @@ function formatStaffPeso(value) {
     return new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(Number(value || 0));
 }
 
+function staffProductAvailable(product) { return Number(product.stock || 0) > 0; }
+
+function groupStaffProducts(products) {
+    const groups = new Map();
+    products.forEach(product => {
+        const isMerch = product.category === 'merchandise';
+        const key = isMerch ? `merch:${product.name.trim().toLowerCase()}` : `supplement:${product.id}`;
+        if (!groups.has(key)) groups.set(key, { key, name: product.name, category: product.category, variants: [] });
+        groups.get(key).variants.push(product);
+    });
+    return [...groups.values()].sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name));
+}
+
+function renderStaffProductCatalog() {
+    const target = document.getElementById('staffProductCatalog');
+    target.replaceChildren();
+    for (const [category, heading] of [['supplement', 'Supplements'], ['merchandise', 'Merchandise']]) {
+        const items = staffProductGroups.filter(group => group.category === category);
+        const section = document.createElement('section'); section.className = 'staff-catalog-section';
+        const title = document.createElement('div'); title.className = 'staff-catalog-section-title';
+        const label = document.createElement('h4'); label.textContent = heading;
+        const count = document.createElement('span'); count.textContent = `${items.length} ${items.length === 1 ? 'item' : 'items'}`;
+        title.append(label, count); section.append(title);
+        const grid = document.createElement('div'); grid.className = 'staff-product-grid';
+        if (!items.length) {
+            const empty = document.createElement('p'); empty.className = 'staff-empty-catalog'; empty.textContent = `No ${heading.toLowerCase()} are listed.`; grid.append(empty);
+        }
+        items.forEach(group => group.variants.forEach(product => {
+            const available = staffProductAvailable(product);
+            const card = document.createElement('article'); card.className = `staff-product-card ${available ? 'is-available' : 'is-unavailable'}`;
+            const top = document.createElement('div'); top.className = 'staff-product-card-top';
+            const icon = document.createElement('span'); icon.className = 'staff-product-icon'; icon.innerHTML = category === 'supplement' ? '<i class="fas fa-capsules" aria-hidden="true"></i>' : '<i class="fas fa-shirt" aria-hidden="true"></i>';
+            const badge = document.createElement('span'); badge.className = `staff-stock-badge ${available ? 'available' : 'unavailable'}`; badge.textContent = available ? 'Available' : 'Unavailable';
+            top.append(icon, badge);
+            const name = document.createElement('h5'); name.textContent = group.name;
+            const details = document.createElement('p'); details.textContent = category === 'merchandise' ? `Size: ${product.size || 'One size'}` : 'Supplement';
+            const bottom = document.createElement('div'); bottom.className = 'staff-product-card-bottom';
+            const price = document.createElement('strong'); price.textContent = `${formatStaffPeso(product.price_per_unit)} / ${product.stock_unit || product.unit}`;
+            const stock = document.createElement('span'); stock.textContent = `${product.stock ?? 0} ${product.stock_unit || product.unit} in stock`;
+            bottom.append(price, stock); card.append(top, name, details, bottom); grid.append(card);
+        }));
+        section.append(grid); target.append(section);
+    }
+}
+
 function updateStaffSaleSummary() {
-    const product = staffProducts.find(item => item.id === document.getElementById('staffSaleProduct').value);
+    const product = getSelectedStaffSaleProduct();
     const quantity = Number(document.getElementById('staffSaleQuantity').value) || 0;
     const unit = document.getElementById('staffSaleUnit').value;
     const factors = { gram: 1, kilogram: 1000, ounce: 28.349523125, pound: 453.59237, milliliter: 1, liter: 1000, fluid_ounce: 29.5735295625, item: 1, piece: 1, box: 1 };
@@ -51,9 +97,50 @@ async function loadStaffProducts() {
         .eq('is_active', true).order('name');
     if (error) throw error;
     staffProducts = data || [];
-    select.replaceChildren(new Option(staffProducts.length ? 'Select a product' : 'No active products available', ''));
-    staffProducts.forEach(product => select.add(new Option(`${product.name} · ${formatStaffPeso(product.price_per_unit)} / ${product.stock_unit || product.unit}`, product.id)));
+    staffProductGroups = groupStaffProducts(staffProducts);
+    renderStaffProductCatalog();
+    select.replaceChildren(new Option(staffProductGroups.length ? 'Select a product' : 'No active products available', ''));
+    staffProductGroups.forEach(group => {
+        const available = group.variants.some(staffProductAvailable);
+        const option = new Option(`${group.category === 'supplement' ? 'Supplement' : 'Merchandise'} - ${group.name}${available ? '' : ' - Unavailable'}`, group.key);
+        option.disabled = !available;
+        select.add(option);
+    });
     updateStaffSaleUnits();
+}
+
+function getSelectedStaffSaleProduct() {
+    const group = staffProductGroups.find(item => item.key === document.getElementById('staffSaleProduct').value);
+    if (!group) return null;
+    if (group.category === 'merchandise') {
+        const selectedId = document.getElementById('staffSaleSize').value;
+        return group.variants.find(product => product.id === selectedId) || null;
+    }
+    return group.variants[0] || null;
+}
+
+function updateStaffSaleUnits() {
+    const group = staffProductGroups.find(item => item.key === document.getElementById('staffSaleProduct').value);
+    const sizeGroup = document.getElementById('staffSaleSizeGroup');
+    const sizeSelect = document.getElementById('staffSaleSize');
+    sizeSelect.replaceChildren();
+    sizeGroup.hidden = !group || group.category !== 'merchandise';
+    if (group?.category === 'merchandise') {
+        group.variants.forEach(product => {
+            const available = staffProductAvailable(product);
+            const label = `${product.size || 'One size'} - ${formatStaffPeso(product.price_per_unit)}${available ? ` - ${product.stock} in stock` : ' - Unavailable'}`;
+            const option = new Option(label, product.id); option.disabled = !available; sizeSelect.add(option);
+        });
+        const firstAvailable = [...sizeSelect.options].find(option => !option.disabled);
+        if (firstAvailable) sizeSelect.value = firstAvailable.value;
+    }
+    const product = group?.category === 'merchandise'
+        ? group.variants.find(item => item.id === sizeSelect.value)
+        : group?.variants[0];
+    const unitSelect = document.getElementById('staffSaleUnit');
+    unitSelect.replaceChildren();
+    (product ? staffSaleUnits(product) : []).forEach(([value, label]) => unitSelect.add(new Option(label, value)));
+    updateStaffSaleSummary();
 }
 
 function updateStaffSaleUnits() {
@@ -86,9 +173,8 @@ async function submitStaffProductSale(event) {
     event.preventDefault();
     if (staffSaleBusy) return;
     const status = document.getElementById('staffSalesStatus');
-    const productId = document.getElementById('staffSaleProduct').value;
-    const product = staffProducts.find(item => item.id === productId);
-    if (!product) { status.textContent = 'Select an active product.'; return; }
+    const product = getSelectedStaffSaleProduct();
+    if (!product || !staffProductAvailable(product)) { status.textContent = 'Choose an available product and size.'; return; }
     const quantity = Number(document.getElementById('staffSaleQuantity').value);
     staffSaleBusy = true;
     const button = document.getElementById('staffCompleteSale'); button.disabled = true;
