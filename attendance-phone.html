@@ -9,11 +9,14 @@
     <meta name="apple-mobile-web-app-title" content="Iron Grind Scan">
     <title>Phone Attendance Scanner | Iron Grind</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261104-operator-scans">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261104-subtle-scrollbars">
     <link rel="manifest" href="attendance-app.webmanifest">
     <link rel="apple-touch-icon" href="assets/images/iron-grind-mark-192.png">
     <style>
-        * { box-sizing: border-box; }
+        * { box-sizing: border-box; font-family: Arial, Helvetica, sans-serif; }
+        [hidden] { display: none !important; }
+        body.phone-scanner-page { margin: 0; font-size: 16px; line-height: 1.5; }
+        button, input { font: inherit; }
         body.phone-scanner-page { min-height: 100svh; display: grid; place-items: start center; padding: max(16px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom)); background: #090909; color: #f3f4f6; }
         .phone-scanner-card { width: min(100%, 520px); margin: 0 auto; padding: clamp(18px, 5vw, 24px); background: #151515; border: 1px solid #343434; border-radius: 18px; }
         .phone-scanner-card h1 { margin: 0 0 8px; font-size: clamp(1.25rem, 5vw, 1.55rem); }
@@ -39,12 +42,12 @@
         <h1><i class="fas fa-qrcode"></i> Attendance Scanner</h1>
         <p id="phoneScannerInstructions">Point your phone camera at a member’s Iron Grind QR code. Sign in before opening the camera. Your name will be recorded with attendance.</p>
         <form id="phoneOperatorSetup" class="phone-model-setup" onsubmit="signInPhoneOperator(event)">
-<label for="phoneOperatorId">Staff / admin ID (username)</label><input id="phoneOperatorId" autocomplete="username" required maxlength="30" autocapitalize="none" spellcheck="false" placeholder="Your assigned account username">
-<label for="phoneOperatorPassword" style="margin-top:12px">Password</label><input id="phoneOperatorPassword" type="password" autocomplete="current-password" required>
-<small>Sign in each time you open the app. This identifies who records attendance; your phone pairing stays saved separately.</small>
+<label for="phoneOperatorId">Staff / admin username</label><input id="phoneOperatorId" autocomplete="username" required maxlength="30" autocapitalize="none" spellcheck="false" placeholder="Your assigned account username">
+<label for="phoneOperatorPassword" style="margin-top:12px">Account password</label><input id="phoneOperatorPassword" type="password" autocomplete="current-password" required>
+<small>Use the same username and password as your staff/admin account. The phone-pairing password is entered on the admin dashboard. Your phone pairing stays saved when you close the app.</small>
 <button id="phoneOperatorSignIn" class="phone-model-save-button" type="submit">Sign in to scan</button></form>
 <div id="phoneOperatorIdentity" class="phone-model-setup" hidden><p id="phoneOperatorName"></p><button type="button" class="phone-next-scan-button" onclick="changePhoneOperator()">Change operator</button></div>
-<div id="phoneQrReader"></div>
+<div id="phoneQrReader" hidden></div>
         <p id="phoneQrStatus" role="status" aria-live="polite">Checking this pairing link…</p>
         <button id="phoneInstallButton" class="phone-install-button" type="button" onclick="installPhoneAttendanceApp()">Install attendance app</button>
         <p id="phoneInstallHelp" class="phone-install-help">To add this app: open your browser menu, then choose <strong>Add to Home Screen</strong> or <strong>Install app</strong>.</p>
@@ -55,11 +58,11 @@
             <button id="phoneModelSaveButton" class="phone-model-save-button" type="button" onclick="savePhoneModelAndContinue()">Save model and continue</button>
         </section>
         <button id="phoneNextScanButton" class="phone-next-scan-button" type="button" onclick="resumePhoneAttendanceScanner()" hidden>Scan next member</button>
-        <button id="phoneCameraButton" class="phone-scanner-button" type="button" onclick="togglePhoneAttendanceCamera()">Open camera</button>
+        <button id="phoneCameraButton" class="phone-scanner-button" type="button" onclick="togglePhoneAttendanceCamera()" hidden>Open camera</button>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/supabase-client.js"></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-    <script src="assets/js/attendance-phone.js?v=20261104-operator-scans"></script>
+    <script src="assets/js/attendance-phone.js?v=20261104-phone-login-layout"></script>
 </body>
 </html>

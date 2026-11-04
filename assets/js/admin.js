@@ -2640,24 +2640,8 @@ async function recordMemberAttendanceScan(member) {
     const today = todayStr();
     const now = new Date();
     const timeIn = manilaClock(now);
-    if (window.ironGrindSupabase) {
-        if (!isUUID(member.id)) {
-            toast('This member is not linked to a Supabase member record, so attendance was not saved.', 'error');
-            return;
-        }
-        const { data: { user }, error: authError } = await window.ironGrindSupabase.auth.getUser();
-        if (authError || !user) { toast('Your Supabase session expired. Please sign in again.', 'error'); return; }
-        const { data, error } = await window.ironGrindSupabase.from('attendance').insert({
-            member_id: member.id,
-            time_in: now.toISOString(),
-            recorded_by: user.id
-        }).select('*').single();
-        if (error) { toast(`Could not save attendance: ${error.message}`, 'error'); return; }
-        attendance.unshift(mapSupabaseAttendance(data));
-    } else {
-        attendance.push({ id: uid('A'), memberId: member.id, memberName: member.name, date: today, timeIn, timeOut: null });
-        saveDB('attendance', attendance);
-    }
+    attendance.push({ id: uid('A'), memberId: member.id, memberName: member.name, date: today, timeIn, timeOut: null });
+    saveDB('attendance', attendance);
     renderAttendance();
     renderDashboard();
     toast(`${member.name} checked in at ${formatAttendanceClock(timeIn)}. Scan their QR again to check them out.`, 'success');

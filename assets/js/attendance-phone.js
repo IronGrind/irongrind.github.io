@@ -6,6 +6,8 @@ let pendingPhoneScan = null;
 function requirePhoneOperator() {
     if (phoneOperator) return true;
     document.getElementById('phoneOperatorSetup').hidden = false;
+    document.getElementById('phoneCameraButton').hidden = true;
+    document.getElementById('phoneQrReader').hidden = true;
     setPhoneAttendanceStatus('Sign in with your assigned staff or admin username before opening the camera.');
     return false;
 }
@@ -36,6 +38,7 @@ async function signInPhoneOperator(event) {
         document.getElementById('phoneOperatorSetup').hidden = true;
         document.getElementById('phoneOperatorIdentity').hidden = false;
         document.getElementById('phoneOperatorName').textContent = 'Operator: ' + phoneOperator.name;
+        setPhoneCameraButton(false);
         const pairing = readPhonePairing();
         if (pairing) await startPhoneMemberScanner(pairing.sessionId, pairing.token, false);
         else setPhoneAttendanceStatus('Signed in. Tap Open pairing camera to pair this phone once.');
@@ -83,6 +86,7 @@ function createPhoneQrScanner() {
     if (typeof Html5Qrcode === 'undefined') throw new Error('The scanner library could not load. Check your internet connection.');
     const reader = document.getElementById('phoneQrReader');
     if (reader) {
+        reader.hidden = false;
         reader.querySelectorAll('video').forEach(video => {
             try { video.pause(); } catch {}
             try { video.srcObject?.getTracks().forEach(track => track.stop()); } catch {}
@@ -97,6 +101,9 @@ function createPhoneQrScanner() {
 
 function setPhoneCameraButton(running) {
     const button = document.getElementById('phoneCameraButton');
+    if (button) button.hidden = !phoneOperator;
+    const reader = document.getElementById('phoneQrReader');
+    if (reader && !running) reader.hidden = true;
     if (button) button.textContent = running ? 'Stop camera' : phoneScannerMode === 'member' && activePhoneSession ? 'Open camera' : 'Open pairing camera';
 }
 
@@ -544,7 +551,7 @@ window.addEventListener('pagehide', () => {
 async function startPhoneAttendanceApp() {
     configurePhoneAppInstall();
     if ('serviceWorker' in navigator && window.isSecureContext) {
-    navigator.serviceWorker.register('attendance-phone-sw.js?v=20261104-operator-scans').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
+    navigator.serviceWorker.register('attendance-phone-sw.js?v=20261104-phone-login-layout').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
     }
     if (!window.ironGrindSupabase) {
         setPhoneAttendanceStatus('The attendance service could not load. Check your connection and reload.', true);

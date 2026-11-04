@@ -854,3 +854,76 @@ body.member-dashboard .dashboard-footer { margin-top: 0; }
     .member-insights-grid { grid-template-columns: 1fr; }
     .member-tools-grid { grid-template-columns: 1fr; }
 }
+
+/* Respond to available window space, including desktop split-screen. */
+.app, .form-group, .form-row > *, .logo-text { min-width: 0; }
+.form-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.table-scroll { max-width: 100%; overscroll-behavior-x: contain; }
+img, video, canvas { max-width: 100%; }
+.logo-text p { overflow-wrap: anywhere; }
+
+/* Keep overflowing content usable without bright browser scrollbar tracks. */
+.main-content, .customer-main, .table-scroll, .activity-table,
+#attendanceLogTable, #dashboardAttendanceTable, #salesTable, .modal-content {
+    scrollbar-width: thin;
+    scrollbar-color: #454545 transparent;
+}
+.main-content::-webkit-scrollbar, .customer-main::-webkit-scrollbar,
+.table-scroll::-webkit-scrollbar, .activity-table::-webkit-scrollbar,
+#attendanceLogTable::-webkit-scrollbar, #dashboardAttendanceTable::-webkit-scrollbar,
+#salesTable::-webkit-scrollbar, .modal-content::-webkit-scrollbar { width: 6px; height: 6px; }
+.main-content::-webkit-scrollbar-track, .customer-main::-webkit-scrollbar-track,
+.table-scroll::-webkit-scrollbar-track, .activity-table::-webkit-scrollbar-track,
+#attendanceLogTable::-webkit-scrollbar-track, #dashboardAttendanceTable::-webkit-scrollbar-track,
+#salesTable::-webkit-scrollbar-track, .modal-content::-webkit-scrollbar-track { background: transparent; }
+.main-content::-webkit-scrollbar-thumb, .customer-main::-webkit-scrollbar-thumb,
+.table-scroll::-webkit-scrollbar-thumb, .activity-table::-webkit-scrollbar-thumb,
+#attendanceLogTable::-webkit-scrollbar-thumb, #dashboardAttendanceTable::-webkit-scrollbar-thumb,
+#salesTable::-webkit-scrollbar-thumb, .modal-content::-webkit-scrollbar-thumb { background: #454545; border-radius: 8px; }
+
+@media (max-width: 1024px) {
+    body.admin-dashboard, body.member-dashboard { height: auto; min-height: 100dvh; overflow: auto; }
+    body.admin-dashboard .app, body.member-dashboard .app { display: flex; flex-direction: column; height: auto; min-height: calc(100dvh - 40px); }
+    body.admin-dashboard .dashboard { display: flex; flex-direction: column; overflow: visible; width: 100%; }
+    body.admin-dashboard .main-content, body.member-dashboard .customer-main { width: 100%; height: auto; overflow: visible; scrollbar-gutter: auto; }
+    body.admin-dashboard .admin-section { min-height: 0; }
+    body.dashboard-body .sidebar { display: flex; flex-direction: row; flex-wrap: nowrap; width: 100%; max-height: none; overflow-x: auto; overflow-y: hidden; gap: 8px; border-radius: 16px; }
+    body.dashboard-body .sidebar { scrollbar-width: none; }
+    body.dashboard-body .sidebar::-webkit-scrollbar { display: none; }
+    body.dashboard-body .sidebar .nav-item { flex: 0 0 auto; width: auto; white-space: nowrap; min-height: 44px; }
+    .sidebar .nav-section-label { display: none; }
+    .dashboard-footer { margin-top: auto; }
+    .membership-controls .search { min-width: 0; flex-basis: 220px; }
+    #attendanceLogTable, #dashboardAttendanceTable, #salesTable { max-width: 100%; overflow-x: auto; }
+    .modal-content { max-height: calc(100dvh - 32px); }
+}
+
+@media (max-width: 640px) {
+    body.admin-dashboard .app, body.member-dashboard .app { min-height: calc(100dvh - 24px); }
+    .app-header { gap: 14px; }
+    .logo-area { width: 100%; min-width: 0; }
+    .logo-text h1 { font-size: 1.4rem; }
+    .logo-text p { font-size: .72rem; }
+    .dashboard-body .header-actions { flex-wrap: wrap; justify-content: flex-start; gap: 8px; }
+    .dashboard-body .user-chip { max-width: 100%; padding: 8px 12px; }
+    .form-row { grid-template-columns: minmax(0, 1fr); }
+    .panel-header { align-items: flex-start; }
+    .panel, .membership-form-card { border-radius: 16px; }
+    .admin-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+    .admin-tab { min-width: 0; white-space: normal; }
+    .attendance-date-filter, .walkin-date-filter { flex-wrap: wrap; min-width: 0; max-width: 100%; }
+    .attendance-date-filter input, .walkin-date-filter input { min-width: 0; max-width: 100%; }
+    .product-grid, .supplement-grid, .member-detail-grid { grid-template-columns: minmax(0, 1fr); }
+    .modal-overlay { padding: 12px; }
+    .modal-content { padding: 20px 16px; border-radius: 16px; max-height: calc(100dvh - 24px); }
+    .modal-actions { flex-wrap: wrap; }
+    .modal-actions > button { flex: 1 1 130px; min-width: 0; }
+}
+
+/* Short landscape windows need document scrolling as well. */
+@media (max-height: 600px) and (min-width: 1025px) {
+    body.admin-dashboard, body.member-dashboard { height: auto; overflow: auto; }
+    body.admin-dashboard .app, body.member-dashboard .app { height: auto; min-height: 100dvh; }
+    body.admin-dashboard .main-content, body.member-dashboard .customer-main { height: auto; overflow: visible; }
+    body.admin-dashboard .dashboard { overflow: visible; }
+}
