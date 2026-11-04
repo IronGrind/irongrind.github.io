@@ -46,7 +46,16 @@ function groupStaffProducts(products) {
         if (!groups.has(key)) groups.set(key, { key, name: product.name, category: product.category, variants: [] });
         groups.get(key).variants.push(product);
     });
-    return [...groups.values()].sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name));
+    const preferredSizes = ['XS', 'Small', 'Medium', 'Large', 'XL', 'XXL', 'XXXL', 'One Size'];
+    return [...groups.values()].map(group => {
+        group.variants.sort((a, b) => {
+            const left = preferredSizes.indexOf(a.size || 'One Size');
+            const right = preferredSizes.indexOf(b.size || 'One Size');
+            if (left >= 0 || right >= 0) return (left < 0 ? 99 : left) - (right < 0 ? 99 : right);
+            return String(a.size || '').localeCompare(String(b.size || ''));
+        });
+        return group;
+    }).sort((a, b) => a.category.localeCompare(b.category) || a.name.localeCompare(b.name));
 }
 
 function renderStaffProductCatalog() {
@@ -93,7 +102,7 @@ function updateStaffSaleSummary() {
 async function loadStaffProducts() {
     const select = document.getElementById('staffSaleProduct');
     const { data, error } = await staffClient.from('products')
-        .select('id,name,category,price_per_unit,unit,stock_unit,stock,is_active')
+        .select('id,name,category,size,price_per_unit,unit,stock_unit,stock,is_active')
         .eq('is_active', true).order('name');
     if (error) throw error;
     staffProducts = data || [];
@@ -137,14 +146,6 @@ function updateStaffSaleUnits() {
     const product = group?.category === 'merchandise'
         ? group.variants.find(item => item.id === sizeSelect.value)
         : group?.variants[0];
-    const unitSelect = document.getElementById('staffSaleUnit');
-    unitSelect.replaceChildren();
-    (product ? staffSaleUnits(product) : []).forEach(([value, label]) => unitSelect.add(new Option(label, value)));
-    updateStaffSaleSummary();
-}
-
-function updateStaffSaleUnits() {
-    const product = staffProducts.find(item => item.id === document.getElementById('staffSaleProduct').value);
     const unitSelect = document.getElementById('staffSaleUnit');
     unitSelect.replaceChildren();
     (product ? staffSaleUnits(product) : []).forEach(([value, label]) => unitSelect.add(new Option(label, value)));
@@ -310,6 +311,7 @@ document.getElementById('staffLogout').onclick = async () => {
 };
 document.querySelectorAll('[data-staff-view]').forEach(button => button.addEventListener('click', () => setStaffView(button.dataset.staffView)));
 document.getElementById('staffSaleProduct').addEventListener('change', updateStaffSaleUnits);
+document.getElementById('staffSaleSize').addEventListener('change', updateStaffSaleSummary);
 document.getElementById('staffSaleQuantity').addEventListener('input', updateStaffSaleSummary);
 document.getElementById('staffSaleUnit').addEventListener('change', updateStaffSaleSummary);
 document.getElementById('staffSaleForm').addEventListener('submit', submitStaffProductSale);
