@@ -2,6 +2,7 @@ const staffClient = window.ironGrindSupabase;
 const staffStatus = document.getElementById('staffStatus');
 let staffUser;
 let staffBusy = false;
+let staffAttendanceRefreshing = false;
 let staffScanner;
 let pendingStaffScan = null;
 let staffProducts = [];
@@ -337,27 +338,33 @@ async function submitStaffWalkin(event) {
     finally { button.disabled = false; }
 }
 async function refreshStaffAttendance() {
-    const { data, error } = await staffClient.rpc('staff_list_attendance');
-    if (error) throw error;
-    const rows = document.getElementById('staffAttendanceRows');
-    rows.replaceChildren();
-    if (!data?.length) {
-        const row = rows.insertRow();
-        const cell = row.insertCell();
-        cell.colSpan = 3;
-        cell.textContent = 'No attendance records yet.';
-    }
-    for (const visit of data || []) {
-        const row = document.createElement('tr');
-        for (const [index, value] of [visit.member_name, visit.time_in, visit.time_out].entries()) {
-            const cell = document.createElement('td');
-            cell.textContent = index === 0 ? value || 'Unknown member' : value
-                ? new Date(value).toLocaleString('en-PH', { timeZone: 'Asia/Manila', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })
-                : 'Still checked in';
-            if (index === 2 && !value) cell.classList.add('staff-visit-open');
-            row.append(cell);
+    if (staffAttendanceRefreshing || !staffUser) return;
+    staffAttendanceRefreshing = true;
+    try {
+        const { data, error } = await staffClient.rpc('staff_list_attendance');
+        if (error) throw error;
+        const rows = document.getElementById('staffAttendanceRows');
+        rows.replaceChildren();
+        if (!data?.length) {
+            const row = rows.insertRow();
+            const cell = row.insertCell();
+            cell.colSpan = 3;
+            cell.textContent = 'No attendance records yet.';
         }
-        rows.append(row);
+        for (const visit of data || []) {
+            const row = document.createElement('tr');
+            for (const [index, value] of [visit.member_name, visit.time_in, visit.time_out].entries()) {
+                const cell = document.createElement('td');
+                cell.textContent = index === 0 ? value || 'Unknown member' : value
+                    ? new Date(value).toLocaleString('en-PH', { timeZone: 'Asia/Manila', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })
+                    : 'Still checked in';
+                if (index === 2 && !value) cell.classList.add('staff-visit-open');
+                row.append(cell);
+            }
+            rows.append(row);
+        }
+    } finally {
+        staffAttendanceRefreshing = false;
     }
 }
 async function recordStaffAttendance(value) {
@@ -435,6 +442,15 @@ document.getElementById('refreshStaffSales').addEventListener('click', async () 
     catch (error) { status.textContent = error.message; }
 });
 document.getElementById('staffWalkinForm').addEventListener('submit', submitStaffWalkin);
+window.setInterval(() => {
+    if (!staffUser || document.hidden || staffBusy) return;
+    refreshStaffAttendance().catch(error => console.warn('Could not refresh staff attendance:', error));
+}, 30000);
+document.addEventListener('visibilitychange', () => {
+    if (staffUser && !document.hidden) {
+        refreshStaffAttendance().catch(error => console.warn('Could not refresh staff attendance:', error));
+    }
+});
 (async () => {
     try {
         const { data: { user }, error } = await staffClient.auth.getUser();
