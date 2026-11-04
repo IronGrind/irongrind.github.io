@@ -2023,6 +2023,14 @@ async function refreshPhonePairingLimitSummary() {
     if (fullNotice && !error) fullNotice.classList.toggle('hidden', Number(data.active_count) < Number(data.max_pairs));
     const createButton = document.getElementById('createPhonePairingQrButton');
     if (createButton && !error) createButton.classList.toggle('hidden', Number(data.active_count) >= Number(data.max_pairs));
+    const qr = document.getElementById('phonePairQr');
+    if (qr && !error) qr.classList.toggle('hidden', Number(data.active_count) >= Number(data.max_pairs));
+    const qrStatus = document.getElementById('phonePairStatus');
+    if (qrStatus && !error && Number(data.active_count) >= Number(data.max_pairs) && qr) {
+        qrStatus.textContent = 'Pairing limit reached. The QR is hidden until a device slot is available.';
+    } else if (qrStatus && !error && qr && qr.classList.contains('hidden')) {
+        qrStatus.textContent = 'A device slot is available. Scan this pairing QR with your phone.';
+    }
     const pairedLimit = document.getElementById('pairedPhonesLimit');
     if (pairedLimit && !error) pairedLimit.textContent = `of ${data.max_pairs} active limit · ${data.active_count} active`;
     const activeSessionCount = document.getElementById('activePhoneSessionCount');
@@ -2116,10 +2124,10 @@ async function refreshPairedAttendancePhones(force = false) {
     const phones = Array.isArray(data) ? data : [];
     const count = document.getElementById('pairedPhonesCount');
     const pairedPhones = phones.filter(phone => phone.paired === true || Boolean(phone.paired_at));
-    if (count) count.textContent = String(pairedPhones.length);
     const { data: pairingSettings, error: pairingSettingsError } = await window.ironGrindSupabase.rpc('get_mobile_attendance_pairing_settings');
     if (!document.getElementById('pairedPhonesList')) return;
     const actualPairedCount = Number(pairingSettings?.paired_count);
+    if (count) count.textContent = String(Number.isFinite(actualPairedCount) ? actualPairedCount : pairedPhones.length);
     const listOutOfSync = !pairingSettingsError && Number.isFinite(actualPairedCount) && actualPairedCount > pairedPhones.length;
     const activeSessionCount = document.getElementById('activePhoneSessionCount');
     if (activeSessionCount) activeSessionCount.textContent = String(phones.length);
@@ -2154,7 +2162,7 @@ async function refreshPairedAttendancePhones(force = false) {
             <button class="btn-danger" onclick="endMobileAttendanceSession('${phone.session_id}', true)">End pairing</button>
         </div>`;
     }).join('') + (listOutOfSync
-        ? `<p class="paired-phone-empty">${actualPairedCount - pairedPhones.length} paired phone(s) are not listed. Apply migration 20261104000019_list_only_paired_attendance_phones.sql to load every admin’s pairings.</p>`
+        ? `<p class="paired-phone-empty">Supabase counts ${actualPairedCount} paired phones, but the device list returned ${pairedPhones.length}. Apply migration 20261104000019_list_only_paired_attendance_phones.sql and refresh the page.</p>`
         : '');
 }
 
