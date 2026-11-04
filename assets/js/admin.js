@@ -51,6 +51,7 @@ let pairedPhoneListRefreshBusy = false;
 let pairedPhoneListLastRefreshAt = 0;
 let lifetimePhonePairingCount = null;
 let pairingPasswordPromptResolver = null;
+let pairingRemovalPinPromptResolver = null;
 let pendingPairingLimitPassword = null;
 let adminRealtimeChannel = null;
 let adminMembershipRefreshTimer = null;
@@ -284,6 +285,11 @@ function closeModal() {
         pairingPasswordPromptResolver = null;
         resolve(null);
     }
+    if (pairingRemovalPinPromptResolver) {
+        const resolve = pairingRemovalPinPromptResolver;
+        pairingRemovalPinPromptResolver = null;
+        resolve(null);
+    }
     pendingPairingLimitPassword = null;
     document.getElementById('modalOverlay').classList.add('hidden');
     document.getElementById('modalContent').classList.remove('report-pdf-modal');
@@ -370,9 +376,9 @@ function switchApprovalType(type) {
 function logout() {
     askConfirmation('Log out?', 'Are you sure you want to log out?', 'Log out', async () => {
         if (mobileAttendanceSessionIds.size) {
-            const pairingPassword = await requestPairingPassword('End phone pairings', 'Enter the separate phone-pairing password to end active pairings and sign out.');
-            if (!pairingPassword) return;
-            for (const sessionId of [...mobileAttendanceSessionIds]) await endMobileAttendanceSession(sessionId, true, pairingPassword);
+            const removalPin = await requestPairingRemovalPin('End phone pairings', 'Enter the four-digit admin PIN to end active pairings and sign out.');
+            if (!removalPin) return;
+            for (const sessionId of [...mobileAttendanceSessionIds]) await endMobileAttendanceSession(sessionId, true, removalPin);
         }
         const storeUnlockKey = adminStoreUnlockKey();
         if (storeUnlockKey) localStorage.removeItem(storeUnlockKey);
@@ -1827,7 +1833,7 @@ function startQRScanner() {
         <p class="modal-sub">Scan with a camera connected to this device or pair a phone camera.</p>
         <p id="phonePairingLimitSummary" class="qr-camera-status">Loading phone pairing limit…</p>
         <label class="phone-pair-remember"><input id="rememberPhoneScanner" type="checkbox" checked> Remember this phone for 30 days</label>
-        <div class="modal-actions"><button class="btn-primary" onclick="startLocalQRScanner()"><i class="fas fa-laptop"></i> This device</button><button class="btn-primary" onclick="startPhoneQRPairing(document.getElementById('rememberPhoneScanner').checked)"><i class="fas fa-mobile-screen-button"></i> Phone camera</button><button class="btn-sm" onclick="changePhonePairingLimit()">Change phone limit</button><button class="btn-sm" onclick="closeModal()">Cancel</button></div>
+        <div class="modal-actions"><button class="btn-primary" onclick="startLocalQRScanner()"><i class="fas fa-laptop"></i> This device</button><button class="btn-primary" onclick="startPhoneQRPairing(document.getElementById('rememberPhoneScanner').checked)"><i class="fas fa-mobile-screen-button"></i> Phone camera</button><button class="btn-sm" onclick="openPhonePairingManager()">Manage paired phones</button><button class="btn-sm" onclick="changePhonePairingLimit()">Change phone limit</button><button class="btn-sm" onclick="closeModal()">Cancel</button></div>
     </div>`);
     refreshPhonePairingLimitSummary();
 }
@@ -1835,6 +1841,11 @@ function startQRScanner() {
 async function startPhoneQRPairing(rememberPhone = false) {
     const { data: settings, error } = await window.ironGrindSupabase.rpc('get_mobile_attendance_pairing_settings');
     if (error) { toast(`Could not check phone pairing setup: ${error.message}`, 'error'); return; }
+    if (Number(settings?.active_count) >= Number(settings?.max_pairs)) {
+        toast(`Pairing limit reached (${settings.active_count} of ${settings.max_pairs}). End an existing pairing to continue.`, 'error');
+        openPhonePairingManager();
+        return;
+    }
     if (!settings?.password_configured) {
         toast('The phone-camera password has not been set in Supabase yet. Ask the database administrator to configure it.', 'error');
         return;
@@ -1855,6 +1866,7 @@ async function createPhonePairingSession(rememberPhone = false, pairingPassword)
     });
     if (error || !data?.session_id || !data?.token) {
         toast(`Could not connect a phone scanner${error?.message ? `: ${error.message}` : '.'}`, 'error');
+        if (/pairing limit reached/i.test(error?.message || '')) openPhonePairingManager();
         return;
     }
     const { data: pairingValid, error: validationError } = await window.ironGrindSupabase.rpc('validate_mobile_attendance_scan_session', {
@@ -1862,7 +1874,10 @@ async function createPhonePairingSession(rememberPhone = false, pairingPassword)
         p_token: data.token
     });
     if (validationError || pairingValid !== true) {
-        await window.ironGrindSupabase.rpc('close_mobile_attendance_scan_session', { p_session_id: data.session_id, p_pairing_password: pairingPassword });
+        const removalPin = await requestPairingRemovalPin('Remove incomplete pairing', 'The new QR did not validate. Enter the four-digit admin PIN to remove its reserved slot.');
+        if (removalPin) {
+            await window.ironGrindSupabase.rpc('close_mobile_attendance_scan_session', { p_session_id: data.session_id, p_pairing_pin: removalPin });
+        }
         toast(validationError
             ? `Supabase could not validate the new phone pairing: ${validationError.message}. Apply migrations 20261104000009 and 20261104000010.`
             : 'Supabase rejected the new phone pairing. Apply migrations 20261104000009 and 20261104000010, then try again.', 'error');
@@ -1958,6 +1973,49 @@ function cancelPairingPasswordPrompt() {
     resolve?.(null);
 }
 
+function requestPairingRemovalPin(title, description) {
+    if (pairingRemovalPinPromptResolver) pairingRemovalPinPromptResolver(null);
+    return new Promise(resolve => {
+        pairingRemovalPinPromptResolver = resolve;
+        openModal(`<form class="qr-camera-modal" onsubmit="submitPairingRemovalPin(event)">
+            <h3><i class="fas fa-lock"></i> ${escapeDialogText(title)}</h3>
+            <p class="modal-sub">${escapeDialogText(description)}</p>
+            <label for="phonePairingRemovalPin">Four-digit admin PIN</label>
+            <input id="phonePairingRemovalPin" type="password" inputmode="numeric" pattern="[0-9]{4}" maxlength="4" autocomplete="off" required autofocus>
+            <p id="phonePairingRemovalPinError" class="qr-camera-status hidden" role="alert"></p>
+            <div class="modal-actions"><button class="btn-danger" type="submit">Confirm</button><button class="btn-sm" type="button" onclick="cancelPairingRemovalPin()">Cancel</button></div>
+        </form>`);
+        document.getElementById('phonePairingRemovalPin')?.focus();
+    });
+}
+
+async function submitPairingRemovalPin(event) {
+    event.preventDefault();
+    const pin = document.getElementById('phonePairingRemovalPin')?.value || '';
+    const errorEl = document.getElementById('phonePairingRemovalPinError');
+    const { data, error } = await window.ironGrindSupabase.rpc('verify_mobile_attendance_removal_pin', { p_pin: pin });
+    if (error || data?.valid !== true) {
+        if (errorEl) { errorEl.textContent = error?.message || 'Incorrect PIN. Enter the four-digit admin PIN.'; errorEl.classList.remove('hidden'); }
+        if (!error && data?.configured === false && errorEl) {
+            errorEl.textContent = 'The four-digit removal PIN has not been set in the database yet.';
+        }
+        const input = document.getElementById('phonePairingRemovalPin');
+        if (input) { input.value = ''; input.focus(); }
+        return;
+    }
+    const resolve = pairingRemovalPinPromptResolver;
+    pairingRemovalPinPromptResolver = null;
+    closeModal();
+    resolve?.(pin);
+}
+
+function cancelPairingRemovalPin() {
+    const resolve = pairingRemovalPinPromptResolver;
+    pairingRemovalPinPromptResolver = null;
+    closeModal();
+    resolve?.(null);
+}
+
 async function refreshPhonePairingLimitSummary() {
     const target = document.getElementById('phonePairingLimitSummary');
     if (!target || !window.ironGrindSupabase) return;
@@ -1966,6 +2024,23 @@ async function refreshPhonePairingLimitSummary() {
     target.textContent = error ? 'Phone pairing limit could not be loaded.' : `${data.active_count} of ${data.max_pairs} phone pairing slots are in use.`;
     const pairedLimit = document.getElementById('pairedPhonesLimit');
     if (pairedLimit && !error) pairedLimit.textContent = `of ${data.max_pairs} active limit · ${data.active_count} active`;
+    const activeSessionCount = document.getElementById('activePhoneSessionCount');
+    if (activeSessionCount && !error) activeSessionCount.textContent = String(data.active_count);
+}
+
+function openPhonePairingManager() {
+    openModal(`<div class="qr-camera-modal">
+        <h3><i class="fas fa-mobile-screen-button"></i> Manage paired phones</h3>
+        <p class="modal-sub">Review active phones and pending pairing QR sessions. Ending a pairing requires the four-digit admin PIN.</p>
+        <p id="phonePairingLimitSummary" class="qr-camera-status">Loading pairing limit…</p>
+        <section class="paired-phones-section" aria-labelledby="managePhonesHeading">
+            <h4 id="managePhonesHeading">Active sessions <span id="activePhoneSessionCount" class="paired-phone-count">0</span></h4>
+            <div id="pairedPhonesList" class="paired-phone-list"><p class="paired-phone-empty">Loading phones…</p></div>
+        </section>
+        <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Close</button><button class="btn-primary" onclick="startQRScanner()">Back to cameras</button></div>
+    </div>`);
+    refreshPairedAttendancePhones(true);
+    refreshPhonePairingLimitSummary();
 }
 
 async function changePhonePairingLimit() {
@@ -2054,39 +2129,46 @@ async function refreshPairedAttendancePhones(force = false) {
     }
     const phones = Array.isArray(data) ? data : [];
     const count = document.getElementById('pairedPhonesCount');
-    let totalPaired = phones.length;
+    const pairedPhones = phones.filter(phone => phone.paired !== false);
     const { count: pairingCount, error: countError } = await window.ironGrindSupabase
         .from('activity_logs')
         .select('id', { count: 'exact', head: true })
         .eq('entity_type', 'mobile_attendance_scan_sessions')
         .eq('action', 'phone_paired');
     if (!countError && Number.isInteger(pairingCount)) {
-        lifetimePhonePairingCount = Math.max(lifetimePhonePairingCount || 0, pairingCount, phones.length);
+        lifetimePhonePairingCount = Math.max(lifetimePhonePairingCount || 0, pairingCount, pairedPhones.length);
     } else {
-        lifetimePhonePairingCount = Math.max(lifetimePhonePairingCount || 0, phones.length);
+        lifetimePhonePairingCount = Math.max(lifetimePhonePairingCount || 0, pairedPhones.length);
     }
     if (count) count.textContent = String(lifetimePhonePairingCount);
+    const activeSessionCount = document.getElementById('activePhoneSessionCount');
+    if (activeSessionCount) activeSessionCount.textContent = String(phones.length);
     const modalStatus = document.getElementById('phonePairStatus');
     if (modalStatus && !modalStatus.textContent.startsWith('Last scan processed') && !modalStatus.textContent.startsWith('Phone connection issue')) {
         const currentPhone = phones.find(phone => phone.session_id === activeMobileAttendanceSessionId);
-        if (currentPhone) {
+        if (currentPhone?.paired !== false && currentPhone) {
             modalStatus.textContent = `Paired phone: ${currentPhone.device || 'Phone'}. Ready for attendance scans.`;
+        } else if (currentPhone) {
+            modalStatus.textContent = 'This pairing QR is waiting for a phone to connect.';
         } else if (phones.length) {
-            modalStatus.textContent = `Waiting for this QR to pair. ${phones.length} other phone${phones.length === 1 ? ' is' : 's are'} already paired.`;
+            modalStatus.textContent = `Waiting for this QR to pair. ${phones.length} other active pairing session${phones.length === 1 ? ' is' : 's are'} listed.`;
         } else {
             modalStatus.textContent = 'Waiting for a phone to scan this pairing QR.';
         }
     }
     if (!phones.length) {
-        list.innerHTML = '<p class="paired-phone-empty">No phones are paired yet.</p>';
+        list.innerHTML = '<p class="paired-phone-empty">No active phone pairings or pending QR sessions.</p>';
         return;
     }
     list.innerHTML = phones.map(phone => {
-        const connectedAt = phone.paired_at
-            ? new Date(phone.paired_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila', dateStyle: 'medium', timeStyle: 'short' })
-            : 'Connected';
+        const isPaired = phone.paired !== false;
+        const relevantTime = isPaired ? phone.paired_at : phone.created_at;
+        const connectedAt = relevantTime
+            ? new Date(relevantTime).toLocaleString('en-PH', { timeZone: 'Asia/Manila', dateStyle: 'medium', timeStyle: 'short' })
+            : 'Unknown';
+        const model = isPaired ? (phone.device || 'Phone') : 'Waiting for phone to scan';
         return `<div class="paired-phone-row">
-            <div class="paired-phone-meta"><strong>${escapeHTML(phone.device || 'Phone')}</strong><small>Paired ${escapeHTML(connectedAt)}</small></div>
+            <div class="paired-phone-meta"><strong>${escapeHTML(model)}</strong><small>${isPaired ? 'Paired' : 'QR created'} ${escapeHTML(connectedAt)}</small></div>
             <button class="btn-danger" onclick="endMobileAttendanceSession('${phone.session_id}', true)">End pairing</button>
         </div>`;
     }).join('');
@@ -2139,11 +2221,11 @@ async function restoreMobileAttendancePairing() {
     if (!mobileAttendanceSessionIds.size) localStorage.removeItem('ig_mobile_attendance_session_id');
 }
 
-async function endMobileAttendanceSession(sessionId = activeMobileAttendanceSessionId, keepModalOpen = false, pairingPassword = null) {
+async function endMobileAttendanceSession(sessionId = activeMobileAttendanceSessionId, keepModalOpen = false, removalPin = null) {
     if (!sessionId || !window.ironGrindSupabase) return;
-    if (!pairingPassword) pairingPassword = await requestPairingPassword('End phone pairing', 'Enter the admin-only phone-pairing password to end this pairing.');
-    if (!pairingPassword) return;
-    const { error } = await window.ironGrindSupabase.rpc('close_mobile_attendance_scan_session', { p_session_id: sessionId, p_pairing_password: pairingPassword });
+    if (!removalPin) removalPin = await requestPairingRemovalPin('End phone pairing', 'Enter the four-digit admin PIN to remove this paired phone.');
+    if (!removalPin) return;
+    const { error } = await window.ironGrindSupabase.rpc('close_mobile_attendance_scan_session', { p_session_id: sessionId, p_pairing_pin: removalPin });
     if (error) { toast(`Could not end phone pairing: ${error.message}`, 'error'); return; }
     mobileAttendanceSessionIds.delete(sessionId);
     mobileAttendanceSessionPersistence.delete(sessionId);
