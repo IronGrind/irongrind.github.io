@@ -3573,28 +3573,25 @@ function renderReports() {
     const groups = [
         {
             name: 'Membership',
-            description: 'Member status, renewals, and record history.',
             reports: [
-                { id: 'membership', name: 'Membership Report', icon: 'fa-id-card', description: 'Monthly member records, plan counts, and paid income.' },
-                { id: 'member-status', name: 'Member Status', icon: 'fa-user-check', description: 'Active, recently expired, and inactive member records.' },
-                { id: 'renewals', name: 'Renewal Report', icon: 'fa-rotate', description: 'Completed renewals and their payment records.' },
-                { id: 'archives', name: 'Archives', icon: 'fa-box-archive', description: 'Expired memberships, plan changes, and archived products.' }
+                { id: 'membership', name: 'Membership Report', icon: 'fa-id-card' },
+                { id: 'member-status', name: 'Member Status', icon: 'fa-user-check' },
+                { id: 'renewals', name: 'Renewal Report', icon: 'fa-rotate' },
+                { id: 'archives', name: 'Archives', icon: 'fa-box-archive' }
             ]
         },
         {
             name: 'Daily Operations',
-            description: 'Attendance and inventory activity.',
             reports: [
-                { id: 'attendance', name: 'Attendance Report', icon: 'fa-clipboard-user', description: 'Member check-ins and check-outs.' },
-                { id: 'inventory', name: 'Inventory Report', icon: 'fa-boxes-stacked', description: 'Product stock and inventory details.' }
+                { id: 'attendance', name: 'Attendance Report', icon: 'fa-clipboard-user' },
+                { id: 'inventory', name: 'Inventory Report', icon: 'fa-boxes-stacked' }
             ]
         },
         {
             name: 'Payments & Sales',
-            description: 'Transaction and payment records.',
             reports: [
-                { id: 'payment', name: 'Payment Report', icon: 'fa-money-bill-wave', description: 'Recorded membership and customer payments.' },
-                { id: 'sales', name: 'Sales Report', icon: 'fa-coins', description: 'Sales transactions and line items.' }
+                { id: 'payment', name: 'Payment Report', icon: 'fa-money-bill-wave' },
+                { id: 'sales', name: 'Sales Report', icon: 'fa-coins' }
             ]
         }
     ];
@@ -3602,10 +3599,6 @@ function renderReports() {
     grid.className = 'reports-content';
     grid.innerHTML = `
         <div class="reports-toolbar">
-            <div class="reports-toolbar-copy">
-                <strong>Export reports</strong>
-                <span>Choose one day, a custom date range, or a full year. Status and inventory reports remain current snapshots.</span>
-            </div>
             <div class="report-export-controls">
                 <label>Area<select id="reportsExportArea" onchange="updateReportExportAction()"><option value="all">All report areas</option><option value="membership">Membership</option><option value="member-status">Member Status</option><option value="renewals">Renewals</option><option value="archives">Archives</option><option value="attendance">Attendance</option><option value="inventory">Inventory</option><option value="payment">Payments</option><option value="sales">Sales</option></select></label>
                 <label>Period<select id="reportsPeriodMode" onchange="updateReportPeriodControls()"><option value="day">Specific day</option><option value="range">Date range</option><option value="year">Full year</option></select></label>
@@ -3613,14 +3606,19 @@ function renderReports() {
                 <label data-report-period="range" hidden>From<input id="reportsFrom" type="date"></label>
                 <label data-report-period="range" hidden>To<input id="reportsTo" type="date"></label>
                 <label data-report-period="year" hidden>Year<input id="reportsYear" type="number" min="2000" max="2100" step="1"></label>
-                <button id="reportsExportButton" class="report-icon-btn report-export-all-btn" type="button" onclick="exportAllReports()" aria-label="Export selected report area" title="Export selected report area"><i class="fas fa-download" aria-hidden="true"></i></button>
+                <div class="report-actions-menu">
+                    <button class="report-icon-btn" type="button" onclick="toggleReportActionsMenu(this)" aria-label="Report actions" title="Report actions" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
+                    <div class="report-actions-menu-popover" role="menu" hidden>
+                        <button id="reportsExportMenuItem" type="button" role="menuitem" onclick="closeReportActionsMenus(); exportAllReports()"><i class="fas fa-file-pdf" aria-hidden="true"></i> Export as PDF</button>
+                        <button type="button" role="menuitem" onclick="closeReportActionsMenus(); printSelectedReport()"><i class="fas fa-print" aria-hidden="true"></i> Print selected</button>
+                    </div>
+                </div>
             </div>
         </div>
         ${groups.map(group => `
             <section class="report-group" aria-label="${group.name} reports">
                 <div class="report-group-heading">
                     <h3>${group.name}</h3>
-                    <p>${group.description}</p>
                 </div>
                 <div class="report-grid">
                     ${group.reports.map(report => `
@@ -3628,12 +3626,9 @@ function renderReports() {
                             <div class="report-card-icon"><i class="fas ${report.icon}" aria-hidden="true"></i></div>
                             <div class="report-card-copy">
                                 <h4>${report.name}</h4>
-                                <p>${report.description}</p>
                             </div>
                             <div class="report-card-actions" aria-label="${report.name} actions">
                                 <button class="report-icon-btn" type="button" onclick="viewReportPDF('${report.id}')" aria-label="Preview ${report.name}" title="Preview"><i class="fas fa-eye" aria-hidden="true"></i></button>
-                                <button class="report-icon-btn" type="button" onclick="printReportPDF('${report.id}')" aria-label="Print ${report.name}" title="Print"><i class="fas fa-print" aria-hidden="true"></i></button>
-                                <button class="report-icon-btn" type="button" onclick="downloadReportPDF('${report.id}')" aria-label="Download ${report.name} as PDF" title="Download PDF"><i class="fas fa-download" aria-hidden="true"></i></button>
                             </div>
                         </article>
                     `).join('')}
@@ -3657,13 +3652,42 @@ function updateReportPeriodControls() {
 
 function updateReportExportAction() {
     const area = document.getElementById('reportsExportArea')?.value || 'all';
-    const button = document.getElementById('reportsExportButton');
-    if (!button) return;
     const all = area === 'all';
-    button.title = all ? 'Export all report areas as ZIP' : 'Export selected report as PDF';
-    button.setAttribute('aria-label', button.title);
-    const icon = button.querySelector('i');
-    if (icon) icon.className = `fas ${all ? 'fa-file-zipper' : 'fa-file-pdf'}`;
+    const exportItem = document.getElementById('reportsExportMenuItem');
+    if (exportItem) {
+        exportItem.title = all ? 'Export all report areas as a ZIP of PDFs' : 'Export selected report as PDF';
+        exportItem.setAttribute('aria-label', exportItem.title);
+        exportItem.innerHTML = `<i class="fas ${all ? 'fa-file-zipper' : 'fa-file-pdf'}" aria-hidden="true"></i> ${all ? 'Export PDFs as ZIP' : 'Export as PDF'}`;
+    }
+}
+
+function closeReportActionsMenus(except = null) {
+    document.querySelectorAll('.report-actions-menu').forEach(menu => {
+        if (menu === except) return;
+        const button = menu.querySelector('button[aria-expanded]');
+        const popover = menu.querySelector('.report-actions-menu-popover');
+        if (button) button.setAttribute('aria-expanded', 'false');
+        if (popover) popover.hidden = true;
+    });
+}
+
+function toggleReportActionsMenu(button) {
+    const menu = button.closest('.report-actions-menu');
+    const popover = menu?.querySelector('.report-actions-menu-popover');
+    const shouldOpen = popover?.hidden;
+    closeReportActionsMenus(menu);
+    if (!popover) return;
+    popover.hidden = !shouldOpen;
+    button.setAttribute('aria-expanded', String(Boolean(shouldOpen)));
+}
+
+function printSelectedReport() {
+    const area = document.getElementById('reportsExportArea')?.value || 'all';
+    if (area === 'all') {
+        toast('Choose one report area before printing.', 'error');
+        return;
+    }
+    printReportPDF(area);
 }
 
 function getSelectedReportPeriod() {
@@ -4302,9 +4326,13 @@ function downloadProductSalesReport() {
 document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', event => {
         if (!event.target.closest('.admin-account-menu-wrap')) closeAdminAccountMenu();
+        if (!event.target.closest('.report-actions-menu')) closeReportActionsMenus();
     });
     document.addEventListener('keydown', event => {
-        if (event.key === 'Escape') closeAdminAccountMenu();
+        if (event.key === 'Escape') {
+            closeAdminAccountMenu();
+            closeReportActionsMenus();
+        }
     });
     // Demo data is only created for offline mode. Supabase-backed dashboards
     // should start from the database instead of presenting fake records.
