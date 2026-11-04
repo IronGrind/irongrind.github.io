@@ -119,7 +119,7 @@ begin
     if paid_type in ('numeric', 'integer', 'bigint', 'real', 'double precision') then
         execute 'update public.members set paid = $1 where id = $2' using p_new_price, member_row.id;
     elsif paid_type = 'boolean' then
-        update public.members set paid = true where id = member_row.id;
+        execute 'update public.members set paid = $1 where id = $2' using true, member_row.id;
     end if;
 
     item_label := p_new_plan || case when p_event_type = 'renewal'

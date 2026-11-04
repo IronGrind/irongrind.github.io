@@ -50,7 +50,7 @@ context.document = { getElementById(id) {
     if (!elements.has(id)) elements.set(id, { textContent: '', innerHTML: '', classList: { toggle(name, value) { this[name] = value; } } });
     return elements.get(id);
 } };
-Object.assign(context, { members: [], attendance: [], sales: [], products: [], todayStr: () => '2026-11-04', formatPeso: amount => `PHP ${amount}` });
+Object.assign(context, { members: [], attendance: [], sales: [], products: [], todayStr: () => '2026-11-04', formatPeso: amount => `PHP ${amount}`, productIsLowStock: () => false, getMemberActivityStatus: () => 'Active' });
 const renderStart = source.indexOf('function renderDashboard()');
 const renderEnd = source.indexOf('/* ========== RENDER: MEMBERS', renderStart);
 vm.runInContext(source.slice(renderStart, renderEnd), context);

@@ -1259,9 +1259,11 @@ async function initializeSupabaseAdminData() {
         toast(profileError
             ? `Could not verify your account: ${profileError.message}`
             : 'This account is not an admin account.', 'error');
+        if (!profileError) window.location.replace(profile?.role === 'staff' ? 'staff.html' : profile?.role === 'member' ? 'customer.html' : 'index.html');
         return;
     }
 
+    document.getElementById('currentUserName').textContent = profile.full_name || profile.username;
     activeDashboardRole = 'admin';
     subscribeAdminRealtimeUpdates();
     await loadSupabaseMembershipData();
@@ -1844,6 +1846,8 @@ function startQRScanner() {
 }
 
 async function startPhoneQRPairing(rememberPhone = true) {
+    try { await window.requireVerifiedAdmin(); }
+    catch (error) { toast(error.message, 'error'); return; }
     const pairingPassword = await requestPairingPassword('Phone camera access', 'Enter the admin-only phone-pairing password to create a secure QR.');
     if (!pairingPassword) return;
     phoneCameraAuthorization = pairingPassword;
@@ -1867,6 +1871,8 @@ async function createPhonePairingSession(rememberPhone = true, pairingPassword) 
         toast('Phone scanning needs an active Supabase connection.', 'error');
         return;
     }
+    try { await window.requireVerifiedAdmin(); }
+    catch (error) { toast(error.message, 'error'); return; }
     const { data, error } = await window.ironGrindSupabase.rpc('create_mobile_attendance_scan_session', {
         p_remember_phone: rememberPhone,
         p_pairing_password: pairingPassword
@@ -2001,6 +2007,11 @@ async function submitPairingPassword(event) {
     const value = document.getElementById('phonePairingPassword')?.value || '';
     if (!value) return;
     const errorEl = document.getElementById('phonePairingPasswordError');
+    try { await window.requireVerifiedAdmin(); }
+    catch (error) {
+        if (errorEl) { errorEl.textContent = error.message; errorEl.classList.remove('hidden'); }
+        return;
+    }
     const { data, error } = await window.ironGrindSupabase.rpc('verify_mobile_attendance_pairing_password', { p_password: value });
     if (error || data !== true) {
         if (errorEl) {
@@ -2593,8 +2604,26 @@ async function resolveMemberFromQR(value) {
     return member;
 }
 
+const pendingAdminAttendanceScans = new Map();
 async function recordMemberAttendanceScan(member) {
     if (!member) return;
+    if (window.ironGrindSupabase) {
+        const key = String(member.id);
+        const requestId = pendingAdminAttendanceScans.get(key) || crypto.randomUUID();
+        pendingAdminAttendanceScans.set(key, requestId);
+        const { data, error } = await window.ironGrindSupabase.rpc('record_attendance_scan', {
+            p_identifier: key, p_request_id: requestId
+        });
+        if (error) {
+            if (error.code) pendingAdminAttendanceScans.delete(key);
+            toast(error.message, 'error'); return;
+        }
+        pendingAdminAttendanceScans.delete(key);
+        await loadSupabaseOperationalData({ captureExpiry: false });
+        renderAttendance(); renderDashboard();
+        toast(data.member_name + (data.action === 'duplicate' ? ' was already scanned just now.' : data.action === 'check_out' ? ' checked out.' : ' checked in.'), 'success');
+        return;
+    }
 
     // The same member QR toggles the open visit closed when scanned again.
     // Check this before expiry so staff can always check a member out.
@@ -2639,8 +2668,10 @@ async function checkOut(id) {
     if (!a) return;
     const now = new Date();
     if (window.ironGrindSupabase) {
+        const { data: { user }, error: authError } = await window.ironGrindSupabase.auth.getUser();
+        if (authError || !user) { toast('Sign in again before checking a member out.', 'error'); return; }
         const { data, error } = await window.ironGrindSupabase.from('attendance')
-            .update({ time_out: now.toISOString() }).eq('id', id).is('time_out', null).select('id').maybeSingle();
+            .update({ time_out: now.toISOString(), checked_out_by: user.id }).eq('id', id).is('time_out', null).select('id').maybeSingle();
         if (error) { toast(`Could not save check-out: ${error.message}`, 'error'); return; }
         if (!data) {
             await loadSupabaseOperationalData({ captureExpiry: false });

@@ -3,6 +3,7 @@ const staffStatus = document.getElementById('staffStatus');
 let staffUser;
 let staffBusy = false;
 let staffScanner;
+let pendingStaffScan = null;
 async function refreshStaffAttendance() {
     const { data, error } = await staffClient.rpc('staff_list_attendance');
     if (error) throw error;
@@ -31,10 +32,14 @@ async function recordStaffAttendance(value) {
     if (staffBusy || !staffUser) return;
     staffBusy = true;
     try {
+        const identifier = value.trim();
+        if (pendingStaffScan && pendingStaffScan.identifier !== identifier) throw new Error('Retry the previous member scan first to confirm its result.');
+        pendingStaffScan ||= { identifier, requestId: crypto.randomUUID() };
         const { data, error } = await staffClient.rpc('record_attendance_scan', {
-            p_identifier: value.trim(), p_request_id: crypto.randomUUID()
+            p_identifier: identifier, p_request_id: pendingStaffScan.requestId
         });
-        if (error) throw error;
+        if (error) { if (error.code) pendingStaffScan = null; throw error; }
+        pendingStaffScan = null;
         staffStatus.textContent = data.member_name + (data.action === 'duplicate' ? ' was already scanned just now.' : data.action === 'check_out' ? ' checked out.' : ' checked in.');
         document.getElementById('staffIdentifier').value = '';
         await refreshStaffAttendance();
@@ -44,12 +49,15 @@ async function recordStaffAttendance(value) {
 document.getElementById('staffScanForm').addEventListener('submit', event => { event.preventDefault(); recordStaffAttendance(document.getElementById('staffIdentifier').value); });
 document.getElementById('refreshStaffAttendance').onclick = () => refreshStaffAttendance().catch(error => { staffStatus.textContent = error.message; });
 document.getElementById('startStaffCamera').onclick = async () => {
-    if (!staffUser || staffScanner) return;
+    if (!staffUser || staffScanner || staffBusy) return;
     try {
         staffScanner = new Html5Qrcode('staffCamera');
         await staffScanner.start({ facingMode: 'environment' }, { fps: 10, qrbox: 250 }, async value => {
-            await staffScanner.stop();
+            if (!staffScanner || staffBusy) return;
+            const scanner = staffScanner;
             staffScanner = null;
+            staffBusy = true;
+            try { await scanner.stop(); } finally { staffBusy = false; }
             await recordStaffAttendance(value);
         }, () => {});
     } catch (error) { staffScanner = null; staffStatus.textContent = `Could not open camera: ${error.message || error}`; }
