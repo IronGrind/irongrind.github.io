@@ -2073,9 +2073,9 @@ async function refreshPhonePairingLimitSummary() {
         window.currentPhonePairingSettings = data;
         applyPhonePairingCapacityState(data);
     }
-    target.textContent = error ? 'Phone pairing limit could not be loaded.' : `${data.active_count} of ${data.max_pairs} phone pairing slots are in use.`;
+    target.textContent = error ? 'Phone pairing limit could not be loaded.' : `${data.paired_count} of ${data.max_pairs} phone slots are paired. ${data.pending_count || 0} QR waiting.`;
     const pairedLimit = document.getElementById('pairedPhonesLimit');
-    if (pairedLimit && !error) pairedLimit.textContent = `of ${data.max_pairs} active limit · ${data.active_count} active`;
+    if (pairedLimit && !error) pairedLimit.textContent = `of ${data.max_pairs} limit · ${data.pending_count || 0} QR waiting`;
     const activeSessionCount = document.getElementById('activePhoneSessionCount');
     if (activeSessionCount && !error) activeSessionCount.textContent = String(data.active_count);
 }
@@ -2122,10 +2122,13 @@ async function authorizePhonePairingLimit(event) {
         return;
     }
     toast(`Phone pairing limit set to ${desired}.`, 'success');
+    const { data: settings } = await window.ironGrindSupabase.rpc('get_mobile_attendance_pairing_settings');
     if (activeMobileAttendanceSessionId && activeMobileAttendancePairingUrl) {
         showMobileAttendancePairingModal(activeMobileAttendanceSessionId, activeMobileAttendancePairingUrl, activeMobileAttendancePersistent);
+    } else if (settings && Number(settings.paired_count) < Number(settings.max_pairs) && phoneCameraAuthorization) {
+        await createPhonePairingSession(phoneCameraRememberPreference, phoneCameraAuthorization);
     } else {
-        showMobileAttendancePairingModal(null, null, false, true);
+        showMobileAttendancePairingModal(null, null, false, settings ? Number(settings.paired_count) >= Number(settings.max_pairs) : false);
     }
 }
 
@@ -2233,7 +2236,7 @@ async function refreshPairedAttendancePhones(force = false) {
         if (!document.getElementById('pendingPhonePairingsList')) return;
         const pendingCount = document.getElementById('pendingPhonePairingsCount');
         const pending = Array.isArray(pendingSessions) ? pendingSessions : [];
-        if (pendingCount) pendingCount.textContent = pendingError ? 'â€”' : String(pending.length);
+        if (pendingCount) pendingCount.textContent = pendingError ? '--' : String(pending.length);
         pendingList.innerHTML = pendingError
             ? `<p class="paired-phone-empty">Could not load pending QR codes: ${escapeHTML(pendingError.message)}. Apply migration 20261104000021_pending_attendance_pairings.sql.</p>`
             : pending.length
@@ -2245,7 +2248,7 @@ async function refreshPairedAttendancePhones(force = false) {
                         ? new Date(session.expires_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila', timeStyle: 'short' })
                         : '';
                     return `<div class="paired-phone-row pending-phone-pairing-row">
-                        <div class="paired-phone-meta"><strong>Waiting for phone to scan</strong><small>QR created ${escapeHTML(createdAt)}${expiresAt ? ` Â· expires ${escapeHTML(expiresAt)}` : ''}</small></div>
+                        <div class="paired-phone-meta"><strong>Waiting for phone to scan</strong><small>QR created ${escapeHTML(createdAt)}</small></div>
                         <button class="btn-danger" onclick="endMobileAttendanceSession('${session.session_id}', true)">End QR</button>
                     </div>`;
                 }).join('')
