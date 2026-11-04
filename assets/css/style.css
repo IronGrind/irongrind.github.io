@@ -1905,3 +1905,27 @@ html[data-dashboard-theme="light"] body.staff-dashboard select:focus,
 html[data-dashboard-theme="light"] body.staff-dashboard textarea:focus {
     border-color: #b54a51 !important; box-shadow: 0 0 0 3px rgba(152, 21, 30, .11);
 }
+
+/* Use flat, solid surfaces on the admin and member dashboards. */
+body.admin-dashboard::after,
+body.member-dashboard::after { background: none !important; }
+body.admin-dashboard #page-loader,
+body.member-dashboard #page-loader { background: #050505; }
+body.admin-dashboard #page-loader::after,
+body.member-dashboard #page-loader::after { display: none; }
+body.admin-dashboard .reports-toolbar,
+body.admin-dashboard .staff-create-panel,
+body.admin-dashboard .staff-directory-panel,
+body.admin-dashboard .staff-account-card,
+body.admin-dashboard .sales-month-overview,
+body.admin-dashboard .membership-income-card.overall,
+body.member-dashboard .customer-hero { background-image: none !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .reports-toolbar { background: #f2f2f3 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .staff-create-panel,
+html[data-dashboard-theme="light"] body.admin-dashboard .staff-directory-panel,
+html[data-dashboard-theme="light"] body.admin-dashboard .staff-account-card { background: #fff !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .sales-month-overview,
+html[data-dashboard-theme="light"] body.admin-dashboard .registration-notice,
+html[data-dashboard-theme="light"] body.admin-dashboard .low-stock-item { background: #fff5f5 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .membership-income-card.overall { background: #f8e9ea !important; }
+html[data-dashboard-theme="light"] body.member-dashboard .customer-hero { background: #fff8f8 !important; }
