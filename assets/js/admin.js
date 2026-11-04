@@ -11,13 +11,28 @@ let activeDashboardRole = 'admin';
     }
     activeDashboardRole = session.role;
     document.getElementById('currentUserName').textContent = session.fullName || session.username;
-    if (session.role === 'staff') document.querySelector('.user-chip i')?.classList.replace('fa-user-shield', 'fa-user');
+    if (session.role === 'staff') {
+        document.querySelector('.user-chip i')?.classList.replace('fa-user-shield', 'fa-user');
+        document.querySelectorAll('.sidebar .nav-item, .sidebar .nav-section-label').forEach(element => {
+            if (element.dataset.section !== 'attendance') element.classList.add('hidden');
+        });
+        document.getElementById('activityLogsButton')?.classList.add('hidden');
+        document.querySelectorAll('.admin-section').forEach(section => section.classList.add('hidden'));
+        document.getElementById('section-attendance')?.classList.remove('hidden');
+    }
 })();
 
 function adminStoreUnlockKey() {
     const session = JSON.parse(localStorage.getItem('irongrind_session') || sessionStorage.getItem('irongrind_session') || 'null');
     const account = String(session?.username || '').trim().toLowerCase();
     return account ? `ig_store_unlocked:${encodeURIComponent(account)}` : '';
+}
+
+function clearCachedAdminDataForStaff() {
+    for (const key of [
+        'ig_members', 'ig_products', 'ig_archivedProducts', 'ig_sales',
+        'ig_pendingApprovals', 'ig_users', 'ig_planArchives', 'ig_membershipArchives'
+    ]) localStorage.removeItem(key);
 }
 
 /* ========== STATE ========== */
@@ -456,10 +471,12 @@ function logout() {
         }
         const storeUnlockKey = adminStoreUnlockKey();
         if (storeUnlockKey) localStorage.removeItem(storeUnlockKey);
-        try {
-            const result = await window.ironGrindSupabase?.rpc('admin_log_session_event', { p_event: 'sign_out_requested' });
-            if (result?.error) console.error('Could not record sign-out request:', result.error);
-        } catch (error) { console.error('Could not record sign-out request:', error); }
+        if (activeDashboardRole === 'admin') {
+            try {
+                const result = await window.ironGrindSupabase?.rpc('admin_log_session_event', { p_event: 'sign_out_requested' });
+                if (result?.error) console.error('Could not record sign-out request:', result.error);
+            } catch (error) { console.error('Could not record sign-out request:', error); }
+        }
         await window.ironGrindSupabase?.auth.signOut();
         localStorage.removeItem('irongrind_session');
         sessionStorage.removeItem('irongrind_session');
@@ -1362,6 +1379,7 @@ async function initializeSupabaseAdminData() {
 
     activeDashboardRole = profile.role;
     if (profile.role === 'staff') {
+        clearCachedAdminDataForStaff();
         document.querySelectorAll('.sidebar .nav-item, .sidebar .nav-section-label').forEach(element => {
             if (element.dataset.section !== 'attendance') element.classList.add('hidden');
         });
@@ -4295,27 +4313,42 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!localStorage.getItem('ig_users')) saveDB('users', []);
     }
 
-    members = loadDB('members');
-    products = loadDB('products').filter(product => product.isActive !== false);
-    archivedProducts = loadDB('archivedProducts');
-    sales = loadDB('sales');
-    attendance = loadDB('attendance');
-    pendingApprovals = loadDB('pendingApprovals');
-    users = loadDB('users').map(({ password, ...safeUser }) => safeUser);
-    saveDB('users', users);
-    planArchives = loadDB('planArchives');
-    membershipArchives = loadDB('membershipArchives');
-    captureExpiredMemberships();
+    if (activeDashboardRole === 'staff' || window.ironGrindSupabase) {
+        // Never hydrate an attendance-only session from the shared browser's
+        // cached admin data.
+        members = [];
+        products = [];
+        archivedProducts = [];
+        sales = [];
+        attendance = [];
+        pendingApprovals = [];
+        users = [];
+        planArchives = [];
+        membershipArchives = [];
+        if (activeDashboardRole === 'staff') renderAttendance();
+    } else {
+        members = loadDB('members');
+        products = loadDB('products').filter(product => product.isActive !== false);
+        archivedProducts = loadDB('archivedProducts');
+        sales = loadDB('sales');
+        attendance = loadDB('attendance');
+        pendingApprovals = loadDB('pendingApprovals');
+        users = loadDB('users').map(({ password, ...safeUser }) => safeUser);
+        saveDB('users', users);
+        planArchives = loadDB('planArchives');
+        membershipArchives = loadDB('membershipArchives');
+        captureExpiredMemberships();
 
-    renderDashboard();
-    renderMembers();
-    renderApprovals();
-    renderAttendance();
-    renderSales();
-    renderReports();
+        renderDashboard();
+        renderMembers();
+        renderApprovals();
+        renderAttendance();
+        renderSales();
+        renderReports();
+    }
     initializeSupabaseAdminData();
 
-    window.setInterval(() => {
+    if (activeDashboardRole === 'admin') window.setInterval(() => {
         captureExpiredMemberships();
         renderMembers();
     }, 60 * 1000);

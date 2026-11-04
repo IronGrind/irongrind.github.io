@@ -9,6 +9,12 @@ alter table public.profiles drop constraint if exists profiles_role_check;
 alter table public.profiles
     add constraint profiles_role_check check (role in ('admin', 'staff', 'member'));
 
+-- The username login and staff manager use the server-only service role.
+grant select (id, username, role, full_name, email, is_active, created_at)
+    on public.profiles to service_role;
+grant update (username, full_name, role, is_active)
+    on public.profiles to service_role;
+
 create or replace function private.is_staff()
 returns boolean
 language sql
