@@ -1745,3 +1745,21 @@ html[data-dashboard-theme="light"] body.admin-dashboard .attendance-table th { c
 html[data-dashboard-theme="light"] body.admin-dashboard .attendance-table td { color: #292929 !important; border-color: #e4e4e6 !important; }
 html[data-dashboard-theme="light"] body.member-dashboard .view-only-note { color: #4b4b4b !important; background: #f2f2f3 !important; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-access-label { color: #414141 !important; background: #fff !important; border-color: #d1d1d5 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .ph-phone-input > span,
+html[data-dashboard-theme="light"] body.member-dashboard .ph-phone-input > span,
+html[data-dashboard-theme="light"] body.staff-dashboard .ph-phone-input > span {
+    color: #3f4146 !important; background: #e5e6e8 !important; border-color: #c8c9cd !important;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .report-card {
+    color: #242424 !important; background: #f0f1f2 !important; border-color: #d7d9dd !important;
+    box-shadow: 0 5px 16px rgba(24, 24, 27, .035);
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .report-card:hover {
+    background: #e9eaec !important; border-color: #c9cbd0 !important;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .membership-income-card {
+    background: #f0f1f2 !important; border-color: #d7d9dd !important;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .membership-income-card.overall {
+    background: linear-gradient(135deg, #f8e9ea, #f3f3f4) !important; border-color: #e3c4c6 !important;
+}
