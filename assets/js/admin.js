@@ -390,7 +390,10 @@ async function loadStaffAccounts() {
         .eq('role', 'staff').order('full_name');
     if (!document.getElementById('staffAccountsList')) return;
     if (error) {
-        list.innerHTML = `<p class="empty-state">Could not load staff accounts: ${escapeHTML(error.message)}</p>`;
+        const message = /profiles\.is_active.*does not exist/i.test(error.message || '')
+            ? 'Staff account setup is not complete in this Supabase project. Apply migration 20261104000023_staff_attendance_role.sql, then reload.'
+            : `Could not load staff accounts: ${error.message}`;
+        list.innerHTML = `<p class="empty-state">${escapeHTML(message)}</p>`;
         return;
     }
     const staff = Array.isArray(data) ? data : [];
@@ -422,7 +425,10 @@ async function createStaffAccount(event) {
         toast(`Staff account created for ${data.full_name}. They can sign in with their username and initial password.`, 'success');
         await loadStaffAccounts();
     } catch (error) {
-        toast(`Could not create staff account: ${error.message || 'Please try again.'}`, 'error');
+        const message = /failed to send a request to the edge function/i.test(error.message || '')
+            ? 'Could not reach the admin-manage-staff Edge Function. Deploy it to this Supabase project, then try again.'
+            : error.message || 'Please try again.';
+        toast(`Could not create staff account: ${message}`, 'error');
     } finally {
         if (submit) submit.disabled = false;
     }
