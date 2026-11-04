@@ -64,7 +64,7 @@ async function searchStaffMembers(query, resultsId, selectedId, onSelect) {
         const button = document.createElement('button'); button.type = 'button'; button.className = 'staff-member-result';
         const details = document.createElement('span');
         const name = document.createElement('strong'); name.textContent = member.full_name;
-        const meta = document.createElement('small'); meta.textContent = `${member.plan || 'No plan'} · ${member.mobile || 'No mobile'} · Expires ${member.expiry_date || 'not set'}`;
+        const meta = document.createElement('small'); meta.textContent = `${member.plan || 'No plan'} · ${member.email || 'No Gmail'} · Expires ${member.expiry_date || 'not set'}`;
         details.append(name, meta);
         const status = document.createElement('span'); status.className = `staff-member-status ${String(member.status || '').toLowerCase()}`; status.textContent = member.status || 'Unknown';
         button.append(details, status);
@@ -391,7 +391,16 @@ document.getElementById('startStaffCamera').onclick = async () => {
             try { await scanner.stop(); } finally { staffBusy = false; }
             await recordStaffAttendance(value);
         }, () => {});
-    } catch (error) { staffScanner = null; staffStatus.textContent = `Could not open camera: ${error.message || error}`; }
+    } catch (error) {
+        staffScanner = null;
+        console.warn('Staff QR camera could not start:', error);
+        const message = ['NotAllowedError', 'PermissionDeniedError', 'SecurityError'].includes(error?.name)
+            ? 'Camera access is off. Allow camera access in your browser settings, then try again.'
+            : error?.name === 'NotFoundError'
+                ? 'No camera was found on this device. You can enter the member code below instead.'
+                : 'The camera is unavailable right now. You can enter the member code below instead.';
+        staffStatus.textContent = message;
+    }
 };
 document.getElementById('staffLogout').onclick = async () => {
     try {
