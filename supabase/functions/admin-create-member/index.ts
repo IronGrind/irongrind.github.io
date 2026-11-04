@@ -22,7 +22,7 @@ Deno.serve(async (request) => {
   const serviceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
   const authorization = request.headers.get('Authorization');
   if (!url || !anonKey || !serviceRoleKey || !authorization) {
-    return response({ error: 'Server configuration or admin session is missing.' }, 500);
+    return response({ error: 'Server configuration or signed-in session is missing.' }, 500);
   }
 
   const callerClient = createClient(url, anonKey, {
@@ -32,8 +32,10 @@ Deno.serve(async (request) => {
   const { data: authData, error: authError } = await callerClient.auth.getUser();
   if (authError || !authData.user) return response({ error: 'Sign in again to continue.' }, 401);
   const { data: profile, error: profileError } = await callerClient
-    .from('profiles').select('role').eq('id', authData.user.id).maybeSingle();
-  if (profileError || profile?.role !== 'admin') return response({ error: 'Admin access required.' }, 403);
+    .from('profiles').select('role,is_active').eq('id', authData.user.id).maybeSingle();
+  if (profileError || !profile?.is_active || !['admin', 'staff'].includes(profile.role)) {
+    return response({ error: 'Active admin or staff access required.' }, 403);
+  }
 
   let body: Record<string, unknown>;
   try {
@@ -57,6 +59,15 @@ Deno.serve(async (request) => {
   }
   if (!/^09\d{9}$/.test(mobile) || !/^09\d{9}$/.test(emergencyContact)) {
     return response({ error: 'Mobile and emergency contact numbers must each be 11 digits and start with 09.' }, 400);
+  }
+  if (profile.role === 'staff') {
+    const standardPlans: Record<string, number> = { Monthly: 800, 'Half Month': 400, 'Walk-in': 80 };
+    if (body.staffWalkinRegistration !== true || standardPlans[plan] !== price) {
+      return response({ error: 'Staff may register walk-in members only with the standard plans and prices.' }, 403);
+    }
+    if (typeof body.signatureData !== 'string' || !body.signatureData.startsWith('data:image/png;base64,')) {
+      return response({ error: 'The member signature is required.' }, 400);
+    }
   }
 
   const adminClient = createClient(url, serviceRoleKey, {
@@ -98,7 +109,7 @@ Deno.serve(async (request) => {
     end_date: expiryDate,
     expiry_date: expiryDate,
     status: 'active',
-    registration_source: 'Admin registration',
+    registration_source: profile.role === 'staff' ? 'Staff walk-in registration' : 'Admin registration',
     paid: price,
     fitness_goals: Array.isArray(body.fitnessGoals) ? body.fitnessGoals : [],
     health_conditions: Array.isArray(body.healthConditions) ? body.healthConditions : [],
@@ -109,8 +120,8 @@ Deno.serve(async (request) => {
     updated_at: now,
   };
   const receiptNumber = `IG-AR-${crypto.randomUUID().toUpperCase()}`;
-  const { data: saved, error: saveError } = await adminClient.rpc('admin_create_member_and_sale', {
-    p_admin_id: authData.user.id,
+  const { data: saved, error: saveError } = await adminClient.rpc('create_member_and_sale_with_actor', {
+    p_actor_id: authData.user.id,
     p_member: member,
     p_receipt_number: receiptNumber,
   });

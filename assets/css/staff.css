@@ -30,3 +30,39 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-status { color: #
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-history .attendance-table th { background: #e9edf3; }
 @media (max-width: 1050px) { .staff-workspace { grid-template-columns: 1fr; } .staff-table-scroll { max-height: 520px; } }
 @media (max-width: 600px) { .staff-heading { align-items: flex-start; flex-direction: column; gap: 12px; } .staff-workspace { gap: 16px; } .staff-workspace .panel { padding: 18px; } .staff-dashboard .header-actions { justify-content: space-between; } }
+
+.staff-view[hidden] { display: none !important; }
+.staff-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 22px; padding: 6px; border: 1px solid #292d35; border-radius: 16px; background: #111318; }
+.staff-tab { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 42px; padding: 10px 16px; border: 1px solid transparent; border-radius: 11px; background: transparent; color: #a4adc2; font: inherit; font-size: .88rem; font-weight: 650; cursor: pointer; transition: background .16s ease, color .16s ease, border-color .16s ease; }
+.staff-tab:hover { color: #fff; background: #1a1d24; }
+.staff-tab.is-active { color: #fff; background: #a90000; border-color: #bd1717; }
+.staff-tabs + .staff-view { margin-bottom: 20px; }
+.staff-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; align-items: end; margin-top: 20px; }
+.staff-form-grid .form-group { margin: 0; min-width: 0; }
+.staff-form-grid input, .staff-form-grid select { width: 100%; min-width: 0; }
+.staff-sale-total { display: flex; flex-direction: column; gap: 5px; min-height: 66px; justify-content: center; padding: 12px 16px; border: 1px solid #343844; border-radius: 12px; background: #171a20; color: #a4adc2; }
+.staff-sale-total strong { color: #fff; font-size: 1.2rem; }
+.staff-form-grid > .btn-primary { min-height: 52px; }
+.staff-subheading, .staff-registration-form h3 { margin: 26px 0 12px; font-size: 1rem; }
+.staff-sales-history { display: grid; gap: 10px; }
+.staff-sale-record { padding: 14px 16px; border: 1px solid #292d35; border-radius: 12px; background: #14171c; }
+.staff-sale-record-heading { display: flex; justify-content: space-between; gap: 12px; color: #f1f3f6; }
+.staff-sale-record p { margin: 7px 0; color: #c3cad5; font-size: .88rem; }
+.staff-sale-record small, .staff-registration-form small { color: #a4adc2; }
+.staff-registration-form { margin-top: 16px; }
+.staff-registration-form .staff-form-grid { margin-top: 14px; }
+.staff-signature-wrap { height: 170px; overflow: hidden; border: 1px solid #d7dbe3; border-radius: 12px; background: #fff; }
+.staff-signature-wrap canvas { display: block; width: 100%; height: 100%; touch-action: none; }
+.staff-form-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 10px; margin-top: 16px; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-tabs { border-color: #cbd2dc; background: #e8ecf2; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-tab { color: #3e4858; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-tab:hover { color: #202a39; background: #dce2eb; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-tab.is-active { color: #fff; background: #a90000; border-color: #900000; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-sale-total,
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-sale-record { border-color: #cad2de; background: #e8ecf2; color: #354052; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-sale-total strong,
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-sale-record-heading,
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-sale-record p { color: #202a39; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-sale-record small,
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-registration-form small { color: #465267; }
+@media (max-width: 650px) { .staff-tabs { display: grid; grid-template-columns: 1fr; } .staff-tab { justify-content: flex-start; } .staff-form-grid { grid-template-columns: 1fr; } .staff-form-actions { flex-direction: column-reverse; } .staff-form-actions button { width: 100%; } }

@@ -259,11 +259,11 @@ async function handleLogin(event) {
                 fullName: profile.full_name || data.user.email,
                 loginTime: new Date().toISOString()
             };
-            if (role === 'admin') {
+            if (role === 'admin' || role === 'staff') {
                 try {
                     const { error: logError } = await supabaseClient.rpc('admin_log_session_event', { p_event: 'signed_in' });
-                    if (logError) console.error('Could not record admin sign-in:', logError);
-                } catch (logError) { console.error('Could not record admin sign-in:', logError); }
+                    if (logError) console.error('Could not record staff/admin sign-in:', logError);
+                } catch (logError) { console.error('Could not record staff/admin sign-in:', logError); }
             }
             saveLoginSession(session, remember);
             return;
