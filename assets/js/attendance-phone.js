@@ -71,6 +71,19 @@ function setPhoneAttendanceStatus(message, isError = false) {
     status.classList.toggle('error', isError);
 }
 
+function getPhoneCameraErrorMessage(error) {
+    if (['NotAllowedError', 'PermissionDeniedError', 'SecurityError'].includes(error?.name)) {
+        return 'Camera access is off. Allow camera access in your browser settings, then try again.';
+    }
+    if (error?.name === 'NotFoundError') {
+        return 'No camera was found on this device. Check the camera or use another paired phone.';
+    }
+    if (error?.name === 'NotReadableError') {
+        return 'The camera is busy right now. Close other apps using it, then try again.';
+    }
+    return 'The camera is unavailable right now. Check camera access or try again in a moment.';
+}
+
 function setPhoneAttendanceMode(mode) {
     const instructions = document.getElementById('phoneScannerInstructions');
     if (instructions) instructions.textContent = mode === 'pair'
@@ -323,9 +336,8 @@ async function startPhonePairingScanner(statusMessage = '') {
         try { scanner?.getRunningTrack?.()?.stop(); } catch {}
         phoneAttendanceScanner = null;
         setPhoneCameraButton(false);
-        setPhoneAttendanceStatus(error?.name === 'NotAllowedError'
-            ? 'Camera permission was denied. Allow camera access in your browser settings.'
-            : `Could not start the camera: ${error.message || 'Check camera permissions.'}`, true);
+        console.warn('Attendance phone camera could not start:', error);
+        setPhoneAttendanceStatus(getPhoneCameraErrorMessage(error), true);
         try { scanner?.clear(); } catch {}
     }
 }
@@ -388,9 +400,8 @@ async function startPhoneMemberScanner(sessionId, token, openCamera = true) {
         try { scanner?.getRunningTrack?.()?.stop(); } catch {}
         phoneAttendanceScanner = null;
         setPhoneCameraButton(false);
-        setPhoneAttendanceStatus(error?.name === 'NotAllowedError'
-            ? 'Camera permission was denied. Allow camera access in your browser settings.'
-            : `Could not start the camera: ${error.message || 'Check camera permissions.'}`, true);
+        console.warn('Attendance phone camera could not start:', error);
+        setPhoneAttendanceStatus(getPhoneCameraErrorMessage(error), true);
         try { scanner?.clear(); } catch {}
     }
 }

@@ -71,12 +71,12 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-registration-form
 .staff-workspace > .panel,
 .staff-view.panel { position: relative; overflow: hidden; border-radius: 20px; }
 .staff-workspace > .panel::before,
-.staff-view.panel::before { content: ""; position: absolute; inset: 0 0 auto; height: 3px; background: linear-gradient(90deg, #a90000, rgba(169,0,0,.15)); }
+.staff-view.panel::before { content: ""; position: absolute; inset: 0 0 auto; height: 3px; background: #a90000; }
 .staff-checkin .panel-header h2 i,
 .staff-history .panel-header h2 i,
 #staffSalesTitle i { color: #dc3434; }
 .staff-checkin .staff-help { margin: 0; }
-.staff-camera-area { min-height: 200px; justify-content: center; gap: 14px; padding: 24px; border-style: solid; border-color: #2d323d; background: radial-gradient(ellipse at top, rgba(169,0,0,.12), transparent 68%), #15181e; }
+.staff-camera-area { min-height: 200px; justify-content: center; gap: 14px; padding: 24px; border-style: solid; border-color: #2d323d; background: #15181e; }
 .staff-camera-icon { display: grid; place-items: center; width: 68px; height: 68px; border: 1px solid rgba(231,65,65,.28); border-radius: 20px; background: rgba(169,0,0,.16); color: #f25c5c; font-size: 1.7rem; }
 .staff-camera-area .btn-primary { min-height: 44px; }
 #staffScanForm { padding: 18px; border: 1px solid #292e38; border-radius: 15px; background: #14171c; }
@@ -110,8 +110,8 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-registration-form
 .staff-product-card-bottom strong { font-size: .88rem; }
 .staff-product-card-bottom span { color: #a4adc2; font-size: .73rem; }
 .staff-empty-catalog { padding: 14px; border: 1px dashed #343945; border-radius: 12px; color: #a4adc2; font-size: .82rem; }
-.staff-sale-entry { position: relative; margin: 10px 0 24px; padding: 22px 22px 22px 26px; overflow: hidden; border-color: rgba(211,63,63,.48); background: radial-gradient(ellipse at 100% 0, rgba(199,31,31,.2), transparent 48%), linear-gradient(135deg, #191a20, #121419 70%); box-shadow: 0 18px 40px rgba(0,0,0,.16); }
-.staff-sale-entry::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: linear-gradient(180deg, #ff6b6b, #a90000); }
+.staff-sale-entry { position: relative; margin: 10px 0 24px; padding: 22px 22px 22px 26px; overflow: hidden; border-color: rgba(211,63,63,.48); background: #191a20; box-shadow: 0 18px 40px rgba(0,0,0,.16); }
+.staff-sale-entry::before { content: ""; position: absolute; inset: 0 auto 0 0; width: 4px; background: #a90000; }
 .staff-sale-entry h3 { margin-bottom: 5px; font-size: 1.2rem; }
 .staff-sale-entry .staff-section-kicker { display: inline-flex; align-items: center; gap: 7px; margin-bottom: 3px; }
 .staff-sale-entry .staff-section-kicker::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #ef5555; box-shadow: 0 0 12px rgba(239,85,85,.65); }
@@ -130,7 +130,7 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-registration-form
 .staff-stock-badge.available::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 .staff-stock-badge.unavailable::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 .staff-membership-panel { padding: clamp(18px, 3vw, 30px) !important; }
-.staff-panel-hero { display: flex; align-items: center; gap: 17px; margin: -4px 0 22px; padding: 20px; border: 1px solid rgba(220,52,52,.24); border-radius: 17px; background: linear-gradient(110deg, rgba(169,0,0,.17), rgba(169,0,0,.035) 65%, transparent); }
+.staff-panel-hero { display: flex; align-items: center; gap: 17px; margin: -4px 0 22px; padding: 20px; border: 1px solid rgba(220,52,52,.24); border-radius: 17px; background: #21191b; }
 .staff-panel-hero-icon { display: grid; flex: 0 0 54px; place-items: center; width: 54px; height: 54px; border-radius: 16px; background: rgba(169,0,0,.24); color: #fa6767; font-size: 1.3rem; }
 .staff-panel-hero h2 { margin: 3px 0 5px; font-size: 1.25rem; }
 .staff-panel-hero p { margin: 0; color: #a4adc2; font-size: .83rem; }
@@ -148,7 +148,7 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-registration-form
 .staff-payment-note i { color: #ef6666; }
 .staff-signature-wrap { height: 190px; }
 .staff-form-actions { margin-top: 14px; }
-html[data-dashboard-theme="light"] body.staff-dashboard .staff-camera-area { background: linear-gradient(150deg, #f7e9e9, #f3f5f8 60%); border-color: #d9c5c5; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-camera-area { background: #f7eeee; border-color: #d9c5c5; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-camera-icon,
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-product-icon,
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-form-section-heading > span,
@@ -171,9 +171,9 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-product-card-bott
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-form-section-heading h3 { color: #202a39; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-payment-note { background: #f5e8e8; border-color: #e8c6c6; color: #354052; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-section-kicker { color: #9b1717; }
-html[data-dashboard-theme="light"] body.staff-dashboard .staff-panel-hero { border-color: #e7c4c4; background: linear-gradient(110deg, #f5e2e2, #f8f9fb 70%); }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-panel-hero { border-color: #e7c4c4; background: #f7eeee; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-empty-catalog { border-color: #cbd3df; color: #465267; }
-html[data-dashboard-theme="light"] body.staff-dashboard .staff-sale-entry { border-color: #e6b7b7; background: radial-gradient(ellipse at 100% 0, #f6dddd, transparent 52%), linear-gradient(135deg, #fff8f7, #f2e9e9 70%); box-shadow: 0 14px 32px rgba(111,29,29,.09); }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-sale-entry { border-color: #e6b7b7; background: #fbf1f0; box-shadow: 0 14px 32px rgba(111,29,29,.09); }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-sale-entry .staff-section-kicker { color: #991515; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-sale-entry h3 { color: #252631; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-sale-entry .staff-sale-total { border-color: #e8c1c1; background: #f6e4e4; }
@@ -221,8 +221,8 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-selected-member {
 .staff-member-search > div:focus-within { border-color: #bf3b3b; box-shadow: 0 0 0 3px rgba(190,48,48,.16), inset 0 1px 2px rgba(0,0,0,.14); }
 .staff-member-search input { flex: 1 1 auto; width: auto; min-height: 46px; padding: 10px 13px 10px 42px !important; border: 0 !important; outline: 0; background: transparent !important; box-shadow: none !important; color: #f1f3f6; }
 .staff-member-search input::placeholder { color: #818b9c; }
-.staff-member-search .btn-logout { flex: 0 0 auto; min-height: 43px; padding: 0 17px; border: 1px solid #b82727; border-radius: 11px; background: linear-gradient(135deg, #b50000, #870000); color: #fff; box-shadow: 0 5px 12px rgba(130,0,0,.2); }
-.staff-member-search .btn-logout:hover { background: linear-gradient(135deg, #c91a1a, #990000); color: #fff; }
+.staff-member-search .btn-logout { flex: 0 0 auto; min-height: 43px; padding: 0 17px; border: 1px solid #b82727; border-radius: 11px; background: #a90000; color: #fff; box-shadow: 0 5px 12px rgba(130,0,0,.2); }
+.staff-member-search .btn-logout:hover { background: #c91a1a; color: #fff; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-search > label { color: #303b4d; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-search > div { border-color: #c5ceda; background: #f9fafc; box-shadow: 0 3px 10px rgba(38,51,70,.05); }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-search > div:focus-within { border-color: #ba4545; background: #fff; box-shadow: 0 0 0 3px rgba(186,69,69,.12), 0 4px 12px rgba(38,51,70,.06); }
@@ -232,14 +232,13 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-search > d
 @media (max-width: 480px) { .staff-member-search > div { gap: 3px; padding: 4px; } .staff-member-search .btn-logout { min-height: 41px; padding: 0 11px; font-size: .78rem; } .staff-member-search input { min-width: 0; font-size: .86rem; } }
 
 /* Warm, more expressive light theme for the staff workspace. */
+body.staff-dashboard::after { background: none !important; }
 html[data-dashboard-theme="light"] body.staff-dashboard {
   color: #29232a;
-  background: linear-gradient(145deg, #fbf8f7 0%, #f4eeee 48%, #f8f6f4 100%);
+  background: #f6f1f0;
 }
 html[data-dashboard-theme="light"] body.staff-dashboard::after {
-  background:
-    radial-gradient(ellipse at 8% 12%, rgba(190, 48, 58, .09), transparent 34%),
-    radial-gradient(ellipse at 92% 78%, rgba(190, 48, 58, .075), transparent 38%);
+  background: none;
 }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-workspace > .panel,
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-view.panel {
@@ -250,12 +249,12 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-view.panel {
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-workspace > .panel::before,
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-view.panel::before {
   height: 4px;
-  background: linear-gradient(90deg, #a90000, #e9a2a2 58%, rgba(233,162,162,0));
+  background: #a90000;
 }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-tabs,
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-membership-tabs {
   border-color: #ead9da;
-  background: linear-gradient(120deg, #fff, #f7eeee);
+  background: #f8eeee;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 5px 16px rgba(68,35,39,.045);
 }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-tab:hover,
@@ -266,12 +265,12 @@ html[data-dashboard-theme="light"] body.staff-dashboard #staffScanForm,
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-product-card,
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-form-section {
   border-color: #e5dadd;
-  background: linear-gradient(145deg, #fff 0%, #fbf7f6 100%);
+  background: #fbf7f6;
   box-shadow: 0 8px 22px rgba(68,35,39,.045);
 }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-camera-area {
   border-color: #e6cfd1;
-  background: radial-gradient(ellipse at 50% 0, #fff 0%, transparent 70%), linear-gradient(135deg, #f8e9e9, #f6f3f2);
+  background: #f7eeee;
 }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-product-card:hover {
   border-color: #d8aeb1;
@@ -281,28 +280,28 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-product-card::bef
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-product-icon,
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-camera-icon,
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-form-section-heading > span {
-  background: linear-gradient(145deg, #f8e3e3, #efd0d1);
+  background: #f2dada;
   box-shadow: inset 0 1px 0 rgba(255,255,255,.8);
 }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-sale-entry {
   border-color: #e4c6c8;
-  background: radial-gradient(ellipse at 100% 0, rgba(237,190,192,.46), transparent 48%), linear-gradient(135deg, #fffaf9, #f8eeee 72%);
+  background: #fbf1f0;
 }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-panel-hero {
   border-color: #e8c9cb;
-  background: linear-gradient(110deg, #f8e7e7 0%, #fffafa 58%, #f8f5f4 100%);
+  background: #f8eaea;
   box-shadow: inset 0 1px 0 #fff;
 }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-catalog-section-title { border-color: #e7d8d9; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-result {
   border-color: #e4d8d9;
-  background: linear-gradient(120deg, #fff, #fbf7f6);
+  background: #fbf7f6;
   box-shadow: 0 4px 12px rgba(68,35,39,.035);
 }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-result:hover,
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-result.is-selected {
   border-color: #d8999d;
-  background: linear-gradient(120deg, #fff7f6, #f8e8e8);
+  background: #f8e8e8;
 }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-search > div {
   border-color: #e0d2d4;

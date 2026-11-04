@@ -2584,18 +2584,18 @@ function startLocalQRScanner() {
 
 function getQRScannerErrorMessage(error) {
     if (['NotAllowedError', 'PermissionDeniedError', 'SecurityError'].includes(error?.name)) {
-        return 'Camera permission is blocked. Allow camera access for this site in your browser settings, then try again.';
+        return 'Camera access is off. Allow camera access in your browser settings, then try again.';
     }
     if (error?.name === 'NotFoundError') {
-        return 'No camera was found. Connect or enable a camera, then try again.';
+        return 'No camera was found on this device. You can use the paired attendance phone instead.';
     }
     if (error?.name === 'NotReadableError') {
-        return 'The camera is busy or unavailable. Close other apps using it, then try again.';
+        return 'The camera is busy right now. Close other apps using it, then try again.';
     }
     if (['OverconstrainedError', 'ConstraintNotSatisfiedError'].includes(error?.name)) {
-        return 'No compatible camera was found. Check the camera connection or try another browser.';
+        return 'A compatible camera is unavailable. Check the camera connection or use the paired attendance phone.';
     }
-    return `Camera could not start${error?.message ? `: ${error.message}` : '. Check browser camera permissions and try again.'}`;
+    return 'The camera is unavailable right now. Check camera access or use the paired attendance phone.';
 }
 
 function stopQRScanner() {

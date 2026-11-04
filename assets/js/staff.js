@@ -47,7 +47,7 @@ function setStaffMembershipAction(action) {
     }
 }
 
-async function searchStaffMembers(query, resultsId, selectedId, onSelect) {
+async function searchStaffMembers(query, resultsId, selectedId, onSelect, activeOnly = false) {
     const results = document.getElementById(resultsId);
     const selected = document.getElementById(selectedId);
     selected.hidden = true;
@@ -56,7 +56,8 @@ async function searchStaffMembers(query, resultsId, selectedId, onSelect) {
     const normalized = query.trim();
     if (normalized.length < 2) { results.textContent = 'Enter at least 2 characters to search.'; return; }
     results.textContent = 'Searching members...';
-    const { data, error } = await staffClient.rpc('staff_search_members', { p_query: normalized });
+    const rpcName = activeOnly ? 'staff_search_active_members' : 'staff_search_members';
+    const { data, error } = await staffClient.rpc(rpcName, { p_query: normalized });
     if (error) { results.textContent = error.message; return; }
     results.replaceChildren();
     if (!data?.length) { results.textContent = 'No members found for this search.'; return; }
@@ -417,7 +418,7 @@ document.getElementById('staffRenewalSearchButton').addEventListener('click', ()
     document.getElementById('staffRenewalSearch').value, 'staffRenewalResults', 'staffRenewalSelected', member => { staffSelectedRenewalMember = member; }
 ));
 document.getElementById('staffChangeSearchButton').addEventListener('click', () => searchStaffMembers(
-    document.getElementById('staffChangeSearch').value, 'staffChangeResults', 'staffChangeSelected', member => { staffSelectedPlanChangeMember = member; }
+    document.getElementById('staffChangeSearch').value, 'staffChangeResults', 'staffChangeSelected', member => { staffSelectedPlanChangeMember = member; }, true
 ));
 document.getElementById('staffRenewalSearch').addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); document.getElementById('staffRenewalSearchButton').click(); } });
 document.getElementById('staffChangeSearch').addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); document.getElementById('staffChangeSearchButton').click(); } });
