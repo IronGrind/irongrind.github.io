@@ -13,8 +13,8 @@ Deno.serve(async request => {
     });
     const { data: { user }, error } = await caller.auth.getUser();
     if (error || !user) return reply({ error: 'Sign in again.' }, 401);
-    const { data: profile, error: profileError } = await caller.from('profiles').select('role').eq('id', user.id).single();
-    if (profileError || profile?.role !== 'admin') return reply({ error: 'Admin access required.' }, 403);
+    const { data: profile, error: profileError } = await caller.from('profiles').select('role,is_active').eq('id', user.id).single();
+    if (profileError || profile?.role !== 'admin' || !profile.is_active) return reply({ error: 'Active admin access required.' }, 403);
     let body;
     try { body = await request.json(); } catch { return reply({ error: 'Invalid request.' }, 400); }
     const action = typeof body.action === 'string' ? body.action : 'create';
