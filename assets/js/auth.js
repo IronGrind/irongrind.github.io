@@ -16,6 +16,15 @@ function hideError() {
     document.getElementById('loginError').classList.add('hidden');
 }
 
+(function showAuthRedirectMessage() {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('auth') !== 'expired') return;
+    showError('Your admin session expired. Sign in again to continue.');
+    const username = document.getElementById('loginEmail');
+    username?.focus();
+    window.history.replaceState(null, '', 'index.html?role=admin');
+})();
+
 function showForgotPassword() {
     const modal = document.getElementById('forgotPasswordModal');
     const emailInput = document.getElementById('recoveryEmail');

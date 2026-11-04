@@ -8,6 +8,8 @@
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
 body { background: #0a0a0a; color: #e8edf5; padding: 20px; min-height: 100vh; }
 body.dashboard-body { position: relative; isolation: isolate; }
+body.admin-dashboard.admin-auth-pending .app { visibility: hidden; }
+body.admin-dashboard.admin-auth-verified .app { visibility: visible; }
 body.dashboard-body::after { content: ''; position: fixed; inset: 0; z-index: -1; background: radial-gradient(ellipse at 82% 82%, rgba(139,0,0,0.09), transparent 44%); pointer-events: none; }
 body.dashboard-body .sidebar,
 body.dashboard-body .stat-card,
@@ -903,10 +905,10 @@ img, video, canvas { max-width: 100%; }
     .app-header { gap: 14px; }
     body.dashboard-body .sidebar { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 10px; }
     body.dashboard-body .sidebar .nav-item { gap: 8px; font-size: .78rem; }
-    body.dashboard-body .sidebar .nav-item:last-child:nth-child(odd) { grid-column: 1 / -1; }
+    body.admin-dashboard .sidebar .nav-item:last-child { grid-column: 1 / -1; }
     .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
     .stats-grid .stat-card { min-height: 112px; padding: 16px 12px; border-radius: 16px; }
-    .stats-grid .stat-card .stat-title { font-size: .67rem; }
+    .stats-grid .stat-card .stat-label { font-size: .67rem; }
     .stats-grid .stat-card .stat-value { font-size: 1.65rem; }
     .stats-grid .stat-card .stat-sub { font-size: .68rem; }
     .logo-area { width: 100%; min-width: 0; }
@@ -937,3 +939,26 @@ img, video, canvas { max-width: 100%; }
 }
 
 @media (max-width: 340px) { .stats-grid { grid-template-columns: minmax(0, 1fr); } }
+
+/* Keep the dashboard brand and account controls on the same header row. */
+.admin-dashboard .app-header, .member-dashboard .app-header {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+}
+.admin-dashboard .logo-area, .member-dashboard .logo-area { width: auto; flex: 0 0 auto; gap: 8px; }
+.admin-dashboard .header-actions, .member-dashboard .header-actions { width: auto; flex: 0 1 auto; margin-left: auto; justify-content: flex-end; flex-wrap: nowrap; }
+@media (max-width: 640px) {
+    .admin-dashboard .logo-text h1, .member-dashboard .logo-text h1 { font-size: 1.15rem; }
+    .admin-dashboard .logo-icon, .member-dashboard .logo-icon { width: 34px; height: 34px; border-radius: 9px; }
+    .admin-dashboard .header-actions, .member-dashboard .header-actions { gap: 5px; }
+    .admin-dashboard .user-chip, .member-dashboard .user-chip { max-width: 100px; padding: 7px 8px; gap: 5px; font-size: .72rem; }
+    .admin-dashboard .btn-logout, .member-dashboard .btn-logout { padding: 7px 9px; gap: 5px; font-size: .72rem; }
+    .admin-dashboard .btn-settings, .member-dashboard .btn-settings { width: 32px; height: 32px; font-size: .85rem; }
+}
+@media (max-width: 480px) {
+    .admin-dashboard .user-chip, .member-dashboard .user-chip { max-width: 80px; }
+    .admin-dashboard .btn-logout, .member-dashboard .btn-logout { width: 32px; height: 32px; padding: 0; gap: 0; font-size: 0; justify-content: center; }
+    .admin-dashboard .btn-logout i, .member-dashboard .btn-logout i { font-size: .85rem; }
+}

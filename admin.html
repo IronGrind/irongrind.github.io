@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IronGrind · Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261105-responsive-layout">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261105-compact-header">
 </head>
-<body class="dashboard-body admin-dashboard">
+<body class="dashboard-body admin-dashboard admin-auth-pending">
 <div id="page-loader" class="page-loader" aria-label="Loading dashboard" role="status"><div class="loader-content"><img class="loader-mark" src="assets/images/iron-grind-mark.png" alt=""><div class="loader-brand">Iron<span>Grind</span></div><div class="loader-track"><span></span></div></div></div>
 <div class="app">
     <header class="app-header">
@@ -15,7 +15,6 @@
             <img class="logo-icon logo-image" src="assets/images/iron-grind-mark.png" alt="Iron Grind Fitness Gym logo">
             <div class="logo-text">
                 <h1>Iron<span>Grind</span></h1>
-                <p>Fitness Gym Membership &amp; Operations Management System</p>
             </div>
         </div>
         <div class="header-actions">
@@ -26,7 +25,7 @@
                 <i class="fas fa-user-shield"></i>
                 <span id="currentUserName">Admin</span>
             </div>
-            <button class="btn-logout" onclick="logout()">
+            <button class="btn-logout" onclick="logout()" aria-label="Logout" title="Logout">
                 <i class="fas fa-sign-out-alt"></i> Logout
             </button>
         </div>
@@ -292,8 +291,8 @@
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script src="assets/js/signature.js"></script>
 <script src="assets/js/activity-logs.js?v=20261104-phone-pairing-audit"></script>
-<script src="assets/js/admin-access.js?v=20261104-verified-role"></script>
-<script src="assets/js/admin.js?v=20261104-verified-role"></script>
+<script src="assets/js/admin-access.js?v=20261105-auth-gate"></script>
+<script src="assets/js/admin.js?v=20261105-auth-gate"></script>
 <script src="assets/js/staff-accounts.js"></script>
 </body>
 </html>

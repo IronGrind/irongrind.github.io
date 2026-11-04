@@ -1,16 +1,17 @@
 /* ========== AUTH GUARD ========== */
 let activeDashboardRole = 'admin';
 (function guardAdmin() {
-    const session = JSON.parse(
-        localStorage.getItem('irongrind_session') ||
-        sessionStorage.getItem('irongrind_session') || 'null'
-    );
-    if (!session || session.role !== 'admin') {
-        window.location.href = 'index.html?role=admin';
-        return;
+    let session = null;
+    try {
+        session = JSON.parse(localStorage.getItem('irongrind_session') || sessionStorage.getItem('irongrind_session') || 'null');
+    } catch {
+        window.clearIronGrindUiSession?.();
     }
-    activeDashboardRole = 'admin';
-    document.getElementById('currentUserName').textContent = session.fullName || session.username;
+    // This browser value is only a display hint. Supabase is verified before the
+    // dashboard is revealed, so a stale or missing UI session cannot grant access.
+    if (session?.role === 'admin') {
+        document.getElementById('currentUserName').textContent = session.fullName || session.username;
+    }
 })();
 
 function adminStoreUnlockKey() {
@@ -1240,13 +1241,21 @@ function subscribeAdminRealtimeUpdates() {
 
 async function initializeSupabaseAdminData() {
     const client = window.ironGrindSupabase;
-    if (!client) return;
+    if (!client) {
+        toast('The login service did not load. Check your connection and reload.', 'error');
+        return false;
+    }
 
     const { data: { user } = {}, error: authError } = await client.auth.getUser();
-    if (authError || !user) {
+    if (!user) {
         console.error('Admin page has no active Supabase Auth session:', authError);
-        toast('Your Supabase admin session is missing or expired. Sign in again to load live data.', 'error');
-        return;
+        await window.redirectExpiredAdminSession(client);
+        return false;
+    }
+    if (authError) {
+        console.error('Could not validate the admin session:', authError);
+        toast('Could not verify your session. Check your connection and reload.', 'error');
+        return false;
     }
 
     const { data: profile, error: profileError } = await client
@@ -1260,7 +1269,7 @@ async function initializeSupabaseAdminData() {
             ? `Could not verify your account: ${profileError.message}`
             : 'This account is not an admin account.', 'error');
         if (!profileError) window.location.replace(profile?.role === 'staff' ? 'staff.html' : profile?.role === 'member' ? 'customer.html' : 'index.html');
-        return;
+        return false;
     }
 
     document.getElementById('currentUserName').textContent = profile.full_name || profile.username;
@@ -1270,6 +1279,10 @@ async function initializeSupabaseAdminData() {
     await loadSupabaseOperationalData();
     await restoreMobileAttendancePairing();
     startAdminMembershipRefresh();
+    document.body.classList.remove('admin-auth-pending');
+    document.body.classList.add('admin-auth-verified');
+    document.getElementById('page-loader')?.classList.add('hidden-loader');
+    return true;
 }
 
 function startAdminMembershipRefresh() {
@@ -4197,5 +4210,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 window.addEventListener('load', () => {
-    window.setTimeout(() => document.getElementById('page-loader')?.classList.add('hidden-loader'), 2500);
+    window.setTimeout(() => {
+        if (document.body.classList.contains('admin-auth-verified')) {
+            document.getElementById('page-loader')?.classList.add('hidden-loader');
+        }
+    }, 2500);
 });

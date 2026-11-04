@@ -11,3 +11,14 @@ window.requireVerifiedAdmin = async function (client = window.ironGrindSupabase)
     }
     return { user, profile };
 };
+
+window.clearIronGrindUiSession = function () {
+    localStorage.removeItem('irongrind_session');
+    sessionStorage.removeItem('irongrind_session');
+};
+
+window.redirectExpiredAdminSession = async function (client = window.ironGrindSupabase) {
+    window.clearIronGrindUiSession();
+    try { await client?.auth.signOut({ scope: 'local' }); } catch {}
+    window.location.replace('index.html?role=admin&auth=expired');
+};
