@@ -2115,12 +2115,12 @@ async function refreshPairedAttendancePhones(force = false) {
     }
     const phones = Array.isArray(data) ? data : [];
     const count = document.getElementById('pairedPhonesCount');
-    const pairedPhones = phones.filter(phone => phone.paired !== false);
+    const pairedPhones = phones.filter(phone => phone.paired === true || Boolean(phone.paired_at));
     if (count) count.textContent = String(pairedPhones.length);
     const { data: pairingSettings, error: pairingSettingsError } = await window.ironGrindSupabase.rpc('get_mobile_attendance_pairing_settings');
     if (!document.getElementById('pairedPhonesList')) return;
-    const actualActiveCount = Number(pairingSettings?.active_count);
-    const listOutOfSync = !pairingSettingsError && Number.isFinite(actualActiveCount) && actualActiveCount > phones.length;
+    const actualPairedCount = Number(pairingSettings?.paired_count);
+    const listOutOfSync = !pairingSettingsError && Number.isFinite(actualPairedCount) && actualPairedCount > pairedPhones.length;
     const activeSessionCount = document.getElementById('activePhoneSessionCount');
     if (activeSessionCount) activeSessionCount.textContent = String(phones.length);
     const modalStatus = document.getElementById('phonePairStatus');
@@ -2138,8 +2138,8 @@ async function refreshPairedAttendancePhones(force = false) {
     }
     if (!phones.length) {
         list.innerHTML = listOutOfSync
-            ? `<p class="paired-phone-empty">Supabase reports ${actualActiveCount} active pairing sessions, but this list returned none. Apply migration 20261104000018_attendance_pairing_removal_pin.sql, then reload the admin page.</p>`
-            : '<p class="paired-phone-empty">No active phone pairings or pending QR sessions.</p>';
+            ? `<p class="paired-phone-empty">Supabase reports ${actualPairedCount} paired phones, but this list returned none. Apply migration 20261104000019_list_only_paired_attendance_phones.sql, then reload the admin page.</p>`
+            : '<p class="paired-phone-empty">No phones have paired yet.</p>';
         return;
     }
     list.innerHTML = phones.map(phone => {
@@ -2154,7 +2154,7 @@ async function refreshPairedAttendancePhones(force = false) {
             <button class="btn-danger" onclick="endMobileAttendanceSession('${phone.session_id}', true)">End pairing</button>
         </div>`;
     }).join('') + (listOutOfSync
-        ? `<p class="paired-phone-empty">${actualActiveCount - phones.length} more active session(s) are not listed. Apply migration 20261104000018_attendance_pairing_removal_pin.sql to load every admin’s pairings.</p>`
+        ? `<p class="paired-phone-empty">${actualPairedCount - pairedPhones.length} paired phone(s) are not listed. Apply migration 20261104000019_list_only_paired_attendance_phones.sql to load every admin’s pairings.</p>`
         : '');
 }
 
