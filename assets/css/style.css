@@ -887,10 +887,10 @@ img, video, canvas { max-width: 100%; }
     body.admin-dashboard .dashboard { display: flex; flex-direction: column; overflow: visible; width: 100%; }
     body.admin-dashboard .main-content, body.member-dashboard .customer-main { width: 100%; height: auto; overflow: visible; scrollbar-gutter: auto; }
     body.admin-dashboard .admin-section { min-height: 0; }
-    body.dashboard-body .sidebar { display: flex; flex-direction: row; flex-wrap: nowrap; width: 100%; max-height: none; overflow-x: auto; overflow-y: hidden; gap: 8px; border-radius: 16px; }
+    body.dashboard-body .sidebar { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; max-height: none; overflow: visible; gap: 8px; border-radius: 16px; }
     body.dashboard-body .sidebar { scrollbar-width: none; }
     body.dashboard-body .sidebar::-webkit-scrollbar { display: none; }
-    body.dashboard-body .sidebar .nav-item { flex: 0 0 auto; width: auto; white-space: nowrap; min-height: 44px; }
+    body.dashboard-body .sidebar .nav-item { width: 100%; white-space: normal; min-height: 44px; padding: 10px 12px; font-size: .82rem; overflow-wrap: anywhere; }
     .sidebar .nav-section-label { display: none; }
     .dashboard-footer { margin-top: auto; }
     .membership-controls .search { min-width: 0; flex-basis: 220px; }
@@ -901,6 +901,14 @@ img, video, canvas { max-width: 100%; }
 @media (max-width: 640px) {
     body.admin-dashboard .app, body.member-dashboard .app { min-height: calc(100dvh - 24px); }
     .app-header { gap: 14px; }
+    body.dashboard-body .sidebar { grid-template-columns: repeat(2, minmax(0, 1fr)); padding: 10px; }
+    body.dashboard-body .sidebar .nav-item { gap: 8px; font-size: .78rem; }
+    body.dashboard-body .sidebar .nav-item:last-child:nth-child(odd) { grid-column: 1 / -1; }
+    .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+    .stats-grid .stat-card { min-height: 112px; padding: 16px 12px; border-radius: 16px; }
+    .stats-grid .stat-card .stat-title { font-size: .67rem; }
+    .stats-grid .stat-card .stat-value { font-size: 1.65rem; }
+    .stats-grid .stat-card .stat-sub { font-size: .68rem; }
     .logo-area { width: 100%; min-width: 0; }
     .logo-text h1 { font-size: 1.4rem; }
     .logo-text p { font-size: .72rem; }
@@ -927,3 +935,5 @@ img, video, canvas { max-width: 100%; }
     body.admin-dashboard .main-content, body.member-dashboard .customer-main { height: auto; overflow: visible; }
     body.admin-dashboard .dashboard { overflow: visible; }
 }
+
+@media (max-width: 340px) { .stats-grid { grid-template-columns: minmax(0, 1fr); } }
