@@ -346,6 +346,13 @@ function runConfirmation() {
 }
 
 /* ========== NAV ========== */
+function setAdminTheme(theme) {
+    const selectedTheme = theme === 'light' ? 'light' : 'dark';
+    window.setDashboardTheme(selectedTheme);
+}
+
+setAdminTheme(document.documentElement.dataset.dashboardTheme || 'dark');
+
 function setAdminAccountMenu(open) {
     const menu = document.getElementById('adminAccountMenu');
     const button = document.querySelector('.admin-menu-button');

@@ -4,13 +4,18 @@
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>IronGrind ? Staff Attendance</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-<link rel="stylesheet" href="assets/css/style.css?v=20261105-responsive-layout">
-<link rel="stylesheet" href="assets/css/staff.css?v=20261104-layout">
+<link rel="stylesheet" href="assets/css/style.css?v=20261105-shared-theme">
+<link rel="stylesheet" href="assets/css/staff.css?v=20261105-shared-theme">
+<script src="assets/js/theme.js?v=20261105-shared-theme"></script>
 </head>
 <body class="dashboard-body staff-dashboard"><div class="app">
 <header class="app-header">
 <div class="logo-area"><img class="logo-icon logo-image" src="assets/images/iron-grind-mark.png" alt="Iron Grind logo"><div class="logo-text"><h1>Iron<span>Grind</span></h1></div></div>
-<div class="header-actions"><div class="user-chip"><i class="fas fa-user" aria-hidden="true"></i><span id="staffIdentity">Verifying account?</span></div><button id="staffLogout" class="btn-logout"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Logout</button></div>
+<div class="header-actions"><div class="user-chip"><i class="fas fa-user" aria-hidden="true"></i><span id="staffIdentity">Verifying account?</span></div><div class="member-account-menu-wrap staff-account-menu-wrap"><button id="staffMenuButton" class="btn-settings" type="button" onclick="toggleStaffAccountMenu(event)" aria-label="Open staff menu" title="Staff menu" aria-haspopup="menu" aria-controls="staffAccountMenu" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button><div class="member-account-menu" id="staffAccountMenu" role="menu" aria-label="Staff account options" hidden>
+<div class="member-account-menu-separator" role="separator"></div><div class="member-account-menu-label">Appearance</div>
+<button class="member-account-menu-item admin-theme-option" type="button" role="menuitemradio" data-dashboard-theme-option="light" aria-checked="false" onclick="setDashboardTheme('light')"><i class="fas fa-sun" aria-hidden="true"></i><span>Light mode</span><i class="fas fa-check admin-theme-check" aria-hidden="true"></i></button>
+<button class="member-account-menu-item admin-theme-option" type="button" role="menuitemradio" data-dashboard-theme-option="dark" aria-checked="true" onclick="setDashboardTheme('dark')"><i class="fas fa-moon" aria-hidden="true"></i><span>Dark mode</span><i class="fas fa-check admin-theme-check" aria-hidden="true"></i></button>
+<button id="staffLogout" class="member-account-menu-item member-account-menu-logout" type="button" role="menuitem"><i class="fas fa-sign-out-alt" aria-hidden="true"></i><span>Logout</span></button></div></div></div>
 </header>
 <main class="main-content staff-main">
 <div class="staff-heading"><div><p class="staff-eyebrow">Staff workspace</p><h1>Attendance &amp; QR</h1><p>Record member visits and check attendance.</p></div><span class="staff-access-label"><i class="fas fa-lock" aria-hidden="true"></i> Attendance access</span></div>

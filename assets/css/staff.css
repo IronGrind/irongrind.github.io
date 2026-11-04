@@ -19,5 +19,10 @@
 .staff-history .attendance-table td { line-height: 1.6; font-variant-numeric: tabular-nums; }
 .staff-history .attendance-table tbody tr:hover { background: rgba(255,255,255,.025); }
 .staff-history .staff-visit-open { color: #91d8a2; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-camera-area { background: #f7f9fc; border-color: #cfd6e1; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-camera-icon { color: #68758a; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-access-label { color: #596579; border-color: #d5dce6; background: #fff; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-heading .staff-eyebrow { color: #68758a; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-history .attendance-table th { background: #e9edf3; }
 @media (max-width: 1050px) { .staff-workspace { grid-template-columns: 1fr; } .staff-table-scroll { max-height: 520px; } }
 @media (max-width: 600px) { .staff-heading { align-items: flex-start; flex-direction: column; gap: 12px; } .staff-workspace { gap: 16px; } .staff-workspace .panel { padding: 18px; } .staff-dashboard .header-actions { justify-content: space-between; } }

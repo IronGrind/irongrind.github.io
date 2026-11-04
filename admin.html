@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IronGrind · Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261105-profile-reports-staff">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261105-shared-theme">
+    <script src="assets/js/theme.js?v=20261105-shared-theme"></script>
 </head>
 <body class="dashboard-body admin-dashboard admin-auth-pending">
 <div id="page-loader" class="page-loader" aria-label="Loading dashboard" role="status"><div class="loader-content"><img class="loader-mark" src="assets/images/iron-grind-mark.png" alt=""><div class="loader-brand">Iron<span>Grind</span></div><div class="loader-track"><span></span></div></div></div>
@@ -26,6 +27,10 @@
                 <button class="btn-settings admin-menu-button" type="button" onclick="toggleAdminAccountMenu(event)" aria-label="Open admin menu" title="Admin menu" aria-haspopup="menu" aria-controls="adminAccountMenu" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
                 <div class="member-account-menu" id="adminAccountMenu" role="menu" aria-label="Admin account options" hidden>
                     <button id="activityLogsButton" class="member-account-menu-item" type="button" role="menuitem" onclick="openActivityLogsFromMenu()" aria-controls="section-activity" aria-pressed="false"><i class="fas fa-clock-rotate-left" aria-hidden="true"></i><span>Activity Logs</span></button>
+                    <div class="member-account-menu-separator" role="separator"></div>
+                    <div class="member-account-menu-label">Appearance</div>
+                    <button id="adminThemeLight" class="member-account-menu-item admin-theme-option" type="button" role="menuitemradio" data-dashboard-theme-option="light" aria-checked="false" onclick="setAdminTheme('light')"><i class="fas fa-sun" aria-hidden="true"></i><span>Light mode</span><i class="fas fa-check admin-theme-check" aria-hidden="true"></i></button>
+                    <button id="adminThemeDark" class="member-account-menu-item admin-theme-option" type="button" role="menuitemradio" data-dashboard-theme-option="dark" aria-checked="true" onclick="setAdminTheme('dark')"><i class="fas fa-moon" aria-hidden="true"></i><span>Dark mode</span><i class="fas fa-check admin-theme-check" aria-hidden="true"></i></button>
                     <button class="member-account-menu-item member-account-menu-logout" type="button" role="menuitem" onclick="closeAdminAccountMenu(); logout()"><i class="fas fa-sign-out-alt" aria-hidden="true"></i><span>Logout</span></button>
                 </div>
             </div>
@@ -315,7 +320,7 @@
 <script src="assets/js/signature.js"></script>
 <script src="assets/js/activity-logs.js?v=20261104-phone-pairing-audit"></script>
 <script src="assets/js/admin-access.js?v=20261105-auth-gate"></script>
-<script src="assets/js/admin.js?v=20261105-report-area-filter"></script>
+<script src="assets/js/admin.js?v=20261105-shared-theme"></script>
 <script src="assets/js/staff-accounts.js?v=20261105-directory"></script>
 </body>
 </html>

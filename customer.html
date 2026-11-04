@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IronGrind · Member Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261105-profile-reports-staff">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261105-shared-theme">
+    <script src="assets/js/theme.js?v=20261105-shared-theme"></script>
 </head>
 <body class="dashboard-body member-dashboard">
 <div id="page-loader" class="page-loader" aria-label="Loading dashboard" role="status"><div class="loader-content"><img class="loader-mark" src="assets/images/iron-grind-mark.png" alt=""><div class="loader-brand">Iron<span>Grind</span></div><div class="loader-track"><span></span></div></div></div>
@@ -18,6 +19,10 @@
                 <button class="btn-settings member-menu-button" type="button" onclick="toggleMemberAccountMenu(event)" aria-label="Open member account menu" title="Member menu" aria-haspopup="menu" aria-controls="memberAccountMenu" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
                 <div class="member-account-menu" id="memberAccountMenu" role="menu" aria-label="Member account options" hidden>
                     <button class="member-account-menu-item" type="button" role="menuitem" onclick="openMemberProfileFromMenu()"><i class="fas fa-user-pen" aria-hidden="true"></i><span>Update Profile</span></button>
+                    <div class="member-account-menu-separator" role="separator"></div>
+                    <div class="member-account-menu-label">Appearance</div>
+                    <button class="member-account-menu-item admin-theme-option" type="button" role="menuitemradio" data-dashboard-theme-option="light" aria-checked="false" onclick="setDashboardTheme('light')"><i class="fas fa-sun" aria-hidden="true"></i><span>Light mode</span><i class="fas fa-check admin-theme-check" aria-hidden="true"></i></button>
+                    <button class="member-account-menu-item admin-theme-option" type="button" role="menuitemradio" data-dashboard-theme-option="dark" aria-checked="true" onclick="setDashboardTheme('dark')"><i class="fas fa-moon" aria-hidden="true"></i><span>Dark mode</span><i class="fas fa-check admin-theme-check" aria-hidden="true"></i></button>
                     <button class="member-account-menu-item member-account-menu-logout" type="button" role="menuitem" onclick="closeMemberAccountMenu(); logout()"><i class="fas fa-sign-out-alt" aria-hidden="true"></i><span>Logout</span></button>
                 </div>
             </div>
