@@ -28,12 +28,12 @@ body.dashboard-body .low-stock-item { background-color: rgba(13,18,25,0.64); bor
 #page-loader::before { content: none; }
 #page-loader::after { content: none; }
 #page-loader.hidden-loader { opacity: 0; visibility: hidden; pointer-events: none; }
-.loader-content { position: relative; z-index: 1; width: min(100%, 220px); text-align: center; }
-.loader-full-logo { display: none; }
-.loader-mark { display: block; width: 42px; height: 42px; margin: 0 auto 10px; border-radius: 10px; object-fit: cover; background: #000; }
-.loader-brand { display: block; color: #e8edf5; font-size: 1.45rem; font-weight: 700; letter-spacing: -0.5px; }
+.loader-content { position: relative; z-index: 1; width: min(88vw, 580px); text-align: center; }
+.loader-full-logo { display: block; width: 100%; aspect-ratio: 1; object-fit: contain; filter: none; mix-blend-mode: normal; }
+.loader-mark { display: none; }
+.loader-brand { display: none; color: #e8edf5; font-size: 1.45rem; font-weight: 700; letter-spacing: -0.5px; }
 .loader-brand span { color: #780000; }
-.loader-track { height: 2px; margin-top: 16px; overflow: hidden; border-radius: 99px; background: #272d39; }
+.loader-track { width: min(42%, 220px); height: 2px; margin: 12px auto 0; overflow: hidden; border-radius: 99px; background: #272d39; }
 .loader-track span { display: block; width: 38%; height: 100%; border-radius: inherit; background: #780000; animation: dashboard-loading 1.1s ease-in-out infinite; }
 @keyframes dashboard-loading { from { transform: translateX(-110%); } to { transform: translateX(280%); } }
 @media (prefers-reduced-motion: reduce) { .loader-track span { animation-duration: 0.01ms; animation-iteration-count: 1; } }

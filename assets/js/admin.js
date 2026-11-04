@@ -1968,23 +1968,21 @@ function showMobileAttendancePairingModal(sessionId, pairingUrl, persistent, cap
     const localOnly = pairingUrl && ['localhost', '127.0.0.1', '::1'].includes(new URL(pairingUrl).hostname);
     openModal(`<div class="qr-camera-modal">
         <h3><i class="fas fa-mobile-screen-button"></i> Connect Phone Camera</h3>
-        <p class="modal-sub">${capacityReached ? 'The pairing limit is full. End a paired phone or a pending QR below to free a slot.' : pairingUrl ? `Scan this pairing QR with your phone. ${persistent ? 'This phone stays paired for 30 days.' : 'This one-time pairing expires in 10 minutes.'}` : 'A pairing slot is available. Create a QR to connect a phone.'}</p>
-        ${localOnly ? '<p class="qr-camera-status">This address uses localhost, which a phone cannot reach. Open the hosted HTTPS site on the admin computer to pair a phone.</p>' : ''}
+        <p class="modal-sub">${capacityReached ? 'Pairing limit reached.' : pairingUrl ? `Scan to pair · ${persistent ? '30 days' : '10 minutes'}` : 'Create a QR to pair a phone.'}</p>
+        ${localOnly ? '<p class="qr-camera-status">This is localhost, which phones cannot reach. Open the hosted HTTPS admin site to pair.</p>' : ''}
         ${pairingUrl ? `<div class="phone-pair-qr-shell"><div id="phonePairQr" class="phone-pair-qr" aria-label="Phone scanner pairing QR code"></div><button id="phonePairQrVisibility" class="btn-sm phone-pair-qr-visibility" type="button" onclick="togglePhonePairingQrVisibility()" aria-pressed="false"><i class="fas fa-eye-slash" aria-hidden="true"></i> Hide QR</button></div>` : ''}
-        <p id="phonePairStatus" class="qr-camera-status" role="status">${capacityReached ? 'All slots are occupied. End a paired phone or pending QR below.' : pairingUrl ? 'Waiting for phone scans…' : 'Create a pairing QR when ready.'}</p>
-        <p id="phonePairCapacityMessage" class="qr-camera-status ${capacityReached ? '' : 'hidden'}" role="status">The active phone limit is full. End a paired phone or pending QR below, then create a new pairing QR.</p>
+        <p id="phonePairStatus" class="qr-camera-status" role="status">${capacityReached ? 'Pairing limit reached.' : pairingUrl ? 'Waiting for phone…' : 'Ready to pair.'}</p>
+        <p id="phonePairCapacityMessage" class="qr-camera-status ${capacityReached ? '' : 'hidden'}" role="status">End a phone or pending QR to free a slot.</p>
         <div class="phone-pairing-limit-controls">
-            <p id="phonePairingLimitSummary" class="qr-camera-status">Loading phone pairing limit…</p>
+            <p id="phonePairingLimitSummary" class="qr-camera-status">Loading…</p>
             <button class="btn-sm" onclick="changePhonePairingLimit()">Change phone limit</button>
         </div>
         <section class="paired-phones-section" aria-labelledby="pairedPhonesHeading">
-            <h4 id="pairedPhonesHeading">Phones paired <span id="pairedPhonesCount" class="paired-phone-count">0</span><small id="pairedPhonesLimit" class="paired-phone-period">of 2 active limit</small></h4>
-            <p class="paired-phone-list-label">Currently paired phones</p>
+            <h4 id="pairedPhonesHeading">Paired phones <span id="pairedPhonesCount" class="paired-phone-count">0</span></h4>
             <div id="pairedPhonesList" class="paired-phone-list"><p class="paired-phone-empty">Loading paired phones…</p></div>
         </section>
         <section class="paired-phones-section pending-phone-pairings" aria-labelledby="pendingPhonePairingsHeading">
-            <h4 id="pendingPhonePairingsHeading">Pending pairing QR codes <span id="pendingPhonePairingsCount" class="paired-phone-count">0</span></h4>
-            <p class="paired-phone-list-label">These QR sessions reserve a slot until they expire or are ended.</p>
+            <h4 id="pendingPhonePairingsHeading">Pending QR codes <span id="pendingPhonePairingsCount" class="paired-phone-count">0</span></h4>
             <div id="pendingPhonePairingsList" class="paired-phone-list"><p class="paired-phone-empty">Loading pending QR codes...</p></div>
         </section>
         <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Close window</button>${!pairingUrl ? `<button id="createPhonePairingQrButton" class="btn-primary ${capacityReached ? 'hidden' : ''}" onclick="startPhoneQRPairing(${Boolean(persistent)})">Create pairing QR</button>` : ''}${sessionId ? `<button class="btn-danger phone-pair-end-button" onclick="endMobileAttendanceSession('${sessionId}')">End this pairing</button>` : ''}</div>
@@ -2032,9 +2030,9 @@ function applyPhonePairingCapacityState(settings) {
     }
     if (notice) notice.classList.toggle('hidden', !slotsFull);
     if (createButton) createButton.classList.toggle('hidden', slotsFull);
-    if (status && slotsFull) status.textContent = 'All pairing slots are in use. The QR is hidden until a slot is freed.';
-    else if (status && qrHidden && !slotsFull) status.textContent = 'The pairing QR is hidden. Choose Show QR when you are ready.';
-    else if (status && qr && !slotsFull) status.textContent = 'Scan this pairing QR with the phone you want to pair.';
+    if (status && slotsFull) status.textContent = 'Pairing limit reached.';
+    else if (status && qrHidden && !slotsFull) status.textContent = 'QR hidden. Select Show QR when ready.';
+    else if (status && qr && !slotsFull) status.textContent = 'Waiting for phone…';
 }
 
 function requestPairingPassword(title, description) {
@@ -2138,9 +2136,9 @@ async function refreshPhonePairingLimitSummary() {
         window.currentPhonePairingSettings = data;
         applyPhonePairingCapacityState(data);
     }
-    target.textContent = error ? 'Phone pairing limit could not be loaded.' : `${data.paired_count} of ${data.max_pairs} phone slots are paired. ${data.pending_count || 0} QR waiting.`;
+    target.textContent = error ? 'Could not load pairing limit.' : `${data.paired_count} / ${data.max_pairs} paired · ${data.pending_count || 0} pending`;
     const pairedLimit = document.getElementById('pairedPhonesLimit');
-    if (pairedLimit && !error) pairedLimit.textContent = `of ${data.max_pairs} limit · ${data.pending_count || 0} QR waiting`;
+    if (pairedLimit && !error) pairedLimit.textContent = `of ${data.max_pairs} limit · ${data.pending_count || 0} pending`;
     const activeSessionCount = document.getElementById('activePhoneSessionCount');
     if (activeSessionCount && !error) activeSessionCount.textContent = String(data.active_count);
 }
@@ -2263,15 +2261,15 @@ async function refreshPairedAttendancePhones(force = false) {
     if (modalStatus && !modalStatus.textContent.startsWith('Last scan processed') && !modalStatus.textContent.startsWith('Phone connection issue')) {
         const currentPhone = phones.find(phone => phone.session_id === activeMobileAttendanceSessionId);
         if (currentPhone?.paired !== false && currentPhone) {
-            modalStatus.textContent = `Paired phone: ${currentPhone.device || 'Phone'}. Ready for attendance scans.`;
+            modalStatus.textContent = 'Connected · ready to scan.';
         } else if (currentPhone) {
-            modalStatus.textContent = 'This pairing QR is waiting for a phone to connect.';
+            modalStatus.textContent = 'Waiting for phone…';
         } else if (!document.getElementById('phonePairQr') && !pairingSettingsError && Number(pairingSettings?.active_count) >= Number(pairingSettings?.max_pairs)) {
-            modalStatus.textContent = 'All pairing slots are occupied. End a paired phone or pending QR below to free a slot.';
+            modalStatus.textContent = 'Pairing limit reached.';
         } else if (phones.length) {
-            modalStatus.textContent = `Waiting for this QR to pair. ${phones.length} other paired phone${phones.length === 1 ? ' is' : 's are'} listed.`;
+            modalStatus.textContent = 'Waiting for phone…';
         } else {
-            modalStatus.textContent = 'Waiting for a phone to scan this pairing QR.';
+            modalStatus.textContent = 'Waiting for phone…';
         }
     }
     if (!phones.length) {

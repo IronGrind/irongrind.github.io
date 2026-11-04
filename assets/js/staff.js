@@ -3,6 +3,8 @@ const staffStatus = document.getElementById('staffStatus');
 let staffUser;
 let staffBusy = false;
 let staffAttendanceRefreshing = false;
+let staffLoaderDelayComplete = false;
+let staffLoaderStartupComplete = false;
 let staffScanner;
 let pendingStaffScan = null;
 let staffProducts = [];
@@ -11,6 +13,22 @@ let staffSignaturePad;
 let staffSaleBusy = false;
 let staffSelectedRenewalMember = null;
 let staffSelectedPlanChangeMember = null;
+
+function hideStaffLoaderWhenReady() {
+    if (staffLoaderDelayComplete && staffLoaderStartupComplete) {
+        document.getElementById('page-loader')?.classList.add('hidden-loader');
+    }
+}
+
+function startStaffLoaderMinimumDuration() {
+    window.setTimeout(() => {
+        staffLoaderDelayComplete = true;
+        hideStaffLoaderWhenReady();
+    }, 2500);
+}
+
+if (document.readyState === 'complete') startStaffLoaderMinimumDuration();
+else window.addEventListener('load', startStaffLoaderMinimumDuration, { once: true });
 
 function setStaffView(view) {
     document.querySelectorAll('[data-staff-view]').forEach(button => {
@@ -463,5 +481,11 @@ document.addEventListener('visibilitychange', () => {
         if (results[0].status === 'rejected') staffStatus.textContent = results[0].reason.message;
         if (results[1].status === 'rejected') document.getElementById('staffSalesStatus').textContent = results[1].reason.message;
         if (results[2].status === 'rejected') document.getElementById('staffSalesHistory').textContent = results[2].reason.message;
-    } catch (error) { staffStatus.textContent = error.message; }
+        staffLoaderStartupComplete = true;
+        hideStaffLoaderWhenReady();
+    } catch (error) {
+        staffStatus.textContent = error.message;
+        staffLoaderStartupComplete = true;
+        hideStaffLoaderWhenReady();
+    }
 })();
