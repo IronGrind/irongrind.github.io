@@ -6,16 +6,26 @@ alter table public.attendance add column if not exists checked_out_by uuid refer
 drop policy if exists staff_insert_attendance on public.attendance;
 drop policy if exists staff_update_attendance on public.attendance;
 
-create table if not exists private.attendance_scan_receipts (
+-- Preserve retry history if the earlier version of migration 26 was applied.
+do $$
+begin
+    if to_regclass('private.attendance_scan_receipts') is not null
+       and to_regclass('private.attendance_scan_requests') is null then
+        alter table private.attendance_scan_receipts rename to attendance_scan_requests;
+    end if;
+end;
+$$;
+
+create table if not exists private.attendance_scan_requests (
     request_id uuid primary key,
     operator_id uuid not null references auth.users(id) on delete cascade,
     member_id uuid not null references public.members(id) on delete cascade,
     result jsonb not null,
     created_at timestamptz not null default now()
 );
--- No client policies: only the SECURITY DEFINER scan function accesses receipts.
-alter table private.attendance_scan_receipts enable row level security;
-revoke all on private.attendance_scan_receipts from public, anon, authenticated;
+-- No client policies: only the SECURITY DEFINER scan function accesses saved scan results.
+alter table private.attendance_scan_requests enable row level security;
+revoke all on private.attendance_scan_requests from public, anon, authenticated;
 
 create or replace function public.record_attendance_scan(
     p_identifier text, p_request_id uuid,
@@ -26,7 +36,7 @@ declare
     operator_id uuid := auth.uid();
     member_row public.members%rowtype;
     visit public.attendance%rowtype;
-    receipt private.attendance_scan_receipts%rowtype;
+    saved_request private.attendance_scan_requests%rowtype;
     result jsonb;
     identifier text := btrim(p_identifier);
     expiry date;
@@ -45,10 +55,10 @@ begin
         if not found then raise exception 'Phone pairing is invalid or expired'; end if;
     end if;
     perform pg_advisory_xact_lock(hashtext(p_request_id::text));
-    select * into receipt from private.attendance_scan_receipts where request_id = p_request_id;
+    select * into saved_request from private.attendance_scan_requests where request_id = p_request_id;
     if found then
-        if receipt.operator_id <> operator_id then raise exception 'Scan belongs to another operator'; end if;
-        return receipt.result;
+        if saved_request.operator_id <> operator_id then raise exception 'Scan belongs to another operator'; end if;
+        return saved_request.result;
     end if;
     if upper(left(identifier, 10)) = 'IRONGRIND|' then identifier := substr(identifier, 11); end if;
     select * into member_row from public.members
@@ -73,7 +83,7 @@ begin
         values (member_row.id, now(), operator_id) returning * into visit;
         result := jsonb_build_object('action', 'check_in', 'member_name', member_row.full_name, 'attendance_id', visit.id);
     end if;
-    insert into private.attendance_scan_receipts(request_id, operator_id, member_id, result)
+    insert into private.attendance_scan_requests(request_id, operator_id, member_id, result)
     values (p_request_id, operator_id, member_row.id, result);
     return result;
 end;
