@@ -3337,10 +3337,17 @@ function switchSalesView(view) {
 }
 
 function renderWalkinSalesReport() {
-    const dateInput = document.getElementById('walkinSalesDate');
-    if (!dateInput) return;
-    if (!dateInput.value) dateInput.value = todayStr();
-    const daySales = sales.filter(sale => sale.date === dateInput.value && sale.status === 'Paid'
+    const today = todayStr();
+    const dayInput = document.getElementById('productSalesDay');
+    const fromInput = document.getElementById('productSalesFrom');
+    const toInput = document.getElementById('productSalesTo');
+    const yearInput = document.getElementById('productSalesYear');
+    if (dayInput && !dayInput.value) dayInput.value = today;
+    if (fromInput && !fromInput.value) fromInput.value = today;
+    if (toInput && !toInput.value) toInput.value = today;
+    if (yearInput && !yearInput.value) yearInput.value = today.slice(0, 4);
+    updateProductSalesPeriodControls();
+    const daySales = sales.filter(sale => isProductSaleInSelectedPeriod(sale) && sale.status === 'Paid'
         && getSaleProductCategory(sale));
     const supplementSales = daySales.filter(sale => getSaleProductCategory(sale) === 'Supplement');
     const merchSales = daySales.filter(sale => getSaleProductCategory(sale) === 'Merchandise');
@@ -3348,6 +3355,37 @@ function renderWalkinSalesReport() {
     document.getElementById('walkinTotalIncome').textContent = formatPeso(sumIncome(daySales));
     document.getElementById('walkinSupplementIncome').textContent = formatPeso(sumIncome(supplementSales));
     document.getElementById('walkinMerchIncome').textContent = formatPeso(sumIncome(merchSales));
+}
+
+function updateProductSalesPeriodControls() {
+    const mode = document.getElementById('productSalesPeriodMode')?.value || 'day';
+    document.querySelectorAll('[data-product-sales-period]').forEach(label => {
+        label.hidden = label.dataset.productSalesPeriod !== mode;
+    });
+}
+
+function getProductSalesPeriod() {
+    const mode = document.getElementById('productSalesPeriodMode')?.value || 'day';
+    if (mode === 'day') {
+        const day = document.getElementById('productSalesDay')?.value;
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(day || '')) throw new Error('Choose a sales day.');
+        return { mode, from: day, to: day, label: day, slug: day };
+    }
+    if (mode === 'range') {
+        const from = document.getElementById('productSalesFrom')?.value;
+        const to = document.getElementById('productSalesTo')?.value;
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(from || '') || !/^\d{4}-\d{2}-\d{2}$/.test(to || '')) throw new Error('Choose both sales dates.');
+        if (from > to) throw new Error('The From date must be on or before the To date.');
+        return { mode, from, to, label: `${from} to ${to}`, slug: `${from}_to_${to}` };
+    }
+    const year = String(document.getElementById('productSalesYear')?.value || '');
+    if (!/^\d{4}$/.test(year)) throw new Error('Choose a sales year.');
+    return { mode, from: `${year}-01-01`, to: `${year}-12-31`, label: year, slug: year };
+}
+
+function isProductSaleInSelectedPeriod(sale) {
+    try { return reportDateMatchesPeriod(sale.date || sale.createdAt, getProductSalesPeriod()); }
+    catch { return false; }
 }
 
 function isWalkinProductSale(sale) {
@@ -3396,12 +3434,13 @@ function getMembershipPlanFromSale(sale) {
 
 function renderSales() {
     const el = document.getElementById('salesTable');
+    if (currentSalesView === 'products') renderWalkinSalesReport();
     document.getElementById('salesTransactionsPanel')
         ?.classList.toggle('membership-sales-active', currentSalesTransactionType === 'membership');
     const membershipSales = sales.filter(isMembershipSale);
     const monthMembershipSales = membershipSales.filter(sale => reportDateBelongsToMonth(sale.date || sale.createdAt, currentMembershipSalesMonth));
-    const productSales = sales.filter(sale => !isMembershipSale(sale) && Boolean(getSaleProductCategory(sale)));
-    if (currentSalesView === 'products') renderWalkinSalesReport();
+    const productSales = sales.filter(sale => !isMembershipSale(sale) && Boolean(getSaleProductCategory(sale))
+        && isProductSaleInSelectedPeriod(sale));
     const currentMonth = localDateStr().slice(0, 7);
     const currentMonthSales = sales.filter(sale => reportDateBelongsToMonth(sale.date || sale.createdAt, currentMonth));
     const currentMonthPaidSales = currentMonthSales.filter(sale => sale.status === 'Paid');
@@ -4015,7 +4054,7 @@ function reportDateBelongsToMonth(value, month) {
     return !Number.isNaN(parsed.getTime()) && localDateStr(parsed).slice(0, 7) === month;
 }
 
-function createMonthlyReportPDF(type, period) {
+function createMonthlyReportPDF(type, period, options = {}) {
     const JsPDF = window.jspdf?.jsPDF;
     if (!JsPDF) throw new Error('PDF generator did not load. Check the internet connection and reload the admin page.');
 
@@ -4062,8 +4101,14 @@ function createMonthlyReportPDF(type, period) {
         ];
         sections.push(rowsFor(['Record Type', 'Member / Product', 'Username / Details', 'Plan / Previous Expiry', 'Archived / Changed'], archivedRows));
     } else if (type === 'payment' || type === 'sales') {
-        const filteredSales = sales.filter(sale => reportDateMatchesPeriod(sale.date || sale.createdAt, period));
-        sections.push(rowsFor(['Transaction reference', 'Customer', 'Total', 'Date', 'Status'], filteredSales.map(sale => [sale.id || '-', sale.customer || 'Name not recorded', `PHP ${Number(sale.total || 0).toFixed(2)}`, sale.date || '-', sale.status || 'Unknown'])));
+        const filteredSales = sales.filter(sale => reportDateMatchesPeriod(sale.date || sale.createdAt, period)
+            && (!options.productSalesOnly || (!isMembershipSale(sale)
+                && Boolean(getSaleProductCategory(sale))
+                && (currentSalesSubType === 'all' || getSaleProductCategory(sale) === currentSalesSubType)
+                && (currentSalesProductName === 'all' || getSaleProductNames(sale).includes(currentSalesProductName)))));
+        sections.push(options.productSalesOnly
+            ? rowsFor(['Transaction reference', 'Customer', 'Products', 'Total', 'Date', 'Status'], filteredSales.map(sale => [sale.id || '-', sale.customer || 'Name not recorded', sale.items || '-', `PHP ${Number(sale.total || 0).toFixed(2)}`, sale.date || '-', sale.status || 'Unknown']))
+            : rowsFor(['Transaction reference', 'Customer', 'Total', 'Date', 'Status'], filteredSales.map(sale => [sale.id || '-', sale.customer || 'Name not recorded', `PHP ${Number(sale.total || 0).toFixed(2)}`, sale.date || '-', sale.status || 'Unknown'])));
     } else if (type === 'attendance') {
         const filteredAttendance = attendance.filter(record => reportDateMatchesPeriod(record.date, period));
         sections.push(rowsFor(['Member', 'Date', 'Time in', 'Time out'], filteredAttendance.map(record => [record.memberName, record.date || '-', formatAttendanceClock(record.timeIn), formatAttendanceClock(record.timeOut)])));
@@ -4231,6 +4276,25 @@ function downloadReportPDF(type) {
     } catch (error) {
         console.error('Could not download PDF report:', error);
         toast(error.message || 'Could not create this PDF report.', 'error');
+    }
+}
+
+function downloadProductSalesReport() {
+    let period;
+    try { period = getProductSalesPeriod(); }
+    catch (error) { toast(error.message, 'error'); return; }
+    try {
+        const pdfBlob = createMonthlyReportPDF('sales', period, { productSalesOnly: true });
+        const url = URL.createObjectURL(pdfBlob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = `Product Sales Report (${period.slug}).pdf`;
+        link.click();
+        window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+        toast(`Product sales report downloaded for ${period.label}.`, 'success');
+    } catch (error) {
+        console.error('Could not download product sales PDF:', error);
+        toast(error.message || 'Could not create the product sales report.', 'error');
     }
 }
 

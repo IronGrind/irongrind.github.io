@@ -246,9 +246,16 @@
                     <div class="panel-header">
                         <div>
                             <h2><i class="fas fa-chart-line"></i> Daily Product Income</h2>
-                            <p class="modal-sub" style="margin-top:6px;">Totals for the selected date. Use the transaction list for individual sales.</p>
+                            <p class="modal-sub" style="margin-top:6px;">Product totals and transactions for the selected period.</p>
                         </div>
-                        <div class="walkin-sales-actions"><label class="walkin-date-filter">Sales date <input type="date" id="walkinSalesDate" onchange="renderWalkinSalesReport()"></label></div>
+                        <div class="walkin-sales-actions report-export-controls">
+                            <label>Period<select id="productSalesPeriodMode" onchange="updateProductSalesPeriodControls(); renderSales();"><option value="day">Specific day</option><option value="range">Date range</option><option value="year">Full year</option></select></label>
+                            <label data-product-sales-period="day">Day<input id="productSalesDay" type="date" onchange="renderSales()"></label>
+                            <label data-product-sales-period="range" hidden>From<input id="productSalesFrom" type="date" onchange="renderSales()"></label>
+                            <label data-product-sales-period="range" hidden>To<input id="productSalesTo" type="date" onchange="renderSales()"></label>
+                            <label data-product-sales-period="year" hidden>Year<input id="productSalesYear" type="number" min="2000" max="2100" step="1" onchange="renderSales()"></label>
+                            <button class="report-icon-btn" type="button" onclick="downloadProductSalesReport()" aria-label="Download product sales report" title="Download product sales report"><i class="fas fa-file-pdf" aria-hidden="true"></i></button>
+                        </div>
                     </div>
                     <div class="stats-grid walkin-sales-summary">
                         <div class="stat-card"><div class="stat-label">Total Income</div><div class="stat-value" id="walkinTotalIncome">₱0</div><div class="stat-sub">All walk-in products</div></div>
