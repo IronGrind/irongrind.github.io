@@ -1417,3 +1417,114 @@ html[data-dashboard-theme="light"] body.staff-dashboard .btn-sm { color: #354258
 html[data-dashboard-theme="light"] body.admin-dashboard .btn-sm:hover,
 html[data-dashboard-theme="light"] body.member-dashboard .btn-sm:hover,
 html[data-dashboard-theme="light"] body.staff-dashboard .btn-sm:hover { color: #1c2533; background: #dce2eb; }
+html[data-dashboard-theme="light"] body.admin-dashboard .btn-sm,
+html[data-dashboard-theme="light"] body.member-dashboard .btn-sm,
+html[data-dashboard-theme="light"] body.staff-dashboard .btn-sm,
+html[data-dashboard-theme="light"] body.admin-dashboard .btn-logout,
+html[data-dashboard-theme="light"] body.member-dashboard .btn-logout,
+html[data-dashboard-theme="light"] body.staff-dashboard .btn-logout,
+html[data-dashboard-theme="light"] body.admin-dashboard .report-icon-btn,
+html[data-dashboard-theme="light"] body.member-dashboard .report-icon-btn,
+html[data-dashboard-theme="light"] body.staff-dashboard .report-icon-btn,
+html[data-dashboard-theme="light"] body.member-dashboard .settings-close { color: #344257; background: #fbfcfe; border: 1px solid #c8d1de; box-shadow: 0 2px 5px rgba(38,52,74,.045); }
+html[data-dashboard-theme="light"] body.admin-dashboard .btn-sm:hover,
+html[data-dashboard-theme="light"] body.member-dashboard .btn-sm:hover,
+html[data-dashboard-theme="light"] body.staff-dashboard .btn-sm:hover,
+html[data-dashboard-theme="light"] body.admin-dashboard .btn-logout:hover,
+html[data-dashboard-theme="light"] body.member-dashboard .btn-logout:hover,
+html[data-dashboard-theme="light"] body.staff-dashboard .btn-logout:hover,
+html[data-dashboard-theme="light"] body.admin-dashboard .report-icon-btn:hover,
+html[data-dashboard-theme="light"] body.member-dashboard .settings-close:hover { color: #202b3b; background: #eef2f7; border-color: #aebaca; }
+html[data-dashboard-theme="light"] body.admin-dashboard .sidebar .nav-item { background: #f8fafc; border: 1px solid #d5dce6; }
+html[data-dashboard-theme="light"] body.admin-dashboard .sidebar .nav-item:hover { background: #eef2f7; }
+html[data-dashboard-theme="light"] body.admin-dashboard .sidebar .nav-item.active { background: #faeeee; border-color: #e0baba; color: #721d25; }
+html[data-dashboard-theme="light"] body.admin-dashboard .sales-section-tabs,
+html[data-dashboard-theme="light"] body.admin-dashboard .admin-tabs { background: #f8fafc; border-color: #d5dce6; }
+html[data-dashboard-theme="light"] body.admin-dashboard .admin-tab:not(.active) { color: #47556a; }
+html[data-dashboard-theme="light"] body.admin-dashboard .admin-tab:not(.active):hover { background: #eef2f7; color: #202b3b; }
+html[data-dashboard-theme="light"] body.member-dashboard .member-settings-nav-item:not(.active) { color: #47556a; }
+html[data-dashboard-theme="light"] body.member-dashboard .member-settings-nav-item:not(.active):hover { background: #f8fafc; color: #202b3b; }
+html[data-dashboard-theme="light"] body.admin-dashboard #forgotPasswordModal .modal-actions .btn-secondary { color: #344257; background: #fbfcfe; border-color: #c8d1de; }
+html[data-dashboard-theme="light"] body.admin-dashboard #forgotPasswordModal .modal-actions .btn-secondary:hover { color: #202b3b; background: #eef2f7; border-color: #aebaca; }
+
+/* Finish the light theme on controls that were still inheriting dark surfaces. */
+html[data-dashboard-theme="light"] body.admin-dashboard .reports-toolbar {
+    background: linear-gradient(135deg, #f8fafc, #e9edf3) !important;
+    border-color: #c8d0dc !important;
+    box-shadow: 0 8px 22px rgba(38, 52, 74, .06);
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .reports-toolbar label { color: #46546a; }
+html[data-dashboard-theme="light"] body.admin-dashboard .membership-controls .search input {
+    color: #202a3a; background: #fff; border-color: #c8d0dc;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .membership-controls .search input::placeholder { color: #68768b; }
+html[data-dashboard-theme="light"] body.admin-dashboard .pill {
+    color: #46546a; background: #f8fafc; border-color: #c8d0dc;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .pill:hover { color: #202a3a; background: #e8edf4; border-color: #adb9c9; }
+html[data-dashboard-theme="light"] body.admin-dashboard .pill.active { color: #fff; background: #8b0000; border-color: #8b0000; }
+html[data-dashboard-theme="light"] body.admin-dashboard .renew-btn {
+    color: #344257; background: #fff; border-color: #bdc8d6;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .renew-btn:hover:not(:disabled) {
+    color: #721d25; background: #fff3f2; border-color: #d59a9a;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .renew-btn:disabled,
+html[data-dashboard-theme="light"] body.admin-dashboard .renew-btn[aria-disabled="true"] {
+    color: #667388; background: #e6eaf0; border-color: #cbd3de; opacity: 1; cursor: not-allowed;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .membership-income-card strong { color: #253044 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .membership-income-card.overall strong { color: #8b0000 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .attendance-phone-status {
+    color: #48566b; background: #e9edf2; border-color: #c8d0dc;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .attendance-phone-status.connected {
+    color: #17683e; background: #e3f2e8; border-color: #b7dec4;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .btn-edit {
+    color: #344257; background: #e4e9f0; border: 1px solid #c6cfdb;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .btn-edit:hover { color: #202a3a; background: #d9e0e9; }
+html[data-dashboard-theme="light"] body.admin-dashboard .btn-restock {
+    color: #17683e; background: #dff1e6; border: 1px solid #b9dec6;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .btn-restock:hover { background: #d1eadb; }
+html[data-dashboard-theme="light"] body.admin-dashboard .btn-delete {
+    color: #8b2525; background: #f7e6e6; border: 1px solid #eccaca;
+}
+html[data-dashboard-theme="light"] body.member-dashboard .view-only-note {
+    color: #4d5b70 !important; background: #e8edf3 !important; border: 1px solid #ccd5e0 !important;
+}
+html[data-dashboard-theme="light"] body.member-dashboard .view-only-note i { color: #8b0000; }
+html[data-dashboard-theme="light"] body.admin-dashboard .sales-subfilter {
+    color: #46546a !important; background: #f8fafc !important; border-color: #c8d0dc !important;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .sales-subfilter:hover {
+    color: #202a3a !important; background: #e8edf4 !important; border-color: #adb9c9 !important;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .sales-subfilter.active {
+    color: #fff !important; background: #8b0000 !important; border-color: #8b0000 !important;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .sales-subfilter span { color: #667388 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .sales-subfilter.active span { color: #ffe4e4 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .report-export-controls label { color: #46546a !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .report-export-controls input,
+html[data-dashboard-theme="light"] body.admin-dashboard .report-export-controls select {
+    color: #202a3a !important; background: #fff !important; border-color: #bdc8d6 !important; color-scheme: light;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .report-actions-menu-popover {
+    color: #29364a !important; background: #f8fafc !important; border-color: #c8d0dc !important;
+    box-shadow: 0 12px 28px rgba(38, 52, 74, .18);
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .report-actions-menu-popover button {
+    color: #344257 !important; background: transparent !important;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .report-actions-menu-popover button:hover,
+html[data-dashboard-theme="light"] body.admin-dashboard .report-actions-menu-popover button:focus-visible {
+    color: #721d25 !important; background: #faeeee !important;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .btn-edit { color: #344257 !important; background: #e4e9f0 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .btn-restock { color: #17683e !important; background: #dff1e6 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .btn-delete { color: #8b2525 !important; background: #f7e6e6 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .renew-btn:disabled,
+html[data-dashboard-theme="light"] body.admin-dashboard .renew-btn[aria-disabled="true"] { color: #59677b !important; opacity: 1 !important; }
