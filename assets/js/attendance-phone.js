@@ -359,7 +359,7 @@ async function startPhoneMemberScanner(sessionId, token, openCamera = true) {
     if (!openCamera) {
         setPhoneCameraButton(false);
         setPhoneAttendanceStatus(deviceError
-            ? 'This phone is paired, but its device name cannot be shared until migration 20261104000011 is applied.'
+            ? 'This phone is paired, but its device name could not be updated. Ask the admin to check the latest phone-pairing migration; do not rerun older migrations.'
             : `This phone is paired: ${deviceLabel}. Tap Open camera when ready.`);
         return;
     }
