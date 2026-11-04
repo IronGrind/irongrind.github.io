@@ -1,0 +1,40 @@
+import { createClient } from '@supabase/supabase-js';
+
+const headers = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Content-Type': 'application/json', 'Cache-Control': 'no-store' };
+const reply = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers });
+Deno.serve(async request => {
+  if (request.method === 'OPTIONS') return new Response('ok', { headers });
+  if (request.method !== 'POST') return reply({ error: 'Method not allowed.' }, 405);
+  try {
+    const url = Deno.env.get('SUPABASE_URL')!;
+    const caller = createClient(url, Deno.env.get('SUPABASE_ANON_KEY')!, {
+      global: { headers: { Authorization: request.headers.get('Authorization') || '' } },
+      auth: { persistSession: false, autoRefreshToken: false },
+    });
+    const { data: { user }, error } = await caller.auth.getUser();
+    if (error || !user) return reply({ error: 'Sign in again.' }, 401);
+    const { data: profile, error: profileError } = await caller.from('profiles').select('role').eq('id', user.id).single();
+    if (profileError || profile?.role !== 'admin') return reply({ error: 'Admin access required.' }, 403);
+    let body;
+    try { body = await request.json(); } catch { return reply({ error: 'Invalid request.' }, 400); }
+    const username = typeof body.username === 'string' ? body.username.trim().toLowerCase() : '';
+    const fullName = typeof body.fullName === 'string' ? body.fullName.trim() : '';
+    const password = typeof body.password === 'string' ? body.password : '';
+    if (!/^[a-z0-9_]{3,30}$/.test(username) || !fullName || fullName.length > 150 || password.length < 12 || password.length > 128) {
+      return reply({ error: 'Enter a name, a 3–30 character username (letters, numbers, underscore), and a password of 12–128 characters.' }, 400);
+    }
+    const admin = createClient(url, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false, autoRefreshToken: false } });
+    const { data: created, error: createError } = await admin.auth.admin.createUser({
+      email: `${username}@staff.irongrind.invalid`, password, email_confirm: true,
+      user_metadata: { username, full_name: fullName },
+    });
+    if (createError || !created.user) return reply({ error: 'Could not create staff account. The username may already be in use.' }, 400);
+    const { data: saved, error: saveError } = await admin.from('profiles').update({ role: 'staff', is_active: true }).eq('id', created.user.id).select('id').single();
+    if (saveError || !saved) {
+      const { error: cleanupError } = await admin.auth.admin.deleteUser(created.user.id);
+      if (cleanupError) console.error('Staff account cleanup failed:', created.user.id);
+      return reply({ error: 'Could not assign staff access.' }, 500);
+    }
+    return reply({ username }, 201);
+  } catch { return reply({ error: 'Staff account service is unavailable.' }, 500); }
+});

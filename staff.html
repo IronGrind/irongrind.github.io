@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Staff Attendance | Iron Grind</title><link rel="stylesheet" href="assets/css/style.css"></head>
+<body class="dashboard-body"><main class="main-content">
+<h1>Staff Attendance</h1><p id="staffIdentity"></p><button id="staffLogout" class="btn-logout">Logout</button>
+<div class="card"><h2>Member check-in / check-out</h2><p>Scan a member QR again to check them out.</p>
+<button id="startStaffCamera" class="btn-primary">Scan QR with camera</button><div id="staffCamera"></div>
+<form id="staffScanForm"><div class="form-group"><label for="staffIdentifier">Member QR or username</label><input id="staffIdentifier" required autocomplete="off"></div><button class="btn-primary">Record attendance</button></form>
+<p id="staffStatus" role="status" aria-live="polite"></p></div>
+<div class="card"><h2>Attendance</h2><button id="refreshStaffAttendance">Refresh</button><div class="table-scroll"><table><thead><tr><th>Member</th><th>In</th><th>Out</th></tr></thead><tbody id="staffAttendanceRows"></tbody></table></div></div>
+</main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/supabase-client.js"></script><script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script><script src="assets/js/staff.js"></script></body></html>

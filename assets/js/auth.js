@@ -205,8 +205,8 @@ async function handleLogin(event) {
                 return;
             }
 
-            const role = profile.role === 'admin' ? 'admin' : 'customer';
-            if ((loginMode === 'admin') !== (role === 'admin')) {
+            const role = ['admin', 'staff'].includes(profile.role) ? profile.role : 'customer';
+            if ((loginMode === 'admin') !== (['admin', 'staff'].includes(role))) {
                 await supabaseClient.auth.signOut();
                 showError(loginMode === 'admin' ? 'Invalid username or password.' : 'Please sign in using your assigned username and password.');
                 return;
@@ -286,7 +286,7 @@ function saveLoginSession(session, remember) {
     localStorage.removeItem('irongrind_session');
     sessionStorage.removeItem('irongrind_session');
     (remember ? localStorage : sessionStorage).setItem('irongrind_session', JSON.stringify(session));
-            window.location.replace(session.role === 'admin' ? 'admin.html' : 'customer.html');
+            window.location.replace(session.role === 'admin' ? 'admin.html' : session.role === 'staff' ? 'staff.html' : 'customer.html');
 }
 // Remove plaintext passwords written by the retired browser-only login flow.
 try {

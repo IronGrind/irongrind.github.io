@@ -44,7 +44,7 @@ export async function handleAdminLogin(request: Request) {
     // Escape LIKE wildcards: this is an exact, case-insensitive username match.
     const pattern = username.replace(/[\\%_]/g, '\\$&');
     const { data: profile, error: profileError } = await admin.from('profiles')
-      .select('id').eq('role', 'admin').ilike('username', pattern).maybeSingle();
+      .select('id').in('role', ['admin', 'staff']).eq('is_active', true).ilike('username', pattern).maybeSingle();
     if (profileError) {
       console.error('Admin username lookup failed:', profileError.code);
       return respond({ error: 'Username sign-in is unavailable. Contact the gym administrator.' }, 503);
@@ -64,8 +64,8 @@ export async function handleAdminLogin(request: Request) {
       return respond({ error: invalidCredentials }, 401);
     }
     const { data: verified, error: roleError } = await admin.from('profiles')
-      .select('role').eq('id', data.user.id).single();
-    if (roleError || verified?.role !== 'admin') {
+      .select('role,is_active').eq('id', data.user.id).single();
+    if (roleError || !['admin', 'staff'].includes(verified?.role) || verified?.is_active !== true) {
       await login.auth.signOut();
       if (roleError) {
         console.error('Admin role lookup failed:', roleError.code);

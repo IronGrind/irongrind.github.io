@@ -31,9 +31,9 @@ Deno.test('admin username endpoint validates credentials, role, privacy, and thr
       }
       if (url.searchParams.get('select') === 'id') {
         receivedPattern = url.searchParams.get('username') || '';
-        assert(url.searchParams.get('role') === 'eq.admin', 'Lookup restricts admin roles');
+        assert(url.searchParams.get('role') === 'in.(admin,staff)' && url.searchParams.get('is_active') === 'eq.true', 'Lookup restricts active admin and staff roles');
         payload = scenario === 'unknown' || scenario === 'member' ? [] : [{ id: userId }];
-      } else payload = { role: scenario === 'demoted' ? 'member' : 'admin' };
+      } else payload = { role: scenario === 'demoted' ? 'member' : scenario === 'staff' ? 'staff' : 'admin', is_active: scenario !== 'inactive' };
     } else if (url.pathname.endsWith(`/admin/users/${userId}`)) {
       payload = { id: userId, email: 'private-staff@example.test' };
     } else if (url.pathname.endsWith('/token')) {
@@ -57,8 +57,11 @@ Deno.test('admin username endpoint validates credentials, role, privacy, and thr
     assert(!JSON.stringify(body).includes('private-staff'), 'Email is not returned by lookup');
     assert(usedAuthEmail === 'private-staff@example.test', 'Authenticates using server-side Auth email');
     assert(receivedPattern === 'ilike.staff\\_one\\%', 'Exact case-insensitive lookup escapes wildcard characters');
+    scenario = 'staff';
+    response = await attempt(); body = await response.json();
+    assert(response.status === 200 && body.session, 'Staff receives a session');
     const invalidBodies = [];
-    for (scenario of ['wrong', 'unknown', 'member', 'demoted']) {
+    for (scenario of ['wrong', 'unknown', 'member', 'demoted', 'inactive']) {
       response = await attempt(); body = await response.json();
       assert(response.status === 401 && !body.session, `${scenario} cannot receive a session`);
       invalidBodies.push(body.error);
