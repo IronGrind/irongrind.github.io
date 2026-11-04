@@ -3568,12 +3568,13 @@ function renderReports() {
                 <span>Choose one day, a custom date range, or a full year. Status and inventory reports remain current snapshots.</span>
             </div>
             <div class="report-export-controls">
+                <label>Area<select id="reportsExportArea" onchange="updateReportExportAction()"><option value="all">All report areas</option><option value="membership">Membership</option><option value="member-status">Member Status</option><option value="renewals">Renewals</option><option value="archives">Archives</option><option value="attendance">Attendance</option><option value="inventory">Inventory</option><option value="payment">Payments</option><option value="sales">Sales</option></select></label>
                 <label>Period<select id="reportsPeriodMode" onchange="updateReportPeriodControls()"><option value="day">Specific day</option><option value="range">Date range</option><option value="year">Full year</option></select></label>
                 <label data-report-period="day">Day<input id="reportsDay" type="date"></label>
                 <label data-report-period="range" hidden>From<input id="reportsFrom" type="date"></label>
                 <label data-report-period="range" hidden>To<input id="reportsTo" type="date"></label>
                 <label data-report-period="year" hidden>Year<input id="reportsYear" type="number" min="2000" max="2100" step="1"></label>
-                <button class="report-icon-btn report-export-all-btn" type="button" onclick="exportAllReports()" aria-label="Download all reports as a ZIP file" title="Download all reports as ZIP"><i class="fas fa-file-zipper" aria-hidden="true"></i></button>
+                <button id="reportsExportButton" class="report-icon-btn report-export-all-btn" type="button" onclick="exportAllReports()" aria-label="Export selected report area" title="Export selected report area"><i class="fas fa-download" aria-hidden="true"></i></button>
             </div>
         </div>
         ${groups.map(group => `
@@ -3607,11 +3608,23 @@ function renderReports() {
     document.getElementById('reportsTo').value = today;
     document.getElementById('reportsYear').value = today.slice(0, 4);
     updateReportPeriodControls();
+    updateReportExportAction();
 }
 
 function updateReportPeriodControls() {
     const mode = document.getElementById('reportsPeriodMode')?.value || 'day';
     document.querySelectorAll('[data-report-period]').forEach(label => { label.hidden = label.dataset.reportPeriod !== mode; });
+}
+
+function updateReportExportAction() {
+    const area = document.getElementById('reportsExportArea')?.value || 'all';
+    const button = document.getElementById('reportsExportButton');
+    if (!button) return;
+    const all = area === 'all';
+    button.title = all ? 'Export all report areas as ZIP' : 'Export selected report as PDF';
+    button.setAttribute('aria-label', button.title);
+    const icon = button.querySelector('i');
+    if (icon) icon.className = `fas ${all ? 'fa-file-zipper' : 'fa-file-pdf'}`;
 }
 
 function getSelectedReportPeriod() {
@@ -4128,10 +4141,11 @@ async function exportAllReports() {
     let period;
     try { period = getSelectedReportPeriod(); }
     catch (error) { toast(error.message, 'error'); return; }
+    const selectedArea = document.getElementById('reportsExportArea')?.value || 'all';
     const JsPDF = window.jspdf?.jsPDF;
     const pdfTableReady = typeof JsPDF === 'function' && typeof new JsPDF().autoTable === 'function';
     const missingTools = [
-        !window.JSZip && 'ZIP generator',
+        selectedArea === 'all' && !window.JSZip && 'ZIP generator',
         !pdfTableReady && 'PDF table generator'
     ].filter(Boolean);
     if (missingTools.length) {
@@ -4144,7 +4158,8 @@ async function exportAllReports() {
         toast(`Could not load ${missingTools.join(' and ')}. Reload the page and try again.`, 'error');
         return;
     }
-    const types = ['membership', 'member-status', 'archives', 'payment', 'attendance', 'renewals', 'inventory', 'sales'];
+    const allTypes = ['membership', 'member-status', 'archives', 'payment', 'attendance', 'renewals', 'inventory', 'sales'];
+    const types = selectedArea === 'all' ? allTypes : allTypes.includes(selectedArea) ? [selectedArea] : [];
     const names = {
         membership: 'Membership Report',
         'member-status': 'Member Status Report',
@@ -4156,7 +4171,20 @@ async function exportAllReports() {
         sales: 'Sales Report'
     };
     try {
+        if (!types.length) throw new Error('Choose a valid report area.');
         toast(`Preparing PDFs for ${period.label}…`, 'success');
+        if (types.length === 1) {
+            const type = types[0];
+            const pdfBlob = createMonthlyReportPDF(type, period);
+            const url = URL.createObjectURL(pdfBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `${names[type]} (${period.slug}).pdf`;
+            link.click();
+            window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+            toast(`${names[type]} exported for ${period.label}.`, 'success');
+            return;
+        }
         const zip = new JSZip();
         const reportFolder = zip.folder('Iron Grind Reports');
         types.forEach(type => {
