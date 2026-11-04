@@ -30,7 +30,15 @@ function isPhoneCameraAvailable() {
 
 function createPhoneQrScanner() {
     if (typeof Html5Qrcode === 'undefined') throw new Error('The scanner library could not load. Check your internet connection.');
-    document.getElementById('phoneQrReader')?.replaceChildren();
+    const reader = document.getElementById('phoneQrReader');
+    if (reader) {
+        reader.querySelectorAll('video').forEach(video => {
+            try { video.pause(); } catch {}
+            try { video.srcObject?.getTracks().forEach(track => track.stop()); } catch {}
+            video.srcObject = null;
+        });
+        reader.replaceChildren();
+    }
     const scanner = new Html5Qrcode('phoneQrReader');
     phoneAttendanceScanner = scanner;
     return scanner;
@@ -46,6 +54,21 @@ function setPhoneNextScanButton(visible, label = 'Scan next member') {
     if (!button) return;
     button.hidden = !visible;
     button.textContent = label;
+}
+
+async function confirmPhoneCameraPreview() {
+    const video = document.querySelector('#phoneQrReader video');
+    if (!video) throw new Error('Camera opened without a video preview. Close other camera apps and try again.');
+    video.muted = true;
+    video.autoplay = true;
+    video.playsInline = true;
+    try { await video.play(); } catch {}
+    if (video.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA && video.videoWidth > 0) return;
+    await Promise.race([
+        new Promise(resolve => video.addEventListener('loadeddata', resolve, { once: true })),
+        new Promise(resolve => window.setTimeout(resolve, 2500))
+    ]);
+    if (!video.videoWidth) throw new Error('Camera permission was granted, but its preview stayed blank. Close other camera apps, then tap Open camera again.');
 }
 
 async function getPhoneDeviceLabel() {
@@ -234,9 +257,12 @@ async function startPhonePairingScanner(statusMessage = '') {
             },
             () => {}
         );
+        await confirmPhoneCameraPreview();
         setPhoneCameraButton(true);
         setPhoneAttendanceStatus(statusMessage || 'Camera is on. Scan the pairing QR shown on the admin page.');
     } catch (error) {
+        try { await scanner?.stop(); } catch {}
+        try { scanner?.getRunningTrack?.()?.stop(); } catch {}
         phoneAttendanceScanner = null;
         setPhoneCameraButton(false);
         setPhoneAttendanceStatus(error?.name === 'NotAllowedError'
@@ -290,10 +316,13 @@ async function startPhoneMemberScanner(sessionId, token, openCamera = true) {
             decodedText => submitPhoneMemberScan(decodedText, scanner, { sessionId, token }),
             () => {}
         );
+        await confirmPhoneCameraPreview();
         phoneScanBusy = false;
         setPhoneCameraButton(true);
         setPhoneAttendanceStatus('Camera is on. Point it at a member QR code.');
     } catch (error) {
+        try { await scanner?.stop(); } catch {}
+        try { scanner?.getRunningTrack?.()?.stop(); } catch {}
         phoneAttendanceScanner = null;
         setPhoneCameraButton(false);
         setPhoneAttendanceStatus(error?.name === 'NotAllowedError'
@@ -351,11 +380,21 @@ async function stopPhoneAttendanceScanner() {
     setPhoneNextScanButton(false);
     setPhoneCameraButton(false);
     if (scanner) {
-        const track = scanner.getRunningTrack?.();
+        let track;
+        try { track = scanner.getRunningTrack?.(); } catch {}
         try { await scanner.stop(); } catch {}
         try { track?.stop(); } catch {}
         try { scanner.clear(); } catch {}
     }
+    const reader = document.getElementById('phoneQrReader');
+    reader?.querySelectorAll('video').forEach(video => {
+        try { video.pause(); } catch {}
+        try { video.srcObject?.getTracks().forEach(track => track.stop()); } catch {}
+        video.srcObject = null;
+        video.removeAttribute('src');
+        try { video.load(); } catch {}
+    });
+    reader?.replaceChildren();
     const deviceLabel = activePhoneSession ? await getPhoneDeviceLabel() : '';
     setPhoneAttendanceStatus(activePhoneSession
         ? deviceLabel
@@ -434,13 +473,22 @@ function configurePhoneAppInstall() {
 window.addEventListener('pagehide', () => {
     const scanner = phoneAttendanceScanner;
     phoneAttendanceScanner = null;
-    if (scanner) scanner.stop().catch(() => {});
+    const reader = document.getElementById('phoneQrReader');
+    if (scanner) {
+        scanner.stop().catch(() => {}).finally(() => {
+            try { scanner.clear(); } catch {}
+            reader?.querySelectorAll('video').forEach(video => {
+                try { video.srcObject?.getTracks().forEach(track => track.stop()); } catch {}
+                video.srcObject = null;
+            });
+        });
+    }
 });
 
 async function startPhoneAttendanceApp() {
     configurePhoneAppInstall();
     if ('serviceWorker' in navigator && window.isSecureContext) {
-        navigator.serviceWorker.register('attendance-phone-sw.js?v=20261104-phone-model-ux').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
+    navigator.serviceWorker.register('attendance-phone-sw.js?v=20261104-phone-camera-reopen').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
     }
     if (!window.ironGrindSupabase) {
         setPhoneAttendanceStatus('The attendance service could not load. Check your connection and reload.', true);
