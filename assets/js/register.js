@@ -14,6 +14,14 @@ function loadDB(key) {
 }
 
 function saveDB(key, data) { localStorage.setItem('ig_' + key, JSON.stringify(data)); }
+function composeRegistrationName() {
+    return ['regFirstName', 'regMiddleName', 'regLastName']
+        .map(id => document.getElementById(id).value.trim()).filter(Boolean).join(' ');
+}
+function phLocalToStored(value) {
+    const digits = String(value || '').replace(/\D/g, '');
+    return /^9\d{9}$/.test(digits) ? `0${digits}` : '';
+}
 function toggleRegPassword(inputId, iconId) {
     const input = document.getElementById(inputId);
     const icon = document.getElementById(iconId);
@@ -37,8 +45,8 @@ const registrationSignature = initDigitalSignature('registrationSignature', 'cle
 const phoneInputs = [document.getElementById('regMobile'), document.getElementById('regEcContact')];
 phoneInputs.forEach(input => {
     input.addEventListener('input', function() {
-        this.value = this.value.replace(/\D/g, '').slice(0, 11);
-        this.setCustomValidity(this.value && !/^09\d{9}$/.test(this.value) ? 'Enter an 11-digit PH number starting with 09.' : '');
+        this.value = this.value.replace(/\D/g, '').slice(0, 10);
+        this.setCustomValidity(this.value && !/^9\d{9}$/.test(this.value) ? 'Enter 10 digits beginning with 9 after +63.' : '');
     });
 });
 
@@ -94,17 +102,19 @@ async function submitRegistration(event) {
     event.preventDefault();
     hideError();
 
-    const fullName = document.getElementById('regFullName').value.trim();
+    const fullName = composeRegistrationName();
     const dob = document.getElementById('regDob').value;
     const age = Number(document.getElementById('regAge').value);
     const sex = document.getElementById('regSex').value;
-    const mobile = document.getElementById('regMobile').value.replace(/\D/g, '');
+    const mobileLocal = document.getElementById('regMobile').value.replace(/\D/g, '');
+    const mobile = phLocalToStored(mobileLocal);
     const height = document.getElementById('regHeight').value;
     const heightUnit = height ? document.getElementById('regHeightUnit').value : null;
     const weight = document.getElementById('regWeight').value;
     const ecName = document.getElementById('regEcName').value.trim();
     const ecRelation = document.getElementById('regEcRelation').value.trim();
-    const ecContact = document.getElementById('regEcContact').value.replace(/\D/g, '');
+    const ecContactLocal = document.getElementById('regEcContact').value.replace(/\D/g, '');
+    const ecContact = phLocalToStored(ecContactLocal);
 
     const planInput = document.querySelector('input[name="regPlan"]:checked');
     if (!planInput) { showError('Please select a membership plan.'); return; }
@@ -136,10 +146,10 @@ async function submitRegistration(event) {
     const confirm = document.getElementById('regConfirmPassword').value;
 
     if (!fullName || !dob || !mobile) { showError('Please complete all required personal information.'); return; }
-    if (!/^09\d{9}$/.test(mobile)) { showError('Enter an 11-digit PH mobile number starting with 09.'); return; }
+    if (!/^9\d{9}$/.test(mobileLocal)) { showError('Enter the 10 digits after +63, beginning with 9.'); return; }
     if (age < 12) { showError('You must be at least 12 years old to register.'); return; }
     if (!ecName || !ecRelation || !ecContact) { showError('Please complete the emergency contact details.'); return; }
-    if (!/^09\d{9}$/.test(ecContact)) { showError('Enter an 11-digit PH emergency contact number starting with 09.'); return; }
+    if (!/^9\d{9}$/.test(ecContactLocal)) { showError('Enter the emergency contact’s 10 digits after +63, beginning with 9.'); return; }
     if (email.length > 300) { showError('Email address must be 300 characters or fewer.'); return; }
     if (!email || !document.getElementById('regEmail').checkValidity()) { showError('Enter a valid email address for your account.'); return; }
     if (username.length < 4) { showError('Username must be at least 4 characters.'); return; }

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IronGrind · Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261105-compact-header">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261105-profile-reports-staff">
 </head>
 <body class="dashboard-body admin-dashboard admin-auth-pending">
 <div id="page-loader" class="page-loader" aria-label="Loading dashboard" role="status"><div class="loader-content"><img class="loader-mark" src="assets/images/iron-grind-mark.png" alt=""><div class="loader-brand">Iron<span>Grind</span></div><div class="loader-track"><span></span></div></div></div>
@@ -18,16 +18,17 @@
             </div>
         </div>
         <div class="header-actions">
-            <button id="activityLogsButton" class="btn-settings admin-activity-button" type="button" onclick="showAdminSection('activity', event)" aria-label="Activity Logs" title="Activity Logs" aria-controls="section-activity" aria-pressed="false">
-                <i class="fas fa-clock-rotate-left" aria-hidden="true"></i>
-            </button>
             <div class="user-chip">
                 <i class="fas fa-user-shield"></i>
                 <span id="currentUserName">Admin</span>
             </div>
-            <button class="btn-logout" onclick="logout()" aria-label="Logout" title="Logout">
-                <i class="fas fa-sign-out-alt"></i> Logout
-            </button>
+            <div class="member-account-menu-wrap admin-account-menu-wrap">
+                <button class="btn-settings admin-menu-button" type="button" onclick="toggleAdminAccountMenu(event)" aria-label="Open admin menu" title="Admin menu" aria-haspopup="menu" aria-controls="adminAccountMenu" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
+                <div class="member-account-menu" id="adminAccountMenu" role="menu" aria-label="Admin account options" hidden>
+                    <button id="activityLogsButton" class="member-account-menu-item" type="button" role="menuitem" onclick="openActivityLogsFromMenu()" aria-controls="section-activity" aria-pressed="false"><i class="fas fa-clock-rotate-left" aria-hidden="true"></i><span>Activity Logs</span></button>
+                    <button class="member-account-menu-item member-account-menu-logout" type="button" role="menuitem" onclick="closeAdminAccountMenu(); logout()"><i class="fas fa-sign-out-alt" aria-hidden="true"></i><span>Logout</span></button>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -55,12 +56,23 @@
         <button class="nav-item" data-section="staff" onclick="showAdminSection('staff', event)">Staff Accounts</button></aside>
 
         <main class="main-content">
-<div id="section-staff" class="admin-section hidden"><h1>Staff Accounts</h1><p>Create individual staff logins with attendance-only access.</p>
-<form id="staffAccountForm" class="card">
-<div class="form-group"><label for="staffName">Full name</label><input id="staffName" required maxlength="150"></div>
-<div class="form-group"><label for="staffUsername">Username</label><input id="staffUsername" required pattern="[A-Za-z0-9_]{3,30}" maxlength="30" autocomplete="off"></div>
-<div class="form-group"><label for="staffPassword">Password (at least 12 characters)</label><input id="staffPassword" type="password" required minlength="12" maxlength="128" autocomplete="new-password"></div>
-<button class="btn-primary" type="submit">Create Staff Account</button><p id="staffAccountStatus" role="status" aria-live="polite"></p></form></div>
+<div id="section-staff" class="admin-section hidden">
+    <div class="section-heading-block"><h1>Staff Accounts</h1><p>Create and manage individual attendance-only staff access.</p></div>
+    <div class="staff-management-grid">
+        <section class="panel staff-create-panel"><div class="panel-header"><h2><i class="fas fa-user-plus"></i> Create Staff Account</h2></div>
+            <form id="staffAccountForm">
+                <div class="form-group"><label for="staffName">Full name</label><input id="staffName" required maxlength="150" autocomplete="name"></div>
+                <div class="form-group"><label for="staffUsername">Username</label><input id="staffUsername" required pattern="[A-Za-z0-9_]{3,30}" maxlength="30" autocomplete="off"></div>
+                <div class="form-group"><label for="staffPassword">Temporary password (12+ characters)</label><input id="staffPassword" type="password" required minlength="12" maxlength="128" autocomplete="new-password"></div>
+                <button class="btn-primary" type="submit"><i class="fas fa-user-plus"></i> Create Account</button><p id="staffAccountStatus" class="activity-help" role="status" aria-live="polite"></p>
+            </form>
+        </section>
+        <section class="panel staff-directory-panel"><div class="panel-header"><div><h2><i class="fas fa-users-gear"></i> Staff Directory</h2><p class="modal-sub">View account details and control attendance access.</p></div><button class="btn-sm" type="button" onclick="loadStaffAccounts()"><i class="fas fa-rotate"></i> Refresh</button></div>
+            <div id="staffAccountsStatus" class="activity-help" role="status" aria-live="polite"></div>
+            <div id="staffAccountsList" class="staff-account-list"></div>
+        </section>
+    </div>
+</div>
             <div id="section-dashboard" class="admin-section">
                 <div id="dashboardRegistrationNotice" class="registration-notice hidden" role="status" aria-live="polite">
                     <i class="fas fa-user-plus" aria-hidden="true"></i>
@@ -292,7 +304,7 @@
 <script src="assets/js/signature.js"></script>
 <script src="assets/js/activity-logs.js?v=20261104-phone-pairing-audit"></script>
 <script src="assets/js/admin-access.js?v=20261105-auth-gate"></script>
-<script src="assets/js/admin.js?v=20261105-piece-box-units"></script>
-<script src="assets/js/staff-accounts.js"></script>
+<script src="assets/js/admin.js?v=20261105-admin-menu-reports"></script>
+<script src="assets/js/staff-accounts.js?v=20261105-directory"></script>
 </body>
 </html>

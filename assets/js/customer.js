@@ -31,11 +31,29 @@ function updateCustomerName(name, updateSettingsField = false) {
     document.getElementById('currentUserName').textContent = fullName;
     document.getElementById('heroName').textContent = firstName + '!';
     document.getElementById('mfName').value = fullName;
-    const settingsName = document.getElementById('settingsFullName');
-    if (updateSettingsField && settingsName) settingsName.value = fullName;
+    if (updateSettingsField) populateSettingsNameFields(fullName);
 }
 
 // ===== HELPERS =====
+function splitFullName(value) {
+    const parts = String(value || '').trim().split(/\s+/).filter(Boolean);
+    if (parts.length < 2) return { first: parts[0] || '', middle: '', last: '' };
+    return { first: parts[0], middle: parts.slice(1, -1).join(' '), last: parts.at(-1) };
+}
+function populateSettingsNameFields(value) {
+    const name = splitFullName(value);
+    const fields = { settingsFirstName: name.first, settingsMiddleName: name.middle, settingsLastName: name.last };
+    Object.entries(fields).forEach(([id, fieldValue]) => { const input = document.getElementById(id); if (input) input.value = fieldValue; });
+}
+function composeSettingsFullName() {
+    return ['settingsFirstName', 'settingsMiddleName', 'settingsLastName']
+        .map(id => document.getElementById(id).value.trim()).filter(Boolean).join(' ');
+}
+function storedPhoneToLocal(value) { return String(value || '').replace(/\D/g, '').replace(/^0/, '').slice(0, 10); }
+function phLocalToStored(value) {
+    const digits = String(value || '').replace(/\D/g, '');
+    return /^9\d{9}$/.test(digits) ? `0${digits}` : '';
+}
 function localDateStr(date = new Date()) {
     const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Manila', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(date);
     const part = type => parts.find(item => item.type === type)?.value;
@@ -751,10 +769,12 @@ async function submitMemberSettings(event) {
     }
     settingsFormMessage('');
     try {
-        const fullName = document.getElementById('settingsFullName').value.trim();
+        const fullName = composeSettingsFullName();
         const dob = document.getElementById('settingsDob').value;
-        const mobile = document.getElementById('settingsMobile').value.replace(/\D/g, '');
-        const emergencyMobile = document.getElementById('settingsEmergencyMobile').value.replace(/\D/g, '');
+        const mobileLocal = document.getElementById('settingsMobile').value.replace(/\D/g, '');
+        const emergencyMobileLocal = document.getElementById('settingsEmergencyMobile').value.replace(/\D/g, '');
+        const mobile = phLocalToStored(mobileLocal);
+        const emergencyMobile = phLocalToStored(emergencyMobileLocal);
         const heightValue = document.getElementById('settingsHeight').value;
         const weightValue = document.getElementById('settingsWeight').value;
         const otherMedicalChoice = document.getElementById('settingsOtherMedicalChoice').checked;
@@ -767,12 +787,12 @@ async function submitMemberSettings(event) {
             settingsFormMessage('Enter a valid date of birth that is not in the future.', 'error');
             return;
         }
-        if (mobile && !/^09\d{9}$/.test(mobile)) {
-            settingsFormMessage('Enter a valid PH mobile number (e.g. 09171234567), or leave it blank.', 'error');
+        if (mobileLocal && !/^9\d{9}$/.test(mobileLocal)) {
+            settingsFormMessage('Enter the 10 mobile digits after +63, beginning with 9, or leave it blank.', 'error');
             return;
         }
-        if (emergencyMobile && !/^09\d{9}$/.test(emergencyMobile)) {
-            settingsFormMessage('Enter a valid emergency contact number, or leave it blank.', 'error');
+        if (emergencyMobileLocal && !/^9\d{9}$/.test(emergencyMobileLocal)) {
+            settingsFormMessage('Enter the emergency contact’s 10 digits after +63, or leave it blank.', 'error');
             return;
         }
         if ((heightValue && (!Number.isFinite(Number(heightValue)) || Number(heightValue) <= 0)) ||
@@ -929,16 +949,16 @@ function updateSettingsAge() {
 
 function populateMemberSettings(member) {
     const emergency = member?.emergencyContact || {};
-    document.getElementById('settingsFullName').value = member?.name || session.fullName || '';
+    populateSettingsNameFields(member?.name || session.fullName || '');
     document.getElementById('settingsDob').value = member?.dateOfBirth || '';
     document.getElementById('settingsSex').value = member?.sex || 'Prefer not to say';
-    document.getElementById('settingsMobile').value = member?.contact || '';
+    document.getElementById('settingsMobile').value = storedPhoneToLocal(member?.contact);
     document.getElementById('settingsHeight').value = member?.height ?? '';
     document.getElementById('settingsHeightUnit').value = member?.heightUnit || 'cm';
     document.getElementById('settingsWeight').value = member?.weight ?? '';
     document.getElementById('settingsEmergencyName').value = emergency.name || '';
     document.getElementById('settingsEmergencyRelationship').value = emergency.relationship || '';
-    document.getElementById('settingsEmergencyMobile').value = emergency.contact || '';
+    document.getElementById('settingsEmergencyMobile').value = storedPhoneToLocal(emergency.contact);
     document.querySelectorAll('input[name="settingsGoal"]').forEach(input => { input.checked = (member?.fitnessGoals || []).includes(input.value); });
     document.querySelectorAll('input[name="settingsHealth"]').forEach(input => { input.checked = (member?.healthConditions || []).includes(input.value); });
     const hasOtherMedical = Boolean(member?.otherMedicalConditions);
@@ -965,7 +985,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const input = document.getElementById(id);
         if (!input) return;
         input.addEventListener('input', () => {
-            input.value = input.value.replace(/\D/g, '').slice(0, 11);
+            input.value = input.value.replace(/\D/g, '').slice(0, 10);
         });
     });
     document.getElementById('membershipForm')?.addEventListener('submit', submitMembershipForm);
@@ -1047,8 +1067,7 @@ async function loadSupabaseMember() {
             if (!fullName) return;
             supabaseMember.name = fullName;
             updateCustomerName(fullName);
-            const settingsName = document.getElementById('settingsFullName');
-            if (settingsName && document.activeElement !== settingsName) settingsName.value = fullName;
+            if (!['settingsFirstName', 'settingsMiddleName', 'settingsLastName'].includes(document.activeElement?.id)) populateSettingsNameFields(fullName);
         })
         .subscribe();
 

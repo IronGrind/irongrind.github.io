@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IronGrind · Membership Registration</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261105-responsive-layout">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261105-profile-reports-staff">
 </head>
 <body class="register-body" style="padding:24px; background: radial-gradient(circle at 20% 20%, #1a1207, #0b0e14 60%);">
     <div class="registration-shell" style="max-width:900px; margin:0 auto; background:#11161f; border:1px solid #1e2533; border-radius:24px; padding:32px;">
@@ -30,14 +30,18 @@
                 <div style="display:flex; align-items:center; gap:10px; font-size:0.95rem; font-weight:600; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid #1e2533;">
                     <i class="fas fa-user" style="color:#d31212;"></i><span>Personal Information</span>
                 </div>
+                <div class="form-row form-row-three">
+                    <div class="form-group"><label for="regFirstName">First Name *</label><input type="text" id="regFirstName" autocomplete="given-name" required></div>
+                    <div class="form-group"><label for="regMiddleName">Middle Name</label><input type="text" id="regMiddleName" autocomplete="additional-name"></div>
+                    <div class="form-group"><label for="regLastName">Last Name *</label><input type="text" id="regLastName" autocomplete="family-name" required></div>
+                </div>
                 <div class="form-row">
-                    <div class="form-group"><label>Full Name *</label><input type="text" id="regFullName" placeholder="Juan Dela Cruz" required></div>
                     <div class="form-group"><label>Date of Birth *</label><input type="date" id="regDob" required></div>
                 </div>
                 <div class="form-row form-row-three">
                     <div class="form-group"><label>Age</label><input type="number" id="regAge" readonly></div>
                     <div class="form-group"><label>Sex</label><select id="regSex"><option>Male</option><option>Female</option><option>Prefer not to say</option></select></div>
-                    <div class="form-group"><label>Mobile *</label><input type="tel" id="regMobile" placeholder="09171234567" inputmode="numeric" maxlength="11" pattern="09[0-9]{9}" autocomplete="tel" required></div>
+                    <div class="form-group"><label>Mobile *</label><div class="ph-phone-input"><span>+63</span><input type="tel" id="regMobile" placeholder="9171234567" inputmode="numeric" maxlength="10" pattern="9[0-9]{9}" autocomplete="tel-national" required></div></div>
                 </div>
                 <div class="form-row">
                     <div class="form-group">
@@ -58,7 +62,7 @@
                 <div class="form-row form-row-three">
                     <div class="form-group"><label>Name *</label><input type="text" id="regEcName" placeholder="Maria Dela Cruz" required></div>
                     <div class="form-group"><label>Relationship *</label><input type="text" id="regEcRelation" placeholder="Mother" required></div>
-                    <div class="form-group"><label>Contact Number *</label><input type="tel" id="regEcContact" placeholder="09171234567" inputmode="numeric" maxlength="11" pattern="09[0-9]{9}" autocomplete="tel" required></div>
+                    <div class="form-group"><label>Contact Number *</label><div class="ph-phone-input"><span>+63</span><input type="tel" id="regEcContact" placeholder="9171234567" inputmode="numeric" maxlength="10" pattern="9[0-9]{9}" autocomplete="tel-national" required></div></div>
                 </div>
             </div>
 
@@ -219,6 +223,6 @@
     <script src="assets/js/supabase-client.js?v=20261104-isolated-registration"></script>
     <script src="assets/js/signature.js"></script>
     <script src="assets/js/button-feedback.js?v=20261102-return-to-login"></script>
-    <script src="assets/js/register.js?v=20261104-verified-registration"></script>
+    <script src="assets/js/register.js?v=20261105-ph-name-fields"></script>
 </body>
 </html>

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IronGrind · Member Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261105-member-account-menu">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261105-profile-reports-staff">
 </head>
 <body class="dashboard-body member-dashboard">
 <div id="page-loader" class="page-loader" aria-label="Loading dashboard" role="status"><div class="loader-content"><img class="loader-mark" src="assets/images/iron-grind-mark.png" alt=""><div class="loader-brand">Iron<span>Grind</span></div><div class="loader-track"><span></span></div></div></div>
@@ -87,14 +87,18 @@
                 <form id="memberSettingsForm">
                     <section class="member-settings-panel active" data-settings-panel="personal" tabindex="-1">
                     <h3 class="settings-section-title"><i class="fas fa-user" aria-hidden="true"></i> Personal Information</h3>
+                    <div class="form-row form-row-three">
+                        <div class="form-group"><label for="settingsFirstName">First Name</label><input type="text" id="settingsFirstName" autocomplete="given-name" required></div>
+                        <div class="form-group"><label for="settingsMiddleName">Middle Name</label><input type="text" id="settingsMiddleName" autocomplete="additional-name"></div>
+                        <div class="form-group"><label for="settingsLastName">Last Name</label><input type="text" id="settingsLastName" autocomplete="family-name" required></div>
+                    </div>
                     <div class="form-row">
-                        <div class="form-group"><label for="settingsFullName">Full Name</label><input type="text" id="settingsFullName" autocomplete="name" required></div>
                         <div class="form-group"><label for="settingsDob">Date of Birth</label><input type="date" id="settingsDob" required></div>
                     </div>
                     <div class="form-row form-row-three">
                         <div class="form-group"><label for="settingsAge">Age</label><input type="number" id="settingsAge" readonly></div>
                         <div class="form-group"><label for="settingsSex">Sex</label><select id="settingsSex"><option>Male</option><option>Female</option><option>Prefer not to say</option></select></div>
-                        <div class="form-group"><label for="settingsMobile">Mobile</label><input type="tel" id="settingsMobile" autocomplete="tel" placeholder="09171234567" inputmode="numeric" maxlength="11" pattern="09[0-9]{9}"></div>
+                        <div class="form-group"><label for="settingsMobile">Mobile</label><div class="ph-phone-input"><span>+63</span><input type="tel" id="settingsMobile" autocomplete="tel-national" placeholder="9171234567" inputmode="numeric" maxlength="10" pattern="9[0-9]{9}"></div></div>
                     </div>
                     <div class="form-row">
                         <div class="form-group"><label for="settingsHeight">Height</label><div class="settings-height-input"><input type="number" id="settingsHeight" min="0.01" step="any" placeholder="170"><select id="settingsHeightUnit" aria-label="Height unit"><option value="cm">cm</option><option value="ft">ft</option><option value="in">inches</option></select></div></div>
@@ -107,7 +111,7 @@
                     <div class="form-row form-row-three">
                         <div class="form-group"><label for="settingsEmergencyName">Name</label><input type="text" id="settingsEmergencyName"></div>
                         <div class="form-group"><label for="settingsEmergencyRelationship">Relationship</label><input type="text" id="settingsEmergencyRelationship"></div>
-                        <div class="form-group"><label for="settingsEmergencyMobile">Contact Number</label><input type="tel" id="settingsEmergencyMobile" inputmode="numeric" maxlength="11" pattern="09[0-9]{9}" placeholder="09171234567" autocomplete="tel"></div>
+                        <div class="form-group"><label for="settingsEmergencyMobile">Contact Number</label><div class="ph-phone-input"><span>+63</span><input type="tel" id="settingsEmergencyMobile" inputmode="numeric" maxlength="10" pattern="9[0-9]{9}" placeholder="9171234567" autocomplete="tel-national"></div></div>
                     </div>
                     </section>
 
@@ -180,6 +184,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/supabase-client.js"></script>
 <script src="assets/js/button-feedback.js?v=20261102-navigation-paint"></script>
-<script src="assets/js/customer.js?v=20261105-member-account-menu"></script>
+<script src="assets/js/customer.js?v=20261105-ph-name-fields"></script>
 </body>
 </html>

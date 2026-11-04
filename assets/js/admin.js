@@ -342,6 +342,24 @@ function runConfirmation() {
 }
 
 /* ========== NAV ========== */
+function setAdminAccountMenu(open) {
+    const menu = document.getElementById('adminAccountMenu');
+    const button = document.querySelector('.admin-menu-button');
+    if (!menu || !button) return;
+    menu.hidden = !open;
+    button.setAttribute('aria-expanded', String(open));
+}
+function toggleAdminAccountMenu(event) {
+    event?.stopPropagation();
+    const menu = document.getElementById('adminAccountMenu');
+    if (!menu) return;
+    setAdminAccountMenu(menu.hidden);
+}
+function closeAdminAccountMenu() { setAdminAccountMenu(false); }
+function openActivityLogsFromMenu() {
+    closeAdminAccountMenu();
+    showAdminSection('activity');
+}
 function showAdminSection(section, event) {
     document.querySelectorAll('.admin-section').forEach(el => el.classList.add('hidden'));
     const target = document.getElementById('section-' + section);
@@ -367,6 +385,7 @@ function showAdminSection(section, event) {
     }
     if (section === 'reports') renderReports();
     if (section === 'activity') loadActivityLogs();
+    if (section === 'staff') loadStaffAccounts();
     if (section === 'dashboard') renderDashboard();
     const content = document.querySelector('.main-content');
     if (content) content.scrollTop = 0;
@@ -3546,11 +3565,14 @@ function renderReports() {
         <div class="reports-toolbar">
             <div class="reports-toolbar-copy">
                 <strong>Export reports</strong>
-                <span>Dated reports use the selected month. Membership and inventory reports show current records.</span>
+                <span>Choose one day, a custom date range, or a full year. Status and inventory reports remain current snapshots.</span>
             </div>
             <div class="report-export-controls">
-                <label for="reportsExportMonth">Report month</label>
-                <input id="reportsExportMonth" type="month" aria-label="Choose a month for dated report records">
+                <label>Period<select id="reportsPeriodMode" onchange="updateReportPeriodControls()"><option value="day">Specific day</option><option value="range">Date range</option><option value="year">Full year</option></select></label>
+                <label data-report-period="day">Day<input id="reportsDay" type="date"></label>
+                <label data-report-period="range" hidden>From<input id="reportsFrom" type="date"></label>
+                <label data-report-period="range" hidden>To<input id="reportsTo" type="date"></label>
+                <label data-report-period="year" hidden>Year<input id="reportsYear" type="number" min="2000" max="2100" step="1"></label>
                 <button class="report-icon-btn report-export-all-btn" type="button" onclick="exportAllReports()" aria-label="Download all reports as a ZIP file" title="Download all reports as ZIP"><i class="fas fa-file-zipper" aria-hidden="true"></i></button>
             </div>
         </div>
@@ -3579,8 +3601,43 @@ function renderReports() {
             </section>
         `).join('')}
     `;
-    const monthInput = document.getElementById('reportsExportMonth');
-    if (monthInput && !monthInput.value) monthInput.value = localDateStr().slice(0, 7);
+    const today = localDateStr();
+    document.getElementById('reportsDay').value = today;
+    document.getElementById('reportsFrom').value = today;
+    document.getElementById('reportsTo').value = today;
+    document.getElementById('reportsYear').value = today.slice(0, 4);
+    updateReportPeriodControls();
+}
+
+function updateReportPeriodControls() {
+    const mode = document.getElementById('reportsPeriodMode')?.value || 'day';
+    document.querySelectorAll('[data-report-period]').forEach(label => { label.hidden = label.dataset.reportPeriod !== mode; });
+}
+
+function getSelectedReportPeriod() {
+    const mode = document.getElementById('reportsPeriodMode')?.value || 'day';
+    if (mode === 'day') {
+        const day = document.getElementById('reportsDay')?.value;
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(day || '')) throw new Error('Choose a report day.');
+        return { mode, from: day, to: day, label: day, slug: day };
+    }
+    if (mode === 'range') {
+        const from = document.getElementById('reportsFrom')?.value;
+        const to = document.getElementById('reportsTo')?.value;
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(from || '') || !/^\d{4}-\d{2}-\d{2}$/.test(to || '')) throw new Error('Choose both From and To dates.');
+        if (from > to) throw new Error('The From date must be on or before the To date.');
+        return { mode, from, to, label: `${from} to ${to}`, slug: `${from}_to_${to}` };
+    }
+    const year = String(document.getElementById('reportsYear')?.value || '');
+    if (!/^\d{4}$/.test(year)) throw new Error('Choose a valid report year.');
+    return { mode, from: `${year}-01-01`, to: `${year}-12-31`, label: year, slug: year };
+}
+
+function reportDateMatchesPeriod(value, period) {
+    if (!value || !period) return false;
+    const text = String(value);
+    const date = /^\d{4}-\d{2}-\d{2}/.test(text) ? text.slice(0, 10) : localDateStr(new Date(text));
+    return /^\d{4}-\d{2}-\d{2}$/.test(date) && date >= period.from && date <= period.to;
 }
 
 function isRenewalSale(sale) {
@@ -3714,7 +3771,7 @@ function setReportPreviewZoom(change) {
     if (label) label.textContent = `${reportPreviewZoom}%`;
 }
 
-function getMembershipIncomeBreakdown(month) {
+function getMembershipIncomeBreakdown(period) {
     const breakdown = {
         Monthly: { count: 0, income: 0 },
         'Half Month': { count: 0, income: 0 },
@@ -3723,7 +3780,9 @@ function getMembershipIncomeBreakdown(month) {
     };
     sales.filter(sale => sale.status === 'Paid'
         && isMembershipSale(sale)
-        && (!month || reportDateBelongsToMonth(sale.date || sale.createdAt, month)))
+        && (!period || (typeof period === 'string'
+            ? reportDateBelongsToMonth(sale.date || sale.createdAt, period)
+            : reportDateMatchesPeriod(sale.date || sale.createdAt, period))))
         .forEach(sale => {
             const plan = getMembershipPlanFromSale(sale);
             const key = plan === 'Monthly' ? 'Monthly'
@@ -3761,7 +3820,9 @@ function viewReportPDF(type) {
 }
 
 function printReportPDF(type, inAppPreview = false) {
-    const selectedMonth = document.getElementById('reportsExportMonth')?.value || '';
+    let selectedPeriod;
+    try { selectedPeriod = getSelectedReportPeriod(); }
+    catch (error) { toast(error.message, 'error'); return; }
     let reportWindow;
     if (inAppPreview) {
         reportWindow = document.getElementById('reportPdfPreviewFrame')?.contentWindow;
@@ -3845,11 +3906,10 @@ function printReportPDF(type, inAppPreview = false) {
         }));
     }
 
-    // Keep status and inventory reports as current snapshots. Dated activity
-    // reports follow the month selected in the Reports toolbar.
-    if (/^\d{4}-(0[1-9]|1[0-2])$/.test(selectedMonth)
-        && ['membership', 'archives', 'payment', 'sales', 'renewals', 'attendance'].includes(type)) {
-        rows = rows.filter(row => reportDateBelongsToMonth(dateForRow(row), selectedMonth));
+    // Keep status and inventory reports as current snapshots. Dated reports
+    // follow the period selected in the Reports toolbar.
+    if (['membership', 'archives', 'payment', 'sales', 'renewals', 'attendance'].includes(type)) {
+        rows = rows.filter(row => reportDateMatchesPeriod(dateForRow(row), selectedPeriod));
     }
 
     const tableHTML = records => `<table><thead><tr>${columns.map(column => `<th>${escapeHTML(column)}</th>`).join('')}</tr></thead><tbody>${records.map(row =>
@@ -3889,7 +3949,7 @@ function printReportPDF(type, inAppPreview = false) {
     }
 
     if (type === 'membership') {
-        const income = getMembershipIncomeBreakdown(selectedMonth);
+        const income = getMembershipIncomeBreakdown(selectedPeriod);
         const incomeRows = [
             ...income.rows.map(row => ({ cells: [row.label, row.count, formatPeso(row.income)] })),
             { cells: ['Overall membership income', income.totalCount, formatPeso(income.totalIncome)] }
@@ -3922,7 +3982,7 @@ function printReportPDF(type, inAppPreview = false) {
             .empty { padding: 18px; border: 1px dashed #cbd0d8; color: #707887; text-align: center; }
             .footer { margin-top: 28px; padding-top: 9px; border-top: 1px solid #d8dce2; color: #858c98; font-size: 9px; }
             @media print { thead { display: table-header-group; } }
-        </style></head><body><header class="masthead"><img src="${logoURL}" alt="Iron Grind"><div><div class="brand">Iron Grind Fitness Gym</div><h1>${escapeHTML(reportTitle)}</h1></div></header><div class="meta"><span>${rows.length} ${rows.length === 1 ? 'total record' : 'total records'}</span><span>Generated ${escapeHTML(generatedAt)}</span></div>${reportContent}<footer class="footer">Iron Grind Fitness Gym · Internal report · ${todayStr()}</footer></body></html>`);
+        </style></head><body><header class="masthead"><img src="${logoURL}" alt="Iron Grind"><div><div class="brand">Iron Grind Fitness Gym</div><h1>${escapeHTML(reportTitle)}</h1></div></header><div class="meta"><span>Period: ${escapeHTML(selectedPeriod.label)} · ${rows.length} ${rows.length === 1 ? 'record' : 'records'}</span><span>Generated ${escapeHTML(generatedAt)}</span></div>${reportContent}<footer class="footer">Iron Grind Fitness Gym · Internal report · ${todayStr()}</footer></body></html>`);
     reportWindow.document.close();
     if (inAppPreview) {
         window.setTimeout(() => setReportPreviewZoom(0), 100);
@@ -3942,7 +4002,7 @@ function reportDateBelongsToMonth(value, month) {
     return !Number.isNaN(parsed.getTime()) && localDateStr(parsed).slice(0, 7) === month;
 }
 
-function createMonthlyReportPDF(type, month) {
+function createMonthlyReportPDF(type, period) {
     const JsPDF = window.jspdf?.jsPDF;
     if (!JsPDF) throw new Error('PDF generator did not load. Check the internet connection and reload the admin page.');
 
@@ -3958,12 +4018,12 @@ function createMonthlyReportPDF(type, month) {
     };
     const sections = [];
     const rowsFor = (headers, rows) => ({ headers, rows });
-    const membersForMonth = members.filter(member => !isPastMembershipArchiveGrace(member)
-        && reportDateBelongsToMonth(member.startDate || member.registeredAt, month));
+    const membersForPeriod = members.filter(member => !isPastMembershipArchiveGrace(member)
+        && reportDateMatchesPeriod(member.startDate || member.registeredAt, period));
 
     if (type === 'membership') {
-        sections.push(rowsFor(['Member', 'Plan', 'Started', 'Expires'], membersForMonth.map(member => [member.name, member.plan, member.startDate || '-', member.expiry || '-'])));
-        const income = getMembershipIncomeBreakdown(month);
+        sections.push(rowsFor(['Member', 'Plan', 'Started', 'Expires'], membersForPeriod.map(member => [member.name, member.plan, member.startDate || '-', member.expiry || '-'])));
+        const income = getMembershipIncomeBreakdown(period);
         sections.push(rowsFor(['Plan', 'Paid Sales', 'Income'], [
             ...income.rows.map(row => [row.label, String(row.count), `PHP ${row.income.toFixed(2)}`]),
             ['Overall membership income', String(income.totalCount), `PHP ${income.totalIncome.toFixed(2)}`]
@@ -3980,22 +4040,22 @@ function createMonthlyReportPDF(type, month) {
         captureExpiredMemberships();
         const archivedRows = [
             ...membershipArchives.filter(isMembershipArchiveReady)
-                .filter(record => reportDateBelongsToMonth(record.archivedAt || record.expiry, month))
+                .filter(record => reportDateMatchesPeriod(record.archivedAt || record.expiry, period))
                 .map(record => ['Expired membership', record.memberName, record.username || '-', record.plan, record.expiry || '-']),
-            ...planArchives.filter(record => reportDateBelongsToMonth(record.changedAt, month))
+            ...planArchives.filter(record => reportDateMatchesPeriod(record.changedAt, period))
                 .map(record => ['Plan change', record.memberName, `${record.previousPlan || '-'} to ${record.newPlan || '-'}`, record.previousExpiry || '-', record.changedAt || '-']),
-            ...archivedProducts.filter(record => reportDateBelongsToMonth(record.archivedAt, month))
+            ...archivedProducts.filter(record => reportDateMatchesPeriod(record.archivedAt, period))
                 .map(record => ['Archived product', record.name, record.category, record.size || '-', record.archivedAt || '-'])
         ];
         sections.push(rowsFor(['Record Type', 'Member / Product', 'Username / Details', 'Plan / Previous Expiry', 'Archived / Changed'], archivedRows));
     } else if (type === 'payment' || type === 'sales') {
-        const filteredSales = sales.filter(sale => reportDateBelongsToMonth(sale.date || sale.createdAt, month));
+        const filteredSales = sales.filter(sale => reportDateMatchesPeriod(sale.date || sale.createdAt, period));
         sections.push(rowsFor(['Transaction reference', 'Customer', 'Total', 'Date', 'Status'], filteredSales.map(sale => [sale.id || '-', sale.customer || 'Name not recorded', `PHP ${Number(sale.total || 0).toFixed(2)}`, sale.date || '-', sale.status || 'Unknown'])));
     } else if (type === 'attendance') {
-        const filteredAttendance = attendance.filter(record => reportDateBelongsToMonth(record.date, month));
+        const filteredAttendance = attendance.filter(record => reportDateMatchesPeriod(record.date, period));
         sections.push(rowsFor(['Member', 'Date', 'Time in', 'Time out'], filteredAttendance.map(record => [record.memberName, record.date || '-', formatAttendanceClock(record.timeIn), formatAttendanceClock(record.timeOut)])));
     } else if (type === 'renewals') {
-        const renewals = getRenewalReportRows().filter(record => reportDateBelongsToMonth(record.date, month));
+        const renewals = getRenewalReportRows().filter(record => reportDateMatchesPeriod(record.date, period));
         sections.push(rowsFor(['Transaction reference', 'Member', 'Renewed Plan', 'Channel', 'Amount', 'Date', 'Payment record'], renewals.map(record => [
             record.saleRecorded === false ? 'Not recorded' : record.id || '-',
             record.customer || 'Name not recorded',
@@ -4027,13 +4087,13 @@ function createMonthlyReportPDF(type, month) {
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
     doc.setTextColor(100, 108, 120);
-    doc.text(`Report month: ${month}  |  Generated: ${new Date().toLocaleString()}`, 40, 74);
+    doc.text(`Report period: ${period.label}  |  Generated: ${new Date().toLocaleString()}`, 40, 74);
 
     let cursorY = 88;
     sections.forEach(section => {
         if (!section.rows.length) {
             doc.setFontSize(10);
-            doc.text('No records for the selected month.', 40, cursorY + 12);
+            doc.text('No records for the selected period.', 40, cursorY + 12);
             cursorY += 32;
             return;
         }
@@ -4050,7 +4110,7 @@ function createMonthlyReportPDF(type, month) {
                 doc.setFont('helvetica', 'normal');
                 doc.setFontSize(8);
                 doc.setTextColor(120, 126, 136);
-                doc.text(`Iron Grind Fitness Gym | ${month}`, 40, doc.internal.pageSize.getHeight() - 16);
+                doc.text(`Iron Grind Fitness Gym | ${period.label}`, 40, doc.internal.pageSize.getHeight() - 16);
                 doc.text(`Page ${data.pageNumber} of ${pageCount}`, doc.internal.pageSize.getWidth() - 40, doc.internal.pageSize.getHeight() - 16, { align: 'right' });
             }
         });
@@ -4059,17 +4119,15 @@ function createMonthlyReportPDF(type, month) {
     if (!sections.length) {
         doc.setFont('helvetica', 'normal');
         doc.setFontSize(10);
-        doc.text('No records for the selected month.', 40, cursorY);
+        doc.text('No records for the selected period.', 40, cursorY);
     }
     return doc.output('blob');
 }
 
 async function exportAllReports() {
-    const selectedMonth = document.getElementById('reportsExportMonth')?.value || '';
-    if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(selectedMonth)) {
-        toast('Choose a month before exporting.', 'error');
-        return;
-    }
+    let period;
+    try { period = getSelectedReportPeriod(); }
+    catch (error) { toast(error.message, 'error'); return; }
     const JsPDF = window.jspdf?.jsPDF;
     const pdfTableReady = typeof JsPDF === 'function' && typeof new JsPDF().autoTable === 'function';
     const missingTools = [
@@ -4098,21 +4156,21 @@ async function exportAllReports() {
         sales: 'Sales Report'
     };
     try {
-        toast(`Preparing PDFs for ${selectedMonth}…`, 'success');
+        toast(`Preparing PDFs for ${period.label}…`, 'success');
         const zip = new JSZip();
         const reportFolder = zip.folder('Iron Grind Reports');
         types.forEach(type => {
-            const pdfBlob = createMonthlyReportPDF(type, selectedMonth);
-            reportFolder.file(`${names[type]} (${selectedMonth}).pdf`, pdfBlob);
+            const pdfBlob = createMonthlyReportPDF(type, period);
+            reportFolder.file(`${names[type]} (${period.slug}).pdf`, pdfBlob);
         });
         const zipBlob = await zip.generateAsync({ type: 'blob', compression: 'DEFLATE' });
         const url = URL.createObjectURL(zipBlob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `Iron Grind Reports (${selectedMonth}).zip`;
+        link.download = `Iron Grind Reports (${period.slug}).zip`;
         link.click();
         window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-        toast(`Exported ${types.length} PDFs for ${selectedMonth}.`, 'success');
+        toast(`Exported ${types.length} PDFs for ${period.label}.`, 'success');
     } catch (error) {
         console.error('Could not export monthly PDF reports:', error);
         toast(error.message || 'Could not create the monthly report archive.', 'error');
@@ -4120,11 +4178,9 @@ async function exportAllReports() {
 }
 
 function downloadReportPDF(type) {
-    const selectedMonth = document.getElementById('reportsExportMonth')?.value || '';
-    if (!/^\d{4}-(0[1-9]|1[0-2])$/.test(selectedMonth)) {
-        toast('Choose a month before downloading.', 'error');
-        return;
-    }
+    let period;
+    try { period = getSelectedReportPeriod(); }
+    catch (error) { toast(error.message, 'error'); return; }
     const names = {
         membership: 'Membership Report',
         'member-status': 'Member Status Report',
@@ -4136,11 +4192,11 @@ function downloadReportPDF(type) {
         sales: 'Sales Report'
     };
     try {
-        const pdfBlob = createMonthlyReportPDF(type, selectedMonth);
+        const pdfBlob = createMonthlyReportPDF(type, period);
         const url = URL.createObjectURL(pdfBlob);
         const link = document.createElement('a');
         link.href = url;
-        link.download = `${names[type] || 'Report'} (${selectedMonth}).pdf`;
+        link.download = `${names[type] || 'Report'} (${period.slug}).pdf`;
         link.click();
         window.setTimeout(() => URL.revokeObjectURL(url), 1000);
         toast(`${names[type] || 'Report'} downloaded.`, 'success');
@@ -4152,8 +4208,12 @@ function downloadReportPDF(type) {
 
 /* ========== INIT ========== */
 document.addEventListener('DOMContentLoaded', () => {
-    const reportsExportMonth = document.getElementById('reportsExportMonth');
-    if (reportsExportMonth && !reportsExportMonth.value) reportsExportMonth.value = localDateStr().slice(0, 7);
+    document.addEventListener('click', event => {
+        if (!event.target.closest('.admin-account-menu-wrap')) closeAdminAccountMenu();
+    });
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeAdminAccountMenu();
+    });
     // Demo data is only created for offline mode. Supabase-backed dashboards
     // should start from the database instead of presenting fake records.
     if (!window.ironGrindSupabase) {

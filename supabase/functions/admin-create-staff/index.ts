@@ -17,13 +17,30 @@ Deno.serve(async request => {
     if (profileError || profile?.role !== 'admin') return reply({ error: 'Admin access required.' }, 403);
     let body;
     try { body = await request.json(); } catch { return reply({ error: 'Invalid request.' }, 400); }
+    const action = typeof body.action === 'string' ? body.action : 'create';
+    const admin = createClient(url, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false, autoRefreshToken: false } });
+    if (action === 'list') {
+      const { data: staff, error: listError } = await admin.from('profiles')
+        .select('id,username,full_name,is_active,created_at').eq('role', 'staff').order('created_at', { ascending: false });
+      if (listError) return reply({ error: 'Could not load staff accounts.' }, 500);
+      return reply({ staff: staff || [] });
+    }
+    if (action === 'set_active') {
+      const id = typeof body.id === 'string' ? body.id : '';
+      const isActive = body.isActive === true;
+      if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)) return reply({ error: 'Invalid staff account.' }, 400);
+      const { data: updated, error: updateError } = await admin.from('profiles').update({ is_active: isActive })
+        .eq('id', id).eq('role', 'staff').select('id').maybeSingle();
+      if (updateError || !updated) return reply({ error: 'Could not update the staff account.' }, 500);
+      return reply({ id, isActive });
+    }
+    if (action !== 'create') return reply({ error: 'Unsupported staff account action.' }, 400);
     const username = typeof body.username === 'string' ? body.username.trim().toLowerCase() : '';
     const fullName = typeof body.fullName === 'string' ? body.fullName.trim() : '';
     const password = typeof body.password === 'string' ? body.password : '';
     if (!/^[a-z0-9_]{3,30}$/.test(username) || !fullName || fullName.length > 150 || password.length < 12 || password.length > 128) {
       return reply({ error: 'Enter a name, a 3–30 character username (letters, numbers, underscore), and a password of 12–128 characters.' }, 400);
     }
-    const admin = createClient(url, Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!, { auth: { persistSession: false, autoRefreshToken: false } });
     const { data: created, error: createError } = await admin.auth.admin.createUser({
       email: `${username}@staff.irongrind.invalid`, password, email_confirm: true,
       user_metadata: { username, full_name: fullName },
