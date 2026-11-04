@@ -1366,14 +1366,21 @@ async function initializeSupabaseAdminData() {
 
     const { data: profile, error: profileError } = await client
         .from('profiles')
-        .select('role,is_active,full_name,username')
+        .select('role,full_name,username')
         .eq('id', user.id)
         .maybeSingle();
-    if (profileError || !['admin', 'staff'].includes(profile?.role || '') || profile?.is_active === false) {
+    let staffIsActive = true;
+    let staffStatusError = null;
+    if (!profileError && profile?.role === 'staff') {
+        const result = await client.from('profiles').select('is_active').eq('id', user.id).maybeSingle();
+        staffIsActive = result.data?.is_active === true;
+        staffStatusError = result.error;
+    }
+    if (profileError || !['admin', 'staff'].includes(profile?.role || '') || (profile?.role === 'staff' && (!staffIsActive || staffStatusError))) {
         console.error('Could not verify the Supabase dashboard profile:', profileError || 'Profile is not active admin/staff.');
-        toast(profileError
-            ? `Could not verify your account: ${profileError.message}`
-            : 'This account is not active for the staff dashboard. Sign in with an active admin or staff account.', 'error');
+        toast(profileError || staffStatusError
+            ? `Could not verify your account: ${(profileError || staffStatusError).message}`
+            : 'This staff account is inactive. Ask an admin to reactivate it.', 'error');
         return;
     }
 

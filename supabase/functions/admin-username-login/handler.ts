@@ -44,7 +44,7 @@ export async function handleAdminLogin(request: Request) {
     // Escape LIKE wildcards: this is an exact, case-insensitive username match.
     const pattern = username.replace(/[\\%_]/g, '\\$&');
     const { data: profile, error: profileError } = await admin.from('profiles')
-      .select('id').in('role', ['admin', 'staff']).eq('is_active', true).ilike('username', pattern).maybeSingle();
+      .select('id,role').in('role', ['admin', 'staff']).ilike('username', pattern).maybeSingle();
     if (profileError) {
       console.error('Admin username lookup failed:', profileError.code);
       return respond({ error: 'Username sign-in is unavailable. Contact the gym administrator.' }, 503);
@@ -64,14 +64,27 @@ export async function handleAdminLogin(request: Request) {
       return respond({ error: invalidCredentials }, 401);
     }
     const { data: verified, error: roleError } = await admin.from('profiles')
-      .select('role,is_active').eq('id', data.user.id).single();
-    if (roleError || !['admin', 'staff'].includes(verified?.role || '') || verified?.is_active !== true) {
+      .select('role').eq('id', data.user.id).single();
+    if (roleError || !['admin', 'staff'].includes(verified?.role || '')) {
       await login.auth.signOut();
       if (roleError) {
         console.error('Admin role lookup failed:', roleError.code);
         return respond({ error: 'Username sign-in is unavailable. Contact the gym administrator.' }, 503);
       }
       return respond({ error: invalidCredentials }, 401);
+    }
+    if (verified.role === 'staff') {
+      const { data: staffStatus, error: staffStatusError } = await admin.from('profiles')
+        .select('is_active').eq('id', data.user.id).single();
+      if (staffStatusError) {
+        await login.auth.signOut();
+        console.error('Staff status lookup failed:', staffStatusError.code);
+        return respond({ error: 'Staff sign-in is unavailable until the staff role migration is applied.' }, 503);
+      }
+      if (staffStatus?.is_active !== true) {
+        await login.auth.signOut();
+        return respond({ error: invalidCredentials }, 401);
+      }
     }
     return respond({ session: { access_token: data.session.access_token, refresh_token: data.session.refresh_token } });
   } catch {

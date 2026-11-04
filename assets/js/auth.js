@@ -192,18 +192,32 @@ async function handleLogin(event) {
 
             const { data: profile, error: profileError } = await supabaseClient
                 .from('profiles')
-                .select('role, username, full_name, is_active')
+                .select('role, username, full_name')
                 .eq('id', data.user.id)
                 .single();
 
             if (profileError || !profile) {
                 await supabaseClient.auth.signOut();
-                showError('Your account profile could not be loaded. Please contact the gym admin.');
+                console.error('Could not load the signed-in account profile:', profileError);
+                showError(profileError
+                    ? `Your account profile could not be loaded (${profileError.code || 'database error'}): ${profileError.message}`
+                    : 'Your account profile could not be found. Ask the gym admin to check that this Auth user has a matching profiles row.');
                 return;
             }
 
             const role = profile.role === 'admin' ? 'admin' : profile.role === 'staff' ? 'staff' : 'customer';
-            if (profile.is_active === false || (loginMode === 'admin') !== (role === 'admin' || role === 'staff')) {
+            let staffIsActive = true;
+            if (role === 'staff') {
+                const { data: staffStatus, error: staffStatusError } = await supabaseClient
+                    .from('profiles').select('is_active').eq('id', data.user.id).single();
+                if (staffStatusError) {
+                    await supabaseClient.auth.signOut();
+                    showError('Staff access is not ready yet. Ask the admin to apply the staff role migration.');
+                    return;
+                }
+                staffIsActive = staffStatus?.is_active === true;
+            }
+            if ((role === 'staff' && !staffIsActive) || (loginMode === 'admin') !== (role === 'admin' || role === 'staff')) {
                 await supabaseClient.auth.signOut();
                 showError(loginMode === 'admin' ? 'Invalid username or password.' : 'Please sign in using your assigned username and password.');
                 return;
