@@ -225,7 +225,7 @@ body.admin-dashboard .admin-section { min-height: 100%; flex-shrink: 0; }
 .sales-month-overview-copy p { margin-top: 7px; color: #a4adc2; font-size: .76rem; }
 .sales-month-overview-copy small { color: #737d91; }
 .sales-month-overview-total { color: #fff; font-size: clamp(1.4rem, 2.5vw, 2rem); font-weight: 750; letter-spacing: -.03em; }
-#salesTransactionsPanel { padding: 16px; border: 1px solid rgba(190,201,220,.1); border-radius: 16px; background: rgba(10,13,19,.52); }
+#salesTransactionsPanel { min-height: 620px; padding: 16px; border: 1px solid rgba(190,201,220,.1); border-radius: 16px; background: rgba(10,13,19,.52); }
 .walkin-sales-content { padding-top: 4px; }
 .transaction-filter-row { display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; margin-bottom: 14px; padding: 12px 14px; border: 1px solid rgba(190,201,220,.1); border-radius: 12px; background: rgba(255,255,255,.025); flex-wrap: wrap; }
 .transaction-filter-row > p { color: #8b95a9; font-size: .8rem; }
@@ -243,12 +243,13 @@ body.admin-dashboard .admin-section { min-height: 100%; flex-shrink: 0; }
 #salesTable .table-scroll { overflow: auto; border: 1px solid rgba(190,201,220,.1); border-radius: 12px; background: rgba(8,11,16,.45); }
 #salesTable .attendance-table th { position: sticky; top: 0; z-index: 1; background: #1b202a; }
 #salesTable .attendance-table tbody tr:hover { background: rgba(255,255,255,.035); }
-#salesTransactionsPanel.membership-sales-active #salesTable .table-scroll { max-height: min(58vh, 620px); overscroll-behavior: contain; }
+#salesTable .table-scroll { max-height: min(34vh, 320px); overscroll-behavior: contain; }
+#salesTransactionsPanel.membership-sales-active #salesTable .table-scroll { max-height: min(34vh, 320px); }
 #salesTransactionsPanel.membership-sales-active #salesTable .attendance-table { min-width: 820px; }
 #salesTransactionsPanel.membership-sales-active #salesTable .attendance-table td:nth-child(1),
 #salesTransactionsPanel.membership-sales-active #salesTable .attendance-table td:nth-child(4),
 #salesTransactionsPanel.membership-sales-active #salesTable .attendance-table td:nth-child(5) { white-space: nowrap; }
-.membership-sales-summary { display: grid; gap: 12px; margin-bottom: 16px; padding: 14px; border: 1px solid rgba(190,201,220,.1); border-radius: 13px; background: rgba(255,255,255,.025); }
+.membership-sales-summary { display: grid; gap: 12px; margin-bottom: 16px; padding: 4px 0 0; border: 0; border-radius: 0; background: transparent; }
 .membership-sales-summary-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .membership-sales-summary-heading h3 { color: #f1f3f7; font-size: .9rem; }
 .membership-sales-summary-heading p { margin-top: 4px; color: #8b95a9; font-size: .75rem; }
@@ -256,10 +257,10 @@ body.admin-dashboard .admin-section { min-height: 100%; flex-shrink: 0; }
 .membership-sales-period-controls label { display: grid; flex: 1 1 118px; min-width: 0; gap: 5px; color: #8b95a9; font-size: .72rem; }
 .membership-sales-period-controls [hidden] { display: none !important; }
 .membership-sales-period-controls input, .membership-sales-period-controls select { width: 100%; min-width: 0; min-height: 36px; padding: 6px 9px; border: 1px solid #393939; border-radius: 8px; background: #111; color: #f1f3f7; color-scheme: dark; font: inherit; }
-.membership-income-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 9px; }
-.membership-income-card { display: grid; align-content: start; gap: 5px; min-height: 86px; padding: 12px; border: 1px solid rgba(190,201,220,.1); border-radius: 11px; background: rgba(8,11,16,.5); }
-.membership-income-card span { color: #a4adc2; font-size: .72rem; }
-.membership-income-card strong { color: #f1f3f7; font-size: 1.02rem; }
+.membership-income-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.membership-income-card { display: grid; align-content: start; gap: 5px; min-height: 108px; padding: 16px 18px; border: 1px solid rgba(190,201,220,.1); border-radius: 16px; background: rgba(13,17,24,.72); }
+.membership-income-card span { color: #a4adc2; font-size: .75rem; }
+.membership-income-card strong { color: #f1f3f7; font-size: 1.55rem; }
 .membership-income-card small { color: #737d91; font-size: .68rem; }
 .membership-income-card.overall { border-color: rgba(195,75,75,.28); background: linear-gradient(135deg, rgba(120,0,0,.2), rgba(8,11,16,.5)); }
 .membership-income-card.overall strong { color: #ffdada; }
@@ -272,7 +273,9 @@ body.admin-dashboard .admin-section { min-height: 100%; flex-shrink: 0; }
     .reports-toolbar { align-items: stretch; flex-direction: column; }
     .report-export-controls { justify-content: flex-start; }
     .transaction-filter-row { align-items: flex-start; flex-direction: column; }
-    #salesTransactionsPanel.membership-sales-active #salesTable .table-scroll { max-height: 52vh; }
+    #salesTransactionsPanel { min-height: 620px; }
+    #salesTransactionsPanel.membership-sales-active #salesTable .table-scroll { max-height: min(34vh, 320px); }
+    .membership-income-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
     .transaction-filter-tabs { width: 100%; }
     .sales-product-filter { width: 100%; margin-left: 0; justify-content: space-between; }
     .sales-product-filter select { max-width: none; flex: 1; }
@@ -930,14 +933,18 @@ body.member-dashboard .dashboard-footer { margin-top: 0; }
 @media (max-width: 640px) {
     .progress-stats { grid-template-columns: repeat(2, 1fr); }
     .product-grid.view-only { grid-template-columns: 1fr; }
-    .walkin-sales-summary.stats-grid { grid-template-columns: 1fr; }
+    .walkin-sales-summary.stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .walkin-sales-summary .stat-card { min-height: 120px; padding: 18px 12px; }
+    .membership-income-cards { gap: 10px; }
+    .membership-income-card { min-height: 120px; padding: 18px 12px; }
+    .membership-income-card strong { font-size: 1.65rem; }
     .walkin-sales-actions { width: 100%; justify-content: stretch; }
     .walkin-sales-actions .btn-primary { width: 100%; justify-content: center; }
     .walkin-date-filter { width: 100%; justify-content: space-between; }
 }
-
 @media (min-width: 641px) and (max-width: 1024px) {
     .walkin-sales-summary.stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .membership-income-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 
 @media (max-width: 1024px) {
@@ -973,6 +980,7 @@ img, video, canvas { max-width: 100%; }
 
 @media (max-width: 1024px) {
     body.admin-dashboard, body.member-dashboard { height: auto; min-height: 100dvh; overflow: auto; }
+    body.admin-dashboard { overflow-y: scroll; scrollbar-gutter: stable; }
     body.admin-dashboard .app, body.member-dashboard .app { display: flex; flex-direction: column; height: auto; min-height: calc(100dvh - 40px); }
     body.admin-dashboard .dashboard { display: flex; flex-direction: column; overflow: visible; width: 100%; }
     body.admin-dashboard .main-content, body.member-dashboard .customer-main { width: 100%; height: auto; overflow: visible; scrollbar-gutter: auto; }
