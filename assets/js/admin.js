@@ -132,14 +132,23 @@ function loadDB(key) {
 function saveDB(key, data) { localStorage.setItem('ig_' + key, JSON.stringify(data)); }
 function isUUID(value) { return /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(String(value || '')); }
 
-const INVENTORY_UNIT_TO_BASE = { gram: 1, kilogram: 1000, ounce: 28.349523125, pound: 453.59237, milliliter: 1, liter: 1000, fluid_ounce: 29.5735295625, item: 1 };
-const SUPPLEMENT_FORM_UNITS = { powder: 'gram', drinkable: 'milliliter', capsule: 'item', tablet: 'item', other: 'item' };
-function stockUnitLabel(unit) { return ({ gram: 'g', kilogram: 'kg', ounce: 'oz', pound: 'lb', milliliter: 'ml', liter: 'L', fluid_ounce: 'fl oz', item: 'items' })[unit] || unit; }
-function saleUnitLabel(unit) { return ({ gram: 'g', kilogram: 'kg', ounce: 'oz', pound: 'lb', milliliter: 'ml', liter: 'L', fluid_ounce: 'fl oz', item: 'item' })[unit] || unit; }
+const INVENTORY_UNIT_TO_BASE = { gram: 1, kilogram: 1000, ounce: 28.349523125, pound: 453.59237, milliliter: 1, liter: 1000, fluid_ounce: 29.5735295625, item: 1, piece: 1, box: 1 };
+const DISCRETE_UNITS = new Set(['item', 'piece', 'box']);
+function isDiscreteUnit(unit) { return DISCRETE_UNITS.has(unit); }
+function supplementSaleUnit(form, stockUnit = '') {
+    if (form === 'powder') return 'gram';
+    if (form === 'drinkable') return 'milliliter';
+    if (form === 'capsule' || form === 'tablet') return ['piece', 'box'].includes(stockUnit) ? stockUnit : 'piece';
+    return 'item';
+}
+function stockUnitLabel(unit) { return ({ gram: 'g', kilogram: 'kg', ounce: 'oz', pound: 'lb', milliliter: 'ml', liter: 'L', fluid_ounce: 'fl oz', item: 'items', piece: 'pcs', box: 'boxes' })[unit] || unit; }
+function saleUnitLabel(unit) { return ({ gram: 'g', kilogram: 'kg', ounce: 'oz', pound: 'lb', milliliter: 'ml', liter: 'L', fluid_ounce: 'fl oz', item: 'item', piece: 'pc', box: 'box' })[unit] || unit; }
 function saleUnitsForProduct(product) {
     const baseUnit = product.inventoryUnit || 'item';
     if (baseUnit === 'gram') return [['gram', 'g'], ['kilogram', 'kg'], ['ounce', 'oz'], ['pound', 'lb']];
     if (baseUnit === 'milliliter') return [['milliliter', 'ml'], ['liter', 'L'], ['fluid_ounce', 'fl oz']];
+    if (baseUnit === 'piece') return [['piece', 'pcs']];
+    if (baseUnit === 'box') return [['box', 'boxes']];
     return [['item', 'item']];
 }
 function productStockInSaleUnits(product) {
@@ -161,8 +170,9 @@ function productClassification(product) {
 function lowStockThreshold(product) {
     if (product.category === 'Merch') return 4;
     if (product.inventoryUnit === 'milliliter') return 1000;
-    if (product.inventoryUnit === 'item') return 30;
-    return 1000;
+    if (product.inventoryUnit === 'item' || product.inventoryUnit === 'piece') return 30;
+    if (product.inventoryUnit === 'box') return 4;
+    return 2000;
 }
 function productIsLowStock(product) {
     return productStockInSaleUnits(product) <= lowStockThreshold(product);
@@ -2754,15 +2764,17 @@ function restockProduct(id) {
     if (!product) return;
     const currentUnit = product.stockUnit || 'item';
     const unitLabel = stockUnitLabel(currentUnit);
-    const compatibleUnits = product.category === 'Merch' || product.inventoryUnit === 'item'
+    const compatibleUnits = product.category === 'Merch'
         ? [['item', 'items']]
+        : isDiscreteUnit(product.inventoryUnit)
+            ? [[product.stockUnit, stockUnitLabel(product.stockUnit)]]
         : product.inventoryUnit === 'milliliter'
             ? [['milliliter', 'ml'], ['liter', 'L'], ['fluid_ounce', 'fl oz']]
             : [['gram', 'g'], ['kilogram', 'kg'], ['ounce', 'oz'], ['pound', 'lb']];
     openModal(`
         <h3><i class="fas fa-boxes-stacked"></i> Restock ${escapeHTML(product.name)}</h3>
         <p class="modal-sub">Current stock: ${escapeHTML(formatProductStock(product))}. Choose the unit for the quantity being added.</p>
-        <div class="form-row" style="margin-bottom:14px;"><div class="form-group"><label for="rsQuantity">Quantity to add</label><input type="number" id="rsQuantity" min="0.001" step="${currentUnit === 'item' ? '1' : '0.001'}" placeholder="Enter quantity"></div><div class="form-group"><label for="rsUnit">Unit</label><select id="rsUnit" onchange="updateRestockQuantityInput()">${compatibleUnits.map(([value, label]) => `<option value="${value}"${value === currentUnit ? ' selected' : ''}>${label}</option>`).join('')}</select></div></div>
+        <div class="form-row" style="margin-bottom:14px;"><div class="form-group"><label for="rsQuantity">Quantity to add</label><input type="number" id="rsQuantity" min="0.001" step="${isDiscreteUnit(currentUnit) ? '1' : '0.001'}" placeholder="Enter quantity"></div><div class="form-group"><label for="rsUnit">Unit</label><select id="rsUnit" onchange="updateRestockQuantityInput()">${compatibleUnits.map(([value, label]) => `<option value="${value}"${value === currentUnit ? ' selected' : ''}>${label}</option>`).join('')}</select></div></div>
         <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="runWithButtonLoading(this, () => submitRestock('${product.id}'), 'Adding stock…')">Add stock</button></div>
     `);
 }
@@ -2771,8 +2783,8 @@ function updateRestockQuantityInput() {
     const unit = document.getElementById('rsUnit')?.value;
     const quantity = document.getElementById('rsQuantity');
     if (!quantity) return;
-    quantity.step = unit === 'item' ? '1' : '0.001';
-    quantity.min = unit === 'item' ? '1' : '0.001';
+    quantity.step = isDiscreteUnit(unit) ? '1' : '0.001';
+    quantity.min = isDiscreteUnit(unit) ? '1' : '0.001';
 }
 
 async function submitRestock(id) {
@@ -2780,8 +2792,8 @@ async function submitRestock(id) {
     const quantity = Number(document.getElementById('rsQuantity')?.value);
     const quantityUnit = document.getElementById('rsUnit')?.value || product?.stockUnit || 'item';
     const unit = product?.stockUnit || 'item';
-    if (!product || !Number.isFinite(quantity) || quantity <= 0 || (quantityUnit === 'item' && !Number.isInteger(quantity))) {
-        toast(quantityUnit === 'item' ? 'Enter a positive whole number of items.' : 'Enter a positive stock quantity.', 'error');
+    if (!product || !Number.isFinite(quantity) || quantity <= 0 || (isDiscreteUnit(quantityUnit) && !Number.isInteger(quantity))) {
+        toast(isDiscreteUnit(quantityUnit) ? `Enter a positive whole number of ${stockUnitLabel(quantityUnit)}.` : 'Enter a positive stock quantity.', 'error');
         return;
     }
     if (window.ironGrindSupabase) {
@@ -2806,6 +2818,8 @@ async function submitRestock(id) {
 
 function unitLabelPlural(unit, quantity) {
     if (unit === 'item') return quantity === 1 ? 'item' : 'items';
+    if (unit === 'piece') return quantity === 1 ? 'pc' : 'pcs';
+    if (unit === 'box') return quantity === 1 ? 'box' : 'boxes';
     return stockUnitLabel(unit);
 }
 
@@ -2840,10 +2854,11 @@ function supplementFormLabel(form) { return ({ powder: 'Powder', drinkable: 'Dri
 function stockUnitOptions(form, selected = '') {
     const units = form === 'powder' ? [['gram', 'g'], ['kilogram', 'kg'], ['ounce', 'oz'], ['pound', 'lb']]
         : form === 'drinkable' ? [['milliliter', 'ml'], ['liter', 'L'], ['fluid_ounce', 'fl oz']]
-            : [['item', 'items']];
+            : (form === 'capsule' || form === 'tablet') ? [['piece', 'pcs'], ['box', 'boxes']]
+                : [['item', 'items']];
     return units.map(([value, label]) => `<option value="${value}"${selected === value ? ' selected' : ''}>${label}</option>`).join('');
 }
-function stockStep(unit) { return unit === 'item' ? '1' : '0.001'; }
+function stockStep(unit) { return isDiscreteUnit(unit) ? '1' : '0.001'; }
 
 function openAddProductModal() {
     openModal(`
@@ -2880,16 +2895,16 @@ function toggleAddProductSize() {
     if (group) group.style.display = isMerch && isApparel ? '' : 'none';
     if (unitSelect) {
         const oldUnit = unitSelect.value;
-        const units = isMerch ? [['item','items']] : form === 'powder' ? [['gram','g'],['kilogram','kg'],['ounce','oz'],['pound','lb']] : form === 'drinkable' ? [['milliliter','ml'],['liter','L'],['fluid_ounce','fl oz']] : [['item','items']];
+        const units = isMerch ? [['item','items']] : form === 'powder' ? [['gram','g'],['kilogram','kg'],['ounce','oz'],['pound','lb']] : form === 'drinkable' ? [['milliliter','ml'],['liter','L'],['fluid_ounce','fl oz']] : (form === 'capsule' || form === 'tablet') ? [['piece','pcs'],['box','boxes']] : [['item','items']];
         const nextUnit = units.some(([value]) => value === oldUnit) ? oldUnit : units[0][0];
         unitSelect.innerHTML = units.map(([value, label]) => `<option value="${value}">${label}</option>`).join('');
         unitSelect.value = nextUnit;
         unitSelect.dataset.previousUnit = nextUnit;
         document.getElementById('apStock').step = stockStep(nextUnit);
     }
-    const saleUnit = isMerch ? 'item' : (SUPPLEMENT_FORM_UNITS[form] || 'item');
+    const saleUnit = isMerch ? 'item' : supplementSaleUnit(form, unitSelect?.value);
     if (priceUnit) priceUnit.textContent = `per ${saleUnitLabel(saleUnit)}`;
-    if (hint) hint.textContent = isMerch || saleUnit === 'item' ? 'Each sale deducts one item.' : `Sales are deducted in ${saleUnitLabel(saleUnit)}; stock converts automatically.`;
+    if (hint) hint.textContent = isDiscreteUnit(saleUnit) ? `Each sale deducts one ${saleUnitLabel(saleUnit)}.` : `Sales are deducted in ${saleUnitLabel(saleUnit)}; stock converts automatically.`;
 }
 
 function convertInventoryUnit(select, inputId) {
@@ -2898,11 +2913,22 @@ function convertInventoryUnit(select, inputId) {
     const next = select.value;
     if (input && previous !== next) {
         const amount = Number(input.value);
-        if (Number.isFinite(amount) && previous !== 'item' && next !== 'item') {
+        if (isDiscreteUnit(previous) || isDiscreteUnit(next)) {
+            input.value = '0';
+        } else if (Number.isFinite(amount)) {
             input.value = (amount * INVENTORY_UNIT_TO_BASE[previous] / INVENTORY_UNIT_TO_BASE[next]).toFixed(3).replace(/\.000$/, '').replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, '');
         }
     }
     select.dataset.previousUnit = next;
+    const prefix = select.id === 'apStockUnit' ? 'ap' : select.id === 'epStockUnit' ? 'ep' : '';
+    if (prefix) {
+        const form = document.getElementById(`${prefix}SupplementForm`)?.value || 'other';
+        const saleUnit = supplementSaleUnit(form, next);
+        const priceUnit = document.getElementById(`${prefix}PriceUnit`);
+        const hint = document.getElementById(`${prefix}StockHint`);
+        if (priceUnit) priceUnit.textContent = `per ${saleUnitLabel(saleUnit)}`;
+        if (hint) hint.textContent = isDiscreteUnit(saleUnit) ? `Each sale deducts one ${saleUnitLabel(saleUnit)}.` : `Sales are deducted in ${saleUnitLabel(saleUnit)}; stock converts automatically.`;
+    }
 }
 
 async function submitAddProduct() {
@@ -2915,10 +2941,10 @@ async function submitAddProduct() {
     const price = Number(document.getElementById('apPrice').value);
     const stock = Number(document.getElementById('apStock').value);
     const stockUnit = document.getElementById('apStockUnit').value;
-    if (!name || !Number.isFinite(price) || price <= 0 || !Number.isFinite(stock) || stock < 0 || (stockUnit === 'item' && !Number.isInteger(stock)) || (category === 'Supplement' && (!supplementType || !supplementForm))) { toast('Enter a name, choose a product type and form, and provide a valid price and stock amount.', 'error'); return; }
+    if (!name || !Number.isFinite(price) || price <= 0 || !Number.isFinite(stock) || stock < 0 || (isDiscreteUnit(stockUnit) && !Number.isInteger(stock)) || (category === 'Supplement' && (!supplementType || !supplementForm))) { toast('Enter a name, choose a product type and form, and provide a valid price and stock amount.', 'error'); return; }
     const image = await getProductPhoto('apImage');
     if (image === false) return;
-    const inventoryUnit = category === 'Supplement' ? SUPPLEMENT_FORM_UNITS[supplementForm] : 'item';
+    const inventoryUnit = category === 'Supplement' ? supplementSaleUnit(supplementForm, stockUnit) : 'item';
     const product = { name, category, price, stock, stockUnit, ...(category === 'Merch' ? { merchType } : { supplementType, supplementForm }), ...(category === 'Merch' && size ? { size } : {}), inventoryUnit, ...(image ? { image } : {}) };
     if (window.ironGrindSupabase) {
         const { data, error } = await window.ironGrindSupabase.from('products').insert({
@@ -2960,7 +2986,7 @@ function editProduct(id) {
         ${p.category === 'Merch' ? `<div class="form-group" style="margin-bottom:14px;"><label for="epMerchType">Merchandise type</label><select id="epMerchType" onchange="toggleEditProductSize('${p.id}')">${merchandiseTypeOptions()}</select></div><div id="epSizeGroup" class="form-group" style="margin-bottom:14px;"><label for="epSize">Apparel size (optional)</label><select id="epSize">${merchandiseSizeOptions(p.size)}</select></div>` : `<div class="form-group" style="margin-bottom:14px;"><label for="epSupplementType">Supplement type</label><select id="epSupplementType">${supplementTypeOptions()}</select></div><div class="form-group" style="margin-bottom:14px;"><label for="epSupplementForm">Form</label><select id="epSupplementForm" onchange="toggleEditSupplementUnits()">${supplementFormOptions(p.supplementForm || 'powder')}</select></div>`}
         <div class="form-row">
             <div class="form-group"><label>Price (<span id="epPriceUnit">per ${productSaleUnitLabel(p)}</span>) ₱</label><input type="number" id="epPrice" min="0" step="0.01" value="${p.price}"></div>
-            <div class="form-group"><label>Current stock</label><div class="form-row"><input type="number" id="epStock" min="0" step="${stockStep(p.stockUnit || 'item')}" value="${Number(p.stock) || 0}"><select id="epStockUnit" aria-label="Stock unit" onchange="convertInventoryUnit(this, 'epStock')">${p.category === 'Supplement' ? stockUnitOptions(p.supplementForm || 'powder', p.stockUnit) : stockUnitOptions('item', 'item')}</select></div><small id="epStockHint">${p.category === 'Supplement' && p.inventoryUnit !== 'item' ? `Sales deduct in ${saleUnitLabel(p.inventoryUnit)}.` : 'Each sale deducts one item.'}</small></div>
+            <div class="form-group"><label>Current stock</label><div class="form-row"><input type="number" id="epStock" min="0" step="${stockStep(p.stockUnit || 'item')}" value="${Number(p.stock) || 0}"><select id="epStockUnit" aria-label="Stock unit" onchange="convertInventoryUnit(this, 'epStock')">${p.category === 'Supplement' ? stockUnitOptions(p.supplementForm || 'powder', p.stockUnit) : stockUnitOptions('item', 'item')}</select></div><small id="epStockHint">${isDiscreteUnit(p.inventoryUnit) ? `Each sale deducts one ${saleUnitLabel(p.inventoryUnit)}.` : `Sales deduct in ${saleUnitLabel(p.inventoryUnit)}.`}</small></div>
         </div>
         <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="runWithButtonLoading(this, () => submitEditProduct('${p.id}'), 'Saving…')">Save</button></div>
     `);
@@ -2985,22 +3011,22 @@ function toggleEditSupplementUnits() {
     const previousForm = formSelect?.dataset.previousForm || form;
     const select = document.getElementById('epStockUnit');
     if (!select) return;
-    const previousSaleUnit = SUPPLEMENT_FORM_UNITS[previousForm] || 'gram';
-    const nextSaleUnit = SUPPLEMENT_FORM_UNITS[form] || 'gram';
+    const oldUnit = select.value;
+    const previousSaleUnit = supplementSaleUnit(previousForm, oldUnit);
+    const unitOptions = form === 'powder' ? [['gram','g'],['kilogram','kg'],['ounce','oz'],['pound','lb']] : form === 'drinkable' ? [['milliliter','ml'],['liter','L'],['fluid_ounce','fl oz']] : (form === 'capsule' || form === 'tablet') ? [['piece','pcs'],['box','boxes']] : [['item','items']];
+    const nextUnit = unitOptions.some(([value]) => value === oldUnit) ? oldUnit : unitOptions[0][0];
+    const nextSaleUnit = supplementSaleUnit(form, nextUnit);
     if (previousSaleUnit !== nextSaleUnit) {
         document.getElementById('epStock').value = '0';
-        document.getElementById('epStockHint').textContent = 'Form changed. Enter the actual stock using the new unit.';
+        document.getElementById('epStockHint').textContent = 'Unit changed. Enter the actual stock using the new unit.';
     }
-    const oldUnit = select.value;
-    const unitOptions = form === 'powder' ? [['gram','g'],['kilogram','kg'],['ounce','oz'],['pound','lb']] : form === 'drinkable' ? [['milliliter','ml'],['liter','L'],['fluid_ounce','fl oz']] : [['item','items']];
-    const nextUnit = unitOptions.some(([value]) => value === oldUnit) ? oldUnit : unitOptions[0][0];
     select.innerHTML = unitOptions.map(([value,label]) => `<option value="${value}">${label}</option>`).join('');
     select.value = nextUnit;
     select.dataset.previousUnit = nextUnit;
     document.getElementById('epStock').step = stockStep(nextUnit);
-    const saleUnit = SUPPLEMENT_FORM_UNITS[form];
+    const saleUnit = nextSaleUnit;
     document.getElementById('epPriceUnit').textContent = `per ${saleUnitLabel(saleUnit)}`;
-    document.getElementById('epStockHint').textContent = saleUnit === 'item' ? 'Each sale deducts one item.' : `Sales deduct in ${saleUnitLabel(saleUnit)}.`;
+    document.getElementById('epStockHint').textContent = isDiscreteUnit(saleUnit) ? `Each sale deducts one ${saleUnitLabel(saleUnit)}.` : `Sales deduct in ${saleUnitLabel(saleUnit)}.`;
     if (formSelect) formSelect.dataset.previousForm = form;
 }
 
@@ -3019,7 +3045,7 @@ async function submitEditProduct(id) {
     const merchType = p.category === 'Merch' ? document.getElementById('epMerchType').value : '';
     const supplementType = p.category === 'Supplement' ? document.getElementById('epSupplementType').value : '';
     const supplementForm = p.category === 'Supplement' ? document.getElementById('epSupplementForm').value : '';
-    if (!Number.isFinite(newPrice) || newPrice <= 0 || !Number.isFinite(Number(stockInput)) || Number(stockInput) < 0 || (stockUnit === 'item' && !Number.isInteger(Number(stockInput)))) { toast('Enter a valid price and stock amount.', 'error'); return; }
+    if (!Number.isFinite(newPrice) || newPrice <= 0 || !Number.isFinite(Number(stockInput)) || Number(stockInput) < 0 || (isDiscreteUnit(stockUnit) && !Number.isInteger(Number(stockInput)))) { toast('Enter a valid price and stock amount.', 'error'); return; }
     const image = await getProductPhoto('epImage');
     if (image === false) return;
     const oldProduct = { ...p };
@@ -3030,7 +3056,7 @@ async function submitEditProduct(id) {
     } else delete updatedProduct.size;
     updatedProduct.stock = Number(stockInput);
     updatedProduct.stockUnit = stockUnit;
-    updatedProduct.inventoryUnit = p.category === 'Supplement' ? SUPPLEMENT_FORM_UNITS[supplementForm] : 'item';
+    updatedProduct.inventoryUnit = p.category === 'Supplement' ? supplementSaleUnit(supplementForm, stockUnit) : 'item';
     if (p.category === 'Supplement') { updatedProduct.supplementType = supplementType; updatedProduct.supplementForm = supplementForm; }
     if (image) updatedProduct.image = image;
     else if (document.getElementById('epRemoveImage').checked) updatedProduct.image = '';
@@ -3164,13 +3190,13 @@ function updateSaleQuantityMode() {
     const factor = INVENTORY_UNIT_TO_BASE[saleUnit] || 1;
     const available = productStockInSaleUnits(product) / factor;
     const unitLabel = saleUnitLabel(saleUnit);
-    const fractional = saleUnit !== 'item';
+    const fractional = !isDiscreteUnit(saleUnit);
     quantityInput.min = fractional ? '0.001' : '1';
     quantityInput.step = fractional ? (['kilogram', 'pound', 'liter'].includes(saleUnit) ? '0.001' : '0.01') : '1';
     quantityInput.max = available;
     if (productChanged) {
         const baseUnit = product.inventoryUnit || 'item';
-        quantityInput.value = baseUnit === 'item' ? '1' : String(Math.min(baseUnit === 'milliliter' ? 100 : 100, productStockInSaleUnits(product)));
+        quantityInput.value = isDiscreteUnit(baseUnit) ? '1' : String(Math.min(100, productStockInSaleUnits(product)));
     } else if (previousUnit && previousUnit !== saleUnit && Number.isFinite(previousQuantity)) {
         const converted = previousQuantity * (INVENTORY_UNIT_TO_BASE[previousUnit] || 1) / factor;
         quantityInput.value = String(Math.min(available, Number(converted.toFixed(3))));
@@ -3197,7 +3223,7 @@ async function submitNewSale() {
     const qty = Number(document.getElementById('nsQty').value);
     const p = products.find(x => x.id === pid);
     const saleUnit = document.getElementById('nsUnit')?.value || p?.inventoryUnit || 'item';
-    const fractional = saleUnit !== 'item';
+    const fractional = !isDiscreteUnit(saleUnit);
     if (!customer) { toast('Enter the walk-in customer name.', 'error'); document.getElementById('nsCustomer').focus(); return; }
     const stockLimit = p ? productStockInSaleUnits(p) / (INVENTORY_UNIT_TO_BASE[saleUnit] || 1) : 0;
     if (!p || !Number.isFinite(qty) || qty <= 0 || qty > stockLimit || (!fractional && !Number.isInteger(qty))) { toast('Enter a valid amount within available stock.', 'error'); return; }
