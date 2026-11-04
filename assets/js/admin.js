@@ -1831,26 +1831,24 @@ function startQRScanner() {
     openModal(`<div class="qr-camera-modal">
         <h3><i class="fas fa-qrcode"></i> Choose a Camera</h3>
         <p class="modal-sub">Scan with a camera connected to this device or pair a phone camera.</p>
-        <p id="phonePairingLimitSummary" class="qr-camera-status">Loading phone pairing limit…</p>
         <label class="phone-pair-remember"><input id="rememberPhoneScanner" type="checkbox" checked> Remember this phone for 30 days</label>
-        <div class="modal-actions"><button class="btn-primary" onclick="startLocalQRScanner()"><i class="fas fa-laptop"></i> This device</button><button class="btn-primary" onclick="startPhoneQRPairing(document.getElementById('rememberPhoneScanner').checked)"><i class="fas fa-mobile-screen-button"></i> Phone camera</button><button class="btn-sm" onclick="changePhonePairingLimit()">Change phone limit</button><button class="btn-sm" onclick="closeModal()">Cancel</button></div>
+        <div class="modal-actions"><button class="btn-primary" onclick="startLocalQRScanner()"><i class="fas fa-laptop"></i> This device</button><button class="btn-primary" onclick="startPhoneQRPairing(document.getElementById('rememberPhoneScanner').checked)"><i class="fas fa-mobile-screen-button"></i> Phone camera</button><button class="btn-sm" onclick="closeModal()">Cancel</button></div>
     </div>`);
-    refreshPhonePairingLimitSummary();
 }
 
 async function startPhoneQRPairing(rememberPhone = false) {
+    const pairingPassword = await requestPairingPassword('Phone camera access', 'Enter the admin-only phone-pairing password to create a secure QR.');
+    if (!pairingPassword) return;
     const { data: settings, error } = await window.ironGrindSupabase.rpc('get_mobile_attendance_pairing_settings');
     if (error) { toast(`Could not check phone pairing setup: ${error.message}`, 'error'); return; }
-    if (Number(settings?.active_count) >= Number(settings?.max_pairs)) {
-        showMobileAttendancePairingModal(null, null, false, true);
-        return;
-    }
     if (!settings?.password_configured) {
         toast('The phone-camera password has not been set in Supabase yet. Ask the database administrator to configure it.', 'error');
         return;
     }
-    const pairingPassword = await requestPairingPassword('Phone camera access', 'Enter the admin-only phone-pairing password to create a secure QR.');
-    if (!pairingPassword) return;
+    if (Number(settings?.active_count) >= Number(settings?.max_pairs)) {
+        showMobileAttendancePairingModal(null, null, false, true);
+        return;
+    }
     await createPhonePairingSession(rememberPhone, pairingPassword);
 }
 
@@ -1901,10 +1899,10 @@ function showMobileAttendancePairingModal(sessionId, pairingUrl, persistent, cap
     const localOnly = pairingUrl && ['localhost', '127.0.0.1', '::1'].includes(new URL(pairingUrl).hostname);
     openModal(`<div class="qr-camera-modal">
         <h3><i class="fas fa-mobile-screen-button"></i> Connect Phone Camera</h3>
-        <p class="modal-sub">${capacityReached ? 'The pairing limit is full. End an existing pairing below to free a slot.' : `Scan this pairing QR with your phone. ${persistent ? 'This phone stays paired for 30 days.' : 'This one-time pairing expires in 10 minutes.'}`}</p>
+        <p class="modal-sub">${capacityReached ? 'The pairing limit is full. End an existing pairing below to free a slot.' : pairingUrl ? `Scan this pairing QR with your phone. ${persistent ? 'This phone stays paired for 30 days.' : 'This one-time pairing expires in 10 minutes.'}` : 'A pairing slot is available. Create a QR to connect a phone.'}</p>
         ${localOnly ? '<p class="qr-camera-status">This address uses localhost, which a phone cannot reach. Open the hosted HTTPS site on the admin computer to pair a phone.</p>' : ''}
-        ${pairingUrl ? '<div id="phonePairQr" class="phone-pair-qr" aria-label="Phone scanner pairing QR code"></div>' : '<div class="qr-camera-status" role="status">No QR generated while the pairing limit is full.</div>'}
-        <p id="phonePairStatus" class="qr-camera-status" role="status">${capacityReached ? 'Remove a paired phone below, then try Phone camera again.' : 'Waiting for phone scans…'}</p>
+        ${pairingUrl ? '<div id="phonePairQr" class="phone-pair-qr" aria-label="Phone scanner pairing QR code"></div>' : ''}
+        <p id="phonePairStatus" class="qr-camera-status" role="status">${capacityReached ? 'Remove a paired phone below to free a slot.' : pairingUrl ? 'Waiting for phone scans…' : 'Create a pairing QR when ready.'}</p>
         <div class="phone-pairing-limit-controls">
             <p id="phonePairingLimitSummary" class="qr-camera-status">Loading phone pairing limit…</p>
             <button class="btn-sm" onclick="changePhonePairingLimit()">Change phone limit</button>
@@ -1914,7 +1912,7 @@ function showMobileAttendancePairingModal(sessionId, pairingUrl, persistent, cap
             <p class="paired-phone-list-label">Currently paired phones</p>
             <div id="pairedPhonesList" class="paired-phone-list"><p class="paired-phone-empty">Loading paired phones…</p></div>
         </section>
-        <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Close window</button>${sessionId ? `<button class="btn-danger phone-pair-end-button" onclick="endMobileAttendanceSession('${sessionId}')">End this pairing</button>` : ''}</div>
+        <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Close window</button>${!pairingUrl && !capacityReached ? `<button class="btn-primary" onclick="startPhoneQRPairing(${Boolean(persistent)})">Create pairing QR</button>` : ''}${sessionId ? `<button class="btn-danger phone-pair-end-button" onclick="endMobileAttendanceSession('${sessionId}')">End this pairing</button>` : ''}</div>
     </div>`);
     if (pairingUrl && typeof QRCode !== 'undefined') {
         new QRCode(document.getElementById('phonePairQr'), {
@@ -2059,7 +2057,7 @@ async function authorizePhonePairingLimit(event) {
     if (activeMobileAttendanceSessionId && activeMobileAttendancePairingUrl) {
         showMobileAttendancePairingModal(activeMobileAttendanceSessionId, activeMobileAttendancePairingUrl, activeMobileAttendancePersistent);
     } else {
-        startQRScanner();
+        showMobileAttendancePairingModal(null, null, false, true);
     }
 }
 
@@ -2208,9 +2206,16 @@ async function restoreMobileAttendancePairing() {
 async function endMobileAttendanceSession(sessionId = activeMobileAttendanceSessionId, keepModalOpen = false, removalPin = null) {
     if (!sessionId || !window.ironGrindSupabase) return;
     if (!removalPin) removalPin = await requestPairingRemovalPin('End phone pairing', 'Enter the four-digit admin PIN to remove this paired phone.');
-    if (!removalPin) return;
+    if (!removalPin) {
+        if (keepModalOpen) restorePhonePairingModal();
+        return;
+    }
     const { error } = await window.ironGrindSupabase.rpc('close_mobile_attendance_scan_session', { p_session_id: sessionId, p_pairing_pin: removalPin });
-    if (error) { toast(`Could not end phone pairing: ${error.message}`, 'error'); return; }
+    if (error) {
+        toast(`Could not end phone pairing: ${error.message}`, 'error');
+        if (keepModalOpen) restorePhonePairingModal();
+        return;
+    }
     mobileAttendanceSessionIds.delete(sessionId);
     mobileAttendanceSessionPersistence.delete(sessionId);
     mobileAttendancePollBusy.delete(sessionId);
@@ -2228,10 +2233,27 @@ async function endMobileAttendanceSession(sessionId = activeMobileAttendanceSess
     } else if (activeMobileAttendanceSessionId) {
         refreshAttendancePhoneStatus(activeMobileAttendanceSessionId);
     }
-    if (keepModalOpen && activeMobileAttendanceSessionId !== sessionId) await refreshPairedAttendancePhones(true);
+    if (keepModalOpen) restorePhonePairingModal();
     else closeModal();
     toast('Phone attendance pairing ended.', 'success');
-    refreshPhonePairingLimitSummary();
+}
+
+async function restorePhonePairingModal() {
+    const { data: settings } = await window.ironGrindSupabase.rpc('get_mobile_attendance_pairing_settings');
+    const activeSessionId = activeMobileAttendanceSessionId;
+    const activeUrl = activeMobileAttendancePairingUrl;
+    const activePersistent = activeMobileAttendancePersistent;
+    const hasCurrentSession = activeSessionId && mobileAttendanceSessionIds.has(activeSessionId) && activeUrl;
+    showMobileAttendancePairingModal(
+        hasCurrentSession ? activeSessionId : null,
+        hasCurrentSession ? activeUrl : null,
+        hasCurrentSession ? activePersistent : false,
+        Number(settings?.active_count) >= Number(settings?.max_pairs)
+    );
+    if (hasCurrentSession) {
+        startMobileAttendancePolling(activeSessionId);
+        refreshAttendancePhoneStatus(activeSessionId);
+    }
 }
 
 async function pollMobileAttendanceScans(sessionId) {
