@@ -52,7 +52,6 @@ let pairedPhoneListLastRefreshAt = 0;
 let lifetimePhonePairingCount = null;
 let adminPasswordPromptResolver = null;
 let pairingPasswordPromptResolver = null;
-let pairingPasswordSetupOptions = null;
 let pendingPairingLimitPassword = null;
 let adminRealtimeChannel = null;
 let adminMembershipRefreshTimer = null;
@@ -1843,7 +1842,7 @@ async function startPhoneQRPairing(rememberPhone = false) {
     const { data: settings, error } = await window.ironGrindSupabase.rpc('get_mobile_attendance_pairing_settings');
     if (error) { toast(`Could not check phone pairing setup: ${error.message}`, 'error'); return; }
     if (!settings?.password_configured) {
-        await configurePhonePairingPassword({ rememberPhone });
+        toast('The phone-camera password has not been set in Supabase yet. Ask the database administrator to configure it.', 'error');
         return;
     }
     const pairingPassword = await requestPairingPassword('Phone camera access', 'Enter the admin-only phone-pairing password to create a secure QR.');
@@ -1901,7 +1900,6 @@ function showMobileAttendancePairingModal(sessionId, pairingUrl, persistent) {
         <div class="phone-pairing-limit-controls">
             <p id="phonePairingLimitSummary" class="qr-camera-status">Loading phone pairing limit…</p>
             <button class="btn-sm" onclick="changePhonePairingLimit()">Change phone limit</button>
-            <button class="btn-sm" onclick="configurePhonePairingPassword({reopenSession:true})">Change pairing password</button>
         </div>
         <section class="paired-phones-section" aria-labelledby="pairedPhonesHeading">
             <h4 id="pairedPhonesHeading">Phones paired <span id="pairedPhonesCount" class="paired-phone-count">0</span><small id="pairedPhonesLimit" class="paired-phone-period">of 2 active limit</small></h4>
@@ -1982,50 +1980,6 @@ function cancelPairingPasswordPrompt() {
     resolve?.(null);
 }
 
-async function configurePhonePairingPassword(options = {}) {
-    pairingPasswordSetupOptions = options;
-    openModal(`<form class="qr-camera-modal" onsubmit="savePhonePairingPassword(event)">
-        <h3><i class="fas fa-key"></i> Set phone-pairing password</h3>
-        <p class="modal-sub">Choose an attendance-only password that only the admin knows. Do not reuse the admin login or store/inventory password. Use 8–72 characters.</p>
-        <label for="newPhonePairingPassword">New pairing password</label>
-        <input id="newPhonePairingPassword" type="password" minlength="8" maxlength="72" autocomplete="new-password" required>
-        <label for="confirmPhonePairingPassword">Confirm pairing password</label>
-        <input id="confirmPhonePairingPassword" type="password" minlength="8" maxlength="72" autocomplete="new-password" required>
-        <p id="pairingPasswordSetupError" class="qr-camera-status hidden" role="alert"></p>
-        <div class="modal-actions"><button class="btn-primary" type="submit">Save password</button><button class="btn-sm" type="button" onclick="closeModal()">Cancel</button></div>
-    </form>`);
-}
-
-async function savePhonePairingPassword(event) {
-    event.preventDefault();
-    const password = document.getElementById('newPhonePairingPassword')?.value || '';
-    const confirmation = document.getElementById('confirmPhonePairingPassword')?.value || '';
-    const errorEl = document.getElementById('pairingPasswordSetupError');
-    if (password !== confirmation) {
-        if (errorEl) { errorEl.textContent = 'The passwords do not match.'; errorEl.classList.remove('hidden'); }
-        return;
-    }
-    const { error } = await window.ironGrindSupabase.rpc('set_mobile_attendance_pairing_password', { p_password: password });
-    if (error) {
-        if (errorEl) {
-            errorEl.textContent = /function .*set_mobile_attendance_pairing_password|schema cache/i.test(error.message)
-                ? 'Apply migration 20261104000016_admin_pairing_password.sql in Supabase, then reload this page.'
-                : error.message;
-            errorEl.classList.remove('hidden');
-        }
-        return;
-    }
-    const setupOptions = pairingPasswordSetupOptions || {};
-    pairingPasswordSetupOptions = null;
-    closeModal();
-    toast('Phone-pairing password saved.', 'success');
-    if (setupOptions.reopenSession && activeMobileAttendanceSessionId && activeMobileAttendancePairingUrl) {
-        showMobileAttendancePairingModal(activeMobileAttendanceSessionId, activeMobileAttendancePairingUrl, activeMobileAttendancePersistent);
-    } else {
-        await createPhonePairingSession(Boolean(setupOptions.rememberPhone), password);
-    }
-}
-
 async function verifyAdminPairingPassword(event) {
     event.preventDefault();
     const input = document.getElementById('adminPairingPassword');
@@ -2064,8 +2018,6 @@ async function refreshPhonePairingLimitSummary() {
     target.textContent = error ? 'Phone pairing limit could not be loaded.' : `${data.active_count} of ${data.max_pairs} phone pairing slots are in use.`;
     const pairedLimit = document.getElementById('pairedPhonesLimit');
     if (pairedLimit && !error) pairedLimit.textContent = `of ${data.max_pairs} active limit · ${data.active_count} active`;
-    const managePassword = document.getElementById('managePairingPasswordButton');
-    if (managePassword && !error) managePassword.textContent = data.password_configured ? 'Change pairing password' : 'Set pairing password';
 }
 
 async function changePhonePairingLimit() {

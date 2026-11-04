@@ -166,8 +166,7 @@ revoke all on function public.get_mobile_attendance_pairing_settings() from publ
 grant execute on function public.get_mobile_attendance_pairing_settings() to authenticated;
 revoke all on function public.verify_mobile_attendance_pairing_password(text) from public, anon;
 grant execute on function public.verify_mobile_attendance_pairing_password(text) to authenticated;
-revoke all on function public.set_mobile_attendance_pairing_password(text) from public, anon;
-grant execute on function public.set_mobile_attendance_pairing_password(text) to authenticated;
+revoke all on function public.set_mobile_attendance_pairing_password(text) from public, anon, authenticated;
 revoke all on function public.create_mobile_attendance_scan_session(boolean, text) from public, anon;
 grant execute on function public.create_mobile_attendance_scan_session(boolean, text) to authenticated;
 revoke all on function public.set_mobile_attendance_pairing_limit(integer, text) from public, anon;
