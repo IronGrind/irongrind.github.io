@@ -2290,11 +2290,13 @@ async function restoreMobileAttendancePairing() {
     } catch {}
     const legacyId = localStorage.getItem('ig_mobile_attendance_session_id');
     if (legacyId) savedIds.push(legacyId);
+    let pairingRestoreFailed = false;
     for (const sessionId of [...new Set(savedIds.filter(Boolean))]) {
         const { data: isActive, error } = await window.ironGrindSupabase.rpc('is_admin_mobile_attendance_scan_session_active', {
             p_session_id: sessionId
         });
-        if (error || isActive !== true) continue;
+        if (error) { pairingRestoreFailed = true; continue; }
+        if (isActive !== true) continue;
         mobileAttendanceSessionPersistence.set(sessionId, true);
         if (!activeMobileAttendanceSessionId) {
             activeMobileAttendanceSessionId = sessionId;
@@ -2302,8 +2304,10 @@ async function restoreMobileAttendancePairing() {
         }
         startMobileAttendancePolling(sessionId);
     }
-    savePersistentMobileAttendanceSessions();
-    if (!mobileAttendanceSessionIds.size) localStorage.removeItem('ig_mobile_attendance_session_id');
+    if (!pairingRestoreFailed) {
+        savePersistentMobileAttendanceSessions();
+        if (!mobileAttendanceSessionIds.size) localStorage.removeItem('ig_mobile_attendance_session_id');
+    }
 }
 
 async function endMobileAttendanceSession(sessionId = activeMobileAttendanceSessionId, keepModalOpen = false, removalPin = null, autoCreateQrWhenSlotFree = true) {
@@ -2369,37 +2373,11 @@ async function pollMobileAttendanceScans(sessionId) {
     if (mobileAttendancePollBusy.has(sessionId) || !mobileAttendanceSessionIds.has(sessionId) || !window.ironGrindSupabase) return;
     mobileAttendancePollBusy.add(sessionId);
     try {
+        // Phones save attendance as the signed-in operator; do not replay old anonymous scans.
         await refreshAttendancePhoneStatus(sessionId);
-        const { data: scans, error } = await window.ironGrindSupabase
-            .from('mobile_attendance_scan_events')
-            .select('id, qr_payload')
-            .eq('session_id', sessionId)
-            .order('created_at', { ascending: true });
-        if (error) throw error;
-        for (const scan of scans || []) {
-            if (!mobileAttendanceSessionIds.has(sessionId)) break;
-            if (mobileAttendanceProcessedScanIds.has(scan.id)) continue;
-            mobileAttendanceProcessedScanIds.add(scan.id);
-            try {
-                const member = await resolveMemberFromQR(String(scan.qr_payload || ''));
-                if (!member) toast('Phone scan received, but the member QR was not recognized.', 'error');
-                else await recordMemberAttendanceScan(member);
-            } catch (scanError) {
-                toast(`Could not process phone scan: ${scanError.message || 'Please try again.'}`, 'error');
-            }
-            const { error: deleteError } = await window.ironGrindSupabase.from('mobile_attendance_scan_events').delete().eq('id', scan.id);
-            if (deleteError) console.error('Could not clear processed phone attendance scan:', deleteError);
-            const status = document.getElementById('phonePairStatus');
-            if (status && activeMobileAttendanceSessionId === sessionId) {
-                status.textContent = `Last scan processed${scans.length > 1 ? ` · ${scans.length - 1} more queued` : ''}. Ready for the next member.`;
-            }
-        }
     } catch (error) {
-        const status = document.getElementById('phonePairStatus');
-        if (status && activeMobileAttendanceSessionId === sessionId) status.textContent = `Phone connection issue: ${error.message || 'Could not check for scans.'}`;
-    } finally {
-        mobileAttendancePollBusy.delete(sessionId);
-    }
+        console.warn('Could not check paired phone status:', error.message);
+    } finally { mobileAttendancePollBusy.delete(sessionId); }
 }
 
 function startLocalQRScanner() {

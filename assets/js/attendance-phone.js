@@ -31,6 +31,7 @@ async function signInPhoneOperator(event) {
         if (userError || !user) throw new Error('Could not verify your sign-in.');
         const { data: profile, error: profileError } = await phoneOperatorClient.from('profiles').select('role,full_name,is_active').eq('id', user.id).single();
         if (profileError || !profile?.is_active || !['staff', 'admin'].includes(profile.role)) throw new Error('Active staff or admin account required.');
+        phoneOperatorClient.auth.startAutoRefresh();
         phoneOperator = { id: user.id, name: profile.full_name || username };
         document.getElementById('phoneOperatorSetup').hidden = true;
         document.getElementById('phoneOperatorIdentity').hidden = false;
@@ -71,7 +72,7 @@ function setPhoneAttendanceMode(mode) {
     const instructions = document.getElementById('phoneScannerInstructions');
     if (instructions) instructions.textContent = mode === 'pair'
         ? 'On the admin page choose Attendance → Phone Camera, then point this camera at the pairing QR.'
-        : 'Point your phone camera at a member’s Iron Grind QR code. Attendance will be recorded on the paired admin page.';
+        : 'Scan a member QR. Attendance is saved directly under your signed-in operator account.';
 }
 
 function isPhoneCameraAvailable() {
@@ -522,6 +523,10 @@ function configurePhoneAppInstall() {
 }
 
 window.addEventListener('pagehide', () => {
+    phoneOperator = null;
+    phoneOperatorClient?.auth.stopAutoRefresh();
+    document.getElementById('phoneOperatorIdentity').hidden = true;
+    document.getElementById('phoneOperatorSetup').hidden = false;
     const scanner = phoneAttendanceScanner;
     phoneAttendanceScanner = null;
     const reader = document.getElementById('phoneQrReader');
@@ -557,5 +562,13 @@ async function startPhoneAttendanceApp() {
         setPhoneCameraButton(false);
     }
 }
+
+window.addEventListener('pageshow', event => {
+    if (event.persisted) {
+        phoneScanBusy = false; phoneCameraTransition = false; phoneCameraPausedForNextMember = false;
+        setPhoneNextScanButton(false); setPhoneCameraButton(false);
+        requirePhoneOperator();
+    }
+});
 
 startPhoneAttendanceApp();

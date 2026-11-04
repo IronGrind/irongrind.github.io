@@ -39,7 +39,7 @@
         <h1><i class="fas fa-qrcode"></i> Attendance Scanner</h1>
         <p id="phoneScannerInstructions">Point your phone camera at a member’s Iron Grind QR code. Sign in before opening the camera. Your name will be recorded with attendance.</p>
         <form id="phoneOperatorSetup" class="phone-model-setup" onsubmit="signInPhoneOperator(event)">
-<label for="phoneOperatorId">Staff / admin username</label><input id="phoneOperatorId" autocomplete="username" required maxlength="30" autocapitalize="none" spellcheck="false" placeholder="Your assigned account username">
+<label for="phoneOperatorId">Staff / admin ID (username)</label><input id="phoneOperatorId" autocomplete="username" required maxlength="30" autocapitalize="none" spellcheck="false" placeholder="Your assigned account username">
 <label for="phoneOperatorPassword" style="margin-top:12px">Password</label><input id="phoneOperatorPassword" type="password" autocomplete="current-password" required>
 <small>Sign in each time you open the app. This identifies who records attendance; your phone pairing stays saved separately.</small>
 <button id="phoneOperatorSignIn" class="phone-model-save-button" type="submit">Sign in to scan</button></form>

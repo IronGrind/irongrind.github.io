@@ -2,6 +2,10 @@
 begin;
 alter table public.attendance add column if not exists checked_out_by uuid references auth.users(id) on delete set null;
 
+-- Staff writes go through the validated transaction below.
+drop policy if exists staff_insert_attendance on public.attendance;
+drop policy if exists staff_update_attendance on public.attendance;
+
 create table if not exists private.attendance_scan_receipts (
     request_id uuid primary key,
     operator_id uuid not null references auth.users(id) on delete cascade,
@@ -9,6 +13,8 @@ create table if not exists private.attendance_scan_receipts (
     result jsonb not null,
     created_at timestamptz not null default now()
 );
+-- No client policies: only the SECURITY DEFINER scan function accesses receipts.
+alter table private.attendance_scan_receipts enable row level security;
 revoke all on private.attendance_scan_receipts from public, anon, authenticated;
 
 create or replace function public.record_attendance_scan(
