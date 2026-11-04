@@ -50,7 +50,6 @@ let activeMobileAttendancePairingUrl = null;
 let pairedPhoneListRefreshBusy = false;
 let pairedPhoneListLastRefreshAt = 0;
 let lifetimePhonePairingCount = null;
-let adminPasswordPromptResolver = null;
 let pairingPasswordPromptResolver = null;
 let pendingPairingLimitPassword = null;
 let adminRealtimeChannel = null;
@@ -280,11 +279,6 @@ async function runWithButtonLoading(button, action, loadingLabel = 'Working…')
     }
 }
 function closeModal() {
-    if (adminPasswordPromptResolver) {
-        const resolve = adminPasswordPromptResolver;
-        adminPasswordPromptResolver = null;
-        resolve(false);
-    }
     if (pairingPasswordPromptResolver) {
         const resolve = pairingPasswordPromptResolver;
         pairingPasswordPromptResolver = null;
@@ -1920,22 +1914,6 @@ function showMobileAttendancePairingModal(sessionId, pairingUrl, persistent) {
     refreshPhonePairingLimitSummary();
 }
 
-function requestAdminPassword(title, description) {
-    if (adminPasswordPromptResolver) adminPasswordPromptResolver(false);
-    return new Promise(resolve => {
-        adminPasswordPromptResolver = resolve;
-        openModal(`<form class="qr-camera-modal" onsubmit="verifyAdminPairingPassword(event)">
-            <h3><i class="fas fa-lock"></i> ${escapeDialogText(title)}</h3>
-            <p class="modal-sub">${escapeDialogText(description)} Only the signed-in admin account can authorize this action.</p>
-            <label for="adminPairingPassword">Admin password</label>
-            <input id="adminPairingPassword" type="password" autocomplete="current-password" required autofocus>
-            <p id="adminPairingPasswordError" class="qr-camera-status hidden" role="alert"></p>
-            <div class="modal-actions"><button class="btn-primary" type="submit">Verify and continue</button><button class="btn-sm" type="button" onclick="cancelAdminPasswordPrompt()">Cancel</button></div>
-        </form>`);
-        document.getElementById('adminPairingPassword')?.focus();
-    });
-}
-
 function requestPairingPassword(title, description) {
     if (pairingPasswordPromptResolver) pairingPasswordPromptResolver(null);
     return new Promise(resolve => {
@@ -1978,36 +1956,6 @@ function cancelPairingPasswordPrompt() {
     pairingPasswordPromptResolver = null;
     closeModal();
     resolve?.(null);
-}
-
-async function verifyAdminPairingPassword(event) {
-    event.preventDefault();
-    const input = document.getElementById('adminPairingPassword');
-    const errorEl = document.getElementById('adminPairingPasswordError');
-    const password = input?.value || '';
-    const client = window.ironGrindSupabase;
-    const { data: userData, error: userError } = await client.auth.getUser();
-    if (userError || !userData?.user?.email) {
-        if (errorEl) { errorEl.textContent = 'Could not verify the signed-in admin account. Sign in again and retry.'; errorEl.classList.remove('hidden'); }
-        return;
-    }
-    const { data, error } = await client.auth.signInWithPassword({ email: userData.user.email, password });
-    if (error || data?.user?.id !== userData.user.id) {
-        if (errorEl) { errorEl.textContent = 'Password was not accepted for this admin account.'; errorEl.classList.remove('hidden'); }
-        if (input) { input.value = ''; input.focus(); }
-        return;
-    }
-    const resolve = adminPasswordPromptResolver;
-    adminPasswordPromptResolver = null;
-    closeModal();
-    resolve?.(true);
-}
-
-function cancelAdminPasswordPrompt() {
-    const resolve = adminPasswordPromptResolver;
-    adminPasswordPromptResolver = null;
-    closeModal();
-    resolve?.(false);
 }
 
 async function refreshPhonePairingLimitSummary() {
