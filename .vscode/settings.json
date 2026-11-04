@@ -11,5 +11,8 @@
     "explorer.fileNesting.patterns": {
         "attendance-phone.html": "attendance-app.webmanifest, attendance-phone-sw.js",
         "package.json": "package-lock.json"
+    },
+    "files.exclude": {
+        "**/node_modules": true
     }
 }

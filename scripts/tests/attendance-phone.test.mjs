@@ -6,14 +6,14 @@ import test from 'node:test';
 function app() {
     const elements = new Map();
     const element = id => {
-        if (!elements.has(id)) elements.set(id, { hidden: true, disabled: false, value: '', textContent: '', style: {}, classList: { toggle() {}, contains() { return false; } } });
+        if (!elements.has(id)) elements.set(id, { hidden: true, disabled: false, value: '', textContent: '', style: {}, classList: { add() {}, remove() {}, toggle() {}, contains() { return false; } } });
         return elements.get(id);
     };
     const storage = () => { const items = new Map(); return { getItem: key => items.get(key) ?? null, setItem: (key, value) => items.set(key, value), removeItem: key => items.delete(key) }; };
     const localStorage = storage();
     const sessionStorage = storage();
     const window = { addEventListener() {}, supabase: { createClient: () => ({}) }, setTimeout() {} };
-    const context = vm.createContext({ window, document: { getElementById: element }, localStorage, sessionStorage,
+    const context = vm.createContext({ window, document: { body: element('body'), getElementById: element }, localStorage, sessionStorage,
         IRON_GRIND_SUPABASE_URL: 'https://example.invalid', IRON_GRIND_SUPABASE_PUBLISHABLE_KEY: 'public', console, navigator: {}, crypto: globalThis.crypto });
     const source = readFileSync(new URL('../../assets/js/attendance-phone.js', import.meta.url), 'utf8').replace(/startPhoneAttendanceApp\(\);\s*$/, '');
     vm.runInContext(source, context);
