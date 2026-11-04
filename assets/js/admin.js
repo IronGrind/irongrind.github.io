@@ -37,7 +37,11 @@ let currentApprovalType = 'registration';
 let currentSalesView = 'membership';
 let currentSalesTransactionType = 'membership';
 let currentSalesSubType = 'all';
-let currentMembershipSalesMonth = localDateStr().slice(0, 7);
+let currentMembershipSalesPeriodMode = 'day';
+let currentMembershipSalesDay = localDateStr();
+let currentMembershipSalesFrom = localDateStr();
+let currentMembershipSalesTo = localDateStr();
+let currentMembershipSalesYear = localDateStr().slice(0, 4);
 let currentSalesProductName = 'all';
 let activeQRScanner = null;
 let qrScanHandled = false;
@@ -3388,6 +3392,30 @@ function isProductSaleInSelectedPeriod(sale) {
     catch { return false; }
 }
 
+function getMembershipSalesPeriod() {
+    if (currentMembershipSalesPeriodMode === 'day') {
+        const day = currentMembershipSalesDay;
+        return { mode: 'day', from: day, to: day, label: day, slug: day };
+    }
+    if (currentMembershipSalesPeriodMode === 'range') {
+        const from = currentMembershipSalesFrom;
+        const to = currentMembershipSalesTo;
+        return { mode: 'range', from, to, label: `${from} to ${to}`, slug: `${from}_to_${to}` };
+    }
+    const year = currentMembershipSalesYear;
+    return { mode: 'year', from: `${year}-01-01`, to: `${year}-12-31`, label: year, slug: year };
+}
+
+function updateMembershipSalesPeriod(field, value) {
+    if (field === 'mode') currentMembershipSalesPeriodMode = ['day', 'range', 'year'].includes(value) ? value : 'day';
+    else if (field === 'day' && /^\d{4}-\d{2}-\d{2}$/.test(value)) currentMembershipSalesDay = value;
+    else if (field === 'from' && /^\d{4}-\d{2}-\d{2}$/.test(value)) currentMembershipSalesFrom = value;
+    else if (field === 'to' && /^\d{4}-\d{2}-\d{2}$/.test(value)) currentMembershipSalesTo = value;
+    else if (field === 'year' && /^\d{4}$/.test(value)) currentMembershipSalesYear = value;
+    currentSalesSubType = 'all';
+    renderSales();
+}
+
 function isWalkinProductSale(sale) {
     return sale.source === 'walk-in' || sale.customer === 'Walk-in'
         || ['Supplement', 'Merch'].includes(sale.category)
@@ -3438,7 +3466,7 @@ function renderSales() {
     document.getElementById('salesTransactionsPanel')
         ?.classList.toggle('membership-sales-active', currentSalesTransactionType === 'membership');
     const membershipSales = sales.filter(isMembershipSale);
-    const monthMembershipSales = membershipSales.filter(sale => reportDateBelongsToMonth(sale.date || sale.createdAt, currentMembershipSalesMonth));
+    const membershipSalesInPeriod = membershipSales.filter(sale => reportDateMatchesPeriod(sale.date || sale.createdAt, getMembershipSalesPeriod()));
     const productSales = sales.filter(sale => !isMembershipSale(sale) && Boolean(getSaleProductCategory(sale))
         && isProductSaleInSelectedPeriod(sale));
     const currentMonth = localDateStr().slice(0, 7);
@@ -3450,9 +3478,9 @@ function renderSales() {
     const currentMonthLabel = new Intl.DateTimeFormat('en', { month: 'long', year: 'numeric' })
         .format(new Date(`${currentMonth}-01T00:00:00`));
     document.getElementById('salesMonthOverview').innerHTML = `<div class="sales-month-overview-copy"><span>This month · ${currentMonthLabel}</span><h3>Overall income</h3><p>Memberships: ${currentMonthPaidMembershipCount} paid sales · Products: ${currentMonthPaidProductCount} paid sales</p></div><strong class="sales-month-overview-total">${formatPeso(currentMonthIncome)}</strong>`;
-    const salesByType = { membership: monthMembershipSales, products: productSales };
+    const salesByType = { membership: membershipSalesInPeriod, products: productSales };
     const typedSales = salesByType[currentSalesTransactionType] || [];
-    const planOptions = [...new Set(monthMembershipSales.map(getMembershipPlanFromSale))].sort((a, b) => {
+    const planOptions = [...new Set(membershipSalesInPeriod.map(getMembershipPlanFromSale))].sort((a, b) => {
         const order = ['Monthly', 'Half Month', 'Weekly', 'Walk-in', 'Other'];
         return (order.indexOf(a) < 0 ? order.length : order.indexOf(a)) - (order.indexOf(b) < 0 ? order.length : order.indexOf(b)) || a.localeCompare(b);
     });
@@ -3460,16 +3488,24 @@ function renderSales() {
         .sort((a, b) => ['Supplement', 'Merchandise'].indexOf(a) - ['Supplement', 'Merchandise'].indexOf(b));
     const membershipSummaryEl = document.getElementById('membershipSalesSummary');
     if (currentSalesTransactionType === 'membership') {
-        const summary = getMembershipIncomeBreakdown(currentMembershipSalesMonth);
+        const selectedPeriod = getMembershipSalesPeriod();
+        const summary = getMembershipIncomeBreakdown(selectedPeriod);
         membershipSummaryEl.classList.remove('hidden');
-        membershipSummaryEl.innerHTML = `<div class="membership-sales-summary-heading"><div><h3>Membership income</h3><p>Paid membership transactions for the selected month</p></div><label>Month <input id="membershipSalesMonth" type="month" value="${currentMembershipSalesMonth}" aria-label="Choose membership sales month"></label></div>
+        membershipSummaryEl.innerHTML = `<div class="membership-sales-summary-heading"><div><h3>Membership income</h3><p>Paid membership transactions for the selected period</p></div>
+            <div class="membership-sales-period-controls">
+                <label>Period<select id="membershipSalesPeriodMode"><option value="day" ${currentMembershipSalesPeriodMode === 'day' ? 'selected' : ''}>Specific day</option><option value="range" ${currentMembershipSalesPeriodMode === 'range' ? 'selected' : ''}>Date range</option><option value="year" ${currentMembershipSalesPeriodMode === 'year' ? 'selected' : ''}>Full year</option></select></label>
+                <label data-membership-sales-period="day" ${currentMembershipSalesPeriodMode !== 'day' ? 'hidden' : ''}>Day<input id="membershipSalesDay" type="date" value="${currentMembershipSalesDay}"></label>
+                <label data-membership-sales-period="range" ${currentMembershipSalesPeriodMode !== 'range' ? 'hidden' : ''}>From<input id="membershipSalesFrom" type="date" value="${currentMembershipSalesFrom}"></label>
+                <label data-membership-sales-period="range" ${currentMembershipSalesPeriodMode !== 'range' ? 'hidden' : ''}>To<input id="membershipSalesTo" type="date" value="${currentMembershipSalesTo}"></label>
+                <label data-membership-sales-period="year" ${currentMembershipSalesPeriodMode !== 'year' ? 'hidden' : ''}>Year<input id="membershipSalesYear" type="number" min="2000" max="2100" step="1" value="${currentMembershipSalesYear}"></label>
+            </div></div>
             <div class="membership-income-cards"><article class="membership-income-card overall"><span>Overall income</span><strong>${formatPeso(summary.totalIncome)}</strong><small>${summary.totalCount} paid sales</small></article>
                 ${summary.rows.map(row => `<article class="membership-income-card"><span>${escapeHTML(row.label)}</span><strong>${formatPeso(row.income)}</strong><small>${row.count} paid sales</small></article>`).join('')}</div>`;
-        document.getElementById('membershipSalesMonth').addEventListener('change', event => {
-            currentMembershipSalesMonth = /^\d{4}-(0[1-9]|1[0-2])$/.test(event.target.value) ? event.target.value : localDateStr().slice(0, 7);
-            currentSalesSubType = 'all';
-            renderSales();
-        });
+        document.getElementById('membershipSalesPeriodMode').addEventListener('change', event => updateMembershipSalesPeriod('mode', event.target.value));
+        document.getElementById('membershipSalesDay').addEventListener('change', event => updateMembershipSalesPeriod('day', event.target.value));
+        document.getElementById('membershipSalesFrom').addEventListener('change', event => updateMembershipSalesPeriod('from', event.target.value));
+        document.getElementById('membershipSalesTo').addEventListener('change', event => updateMembershipSalesPeriod('to', event.target.value));
+        document.getElementById('membershipSalesYear').addEventListener('change', event => updateMembershipSalesPeriod('year', event.target.value));
     } else {
         membershipSummaryEl.classList.add('hidden');
         membershipSummaryEl.innerHTML = '';
@@ -3489,7 +3525,7 @@ function renderSales() {
         subfilterEl.innerHTML = `<button class="sales-subfilter ${currentSalesSubType === 'all' ? 'active' : ''}" data-sale-subfilter="all">All ${currentSalesTransactionType === 'membership' ? 'plans' : 'products'} <span>${typedSales.length}</span></button>
             ${subOptions.map(option => {
                 const optionCount = currentSalesTransactionType === 'membership'
-                    ? monthMembershipSales.filter(sale => getMembershipPlanFromSale(sale) === option).length
+                    ? membershipSalesInPeriod.filter(sale => getMembershipPlanFromSale(sale) === option).length
                     : productSales.filter(sale => getSaleProductCategory(sale) === option).length;
                 return `<button class="sales-subfilter ${currentSalesSubType === option ? 'active' : ''}" data-sale-subfilter="${escapeHTML(option)}">${escapeHTML(option)} <span>${optionCount}</span></button>`;
             }).join('')}
@@ -4078,7 +4114,7 @@ function reportDateBelongsToMonth(value, month) {
     return !Number.isNaN(parsed.getTime()) && localDateStr(parsed).slice(0, 7) === month;
 }
 
-function createMonthlyReportPDF(type, period, options = {}) {
+function createMonthlyReportPDF(type, period) {
     const JsPDF = window.jspdf?.jsPDF;
     if (!JsPDF) throw new Error('PDF generator did not load. Check the internet connection and reload the admin page.');
 
@@ -4125,14 +4161,8 @@ function createMonthlyReportPDF(type, period, options = {}) {
         ];
         sections.push(rowsFor(['Record Type', 'Member / Product', 'Username / Details', 'Plan / Previous Expiry', 'Archived / Changed'], archivedRows));
     } else if (type === 'payment' || type === 'sales') {
-        const filteredSales = sales.filter(sale => reportDateMatchesPeriod(sale.date || sale.createdAt, period)
-            && (!options.productSalesOnly || (!isMembershipSale(sale)
-                && Boolean(getSaleProductCategory(sale))
-                && (currentSalesSubType === 'all' || getSaleProductCategory(sale) === currentSalesSubType)
-                && (currentSalesProductName === 'all' || getSaleProductNames(sale).includes(currentSalesProductName)))));
-        sections.push(options.productSalesOnly
-            ? rowsFor(['Transaction reference', 'Customer', 'Products', 'Total', 'Date', 'Status'], filteredSales.map(sale => [sale.id || '-', sale.customer || 'Name not recorded', sale.items || '-', `PHP ${Number(sale.total || 0).toFixed(2)}`, sale.date || '-', sale.status || 'Unknown']))
-            : rowsFor(['Transaction reference', 'Customer', 'Total', 'Date', 'Status'], filteredSales.map(sale => [sale.id || '-', sale.customer || 'Name not recorded', `PHP ${Number(sale.total || 0).toFixed(2)}`, sale.date || '-', sale.status || 'Unknown'])));
+        const filteredSales = sales.filter(sale => reportDateMatchesPeriod(sale.date || sale.createdAt, period));
+        sections.push(rowsFor(['Transaction reference', 'Customer', 'Total', 'Date', 'Status'], filteredSales.map(sale => [sale.id || '-', sale.customer || 'Name not recorded', `PHP ${Number(sale.total || 0).toFixed(2)}`, sale.date || '-', sale.status || 'Unknown'])));
     } else if (type === 'attendance') {
         const filteredAttendance = attendance.filter(record => reportDateMatchesPeriod(record.date, period));
         sections.push(rowsFor(['Member', 'Date', 'Time in', 'Time out'], filteredAttendance.map(record => [record.memberName, record.date || '-', formatAttendanceClock(record.timeIn), formatAttendanceClock(record.timeOut)])));
@@ -4300,25 +4330,6 @@ function downloadReportPDF(type) {
     } catch (error) {
         console.error('Could not download PDF report:', error);
         toast(error.message || 'Could not create this PDF report.', 'error');
-    }
-}
-
-function downloadProductSalesReport() {
-    let period;
-    try { period = getProductSalesPeriod(); }
-    catch (error) { toast(error.message, 'error'); return; }
-    try {
-        const pdfBlob = createMonthlyReportPDF('sales', period, { productSalesOnly: true });
-        const url = URL.createObjectURL(pdfBlob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = `Product Sales Report (${period.slug}).pdf`;
-        link.click();
-        window.setTimeout(() => URL.revokeObjectURL(url), 1000);
-        toast(`Product sales report downloaded for ${period.label}.`, 'success');
-    } catch (error) {
-        console.error('Could not download product sales PDF:', error);
-        toast(error.message || 'Could not create the product sales report.', 'error');
     }
 }
 

@@ -57,17 +57,19 @@
 
         <main class="main-content">
 <div id="section-staff" class="admin-section hidden">
-    <div class="section-heading-block"><h1>Staff Accounts</h1><p>Create and manage individual attendance-only staff access.</p></div>
+    <div class="section-heading-block staff-section-heading"><h1>Staff Accounts</h1><p>Create and manage individual attendance-only staff access.</p></div>
     <div class="staff-management-grid">
-        <section class="panel staff-create-panel"><div class="panel-header"><h2><i class="fas fa-user-plus"></i> Create Staff Account</h2></div>
+        <section class="panel staff-create-panel"><div class="panel-header"><div><h2><i class="fas fa-user-plus"></i> Create Staff Account</h2><p class="staff-panel-description">Add profile details and sign-in credentials.</p></div><span class="staff-required-note"><i class="fas fa-asterisk" aria-hidden="true"></i> Required fields</span></div>
             <form id="staffAccountForm">
-                <div class="form-group"><label for="staffName">Full name</label><input id="staffName" required maxlength="150" autocomplete="name"></div>
-                <div class="form-group"><label for="staffUsername">Username</label><input id="staffUsername" required pattern="[A-Za-z0-9_]{3,30}" maxlength="30" autocomplete="off"></div>
-                <div class="form-group"><label for="staffEmail">Gmail address</label><input id="staffEmail" type="email" required pattern="[A-Za-z0-9._%+-]+@gmail\.com" maxlength="254" autocomplete="email" placeholder="name@gmail.com" title="Enter a Gmail address ending in @gmail.com"></div>
-                <div class="form-group"><label for="staffMobile">Mobile number</label><div class="ph-phone-input"><span>+63</span><input id="staffMobile" type="tel" required inputmode="numeric" maxlength="10" pattern="9[0-9]{9}" placeholder="9171234567" autocomplete="tel-national" title="Enter 10 digits beginning with 9"></div></div>
-                <div class="form-group"><label for="staffGender">Gender</label><select id="staffGender" required><option value="">Select gender</option><option value="Female">Female</option><option value="Male">Male</option><option value="Prefer not to say">Prefer not to say</option></select></div>
-                <div class="form-group"><label for="staffPassword">Password</label><input id="staffPassword" type="password" required minlength="12" maxlength="128" autocomplete="new-password" aria-describedby="staffPasswordHint"><small id="staffPasswordHint" class="field-hint">Use at least 12 characters, including one letter and one number.</small></div>
-                <button class="btn-primary" type="submit"><i class="fas fa-user-plus"></i> Create Account</button><p id="staffAccountStatus" class="activity-help" role="status" aria-live="polite"></p>
+                <div class="staff-form-grid">
+                    <div class="form-group staff-form-field-wide"><label for="staffName">Full name</label><input id="staffName" required maxlength="150" autocomplete="name"></div>
+                    <div class="form-group"><label for="staffUsername">Username</label><input id="staffUsername" required pattern="[A-Za-z0-9_]{3,30}" maxlength="30" autocomplete="off"></div>
+                    <div class="form-group"><label for="staffEmail">Gmail address</label><input id="staffEmail" type="email" required pattern="[A-Za-z0-9._%+-]+@gmail\.com" maxlength="254" autocomplete="email" placeholder="name@gmail.com" title="Enter a Gmail address ending in @gmail.com"></div>
+                    <div class="form-group"><label for="staffMobile">Mobile number</label><div class="ph-phone-input"><span>+63</span><input id="staffMobile" type="tel" required inputmode="numeric" maxlength="10" pattern="9[0-9]{9}" placeholder="9171234567" autocomplete="tel-national" title="Enter 10 digits beginning with 9"></div></div>
+                    <div class="form-group"><label for="staffGender">Gender</label><select id="staffGender" required><option value="">Select gender</option><option value="Female">Female</option><option value="Male">Male</option><option value="Prefer not to say">Prefer not to say</option></select></div>
+                    <div class="form-group staff-form-field-wide"><label for="staffPassword">Password</label><input id="staffPassword" type="password" required minlength="12" maxlength="128" autocomplete="new-password" aria-describedby="staffPasswordHint"><small id="staffPasswordHint" class="field-hint">At least 12 characters, including one letter and one number.</small></div>
+                </div>
+                <div class="staff-form-footer"><button class="btn-primary" type="submit"><i class="fas fa-user-plus"></i> Create Account</button><p id="staffAccountStatus" class="activity-help" role="status" aria-live="polite"></p></div>
             </form>
         </section>
         <section class="panel staff-directory-panel"><div class="panel-header"><div><h2><i class="fas fa-users-gear"></i> Staff Directory</h2><p class="modal-sub">View account details and control attendance access.</p></div><button class="btn-sm" type="button" onclick="loadStaffAccounts()"><i class="fas fa-rotate"></i> Refresh</button></div>
@@ -257,7 +259,6 @@
                             <label data-product-sales-period="range" hidden>From<input id="productSalesFrom" type="date" onchange="renderSales()"></label>
                             <label data-product-sales-period="range" hidden>To<input id="productSalesTo" type="date" onchange="renderSales()"></label>
                             <label data-product-sales-period="year" hidden>Year<input id="productSalesYear" type="number" min="2000" max="2100" step="1" onchange="renderSales()"></label>
-                            <button class="report-icon-btn" type="button" onclick="downloadProductSalesReport()" aria-label="Download product sales report" title="Download product sales report"><i class="fas fa-file-pdf" aria-hidden="true"></i></button>
                         </div>
                     </div>
                     <div class="stats-grid walkin-sales-summary">

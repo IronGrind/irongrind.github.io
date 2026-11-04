@@ -55,7 +55,7 @@
                 <td role="cell" data-label="Record">${escape(log.record_label || '—')}<small>${escape(log.entity_id || '')}</small></td>
                 <td role="cell" data-label="Fields changed">${escape((log.changed_fields || []).join(', ') || '—')}</td>
             </tr>`).join('')}</tbody></table>` : '<div class="empty-state">No activity matches these filters. Logs begin after activity logging is enabled.</div>';
-            status.textContent = `${count || 0} events found. Record changes are captured automatically; sign-in and sign-out entries describe app activity.`;
+            status.textContent = `${count || 0} events found.`;
             document.getElementById('activityPage').textContent = `Page ${page + 1} of ${Math.max(1, Math.ceil((count || 0) / pageSize))}`;
             previous.disabled = page === 0;
             next.disabled = (page + 1) * pageSize >= (count || 0);
