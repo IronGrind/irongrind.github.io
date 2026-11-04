@@ -363,6 +363,9 @@ label:has(input[name="wiPlan"]:checked) {
 .qr-camera-status { min-height: 1.25em; margin: 12px 0 0; color: #8b95a9; font-size: 0.8rem; }
 .phone-pair-qr { display: flex; justify-content: center; width: fit-content; max-width: 100%; margin: 18px auto; padding: 12px; border-radius: 12px; background: #fff; }
 .phone-pair-qr img, .phone-pair-qr canvas { display: block; max-width: 100%; height: auto; }
+.phone-pair-qr-shell { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+.phone-pair-qr-visibility { display: inline-flex; align-items: center; gap: 7px; }
+.phone-pair-qr-visibility:disabled { cursor: not-allowed; opacity: 0.7; }
 .phone-pair-remember { display: flex; align-items: center; justify-content: center; gap: 9px; margin: 14px 0; color: #d6dae2; font-size: 0.88rem; }
 .phone-pairing-limit-controls { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; margin: 12px 0 16px; padding: 10px 12px; border: 1px solid #282f3b; border-radius: 12px; background: #11151b; }
 .phone-pairing-limit-controls .qr-camera-status { margin: 0; }
