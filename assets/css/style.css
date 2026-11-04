@@ -1528,3 +1528,85 @@ html[data-dashboard-theme="light"] body.admin-dashboard .btn-restock { color: #1
 html[data-dashboard-theme="light"] body.admin-dashboard .btn-delete { color: #8b2525 !important; background: #f7e6e6 !important; }
 html[data-dashboard-theme="light"] body.admin-dashboard .renew-btn:disabled,
 html[data-dashboard-theme="light"] body.admin-dashboard .renew-btn[aria-disabled="true"] { color: #59677b !important; opacity: 1 !important; }
+
+/* Theme the initial loading layer too, so it never flashes a black screen in light mode. */
+html[data-dashboard-theme="light"] #page-loader {
+    background:
+        radial-gradient(ellipse at 50% 43%, rgba(255, 255, 255, .72), transparent 42%),
+        radial-gradient(ellipse at 12% 88%, rgba(213, 91, 102, .14), transparent 42%),
+        linear-gradient(145deg, #f9e7e9 0%, #f3dadd 52%, #faeeee 100%) !important;
+}
+html[data-dashboard-theme="light"] #page-loader::before { opacity: .025; mix-blend-mode: multiply; }
+html[data-dashboard-theme="light"] #page-loader::after { background: radial-gradient(circle, rgba(190, 47, 59, .12), transparent 70%); }
+html[data-dashboard-theme="light"] .loader-mark { background: #fff7f7; box-shadow: 0 5px 18px rgba(112, 31, 40, .16); }
+html[data-dashboard-theme="light"] .loader-brand { color: #38262b; }
+html[data-dashboard-theme="light"] .loader-brand span { color: #9e2630; }
+html[data-dashboard-theme="light"] .loader-track { background: #e4bdc1; }
+
+/* Login uses the same saved theme preference as the dashboard. */
+.login-form-panel { position: relative; }
+.login-theme-toggle {
+    position: absolute; top: 20px; right: 20px; display: grid; place-items: center;
+    width: 42px; height: 42px; border: 1px solid #414958; border-radius: 12px;
+    color: #e8edf5; background: #202630; font-size: 1rem; cursor: pointer;
+    transition: color .18s ease, background .18s ease, border-color .18s ease, transform .18s ease;
+}
+.login-theme-toggle:hover { transform: translateY(-1px); border-color: #b94b50; color: #fff; background: #34252a; }
+html[data-dashboard-theme="light"] body.login-body {
+    color: #243044; background: radial-gradient(circle at 18% 15%, #f9eeee, #e7ebf1 58%);
+}
+html[data-dashboard-theme="light"] body.login-body .login-wrapper {
+    color: #243044; background: #f8fafc; border-color: #c8d0dc;
+    box-shadow: 0 24px 64px rgba(38, 52, 74, .14);
+}
+html[data-dashboard-theme="light"] body.login-body .login-form-panel { background: #f8fafc; }
+html[data-dashboard-theme="light"] body.login-body .login-form-header p,
+html[data-dashboard-theme="light"] body.login-body .remember-me,
+html[data-dashboard-theme="light"] body.login-body .register-cta p { color: #536178; }
+html[data-dashboard-theme="light"] body.login-body .login-form-panel .form-group label { color: #3e4b60; }
+html[data-dashboard-theme="light"] body.login-body .login-form-panel .form-group input {
+    color: #202a3a; background: #fff; border-color: #bdc8d6;
+}
+html[data-dashboard-theme="light"] body.login-body .login-form-panel .form-group input::placeholder { color: #718096; }
+html[data-dashboard-theme="light"] body.login-body .login-role-tabs,
+html[data-dashboard-theme="light"] body.login-body .register-cta,
+html[data-dashboard-theme="light"] body.login-body .login-hint {
+    color: #46546a; background: #edf1f6; border-color: #c8d0dc;
+}
+html[data-dashboard-theme="light"] body.login-body .login-tab:not(.active) { color: #4e5b70; }
+html[data-dashboard-theme="light"] body.login-body .login-theme-toggle {
+    color: #344257; background: #fff; border-color: #bdc8d6;
+}
+html[data-dashboard-theme="light"] body.login-body .login-theme-toggle:hover { color: #7d2025; background: #fff2f1; border-color: #d59a9a; }
+html[data-dashboard-theme="light"] body.login-body .login-page-footer,
+html[data-dashboard-theme="light"] body.login-body .developer-credit { color: #536178; }
+html[data-dashboard-theme="light"] body.login-body .developer-credit summary:hover { color: #263247; }
+
+/* Remaining dark-only widgets that appear in normal dashboard workflows. */
+html[data-dashboard-theme="light"] body.admin-dashboard .member-avatar {
+    color: #8b2028; background: #e3e8ef; border: 1px solid #ccd4df;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .low-stock-item .name,
+html[data-dashboard-theme="light"] body.admin-dashboard .low-stock-item .qty { color: #29364a !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .low-stock-item .qty small { color: #8b3037 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .phone-pairing-limit-controls,
+html[data-dashboard-theme="light"] body.admin-dashboard .paired-phone-row,
+html[data-dashboard-theme="light"] body.admin-dashboard .sale-total-preview,
+html[data-dashboard-theme="light"] body.admin-dashboard .member-detail-field,
+html[data-dashboard-theme="light"] body.admin-dashboard .member-detail-signature {
+    color: #344257 !important; background: #f8fafc !important; border-color: #c8d0dc !important;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .paired-phone-meta strong,
+html[data-dashboard-theme="light"] body.admin-dashboard .sale-total-preview strong,
+html[data-dashboard-theme="light"] body.admin-dashboard .member-detail-field strong { color: #243044 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .qr-camera-modal > input,
+html[data-dashboard-theme="light"] body.admin-dashboard .attendance-date-filter input,
+html[data-dashboard-theme="light"] body.admin-dashboard .walkin-date-filter input {
+    color: #202a3a !important; background: #fff !important; border-color: #bdc8d6 !important; color-scheme: light;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .attendance-date-filter,
+html[data-dashboard-theme="light"] body.admin-dashboard .walkin-date-filter { color: #46546a; }
+html[data-dashboard-theme="light"] body.member-dashboard .member-avatar { color: #8b2028; background: #e3e8ef; }
+html[data-dashboard-theme="light"] body.member-dashboard .btn-reserve-lg:disabled {
+    color: #5d6a7f; background: #e1e6ed; border-color: #c8d0dc; opacity: 1;
+}

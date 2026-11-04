@@ -15,9 +15,16 @@
         document.querySelectorAll('[data-dashboard-theme-option]').forEach(button => {
             button.setAttribute('aria-checked', String(button.dataset.dashboardThemeOption === selectedTheme));
         });
+        document.querySelectorAll('[data-login-theme-toggle]').forEach(button => {
+            const nextTheme = selectedTheme === 'light' ? 'dark' : 'light';
+            button.setAttribute('aria-label', `Switch to ${nextTheme} mode`);
+            button.setAttribute('title', `Switch to ${nextTheme} mode`);
+            button.innerHTML = `<i class="fas fa-${nextTheme === 'light' ? 'sun' : 'moon'}" aria-hidden="true"></i>`;
+        });
     }
 
     window.setDashboardTheme = applyTheme;
+    window.toggleDashboardTheme = () => applyTheme(document.documentElement.dataset.dashboardTheme === 'light' ? 'dark' : 'light');
     applyTheme(preference);
     document.addEventListener('DOMContentLoaded', () => applyTheme(preference));
 

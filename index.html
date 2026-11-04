@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IronGrind · Login</title>
+    <script src="assets/js/theme.js?v=20261105-login-toggle"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
-    <link rel="stylesheet" href="assets/css/style.css?v=20261105-responsive-layout">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261105-pastel-loader">
 </head>
 <body class="login-body">
     <div class="login-wrapper">
@@ -27,6 +28,9 @@
             </div>
             </div>
         <div class="login-form-panel">
+            <button type="button" class="login-theme-toggle" data-login-theme-toggle onclick="toggleDashboardTheme()" aria-label="Switch to light mode" title="Switch to light mode">
+                <i class="fas fa-sun" aria-hidden="true"></i>
+            </button>
             <div class="login-form-header">
                 <h2 class="welcome-heading">Welcome<span aria-hidden="true">.</span></h2>
                 <p>Sign in to use Iron Grind</p>
