@@ -985,7 +985,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const input = document.getElementById(id);
         if (!input) return;
         input.addEventListener('input', () => {
-            input.value = input.value.replace(/\D/g, '').slice(0, 10);
+            const digits = input.value.replace(/\D/g, '');
+            input.value = digits && !digits.startsWith('9') ? '' : digits.slice(0, 10);
         });
     });
     document.getElementById('membershipForm')?.addEventListener('submit', submitMembershipForm);

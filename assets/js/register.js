@@ -45,7 +45,8 @@ const registrationSignature = initDigitalSignature('registrationSignature', 'cle
 const phoneInputs = [document.getElementById('regMobile'), document.getElementById('regEcContact')];
 phoneInputs.forEach(input => {
     input.addEventListener('input', function() {
-        this.value = this.value.replace(/\D/g, '').slice(0, 10);
+        const digits = this.value.replace(/\D/g, '');
+        this.value = digits && !digits.startsWith('9') ? '' : digits.slice(0, 10);
         this.setCustomValidity(this.value && !/^9\d{9}$/.test(this.value) ? 'Enter 10 digits beginning with 9 after +63.' : '');
     });
 });
