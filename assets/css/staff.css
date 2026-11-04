@@ -87,7 +87,8 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-registration-form
 .staff-history .attendance-table { border-radius: 12px; overflow: hidden; }
 .staff-history .attendance-table tbody tr { transition: background .16s ease; }
 .staff-history .attendance-table tbody tr:hover { background: rgba(169,0,0,.08); }
-.staff-visit-open { font-weight: 700; }
+.staff-visit-open { display: table-cell; font-weight: 700; }
+.staff-visit-open::before { content: "\f00c"; display: inline-grid; place-items: center; width: 16px; height: 16px; margin-right: 7px; border-radius: 50%; background: rgba(55, 190, 116, .18); color: #55d08d; font-family: "Font Awesome 6 Free"; font-size: .58rem; font-weight: 900; vertical-align: -2px; }
 .staff-catalog-heading { display: flex; align-items: end; justify-content: space-between; gap: 18px; margin: 25px 0 16px; }
 .staff-catalog-heading h3, .staff-sale-entry h3 { margin: 4px 0 0; font-size: 1.1rem; }
 .staff-catalog-heading > p { margin: 0; color: #a4adc2; font-size: .8rem; }
@@ -275,6 +276,14 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-camera-area {
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-product-card:hover {
   border-color: #d8aeb1;
   box-shadow: 0 13px 28px rgba(91,39,44,.10);
+}
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-visit-open {
+  color: #176b43;
+  font-weight: 750;
+}
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-visit-open::before {
+  background: #d9f2e3;
+  color: #167345;
 }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-product-card::before { height: 4px; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-product-icon,

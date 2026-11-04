@@ -10,30 +10,30 @@ body { background: #0a0a0a; color: #e8edf5; padding: 20px; min-height: 100vh; }
 body.dashboard-body { position: relative; isolation: isolate; }
 body.admin-dashboard.admin-auth-pending .app { visibility: hidden; }
 body.admin-dashboard.admin-auth-verified .app { visibility: visible; }
-body.dashboard-body::after { content: ''; position: fixed; inset: 0; z-index: -1; background: radial-gradient(ellipse at 82% 82%, rgba(139,0,0,0.09), transparent 44%); pointer-events: none; }
+body.dashboard-body::after { content: ''; position: fixed; inset: 0; z-index: -1; background: none; pointer-events: none; }
 body.dashboard-body .sidebar,
 body.dashboard-body .stat-card,
 body.dashboard-body .panel,
 body.dashboard-body .membership-form-card,
 body.dashboard-body .store-lock,
 body.dashboard-body .qr-scanner-box { background-color: rgba(17,22,31,0.64); border-color: rgba(190,201,220,0.12); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-body.dashboard-body .customer-hero { background: linear-gradient(135deg, rgba(26,15,8,0.72), rgba(17,22,31,0.64)); border-color: rgba(190,201,220,0.12); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+body.dashboard-body .customer-hero { background: #17191e; border-color: rgba(190,201,220,0.12); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
 body.dashboard-body .product-card,
 body.dashboard-body .supplement-card,
 body.dashboard-body .low-stock-item { background-color: rgba(13,18,25,0.64); border-color: rgba(190,201,220,0.1); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
 .app { max-width: 1600px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px; }
 
 /* ========== DASHBOARD LOADER ========== */
-#page-loader { position: fixed; inset: 0; z-index: 3000; display: grid; place-items: center; overflow: hidden; padding: 24px; background: radial-gradient(ellipse at 50% 48%, rgba(139,0,0,0.15), transparent 42%), #050505; opacity: 1; visibility: visible; transition: opacity 0.45s ease, visibility 0.45s ease; }
-#page-loader::before { content: ''; position: absolute; inset: 0; background: url('../images/iron-grind-logo.jpg') center / min(78vw, 78vh, 620px) no-repeat; opacity: 0.24; mix-blend-mode: screen; filter: saturate(0.85); pointer-events: none; }
-#page-loader::after { content: ''; position: absolute; width: min(75vw, 600px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(139,0,0,0.16), transparent 68%); filter: blur(18px); pointer-events: none; }
+#page-loader { position: fixed; inset: 0; z-index: 3000; display: grid; place-items: center; overflow: hidden; padding: 24px; background: #050505; opacity: 1; visibility: visible; transition: opacity 0.45s ease, visibility 0.45s ease; }
+#page-loader::before { content: none; }
+#page-loader::after { content: none; }
 #page-loader.hidden-loader { opacity: 0; visibility: hidden; pointer-events: none; }
-.loader-content { position: relative; z-index: 1; width: min(100%, 220px); text-align: center; }
-.loader-full-logo { display: none; }
-.loader-mark { display: block; width: 42px; height: 42px; margin: 0 auto 10px; border-radius: 10px; object-fit: cover; background: #000; }
-.loader-brand { color: #e8edf5; font-size: 1.45rem; font-weight: 700; letter-spacing: -0.5px; }
+.loader-content { position: relative; z-index: 1; width: min(88vw, 580px); text-align: center; }
+.loader-full-logo { display: block; width: 100%; aspect-ratio: 1; object-fit: contain; filter: grayscale(1) invert(1); mix-blend-mode: screen; }
+.loader-mark { display: none; }
+.loader-brand { display: none; color: #e8edf5; font-size: 1.45rem; font-weight: 700; letter-spacing: -0.5px; }
 .loader-brand span { color: #780000; }
-.loader-track { height: 2px; margin-top: 16px; overflow: hidden; border-radius: 99px; background: #272d39; }
+.loader-track { width: min(42%, 220px); height: 2px; margin: 12px auto 0; overflow: hidden; border-radius: 99px; background: #272d39; }
 .loader-track span { display: block; width: 38%; height: 100%; border-radius: inherit; background: #780000; animation: dashboard-loading 1.1s ease-in-out infinite; }
 @keyframes dashboard-loading { from { transform: translateX(-110%); } to { transform: translateX(280%); } }
 @media (prefers-reduced-motion: reduce) { .loader-track span { animation-duration: 0.01ms; animation-iteration-count: 1; } }
@@ -158,7 +158,7 @@ body.admin-dashboard .admin-section { min-height: 100%; flex-shrink: 0; }
 .report-export-controls [hidden] { display: none !important; }
 .report-card-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
 .reports-content { display: flex; flex-direction: column; gap: 24px; margin-top: 4px; }
-.reports-toolbar { display: flex; align-items: center; justify-content: flex-start; gap: 20px; padding: 16px 18px; border: 1px solid rgba(190,201,220,.12); border-radius: 16px; background: linear-gradient(135deg, rgba(25,29,38,.9), rgba(14,17,23,.9)); }
+.reports-toolbar { display: flex; align-items: center; justify-content: flex-start; gap: 20px; padding: 16px 18px; border: 1px solid rgba(190,201,220,.12); border-radius: 16px; background: #15181e; }
 .reports-toolbar > .report-export-controls { width: 100%; justify-content: flex-start; }
 .report-group { display: flex; flex-direction: column; gap: 12px; }
 .report-group-heading { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; padding-bottom: 9px; border-bottom: 1px solid #282828; }
@@ -183,7 +183,7 @@ body.admin-dashboard .admin-section { min-height: 100%; flex-shrink: 0; }
 .staff-section-heading h1 { color: #f1f3f7; font-size: clamp(1.55rem, 3vw, 2rem); letter-spacing: -.035em; }
 .staff-section-heading p { max-width: 560px; margin-top: 7px; color: #8b95a9; font-size: .9rem; line-height: 1.55; }
 .staff-management-grid { display: grid; grid-template-columns: minmax(280px, .72fr) minmax(0, 1.28fr); gap: 20px; align-items: start; width: 100%; min-width: 0; }
-.staff-create-panel, .staff-directory-panel { position: relative; width: 100%; max-width: 100%; min-width: 0; overflow: visible; padding: 24px; border-color: rgba(190,201,220,.14); background: linear-gradient(145deg, rgba(21,26,36,.96), rgba(14,17,24,.96)); box-shadow: 0 16px 38px rgba(0,0,0,.18); }
+.staff-create-panel, .staff-directory-panel { position: relative; width: 100%; max-width: 100%; min-width: 0; overflow: visible; padding: 24px; border-color: rgba(190,201,220,.14); background: #15181e; box-shadow: 0 16px 38px rgba(0,0,0,.18); }
 .staff-create-panel { position: sticky; top: 0; }
 .staff-create-panel .panel-header, .staff-directory-panel .panel-header { align-items: flex-start; margin-bottom: 22px; }
 .staff-create-panel .panel-header h2, .staff-directory-panel .panel-header h2 { font-size: 1.08rem; letter-spacing: -.015em; }
@@ -206,7 +206,7 @@ body.admin-dashboard .admin-section { min-height: 100%; flex-shrink: 0; }
 .staff-form-footer .activity-help { min-width: 0; margin: 0; color: #8b95a9; font-size: .78rem; line-height: 1.45; }
 .staff-account-list { display: grid; gap: 10px; }
 .staff-detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.staff-account-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 16px; border: 1px solid rgba(190,201,220,.12); border-radius: 14px; background: linear-gradient(135deg, rgba(20,25,34,.82), rgba(13,17,24,.72)); transition: border-color .16s ease, transform .16s ease; }
+.staff-account-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 16px; border: 1px solid rgba(190,201,220,.12); border-radius: 14px; background: #15181e; transition: border-color .16s ease, transform .16s ease; }
 .staff-account-card:hover { transform: translateY(-1px); border-color: rgba(195,75,75,.35); }
 .staff-account-name { font-weight: 700; color: #f1f3f7; }
 .staff-account-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; color: #8b95a9; font-size: .76rem; }
@@ -220,7 +220,7 @@ body.admin-dashboard .admin-section { min-height: 100%; flex-shrink: 0; }
 @media (max-width: 520px) { .staff-account-card { grid-template-columns: 1fr; } .staff-account-actions { justify-content: flex-start; } }
 .report-export-all-btn { border-color: rgba(195,75,75,.35); background: rgba(120,0,0,.2); color: #f0c2c2; }
 .sales-section-tabs { width: fit-content; margin-bottom: 16px; padding: 4px; border: 1px solid rgba(190,201,220,.1); border-radius: 14px; background: rgba(8,11,16,.55); }
-.sales-month-overview { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 18px; padding: 18px 20px; border: 1px solid rgba(195,75,75,.24); border-radius: 16px; background: radial-gradient(ellipse at 100% 0%, rgba(120,0,0,.2), transparent 55%), linear-gradient(135deg, rgba(24,28,37,.95), rgba(11,14,20,.9)); }
+.sales-month-overview { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin: 0 0 18px; padding: 18px 20px; border: 1px solid rgba(195,75,75,.24); border-radius: 16px; background: #15181e; }
 .sales-month-overview-copy > span { color: #c78686; font-size: .72rem; font-weight: 650; letter-spacing: .04em; text-transform: uppercase; }
 .sales-month-overview-copy h3 { margin-top: 6px; color: #f1f3f7; font-size: .9rem; }
 .sales-month-overview-copy p { margin-top: 7px; color: #a4adc2; font-size: .76rem; }
@@ -263,7 +263,7 @@ body.admin-dashboard .admin-section { min-height: 100%; flex-shrink: 0; }
 .membership-income-card span { color: #a4adc2; font-size: .75rem; }
 .membership-income-card strong { color: #f1f3f7; font-size: 1.55rem; }
 .membership-income-card small { color: #737d91; font-size: .68rem; }
-.membership-income-card.overall { border-color: rgba(195,75,75,.28); background: linear-gradient(135deg, rgba(120,0,0,.2), rgba(8,11,16,.5)); }
+.membership-income-card.overall { border-color: rgba(195,75,75,.28); background: #17191e; }
 .membership-income-card.overall strong { color: #ffdada; }
 #walkinSalesPanel { margin: 0 0 16px; padding: 0; border: 0; }
 .walkin-sales-summary .stat-card { min-height: 108px; padding: 16px 18px; }
@@ -1069,7 +1069,7 @@ img, video, canvas { max-width: 100%; }
 
 /* Admin-only light theme. The preference is set on the root element. */
 html[data-admin-theme="light"] body.admin-dashboard { background: #f2f4f8; color: #202938; }
-html[data-admin-theme="light"] body.admin-dashboard::after { background: radial-gradient(ellipse at 82% 82%, rgba(139,0,0,.045), transparent 44%); }
+html[data-admin-theme="light"] body.admin-dashboard::after { background: none; }
 html[data-admin-theme="light"] body.admin-dashboard .app-header { border-bottom-color: #d9dee8; }
 html[data-admin-theme="light"] body.admin-dashboard .logo-text h1,
 html[data-admin-theme="light"] body.admin-dashboard .panel-header h2,
@@ -1101,7 +1101,7 @@ html[data-admin-theme="light"] body.admin-dashboard .activity-help,
 html[data-admin-theme="light"] body.admin-dashboard .sales-month-overview-copy p,
 html[data-admin-theme="light"] body.admin-dashboard .report-group-heading p,
 html[data-admin-theme="light"] body.admin-dashboard .dashboard-footer { color: #68758a; }
-html[data-admin-theme="light"] body.admin-dashboard .sales-month-overview { background: linear-gradient(135deg, #fff8f8, #fff); border-color: #ead1d1; }
+html[data-admin-theme="light"] body.admin-dashboard .sales-month-overview { background: #fff8f8; border-color: #ead1d1; }
 html[data-admin-theme="light"] body.admin-dashboard .sales-month-overview-total,
 html[data-admin-theme="light"] body.admin-dashboard .stat-value { color: #202938; }
 html[data-admin-theme="light"] body.admin-dashboard .sales-section-tabs,
@@ -1117,7 +1117,7 @@ html[data-admin-theme="light"] body.admin-dashboard .membership-income-card span
 html[data-admin-theme="light"] body.admin-dashboard .membership-income-card small,
 html[data-admin-theme="light"] body.admin-dashboard .stat-label,
 html[data-admin-theme="light"] body.admin-dashboard .stat-sub { color: #68758a; }
-html[data-admin-theme="light"] body.admin-dashboard .membership-income-card.overall { background: linear-gradient(135deg, #fff0f0, #fff); border-color: #e6bcbc; }
+html[data-admin-theme="light"] body.admin-dashboard .membership-income-card.overall { background: #fff0f0; border-color: #e6bcbc; }
 html[data-admin-theme="light"] body.admin-dashboard .membership-income-card.overall strong { color: #8b0000; }
 html[data-admin-theme="light"] body.admin-dashboard .sales-subfilter { color: #596579; background: #fff; border-color: #d5dbe5; }
 html[data-admin-theme="light"] body.admin-dashboard .sales-subfilter.active { color: #7d0909; background: #fff0f0; border-color: #c98282; }
@@ -1190,7 +1190,7 @@ html[data-dashboard-theme="light"] body.member-dashboard .supplement-card,
 html[data-dashboard-theme="light"] body.staff-dashboard .sidebar,
 html[data-dashboard-theme="light"] body.staff-dashboard .panel,
 html[data-dashboard-theme="light"] body.staff-dashboard .stat-card { color: #202938; background: #fff !important; border-color: #dce1e9 !important; backdrop-filter: none; -webkit-backdrop-filter: none; box-shadow: 0 8px 24px rgba(31,42,60,.045); }
-html[data-dashboard-theme="light"] body.member-dashboard .customer-hero { background: linear-gradient(135deg, #fff8f8, #fff) !important; }
+html[data-dashboard-theme="light"] body.member-dashboard .customer-hero { background: #fff8f8 !important; }
 html[data-dashboard-theme="light"] body.member-dashboard .customer-hero p,
 html[data-dashboard-theme="light"] body.member-dashboard .section-heading-block p,
 html[data-dashboard-theme="light"] body.member-dashboard .settings-choice-list label,
@@ -1450,7 +1450,7 @@ html[data-dashboard-theme="light"] body.admin-dashboard #forgotPasswordModal .mo
 
 /* Finish the light theme on controls that were still inheriting dark surfaces. */
 html[data-dashboard-theme="light"] body.admin-dashboard .reports-toolbar {
-    background: linear-gradient(135deg, #f8fafc, #e9edf3) !important;
+    background: #e9edf3 !important;
     border-color: #c8d0dc !important;
     box-shadow: 0 8px 22px rgba(38, 52, 74, .06);
 }
@@ -1642,7 +1642,7 @@ html[data-dashboard-theme="light"] body.staff-dashboard .stat-card {
 html[data-dashboard-theme="light"] body.admin-dashboard .sales-month-overview,
 html[data-dashboard-theme="light"] body.admin-dashboard .registration-notice,
 html[data-dashboard-theme="light"] body.admin-dashboard .low-stock-item {
-    background: linear-gradient(135deg, #fff5f5, #fff) !important; border-color: #e8c5c7 !important;
+    background: #fff5f5 !important; border-color: #e8c5c7 !important;
 }
 html[data-dashboard-theme="light"] body.admin-dashboard .reports-toolbar,
 html[data-dashboard-theme="light"] body.admin-dashboard .admin-tabs,
@@ -1761,7 +1761,7 @@ html[data-dashboard-theme="light"] body.admin-dashboard .membership-income-card 
     background: #f0f1f2 !important; border-color: #d7d9dd !important;
 }
 html[data-dashboard-theme="light"] body.admin-dashboard .membership-income-card.overall {
-    background: linear-gradient(135deg, #f8e9ea, #f3f3f4) !important; border-color: #e3c4c6 !important;
+    background: #f8e9ea !important; border-color: #e3c4c6 !important;
 }
 
 /* Keep secondary copy readable against the light neutral surfaces. */
@@ -1920,6 +1920,13 @@ body.admin-dashboard .staff-account-card,
 body.admin-dashboard .sales-month-overview,
 body.admin-dashboard .membership-income-card.overall,
 body.member-dashboard .customer-hero { background-image: none !important; }
+body.admin-dashboard .reports-toolbar { background-color: #15181e !important; }
+body.admin-dashboard .staff-create-panel,
+body.admin-dashboard .staff-directory-panel,
+body.admin-dashboard .staff-account-card { background-color: #15181e !important; }
+body.admin-dashboard .sales-month-overview { background-color: #15181e !important; }
+body.admin-dashboard .membership-income-card.overall,
+body.member-dashboard .customer-hero { background-color: #17191e !important; }
 html[data-dashboard-theme="light"] body.admin-dashboard .reports-toolbar { background: #f2f2f3 !important; }
 html[data-dashboard-theme="light"] body.admin-dashboard .staff-create-panel,
 html[data-dashboard-theme="light"] body.admin-dashboard .staff-directory-panel,
