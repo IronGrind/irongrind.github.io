@@ -49,7 +49,6 @@ let mobileAttendanceSessionPersistence = new Map();
 let activeMobileAttendancePairingUrl = null;
 let pairedPhoneListRefreshBusy = false;
 let pairedPhoneListLastRefreshAt = 0;
-let lifetimePhonePairingCount = null;
 let pairingPasswordPromptResolver = null;
 let pairingRemovalPinPromptResolver = null;
 let pendingPairingLimitPassword = null;
@@ -1903,6 +1902,7 @@ function showMobileAttendancePairingModal(sessionId, pairingUrl, persistent, cap
         ${localOnly ? '<p class="qr-camera-status">This address uses localhost, which a phone cannot reach. Open the hosted HTTPS site on the admin computer to pair a phone.</p>' : ''}
         ${pairingUrl ? '<div id="phonePairQr" class="phone-pair-qr" aria-label="Phone scanner pairing QR code"></div>' : ''}
         <p id="phonePairStatus" class="qr-camera-status" role="status">${capacityReached ? 'Remove a paired phone below to free a slot.' : pairingUrl ? 'Waiting for phone scans…' : 'Create a pairing QR when ready.'}</p>
+        <p id="phonePairCapacityMessage" class="qr-camera-status ${capacityReached ? '' : 'hidden'}" role="status">The active phone limit is full. End one of the sessions below, then create a new pairing QR.</p>
         <div class="phone-pairing-limit-controls">
             <p id="phonePairingLimitSummary" class="qr-camera-status">Loading phone pairing limit…</p>
             <button class="btn-sm" onclick="changePhonePairingLimit()">Change phone limit</button>
@@ -1912,7 +1912,7 @@ function showMobileAttendancePairingModal(sessionId, pairingUrl, persistent, cap
             <p class="paired-phone-list-label">Currently paired phones</p>
             <div id="pairedPhonesList" class="paired-phone-list"><p class="paired-phone-empty">Loading paired phones…</p></div>
         </section>
-        <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Close window</button>${!pairingUrl && !capacityReached ? `<button class="btn-primary" onclick="startPhoneQRPairing(${Boolean(persistent)})">Create pairing QR</button>` : ''}${sessionId ? `<button class="btn-danger phone-pair-end-button" onclick="endMobileAttendanceSession('${sessionId}')">End this pairing</button>` : ''}</div>
+        <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Close window</button>${!pairingUrl ? `<button id="createPhonePairingQrButton" class="btn-primary ${capacityReached ? 'hidden' : ''}" onclick="startPhoneQRPairing(${Boolean(persistent)})">Create pairing QR</button>` : ''}${sessionId ? `<button class="btn-danger phone-pair-end-button" onclick="endMobileAttendanceSession('${sessionId}')">End this pairing</button>` : ''}</div>
     </div>`);
     if (pairingUrl && typeof QRCode !== 'undefined') {
         new QRCode(document.getElementById('phonePairQr'), {
@@ -2019,6 +2019,10 @@ async function refreshPhonePairingLimitSummary() {
     const { data, error } = await window.ironGrindSupabase.rpc('get_mobile_attendance_pairing_settings');
     if (!document.getElementById('phonePairingLimitSummary')) return;
     target.textContent = error ? 'Phone pairing limit could not be loaded.' : `${data.active_count} of ${data.max_pairs} phone pairing slots are in use.`;
+    const fullNotice = document.getElementById('phonePairCapacityMessage');
+    if (fullNotice && !error) fullNotice.classList.toggle('hidden', Number(data.active_count) < Number(data.max_pairs));
+    const createButton = document.getElementById('createPhonePairingQrButton');
+    if (createButton && !error) createButton.classList.toggle('hidden', Number(data.active_count) >= Number(data.max_pairs));
     const pairedLimit = document.getElementById('pairedPhonesLimit');
     if (pairedLimit && !error) pairedLimit.textContent = `of ${data.max_pairs} active limit · ${data.active_count} active`;
     const activeSessionCount = document.getElementById('activePhoneSessionCount');
@@ -2112,17 +2116,11 @@ async function refreshPairedAttendancePhones(force = false) {
     const phones = Array.isArray(data) ? data : [];
     const count = document.getElementById('pairedPhonesCount');
     const pairedPhones = phones.filter(phone => phone.paired !== false);
-    const { count: pairingCount, error: countError } = await window.ironGrindSupabase
-        .from('activity_logs')
-        .select('id', { count: 'exact', head: true })
-        .eq('entity_type', 'mobile_attendance_scan_sessions')
-        .eq('action', 'phone_paired');
-    if (!countError && Number.isInteger(pairingCount)) {
-        lifetimePhonePairingCount = Math.max(lifetimePhonePairingCount || 0, pairingCount, pairedPhones.length);
-    } else {
-        lifetimePhonePairingCount = Math.max(lifetimePhonePairingCount || 0, pairedPhones.length);
-    }
-    if (count) count.textContent = String(lifetimePhonePairingCount);
+    if (count) count.textContent = String(pairedPhones.length);
+    const { data: pairingSettings, error: pairingSettingsError } = await window.ironGrindSupabase.rpc('get_mobile_attendance_pairing_settings');
+    if (!document.getElementById('pairedPhonesList')) return;
+    const actualActiveCount = Number(pairingSettings?.active_count);
+    const listOutOfSync = !pairingSettingsError && Number.isFinite(actualActiveCount) && actualActiveCount > phones.length;
     const activeSessionCount = document.getElementById('activePhoneSessionCount');
     if (activeSessionCount) activeSessionCount.textContent = String(phones.length);
     const modalStatus = document.getElementById('phonePairStatus');
@@ -2139,7 +2137,9 @@ async function refreshPairedAttendancePhones(force = false) {
         }
     }
     if (!phones.length) {
-        list.innerHTML = '<p class="paired-phone-empty">No active phone pairings or pending QR sessions.</p>';
+        list.innerHTML = listOutOfSync
+            ? `<p class="paired-phone-empty">Supabase reports ${actualActiveCount} active pairing sessions, but this list returned none. Apply migration 20261104000018_attendance_pairing_removal_pin.sql, then reload the admin page.</p>`
+            : '<p class="paired-phone-empty">No active phone pairings or pending QR sessions.</p>';
         return;
     }
     list.innerHTML = phones.map(phone => {
@@ -2153,7 +2153,9 @@ async function refreshPairedAttendancePhones(force = false) {
             <div class="paired-phone-meta"><strong>${escapeHTML(model)}</strong><small>${isPaired ? 'Paired' : 'QR created'} ${escapeHTML(connectedAt)}</small></div>
             <button class="btn-danger" onclick="endMobileAttendanceSession('${phone.session_id}', true)">End pairing</button>
         </div>`;
-    }).join('');
+    }).join('') + (listOutOfSync
+        ? `<p class="paired-phone-empty">${actualActiveCount - phones.length} more active session(s) are not listed. Apply migration 20261104000018_attendance_pairing_removal_pin.sql to load every admin’s pairings.</p>`
+        : '');
 }
 
 async function refreshAttendancePhoneStatus(sessionId) {
