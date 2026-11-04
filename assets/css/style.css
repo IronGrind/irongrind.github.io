@@ -1763,6 +1763,45 @@ html[data-dashboard-theme="light"] body.admin-dashboard .membership-income-card 
 html[data-dashboard-theme="light"] body.admin-dashboard .membership-income-card.overall {
     background: linear-gradient(135deg, #f8e9ea, #f3f3f4) !important; border-color: #e3c4c6 !important;
 }
+
+/* Keep secondary copy readable against the light neutral surfaces. */
+html[data-dashboard-theme="light"] body.admin-dashboard :is(
+    .section-heading-block p, .modal-sub, .activity-help, .activity-filters label,
+    .field-hint, .staff-panel-description, .staff-account-meta, .staff-account-card small,
+    .member-detail-field span, .report-card-copy p, .membership-income-card span,
+    .membership-income-card small, .stat-label, .stat-sub, .empty-state,
+    .activity-table small, .attendance-date-filter, .walkin-date-filter,
+    .transaction-filter-row > p, .sales-product-filter, .report-export-controls label
+) { color: #414141 !important; }
+html[data-dashboard-theme="light"] body.member-dashboard :is(
+    .section-heading-block p, .customer-hero p, .member-status, .field-hint,
+    .settings-choice-list label, .stat-label, .stat-sub, .progress-label,
+    .ps-label, .progress-dates, .store-section-label, .product-card .stock,
+    .view-only-note
+) { color: #414141 !important; }
+html[data-dashboard-theme="light"] body.staff-dashboard :is(
+    .staff-heading p, .staff-help, .staff-eyebrow, .staff-status, .field-hint,
+    .staff-account-meta, .staff-access-label
+) { color: #414141 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .report-card-copy h4,
+html[data-dashboard-theme="light"] body.admin-dashboard .membership-income-card strong,
+html[data-dashboard-theme="light"] body.admin-dashboard .staff-account-name,
+html[data-dashboard-theme="light"] body.admin-dashboard .member-details h4,
+html[data-dashboard-theme="light"] body.member-dashboard .progress-plan,
+html[data-dashboard-theme="light"] body.member-dashboard .ps-value,
+html[data-dashboard-theme="light"] body.staff-dashboard .attendance-table td { color: #191919 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .attendance-table td,
+html[data-dashboard-theme="light"] body.member-dashboard .attendance-table td,
+html[data-dashboard-theme="light"] body.staff-dashboard .attendance-table td { color: #292929 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .approval-card .member-details p,
+html[data-dashboard-theme="light"] body.admin-dashboard .approval-detail-label { color: #494949 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard input::placeholder,
+html[data-dashboard-theme="light"] body.admin-dashboard textarea::placeholder,
+html[data-dashboard-theme="light"] body.member-dashboard input::placeholder,
+html[data-dashboard-theme="light"] body.member-dashboard textarea::placeholder,
+html[data-dashboard-theme="light"] body.staff-dashboard input::placeholder,
+html[data-dashboard-theme="light"] body.staff-dashboard textarea::placeholder { color: #666 !important; opacity: 1; }
+html[data-dashboard-theme="light"] body.login-body :is(.login-form-header p, .remember-me, .register-cta p, .login-page-footer, .developer-credit) { color: #414141 !important; }
 html[data-dashboard-theme="light"] body.member-dashboard .progress-bar-track {
     background: #e5e5e7 !important; border-color: #d2d3d7 !important;
 }
