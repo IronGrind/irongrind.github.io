@@ -29,6 +29,7 @@ body.dashboard-body .low-stock-item { background-color: rgba(13,18,25,0.64); bor
 #page-loader::after { content: ''; position: absolute; width: min(75vw, 600px); aspect-ratio: 1; border-radius: 50%; background: radial-gradient(circle, rgba(139,0,0,0.16), transparent 68%); filter: blur(18px); pointer-events: none; }
 #page-loader.hidden-loader { opacity: 0; visibility: hidden; pointer-events: none; }
 .loader-content { position: relative; z-index: 1; width: min(100%, 220px); text-align: center; }
+.loader-full-logo { display: none; }
 .loader-mark { display: block; width: 42px; height: 42px; margin: 0 auto 10px; border-radius: 10px; object-fit: cover; background: #000; }
 .loader-brand { color: #e8edf5; font-size: 1.45rem; font-weight: 700; letter-spacing: -0.5px; }
 .loader-brand span { color: #780000; }
@@ -1531,17 +1532,19 @@ html[data-dashboard-theme="light"] body.admin-dashboard .renew-btn[aria-disabled
 
 /* Theme the initial loading layer too, so it never flashes a black screen in light mode. */
 html[data-dashboard-theme="light"] #page-loader {
-    background:
-        radial-gradient(ellipse at 50% 43%, rgba(255, 255, 255, .72), transparent 42%),
-        radial-gradient(ellipse at 12% 88%, rgba(213, 91, 102, .14), transparent 42%),
-        linear-gradient(145deg, #f9e7e9 0%, #f3dadd 52%, #faeeee 100%) !important;
+    background: #fff !important;
 }
-html[data-dashboard-theme="light"] #page-loader::before { opacity: .025; mix-blend-mode: multiply; }
-html[data-dashboard-theme="light"] #page-loader::after { background: radial-gradient(circle, rgba(190, 47, 59, .12), transparent 70%); }
-html[data-dashboard-theme="light"] .loader-mark { background: #fff7f7; box-shadow: 0 5px 18px rgba(112, 31, 40, .16); }
-html[data-dashboard-theme="light"] .loader-brand { color: #38262b; }
-html[data-dashboard-theme="light"] .loader-brand span { color: #9e2630; }
-html[data-dashboard-theme="light"] .loader-track { background: #e4bdc1; }
+html[data-dashboard-theme="light"] #page-loader::before,
+html[data-dashboard-theme="light"] #page-loader::after { display: none; }
+html[data-dashboard-theme="light"] #page-loader .loader-content { width: min(88vw, 580px); }
+html[data-dashboard-theme="light"] #page-loader .loader-full-logo {
+    display: block; width: 100%; aspect-ratio: 1; object-fit: contain;
+    filter: grayscale(1) invert(1); mix-blend-mode: multiply;
+}
+html[data-dashboard-theme="light"] #page-loader .loader-mark,
+html[data-dashboard-theme="light"] #page-loader .loader-brand { display: none; }
+html[data-dashboard-theme="light"] #page-loader .loader-track { width: min(42%, 220px); margin: 12px auto 0; background: #f0d9db; }
+html[data-dashboard-theme="light"] #page-loader .loader-track span { background: #a71922; }
 
 /* Login uses the same saved theme preference as the dashboard. */
 .login-form-panel { position: relative; }
@@ -1610,3 +1613,135 @@ html[data-dashboard-theme="light"] body.member-dashboard .member-avatar { color:
 html[data-dashboard-theme="light"] body.member-dashboard .btn-reserve-lg:disabled {
     color: #5d6a7f; background: #e1e6ed; border-color: #c8d0dc; opacity: 1;
 }
+
+/* White, ink, and Iron Grind red: shared brand palette for all light dashboards. */
+html[data-dashboard-theme="light"] body.admin-dashboard,
+html[data-dashboard-theme="light"] body.member-dashboard,
+html[data-dashboard-theme="light"] body.staff-dashboard {
+    color: #191919 !important; background: #f7f7f8 !important;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .panel,
+html[data-dashboard-theme="light"] body.admin-dashboard .sidebar,
+html[data-dashboard-theme="light"] body.admin-dashboard .stat-card,
+html[data-dashboard-theme="light"] body.admin-dashboard .membership-form-card,
+html[data-dashboard-theme="light"] body.admin-dashboard .product-card,
+html[data-dashboard-theme="light"] body.admin-dashboard .supplement-card,
+html[data-dashboard-theme="light"] body.member-dashboard .panel,
+html[data-dashboard-theme="light"] body.member-dashboard .sidebar,
+html[data-dashboard-theme="light"] body.member-dashboard .stat-card,
+html[data-dashboard-theme="light"] body.member-dashboard .membership-form-card,
+html[data-dashboard-theme="light"] body.member-dashboard .customer-hero,
+html[data-dashboard-theme="light"] body.member-dashboard .product-card,
+html[data-dashboard-theme="light"] body.member-dashboard .supplement-card,
+html[data-dashboard-theme="light"] body.staff-dashboard .panel,
+html[data-dashboard-theme="light"] body.staff-dashboard .sidebar,
+html[data-dashboard-theme="light"] body.staff-dashboard .stat-card {
+    color: #191919 !important; background: #fff !important; border-color: #dedfe3 !important;
+    box-shadow: 0 8px 24px rgba(24, 24, 27, .045);
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .sales-month-overview,
+html[data-dashboard-theme="light"] body.admin-dashboard .registration-notice,
+html[data-dashboard-theme="light"] body.admin-dashboard .low-stock-item {
+    background: linear-gradient(135deg, #fff5f5, #fff) !important; border-color: #e8c5c7 !important;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .reports-toolbar,
+html[data-dashboard-theme="light"] body.admin-dashboard .admin-tabs,
+html[data-dashboard-theme="light"] body.admin-dashboard .sales-section-tabs,
+html[data-dashboard-theme="light"] body.admin-dashboard .membership-controls .search input,
+html[data-dashboard-theme="light"] body.member-dashboard .member-settings-nav,
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-camera-area {
+    color: #242424 !important; background: #f2f2f3 !important; border-color: #dedfe3 !important;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .nav-item { color: #343434 !important; background: #f2f2f3 !important; border-color: #e3e3e6 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .app-header .logo-image,
+html[data-dashboard-theme="light"] body.member-dashboard .app-header .logo-image,
+html[data-dashboard-theme="light"] body.staff-dashboard .app-header .logo-image { background: #fff; filter: invert(1); border: 1px solid #e0e0e3; }
+html[data-dashboard-theme="light"] body.admin-dashboard .nav-item:hover { color: #171717 !important; background: #e9e9eb !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .nav-item.active { color: #84131a !important; background: #fceced !important; border-color: #e7b9bc !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .nav-item.active i { color: #a71922 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard h1,
+html[data-dashboard-theme="light"] body.admin-dashboard h2,
+html[data-dashboard-theme="light"] body.admin-dashboard h3,
+html[data-dashboard-theme="light"] body.admin-dashboard h4,
+html[data-dashboard-theme="light"] body.member-dashboard h1,
+html[data-dashboard-theme="light"] body.member-dashboard h2,
+html[data-dashboard-theme="light"] body.member-dashboard h3,
+html[data-dashboard-theme="light"] body.member-dashboard h4,
+html[data-dashboard-theme="light"] body.staff-dashboard h1,
+html[data-dashboard-theme="light"] body.staff-dashboard h2,
+html[data-dashboard-theme="light"] body.staff-dashboard h3,
+html[data-dashboard-theme="light"] body.staff-dashboard h4 { color: #191919; }
+html[data-dashboard-theme="light"] body.admin-dashboard .section-heading-block p,
+html[data-dashboard-theme="light"] body.admin-dashboard .report-card-copy p,
+html[data-dashboard-theme="light"] body.admin-dashboard .membership-income-card span,
+html[data-dashboard-theme="light"] body.admin-dashboard .membership-income-card small,
+html[data-dashboard-theme="light"] body.admin-dashboard .stat-label,
+html[data-dashboard-theme="light"] body.admin-dashboard .stat-sub,
+html[data-dashboard-theme="light"] body.admin-dashboard .activity-help,
+html[data-dashboard-theme="light"] body.member-dashboard .section-heading-block p,
+html[data-dashboard-theme="light"] body.member-dashboard .customer-hero p,
+html[data-dashboard-theme="light"] body.member-dashboard .stat-label,
+html[data-dashboard-theme="light"] body.member-dashboard .stat-sub,
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-heading p,
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-help,
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-eyebrow { color: #555b65 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard input,
+html[data-dashboard-theme="light"] body.admin-dashboard select,
+html[data-dashboard-theme="light"] body.admin-dashboard textarea,
+html[data-dashboard-theme="light"] body.member-dashboard input,
+html[data-dashboard-theme="light"] body.member-dashboard select,
+html[data-dashboard-theme="light"] body.member-dashboard textarea,
+html[data-dashboard-theme="light"] body.staff-dashboard input,
+html[data-dashboard-theme="light"] body.staff-dashboard select,
+html[data-dashboard-theme="light"] body.staff-dashboard textarea {
+    color: #191919 !important; background-color: #fff !important; border-color: #c9c9ce !important; color-scheme: light;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .report-icon-btn,
+html[data-dashboard-theme="light"] body.admin-dashboard .btn-sm,
+html[data-dashboard-theme="light"] body.admin-dashboard .btn-logout,
+html[data-dashboard-theme="light"] body.admin-dashboard .renew-btn,
+html[data-dashboard-theme="light"] body.admin-dashboard .btn-edit,
+html[data-dashboard-theme="light"] body.member-dashboard .btn-sm,
+html[data-dashboard-theme="light"] body.member-dashboard .btn-logout,
+html[data-dashboard-theme="light"] body.member-dashboard .settings-close,
+html[data-dashboard-theme="light"] body.staff-dashboard .btn-sm,
+html[data-dashboard-theme="light"] body.staff-dashboard .btn-logout {
+    color: #282828 !important; background: #fff !important; border-color: #c9c9ce !important;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .report-icon-btn:hover,
+html[data-dashboard-theme="light"] body.admin-dashboard .btn-sm:hover,
+html[data-dashboard-theme="light"] body.admin-dashboard .renew-btn:hover,
+html[data-dashboard-theme="light"] body.admin-dashboard .btn-edit:hover,
+html[data-dashboard-theme="light"] body.member-dashboard .btn-sm:hover,
+html[data-dashboard-theme="light"] body.staff-dashboard .btn-sm:hover {
+    color: #75131a !important; background: #fff2f2 !important; border-color: #dcaeb1 !important;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .pill:not(.active),
+html[data-dashboard-theme="light"] body.admin-dashboard .sales-subfilter:not(.active) { color: #333 !important; background: #fff !important; border-color: #d1d1d5 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .pill.active,
+html[data-dashboard-theme="light"] body.admin-dashboard .sales-subfilter.active,
+html[data-dashboard-theme="light"] body.admin-dashboard .btn-primary,
+html[data-dashboard-theme="light"] body.member-dashboard .btn-primary,
+html[data-dashboard-theme="light"] body.staff-dashboard .btn-primary { color: #fff !important; background: #98151e !important; border-color: #98151e !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .member-avatar,
+html[data-dashboard-theme="light"] body.member-dashboard .member-avatar { color: #8e1820 !important; background: #f5e5e6 !important; border-color: #e4c4c6 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .membership-income-card,
+html[data-dashboard-theme="light"] body.admin-dashboard #salesTransactionsPanel,
+html[data-dashboard-theme="light"] body.admin-dashboard .membership-sales-summary,
+html[data-dashboard-theme="light"] body.admin-dashboard .report-card,
+html[data-dashboard-theme="light"] body.admin-dashboard .activity-table,
+html[data-dashboard-theme="light"] body.admin-dashboard .staff-account-card,
+html[data-dashboard-theme="light"] body.admin-dashboard .member-detail-field,
+html[data-dashboard-theme="light"] body.member-dashboard .view-only-note {
+    color: #272727 !important; background: #fff !important; border-color: #dedfe3 !important;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .membership-income-card strong { color: #191919 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .membership-income-card.overall strong { color: #94141d !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .attendance-phone-status { color: #414141 !important; background: #f0f0f1 !important; border-color: #d7d7dc !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .attendance-phone-status.connected { color: #17683e !important; background: #e8f4ec !important; border-color: #b9ddc5 !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .btn-restock { color: #17683e !important; background: #e5f2e9 !important; border-color: #c2dfca !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .btn-delete { color: #921923 !important; background: #f9e9ea !important; border-color: #ecc9cb !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .attendance-table th { color: #292929 !important; background: #ededee !important; }
+html[data-dashboard-theme="light"] body.admin-dashboard .attendance-table td { color: #292929 !important; border-color: #e4e4e6 !important; }
+html[data-dashboard-theme="light"] body.member-dashboard .view-only-note { color: #4b4b4b !important; background: #f2f2f3 !important; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-access-label { color: #414141 !important; background: #fff !important; border-color: #d1d1d5 !important; }
