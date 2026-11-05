@@ -540,7 +540,7 @@ function productCard(p) {
             <span class="cat">${p.category}</span>
             <h4>${p.name}${!supplement && p.size ? ' — ' + p.size : ''}</h4>
             <div class="price-row">
-                <span class="price">${formatPeso(p.price)}${supplement ? ' / g' : ''}</span>
+                <span class="price">${formatPeso(productPriceQuote(p.price, p.inventoryUnit || (supplement ? 'gram' : 'item')).amount)} / ${productPriceQuote(p.price, p.inventoryUnit || (supplement ? 'gram' : 'item')).quantity} ${productPriceQuote(p.price, p.inventoryUnit || (supplement ? 'gram' : 'item')).unit}</span>
                 ${!supplement ? `<span class="stock-tag ${stockClass}">${stockLabel}</span>` : ''}
             </div>
             <div class="view-only-note"><i class="fas fa-store"></i> Available in-store only</div>
@@ -908,8 +908,8 @@ async function submitMemberPassword(event) {
     const passwordInput = document.getElementById('settingsPassword');
     const confirmInput = document.getElementById('settingsPasswordConfirm');
     setSettingsStatus('memberPasswordStatus', '');
-    if (passwordInput.value.length < 8) {
-        setSettingsStatus('memberPasswordStatus', 'Use a password with at least 8 characters.', 'error');
+    if (!newPasswordValid(passwordInput.value, 8)) {
+        setSettingsStatus('memberPasswordStatus', newPasswordMessage(8), 'error');
         return;
     }
     if (passwordInput.value !== confirmInput.value) {
@@ -1107,6 +1107,7 @@ async function loadSupabaseMember() {
             name: product.name,
             category: product.category === 'supplement' ? 'Supplement' : 'Merch',
             price: Number(product.price_per_unit) || 0,
+            inventoryUnit: product.unit || (product.category === 'supplement' ? 'gram' : 'item'),
             stock: Number(product.stock) || 0,
             size: product.size || '',
             image: product.image_path || ''

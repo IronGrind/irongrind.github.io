@@ -191,11 +191,12 @@ function renderStaffProductCatalog() {
             const top = document.createElement('div'); top.className = 'staff-product-card-top';
             const icon = document.createElement('span'); icon.className = 'staff-product-icon'; icon.innerHTML = category === 'supplement' ? '<i class="fas fa-capsules" aria-hidden="true"></i>' : '<i class="fas fa-shirt" aria-hidden="true"></i>';
             const badge = document.createElement('span'); badge.className = `staff-stock-badge ${available ? 'available' : 'unavailable'}`; badge.textContent = available ? 'Available' : 'Unavailable';
+            if (product.image_path) { const photo = document.createElement('img'); photo.className = 'staff-product-photo'; photo.src = product.image_path; photo.alt = product.name; photo.loading = 'lazy'; card.append(photo); }
             top.append(icon, badge);
             const name = document.createElement('h5'); name.textContent = group.name;
             const details = document.createElement('p'); details.textContent = category === 'merchandise' ? `Size: ${product.size || 'One size'}` : 'Supplement';
             const bottom = document.createElement('div'); bottom.className = 'staff-product-card-bottom';
-            const price = document.createElement('strong'); price.textContent = `${formatStaffPeso(product.price_per_unit)} / ${product.stock_unit || product.unit}`;
+            const price = document.createElement('strong'); price.textContent = `${formatStaffPeso(productPriceQuote(product.price_per_unit, product.unit).amount)} / ${productPriceQuote(product.price_per_unit, product.unit).quantity} ${productPriceQuote(product.price_per_unit, product.unit).unit}`;
             const stock = document.createElement('span'); stock.textContent = `${product.stock ?? 0} ${product.stock_unit || product.unit} in stock`;
             bottom.append(price, stock); card.append(top, name, details, bottom); grid.append(card);
         }));
@@ -344,6 +345,8 @@ async function submitStaffWalkin(event) {
     };
     button.disabled = true; status.textContent = 'Creating member account and recording payment…';
     try {
+        if (!newPasswordValid(body.password, 6)) throw new Error(newPasswordMessage(6));
+        if (body.password !== document.getElementById('walkinConfirmPassword').value) throw new Error('Passwords do not match.');
         const { data, error } = await staffClient.functions.invoke('admin-create-member', { body });
         if (error) {
             const detail = error.context?.json ? await error.context.json().catch(() => null) : null;

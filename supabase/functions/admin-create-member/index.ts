@@ -53,6 +53,9 @@ Deno.serve(async (request) => {
   const price = Number(body.planPrice);
   const startDate = String(body.startDate || '');
   const expiryDate = String(body.expiryDate || '');
+  if (password.length < 6 || password.length > 128 || !/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {
+    return response({ error: 'Use 6–128 characters, including at least one letter and one number.' }, 400);
+  }
   if (!email || !username || password.length < 6 || !fullName || !mobile || !plan
     || !Number.isFinite(price) || price <= 0 || !startDate || !expiryDate) {
     return response({ error: 'Required member or membership details are missing.' }, 400);

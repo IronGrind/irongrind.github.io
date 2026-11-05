@@ -60,8 +60,8 @@
         const password = document.getElementById('newPassword').value;
         const confirmation = document.getElementById('confirmPassword').value;
         statusBox.classList.add('hidden');
-        if (password.length < 8) {
-            statusText.textContent = 'Use a password with at least 8 characters.';
+        if (!newPasswordValid(password, 8)) {
+            statusText.textContent = newPasswordMessage(8);
             statusBox.classList.remove('hidden');
             return;
         }

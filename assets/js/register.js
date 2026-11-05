@@ -155,7 +155,7 @@ async function submitRegistration(event) {
     if (!email || !document.getElementById('regEmail').checkValidity()) { showError('Enter a valid email address for your account.'); return; }
     if (username.length < 4) { showError('Username must be at least 4 characters.'); return; }
     if (!/^[a-z0-9_.]+$/.test(username)) { showError('Username can only contain letters, numbers, underscores, and dots.'); return; }
-    if (password.length < 6) { showError('Password must be at least 6 characters.'); return; }
+    if (!newPasswordValid(password, 6)) { showError(newPasswordMessage(6)); return; }
     if (password !== confirm) { showError('Passwords do not match.'); return; }
 
     const application = {

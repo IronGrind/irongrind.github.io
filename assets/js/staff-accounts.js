@@ -95,6 +95,7 @@ async function loadStaffAccounts() {
 staffAccountForm?.addEventListener('submit', async event => {
     event.preventDefault();
     if (!staffAccountForm.reportValidity()) return;
+    if (document.getElementById('staffPassword').value !== document.getElementById('staffConfirmPassword').value) return;
     const button = staffAccountForm.querySelector('[type="submit"]');
     const status = document.getElementById('staffAccountStatus');
     button.disabled = true;

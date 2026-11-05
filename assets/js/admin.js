@@ -1596,7 +1596,7 @@ async function submitNewMember() {
         toast('Username must be 4+ characters and use only letters, numbers, dots, or underscores.', 'error');
         return;
     }
-    if (password.length < 6) { toast('Password must be at least 6 characters.', 'error'); return; }
+    if (!newPasswordValid(password, 6)) { toast(newPasswordMessage(6), 'error'); return; }
     if (password !== confirmPassword) { toast('Passwords do not match.', 'error'); return; }
     if (users.some(user => user.username?.toLowerCase() === username) || members.some(member => member.username?.toLowerCase() === username) || pendingApprovals.some(application => application.username?.toLowerCase() === username)) {
         toast('That username is already in use.', 'error');
@@ -2775,7 +2775,7 @@ function productCard(p) {
             ${p.image ? `<div class="product-img-wrap"><img src="${p.image}" alt="${escapeHTML(p.name)}" loading="lazy"></div>` : ''}
             <span class="cat">${p.category} · ${productType}</span>
             <h4>${p.name}${!supplement && p.size ? ' — ' + p.size : ''}</h4>
-            <div class="price">${formatPeso(p.price)} / ${productSaleUnitLabel(p)}</div>
+            <div class="price">${formatPeso(productPriceQuote(p.price, p.inventoryUnit).amount)} / ${productPriceQuote(p.price, p.inventoryUnit).quantity} ${productSaleUnitLabel(p)}</div>
             <div class="stock ${low ? 'low' : ''}">${low ? '⚠ ' : ''}${stockLabel}</div>
             <div class="product-actions">
                 <button class="btn-restock" onclick="restockProduct('${p.id}')">Restock</button>
@@ -2889,15 +2889,15 @@ function stockStep(unit) { return isDiscreteUnit(unit) ? '1' : '0.001'; }
 function openAddProductModal() {
     openModal(`
         <h3><i class="fas fa-plus"></i> Add Product</h3>
-        <div class="form-group product-photo-field"><label for="apImage">Product photo (optional)</label><input type="file" id="apImage" accept="image/*" onchange="previewProductPhoto(this, 'apImagePreview')"><div id="apImagePreview" class="product-photo-preview"><span>No photo selected</span></div><small>Images are resized before saving.</small></div>
+        <div class="form-group product-photo-field"><label for="apImage">Product photo (optional)</label><input type="file" id="apImage" accept="image/*" onchange="previewProductPhoto(this, 'apImagePreview')"><div id="apImagePreview" class="product-photo-preview"><span>No photo selected</span></div><small>Photos fit the frame without cropping and are resized automatically. Click a preview to enlarge.</small></div>
         <div class="form-group" style="margin-bottom:14px;"><label>Name</label><input type="text" id="apName" placeholder="Whey Protein — Vanilla"></div>
         <div class="form-group" style="margin-bottom:14px;"><label>Category</label><select id="apCat" onchange="toggleAddProductSize()"><option value="Supplement">Supplement</option><option value="Merch">Merchandise</option></select></div>
         <div id="apMerchTypeGroup" class="form-group" style="margin-bottom:14px;display:none"><label for="apMerchType">Merchandise type</label><select id="apMerchType" onchange="toggleAddProductSize()">${merchandiseTypeOptions()}</select></div>
         <div id="apSupplementTypeGroup" class="form-group" style="margin-bottom:14px;"><label for="apSupplementType">Supplement type</label><select id="apSupplementType">${supplementTypeOptions()}</select></div>
         <div id="apSupplementFormGroup" class="form-group" style="margin-bottom:14px;"><label for="apSupplementForm">Form</label><select id="apSupplementForm" onchange="toggleAddProductSize()">${supplementFormOptions()}</select></div>
-        <div id="apSizeGroup" class="form-group" style="margin-bottom:14px;display:none"><label for="apSize">Apparel size (optional)</label><select id="apSize">${merchandiseSizeOptions()}</select></div>
+        <div id="apSizeGroup" class="form-group" style="margin-bottom:14px;display:none"><label for="apSize">Size / variant (optional)</label><input id="apSize" list="apSizeSuggestions" maxlength="30" placeholder="Choose or type an available size"><datalist id="apSizeSuggestions">${merchandiseSizeOptions()}</datalist></div>
         <div class="form-row">
-            <div class="form-group"><label>Price (<span id="apPriceUnit">per g</span>) ₱</label><input type="number" id="apPrice" min="0" step="0.01" placeholder="Price per unit"></div>
+            <div class="form-group"><label for="apPrice">Price (₱)</label><input type="number" id="apPrice" min="0.01" step="0.01" placeholder="e.g. 80"><label for="apPriceQuantity">For this quantity (<span id="apPriceUnit">g</span>)</label><input type="number" id="apPriceQuantity" min="0.001" step="0.001" value="10"><small>Example: ₱80 for 10 g. Checkout uses the equivalent unit price.</small></div>
             <div class="form-group"><label>Starting stock</label><div class="form-row"><input type="number" id="apStock" min="0" step="0.001" placeholder="Enter available stock"><select id="apStockUnit" aria-label="Stock unit" onchange="convertInventoryUnit(this, 'apStock')"><option value="gram">g</option><option value="kilogram">kg</option><option value="ounce">oz</option><option value="pound">lb</option></select></div><small id="apStockHint">Stock is tracked and deducted in grams sold.</small></div>
         </div>
         <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="runWithButtonLoading(this, submitAddProduct, 'Adding product…')">Add</button></div>
@@ -2918,7 +2918,7 @@ function toggleAddProductSize() {
     if (typeGroup) typeGroup.style.display = isMerch ? '' : 'none';
     if (supplementTypeGroup) supplementTypeGroup.style.display = isMerch ? 'none' : '';
     if (formGroup) formGroup.style.display = isMerch ? 'none' : '';
-    if (group) group.style.display = isMerch && isApparel ? '' : 'none';
+    if (group) group.style.display = isMerch ? '' : 'none';
     if (unitSelect) {
         const oldUnit = unitSelect.value;
         const units = isMerch ? [['item','items']] : form === 'powder' ? [['gram','g'],['kilogram','kg'],['ounce','oz'],['pound','lb']] : form === 'drinkable' ? [['milliliter','ml'],['liter','L'],['fluid_ounce','fl oz']] : (form === 'capsule' || form === 'tablet') ? [['piece','pcs'],['box','boxes']] : [['item','items']];
@@ -2929,7 +2929,9 @@ function toggleAddProductSize() {
         document.getElementById('apStock').step = stockStep(nextUnit);
     }
     const saleUnit = isMerch ? 'item' : supplementSaleUnit(form, unitSelect?.value);
-    if (priceUnit) priceUnit.textContent = `per ${saleUnitLabel(saleUnit)}`;
+    if (priceUnit) priceUnit.textContent = saleUnitLabel(saleUnit);
+    const basis = document.getElementById('apPriceQuantity');
+    if (basis) { basis.step = isDiscreteUnit(saleUnit) ? '1' : '0.001'; if (basis.dataset.unit !== saleUnit) { basis.value = saleUnit === 'gram' ? '10' : '1'; basis.dataset.unit = saleUnit; } }
     if (hint) hint.textContent = isDiscreteUnit(saleUnit) ? `Each sale deducts one ${saleUnitLabel(saleUnit)}.` : `Sales are deducted in ${saleUnitLabel(saleUnit)}; stock converts automatically.`;
 }
 
@@ -2952,19 +2954,21 @@ function convertInventoryUnit(select, inputId) {
         const saleUnit = supplementSaleUnit(form, next);
         const priceUnit = document.getElementById(`${prefix}PriceUnit`);
         const hint = document.getElementById(`${prefix}StockHint`);
-        if (priceUnit) priceUnit.textContent = `per ${saleUnitLabel(saleUnit)}`;
+        if (priceUnit) priceUnit.textContent = saleUnitLabel(saleUnit);
         if (hint) hint.textContent = isDiscreteUnit(saleUnit) ? `Each sale deducts one ${saleUnitLabel(saleUnit)}.` : `Sales are deducted in ${saleUnitLabel(saleUnit)}; stock converts automatically.`;
     }
 }
 
 async function submitAddProduct() {
     const name = document.getElementById('apName').value.trim();
+    if (document.getElementById('apSize').value.trim().length > 30) { toast('Size must be 30 characters or fewer.', 'error'); return; }
     const category = document.getElementById('apCat').value;
     const merchType = category === 'Merch' ? document.getElementById('apMerchType').value : '';
     const supplementType = category === 'Supplement' ? document.getElementById('apSupplementType').value : '';
     const supplementForm = category === 'Supplement' ? document.getElementById('apSupplementForm').value : '';
-    const size = category === 'Merch' && merchType === 'apparel' ? document.getElementById('apSize').value.trim() : '';
-    const price = Number(document.getElementById('apPrice').value);
+    const size = category === 'Merch' ? document.getElementById('apSize').value.trim() : '';
+    const price = productUnitPrice(document.getElementById('apPrice').value, document.getElementById('apPriceQuantity').value, category === 'Merch' || ['capsule', 'tablet', 'other'].includes(supplementForm));
+    if (price === null) { toast('Enter a positive price and quantity that give a unit price with at most two decimal places.', 'error'); return; }
     const stock = Number(document.getElementById('apStock').value);
     const stockUnit = document.getElementById('apStockUnit').value;
     if (!name || !Number.isFinite(price) || price <= 0 || !Number.isFinite(stock) || stock < 0 || (isDiscreteUnit(stockUnit) && !Number.isInteger(stock)) || (category === 'Supplement' && (!supplementType || !supplementForm))) { toast('Enter a name, choose a product type and form, and provide a valid price and stock amount.', 'error'); return; }
@@ -3009,9 +3013,9 @@ function editProduct(id) {
         <p class="modal-sub">Supplement pricing and stock units follow the selected form. Supabase checks admin access when saving.</p>
         <div class="form-group product-photo-field"><label for="epImage">Product photo (optional)</label><input type="file" id="epImage" accept="image/*" onchange="previewProductPhoto(this, 'epImagePreview')"><div id="epImagePreview" class="product-photo-preview">${p.image ? `<img src="${p.image}" alt="Current product photo">` : '<span>No photo selected</span>'}</div><label class="product-photo-remove"><input type="checkbox" id="epRemoveImage"> Remove current photo</label><small>Choose a new image to replace the current one.</small></div>
         <div class="form-group" style="margin-bottom:14px;"><label>Name</label><input type="text" id="epName" value="${p.name}"></div>
-        ${p.category === 'Merch' ? `<div class="form-group" style="margin-bottom:14px;"><label for="epMerchType">Merchandise type</label><select id="epMerchType" onchange="toggleEditProductSize('${p.id}')">${merchandiseTypeOptions()}</select></div><div id="epSizeGroup" class="form-group" style="margin-bottom:14px;"><label for="epSize">Apparel size (optional)</label><select id="epSize">${merchandiseSizeOptions(p.size)}</select></div>` : `<div class="form-group" style="margin-bottom:14px;"><label for="epSupplementType">Supplement type</label><select id="epSupplementType">${supplementTypeOptions()}</select></div><div class="form-group" style="margin-bottom:14px;"><label for="epSupplementForm">Form</label><select id="epSupplementForm" onchange="toggleEditSupplementUnits()">${supplementFormOptions(p.supplementForm || 'powder')}</select></div>`}
+        ${p.category === 'Merch' ? `<div class="form-group" style="margin-bottom:14px;"><label for="epMerchType">Merchandise type</label><select id="epMerchType" onchange="toggleEditProductSize('${p.id}')">${merchandiseTypeOptions()}</select></div><div id="epSizeGroup" class="form-group" style="margin-bottom:14px;"><label for="epSize">Size / variant (optional)</label><input id="epSize" list="epSizeSuggestions" maxlength="30" placeholder="Choose or type an available size"><datalist id="epSizeSuggestions">${merchandiseSizeOptions(p.size)}</datalist></div>` : `<div class="form-group" style="margin-bottom:14px;"><label for="epSupplementType">Supplement type</label><select id="epSupplementType">${supplementTypeOptions()}</select></div><div class="form-group" style="margin-bottom:14px;"><label for="epSupplementForm">Form</label><select id="epSupplementForm" onchange="toggleEditSupplementUnits()">${supplementFormOptions(p.supplementForm || 'powder')}</select></div>`}
         <div class="form-row">
-            <div class="form-group"><label>Price (<span id="epPriceUnit">per ${productSaleUnitLabel(p)}</span>) ₱</label><input type="number" id="epPrice" min="0" step="0.01" value="${p.price}"></div>
+            <div class="form-group"><label for="epPrice">Price (₱)</label><input type="number" id="epPrice" min="0.01" step="0.01" value="${productPriceQuote(p.price, p.inventoryUnit).amount}"><label for="epPriceQuantity">For this quantity (<span id="epPriceUnit">${productSaleUnitLabel(p)}</span>)</label><input type="number" id="epPriceQuantity" min="0.001" step="0.001" value="${productPriceQuote(p.price, p.inventoryUnit).quantity}"><small>Edit the price and quantity separately. Checkout uses the equivalent unit price.</small></div>
             <div class="form-group"><label>Current stock</label><div class="form-row"><input type="number" id="epStock" min="0" step="${stockStep(p.stockUnit || 'item')}" value="${Number(p.stock) || 0}"><select id="epStockUnit" aria-label="Stock unit" onchange="convertInventoryUnit(this, 'epStock')">${p.category === 'Supplement' ? stockUnitOptions(p.supplementForm || 'powder', p.stockUnit) : stockUnitOptions('item', 'item')}</select></div><small id="epStockHint">${isDiscreteUnit(p.inventoryUnit) ? `Each sale deducts one ${saleUnitLabel(p.inventoryUnit)}.` : `Sales deduct in ${saleUnitLabel(p.inventoryUnit)}.`}</small></div>
         </div>
         <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="runWithButtonLoading(this, () => submitEditProduct('${p.id}'), 'Saving…')">Save</button></div>
@@ -3044,6 +3048,7 @@ function toggleEditSupplementUnits() {
     const nextSaleUnit = supplementSaleUnit(form, nextUnit);
     if (previousSaleUnit !== nextSaleUnit) {
         document.getElementById('epStock').value = '0';
+        document.getElementById('epPriceQuantity').value = nextSaleUnit === 'gram' ? '10' : '1';
         document.getElementById('epStockHint').textContent = 'Unit changed. Enter the actual stock using the new unit.';
     }
     select.innerHTML = unitOptions.map(([value,label]) => `<option value="${value}">${label}</option>`).join('');
@@ -3051,7 +3056,7 @@ function toggleEditSupplementUnits() {
     select.dataset.previousUnit = nextUnit;
     document.getElementById('epStock').step = stockStep(nextUnit);
     const saleUnit = nextSaleUnit;
-    document.getElementById('epPriceUnit').textContent = `per ${saleUnitLabel(saleUnit)}`;
+    document.getElementById('epPriceUnit').textContent = saleUnitLabel(saleUnit);
     document.getElementById('epStockHint').textContent = isDiscreteUnit(saleUnit) ? `Each sale deducts one ${saleUnitLabel(saleUnit)}.` : `Sales deduct in ${saleUnitLabel(saleUnit)}.`;
     if (formSelect) formSelect.dataset.previousForm = form;
 }
@@ -3059,13 +3064,16 @@ function toggleEditSupplementUnits() {
 function toggleEditProductSize() {
     const type = document.getElementById('epMerchType')?.value;
     const group = document.getElementById('epSizeGroup');
-    if (group) group.style.display = type === 'apparel' ? '' : 'none';
+    if (group) group.style.display = '';
 }
 
 async function submitEditProduct(id) {
     const p = products.find(x => x.id === id);
     if (!p) return;
-    const newPrice = Number(document.getElementById('epPrice').value);
+    if ((document.getElementById('epSize')?.value || '').trim().length > 30) { toast('Size must be 30 characters or fewer.', 'error'); return; }
+    const priceForm = document.getElementById('epSupplementForm')?.value;
+    const newPrice = productUnitPrice(document.getElementById('epPrice').value, document.getElementById('epPriceQuantity').value, p.category === 'Merch' || ['capsule', 'tablet', 'other'].includes(priceForm));
+    if (newPrice === null) { toast('Enter a positive price and quantity that give a unit price with at most two decimal places.', 'error'); return; }
     const stockInput = document.getElementById('epStock').value.trim();
     const stockUnit = document.getElementById('epStockUnit').value;
     const merchType = p.category === 'Merch' ? document.getElementById('epMerchType').value : '';
@@ -3078,7 +3086,7 @@ async function submitEditProduct(id) {
     const updatedProduct = { ...p, name: document.getElementById('epName').value.trim(), price: newPrice };
     if (p.category === 'Merch') {
         updatedProduct.merchType = merchType;
-        updatedProduct.size = merchType === 'apparel' ? document.getElementById('epSize').value.trim() : '';
+        updatedProduct.size = document.getElementById('epSize').value.trim();
     } else delete updatedProduct.size;
     updatedProduct.stock = Number(stockInput);
     updatedProduct.stockUnit = stockUnit;
@@ -3141,7 +3149,9 @@ function getProductPhoto(inputId) {
                 const canvas = document.createElement('canvas');
                 canvas.width = Math.max(1, Math.round(img.width * scale));
                 canvas.height = Math.max(1, Math.round(img.height * scale));
-                canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+                const context = canvas.getContext('2d');
+                context.fillStyle = '#ffffff'; context.fillRect(0, 0, canvas.width, canvas.height);
+                context.drawImage(img, 0, 0, canvas.width, canvas.height);
                 resolve(canvas.toDataURL('image/jpeg', 0.78));
             };
             img.src = reader.result;
