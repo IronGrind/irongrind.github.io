@@ -26,7 +26,7 @@ Reviewed against the checked-in system files on November 5, 2026 (Asia/Manila). 
 - Final page layout has not been rendered in Microsoft Word. Check pagination, caption placement, and image text size before submission.
 - Existing interface screenshots, other than the replaced receipt illustration, are historical prototype images and were not recaptured. Capture the current interfaces before presenting those figures as current screenshots.
 - The Agile illustration was inspected and retained. The Gantt chart remains the original planned schedule, not evidence of actual completion dates.
-- Some staff messages still use the word â€œreceiptâ€ for the internal reference. No application code was changed in this documentation task.
+- Some staff messages still use the word Ã¢â‚¬Å“receiptÃ¢â‚¬Â for the internal reference. No application code was changed in this documentation task.
 - Illustrations and editable ERD source are in Chapter 3 Diagrams. build-chapter3-diagrams.ps1 regenerates those source images; regenerating the images alone does not replace images already embedded in Word.
 
 ## Diagram conventions
@@ -39,6 +39,8 @@ The availability audit checked current frontend calls and backend functions. It 
 
 ERD panels repeat table boxes rather than drawing every relationship across one crowded page. Each repeated name denotes the same physical table. activity_logs.actor_id has no declared foreign key, so it is not represented as an enforced relationship. Managed Supabase Auth internals are outside the application-owned dictionary.
 
-## Staff-permission correction
+## Final function alignment
 
-The DFD now has nine processes. Process 3.0 contains counter registration, direct renewal, and active-member plan change. Member self-profile viewing/editing is isolated in process 9.0 with no staff association. Each DFD actor has separate labeled input/output arrows, including online-review, attendance, and catalog flows. Staff have no profile screen or existing personal-detail editing function. New Auth/profile rows created by the registration service describe server writes, not profile access granted to staff. Limited counter lookup details are distinguished from a member profile view. The context diagram, UML use-case associations, physical ERD, Agile illustration, and Gantt chart were rechecked for this issue. The use-case and staff-operation figures explicitly state the staff restriction. Physical ERD relationships remain unchanged because they do not grant application permissions.
+The functional, input, and output requirements now share nine functions: User Login; Membership Applications; User Management; Renewals; QR Attendance; Products & Inventory; Sales; Generate Reports; Activity Logs. The DFD uses the same numbered responsibilities. Process 9.0 is read-only Activity Logs, while process 8.0 generates reports. Administrator staff-account changes belong to User Management, and phone-pairing controls belong to QR Attendance. Their recorded events are visible in Activity Logs; the viewer does not perform those changes.
+
+User Management has distinct actor arrows: administrator user/staff controls; staff counter registration, renewal and active-plan changes with limited lookup; and member own-profile queries/edits. Staff have no member-profile viewing or personal-detail editing function. New Auth/profile records created by registration services are backend writes, not staff profile-editing rights. The use-case illustration shows report generation and activity-log review separately. The physical ERD describes stored relationships rather than granting user permissions.

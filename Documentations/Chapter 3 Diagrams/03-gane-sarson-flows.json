@@ -79,26 +79,26 @@
     },
     {
         "Id":  "3.0",
-        "Name":  "Process counter memberships",
+        "Name":  "User management",
         "Output":  "Limited lookup and counter confirmation",
         "Stores":  [
                        [
                            "D0",
                            "Auth accounts",
-                           "New walk-in account",
+                           "New member / staff account",
                            ""
                        ],
                        [
                            "D1",
                            "profiles",
-                           "New account (service)",
-                           ""
+                           "Role-scoped account data",
+                           "Own / permitted account"
                        ],
                        [
                            "D3",
                            "members",
-                           "Counter membership update",
-                           "Permitted lookup details"
+                           "Role-scoped member changes",
+                           "Own record / limited lookup"
                        ],
                        [
                            "D8",
@@ -125,7 +125,7 @@
                            ""
                        ]
                    ],
-        "Actor":  "Administrator; Authorized Staff",
+        "Actor":  "Administrator; Authorized Staff; Member",
         "Input":  "Walk-in registration / renewal / active-plan change"
     },
     {
@@ -193,7 +193,7 @@
                        [
                            "D10",
                            "pairing policy",
-                           "",
+                           "Admin pairing settings",
                            "Phone-pairing policy"
                        ],
                        [
@@ -274,74 +274,32 @@
     },
     {
         "Id":  "8.0",
-        "Name":  "Generate reports and administer access",
-        "Output":  "Reports, account states, pairing and activity records",
+        "Name":  "Generate reports",
+        "Output":  "Report preview / PDF / ZIP",
         "Stores":  [
-                       [
-                           "D0",
-                           "Auth accounts",
-                           "Staff provisioning",
-                           ""
-                       ],
-                       [
-                           "D1",
-                           "profiles",
-                           "Staff access state",
-                           "Staff profile records"
-                       ],
                        [
                            "D2-D8",
                            "Operational stores",
                            "",
                            "Report source records"
-                       ],
-                       [
-                           "D9",
-                           "activity_logs",
-                           "Administrative event",
-                           "Filtered activity records"
-                       ],
-                       [
-                           "D10",
-                           "pairing policy",
-                           "Pairing settings",
-                           "Current policy"
-                       ],
-                       [
-                           "D11",
-                           "pairing sessions",
-                           "Pair / end session",
-                           "Current paired devices"
                        ]
                    ],
         "Actor":  "Administrator",
-        "Input":  "Report filters / staff account and phone controls"
+        "Input":  "Report type / period"
     },
     {
         "Id":  "9.0",
-        "Name":  "View and update own member profile",
-        "Output":  "Own personal and membership details",
+        "Name":  "Activity logs",
+        "Output":  "Filtered recorded actions",
         "Stores":  [
-                       [
-                           "D3",
-                           "members",
-                           "Own personal details",
-                           "Own member record"
-                       ],
-                       [
-                           "D1",
-                           "profiles",
-                           "Own display name",
-                           "Own account details"
-                       ],
                        [
                            "D9",
                            "activity_logs",
-                           "Profile update event",
-                           ""
+                           "",
+                           "Filtered activity records"
                        ]
                    ],
-        "Actor":  "Member",
-        "Input":  "Own profile query / permitted personal changes"
+        "Actor":  "Administrator",
+        "Input":  "Activity filters / page request"
     }
 ]
