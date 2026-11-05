@@ -2886,10 +2886,26 @@ function stockUnitOptions(form, selected = '') {
 }
 function stockStep(unit) { return isDiscreteUnit(unit) ? '1' : '0.001'; }
 
+function productPhotoPicker(prefix, image = '') {
+    return `<div class="form-group product-photo-field">
+        <input class="product-photo-file-input" type="file" id="${prefix}Image" accept="image/*" aria-label="Product photo (optional)" onchange="previewProductPhoto(this, '${prefix}ImagePreview')" style="display:none!important" hidden>
+        <div class="product-photo-upload${image ? ' has-photo' : ''}">
+            <div id="${prefix}ImagePreview" class="product-photo-preview">${image ? `<img src="${escapeHTML(image)}" alt="Current product photo">` : ''}</div>
+            <button type="button" class="product-photo-upload-button" onclick="document.getElementById('${prefix}Image').click()" aria-label="${image ? 'Change' : 'Upload'} product photo">
+                <i class="fas fa-cloud-arrow-up" aria-hidden="true"></i>
+                <span>${image ? 'Change photo' : 'Upload photo'}</span>
+                <small>Choose an image</small>
+            </button>
+        </div>
+        ${prefix === 'ep' ? '<label class="product-photo-remove"><input type="checkbox" id="epRemoveImage"> Remove current photo</label>' : ''}
+        <small>Photos fit automatically without cropping. Click a selected photo to enlarge.</small>
+    </div>`;
+}
+
 function openAddProductModal() {
     openModal(`
         <h3><i class="fas fa-plus"></i> Add Product</h3>
-        <div class="form-group product-photo-field"><label for="apImage">Product photo (optional)</label><input type="file" id="apImage" accept="image/*" onchange="previewProductPhoto(this, 'apImagePreview')"><div id="apImagePreview" class="product-photo-preview"><span>No photo selected</span></div><small>Photos fit the frame without cropping and are resized automatically. Click a preview to enlarge.</small></div>
+        ${productPhotoPicker('ap')}
         <div class="form-group" style="margin-bottom:14px;"><label>Name</label><input type="text" id="apName" placeholder="Whey Protein — Vanilla"></div>
         <div class="form-group" style="margin-bottom:14px;"><label>Category</label><select id="apCat" onchange="toggleAddProductSize()"><option value="Supplement">Supplement</option><option value="Merch">Merchandise</option></select></div>
         <div id="apMerchTypeGroup" class="form-group" style="margin-bottom:14px;display:none"><label for="apMerchType">Merchandise type</label><select id="apMerchType" onchange="toggleAddProductSize()">${merchandiseTypeOptions()}</select></div>
@@ -3010,7 +3026,7 @@ function editProduct(id) {
     openModal(`
         <h3><i class="fas fa-edit"></i> Edit Product</h3>
         <p class="modal-sub">Supplement pricing and stock units follow the selected form. Supabase checks admin access when saving.</p>
-        <div class="form-group product-photo-field"><label for="epImage">Product photo (optional)</label><input type="file" id="epImage" accept="image/*" onchange="previewProductPhoto(this, 'epImagePreview')"><div id="epImagePreview" class="product-photo-preview">${p.image ? `<img src="${p.image}" alt="Current product photo">` : '<span>No photo selected</span>'}</div><label class="product-photo-remove"><input type="checkbox" id="epRemoveImage"> Remove current photo</label><small>Choose a new image to replace the current one.</small></div>
+        ${productPhotoPicker('ep', p.image)}
         <div class="form-group" style="margin-bottom:14px;"><label>Name</label><input type="text" id="epName" value="${p.name}"></div>
         ${p.category === 'Merch' ? `<div class="form-group" style="margin-bottom:14px;"><label for="epMerchType">Merchandise type</label><select id="epMerchType" onchange="toggleEditProductSize('${p.id}')">${merchandiseTypeOptions()}</select></div><div id="epSizeGroup" class="form-group" style="margin-bottom:14px;"><label for="epSize">Size / variant (optional)</label><input id="epSize" list="epSizeSuggestions" maxlength="30" placeholder="Choose or type an available size"><datalist id="epSizeSuggestions">${merchandiseSizeOptions(p.size)}</datalist></div>` : `<div class="form-group" style="margin-bottom:14px;"><label for="epSupplementType">Supplement type</label><select id="epSupplementType">${supplementTypeOptions()}</select></div><div class="form-group" style="margin-bottom:14px;"><label for="epSupplementForm">Form</label><select id="epSupplementForm" onchange="toggleEditSupplementUnits()">${supplementFormOptions(p.supplementForm || 'powder')}</select></div>`}
         <div class="form-row">
@@ -3127,7 +3143,16 @@ function previewProductPhoto(input, previewId) {
     if (!preview || !file) return;
     if (!file.type.startsWith('image/')) { input.value = ''; toast('Choose an image file.', 'error'); return; }
     const reader = new FileReader();
-    reader.onload = () => { preview.innerHTML = `<img src="${reader.result}" alt="Selected product photo preview">`; };
+    reader.onload = () => {
+        if (input.files?.[0] !== file) return;
+        preview.innerHTML = `<img src="${reader.result}" alt="Selected product photo preview">`;
+        const frame = preview.closest('.product-photo-upload');
+        frame?.classList.add('has-photo');
+        const button = frame?.querySelector('.product-photo-upload-button');
+        if (button) { button.querySelector('span').textContent = 'Change photo'; button.setAttribute('aria-label', 'Change product photo'); }
+        const remove = document.getElementById('epRemoveImage');
+        if (input.id === 'epImage' && remove) remove.checked = false;
+    };
     reader.onerror = () => toast('Could not read that image.', 'error');
     reader.readAsDataURL(file);
 }
