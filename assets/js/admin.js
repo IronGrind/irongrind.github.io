@@ -2911,7 +2911,6 @@ function toggleAddProductSize() {
     const supplementTypeGroup = document.getElementById('apSupplementTypeGroup');
     const formGroup = document.getElementById('apSupplementFormGroup');
     const form = document.getElementById('apSupplementForm')?.value || 'powder';
-    const isApparel = document.getElementById('apMerchType')?.value === 'apparel';
     const unitSelect = document.getElementById('apStockUnit');
     const priceUnit = document.getElementById('apPriceUnit');
     const hint = document.getElementById('apStockHint');
@@ -3062,7 +3061,6 @@ function toggleEditSupplementUnits() {
 }
 
 function toggleEditProductSize() {
-    const type = document.getElementById('epMerchType')?.value;
     const group = document.getElementById('epSizeGroup');
     if (group) group.style.display = '';
 }

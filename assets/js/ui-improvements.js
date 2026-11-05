@@ -70,12 +70,33 @@
             viewer.innerHTML = '<div class="photo-viewer-toolbar"><label>Zoom <input type="range" min="50" max="250" value="100" step="10" aria-label="Photo zoom"></label><output>100%</output><button type="button" class="btn-sm">Close photo</button></div><div class="photo-viewer-stage"><img alt=""></div>';
             document.body.append(viewer);
             const slider = viewer.querySelector('input'); const photo = viewer.querySelector('img');
-            slider.addEventListener('input', () => { photo.style.transform = `scale(${Number(slider.value) / 100})`; viewer.querySelector('output').textContent = `${slider.value}%`; });
+            const stage = viewer.querySelector('.photo-viewer-stage');
+            let drag;
+            slider.addEventListener('input', () => { photo.style.transform = `scale(${Number(slider.value) / 100})`; photo.dataset.panX = '0'; photo.dataset.panY = '0'; viewer.querySelector('output').textContent = `${slider.value}%`; });
+            stage.addEventListener('pointerdown', event => {
+                if (Number(slider.value) <= 100) return;
+                event.preventDefault(); stage.setPointerCapture(event.pointerId);
+                drag = { x: event.clientX, y: event.clientY, panX: Number(photo.dataset.panX || 0), panY: Number(photo.dataset.panY || 0) };
+            });
+            stage.addEventListener('pointermove', event => {
+                if (!drag) return;
+                const zoom = Number(slider.value) / 100;
+                const maxX = (zoom - 1) * stage.clientWidth / 2;
+                const maxY = (zoom - 1) * stage.clientHeight / 2;
+                const x = Math.max(-maxX, Math.min(maxX, drag.panX + event.clientX - drag.x));
+                const y = Math.max(-maxY, Math.min(maxY, drag.panY + event.clientY - drag.y));
+                photo.dataset.panX = String(x); photo.dataset.panY = String(y);
+                photo.style.transform = `translate(${x}px, ${y}px) scale(${zoom})`;
+            });
+            stage.addEventListener('pointerup', () => { drag = null; });
+            stage.addEventListener('pointercancel', () => { drag = null; });
             viewer.querySelector('button').addEventListener('click', () => viewer.close());
             viewer.addEventListener('click', event => { if (event.target === viewer) viewer.close(); });
         }
         const photo = viewer.querySelector('img'); photo.src = img.currentSrc || img.src; photo.alt = img.alt || 'Product photo';
+        photo.dataset.panX = '0'; photo.dataset.panY = '0';
         photo.style.transform = 'scale(1)'; viewer.querySelector('input').value = '100'; viewer.querySelector('output').textContent = '100%';
+        img.focus({ preventScroll: true });
         viewer.showModal();
     }
     const targetPhoto = target => target.closest?.('img[data-zoom-ready]');

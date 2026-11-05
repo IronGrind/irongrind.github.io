@@ -1961,3 +1961,6 @@ img[data-zoom-ready]:focus-visible { outline: 3px solid #bd3333; outline-offset:
 html[data-dashboard-theme="light"] .password-guidance, html[data-admin-theme="light"] .password-guidance { color: #58677b; }
 html[data-dashboard-theme="light"] .password-guidance[data-state="valid"], html[data-admin-theme="light"] .password-guidance[data-state="valid"] { color: #166f4b; }
 html[data-dashboard-theme="light"] .password-guidance[data-state="invalid"], html[data-admin-theme="light"] .password-guidance[data-state="invalid"] { color: #ad2525; }
+.photo-viewer-stage { touch-action: none; cursor: grab; }
+.photo-viewer-stage:active { cursor: grabbing; }
+.photo-viewer-stage img { user-select: none; -webkit-user-drag: none; }

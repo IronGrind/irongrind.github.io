@@ -216,7 +216,7 @@ function updateStaffSaleSummary() {
 async function loadStaffProducts() {
     const select = document.getElementById('staffSaleProduct');
     const { data, error } = await staffClient.from('products')
-        .select('id,name,category,size,price_per_unit,unit,stock_unit,stock,is_active')
+        .select('id,name,category,size,price_per_unit,unit,stock_unit,stock,is_active,image_path')
         .eq('is_active', true).order('name');
     if (error) throw error;
     staffProducts = data || [];
