@@ -1948,23 +1948,36 @@ html[data-dashboard-theme="light"] body.member-dashboard .customer-hero { backgr
 .product-photo-preview { max-width: 100%; aspect-ratio: 4 / 3; }
 .staff-product-photo { display: block; width: 100%; height: 170px; object-fit: contain; padding: 8px; box-sizing: border-box; border-radius: 12px; background: #fff; cursor: zoom-in; margin-bottom: 12px; }
 img[data-zoom-ready]:focus-visible { outline: 3px solid #bd3333; outline-offset: -4px; }
-.product-photo-dialog { width: min(960px, 94vw); max-width: 94vw; max-height: 92dvh; padding: 16px; border: 1px solid #444; border-radius: 18px; color: #f1f3f7; background: #171717; margin: auto; }
-.product-photo-dialog::backdrop { background: rgba(0,0,0,.8); }
-.photo-viewer-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 12px; }
-.photo-viewer-toolbar label { display: flex; align-items: center; gap: 10px; }
-.photo-viewer-toolbar input { width: min(180px, 35vw); accent-color: #b62828; }
-.photo-viewer-toolbar output { min-width: 48px; font-variant-numeric: tabular-nums; }
-.photo-viewer-toolbar button { margin-left: auto; }
-.photo-viewer-stage { height: min(66dvh, 650px); overflow: auto; display: grid; place-items: center; background: #fff; border-radius: 10px; }
-.photo-viewer-stage img { display: block; width: 100%; height: 100%; object-fit: contain; transform-origin: center; }
+.product-photo-dialog { position: fixed; inset: 0; width: 100vw; height: 100dvh; max-width: none; max-height: none; padding: 0; border: 0; border-radius: 0; color: #f1f3f7; background: rgba(10,12,17,.92); margin: 0; overflow: hidden; }
+.product-photo-dialog::backdrop { background: rgba(0,0,0,.65); backdrop-filter: blur(10px); }
+.photo-lightbox { display: grid; grid-template-rows: auto minmax(0,1fr) auto; width: 100%; height: 100%; }
+.photo-lightbox-header { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 22px 30px 14px; }
+.photo-lightbox-eyebrow { font-size: .62rem; font-weight: 700; letter-spacing: .17em; color: #8993a6; }
+.photo-lightbox-title { margin: 5px 0 0; color: #eef1f7; font-size: .95rem; line-height: 1.4; max-width: 75vw; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+.product-photo-dialog button { display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; width: 40px; height: 40px; padding: 0; border: 0; border-radius: 50%; background: transparent; color: #e5e9f2; font: inherit; cursor: pointer; }
+.product-photo-dialog button:hover { background: rgba(255,255,255,.1); }
+.product-photo-dialog button:focus-visible { outline: 2px solid #f0a0a0; outline-offset: 3px; }
+.product-photo-dialog button:disabled { opacity: .3; cursor: default; }
+.product-photo-dialog .photo-lightbox-close { border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.06); font-size: 1.2rem; }
+.product-photo-dialog .photo-viewer-stage { display: flex; align-items: center; justify-content: center; height: 100%; min-height: 0; min-width: 0; overflow: hidden; margin: 0 20px; border-radius: 0; background: transparent; touch-action: none; cursor: zoom-in; }
+.product-photo-dialog .photo-viewer-stage > img { display: block; flex: 0 1 auto; width: auto; height: auto; max-width: 100%; max-height: 100%; min-width: 0; min-height: 0; padding: 0; object-fit: contain; transform-origin: center; user-select: none; -webkit-user-drag: none; filter: drop-shadow(0 14px 36px rgba(0,0,0,.3)); animation: photo-lightbox-reveal .18s ease-out; }
+.product-photo-dialog .photo-viewer-stage.is-zoomed { cursor: grab; }
+.product-photo-dialog .photo-viewer-stage.is-zoomed:active { cursor: grabbing; }
+.photo-lightbox-footer { display: flex; flex-direction: column; align-items: center; gap: 9px; padding: 18px 16px 20px; }
+.photo-lightbox-controls { display: flex; align-items: center; gap: 3px; padding: 5px 8px; border: 1px solid rgba(255,255,255,.13); border-radius: 999px; background: #232833; box-shadow: 0 8px 28px rgba(0,0,0,.22); }
+.photo-lightbox-controls output { min-width: 54px; color: #edf0f7; font-size: .8rem; text-align: center; font-variant-numeric: tabular-nums; }
+.photo-control-divider { width: 1px; height: 20px; margin: 0 7px; background: rgba(255,255,255,.15); }
+.product-photo-dialog .photo-fit-button { width: auto; padding: 0 12px; border-radius: 24px; gap: 7px; font-size: .8rem; }
+.photo-lightbox-footer > p { margin: 0; color: #929bad; font-size: .67rem; line-height: 1.4; text-align: center; }
+body.photo-lightbox-open { overflow: hidden; }
+@keyframes photo-lightbox-reveal { from { opacity: 0; } to { opacity: 1; } }
+@media (max-width: 600px) { .photo-lightbox-header { padding: 16px 16px 12px; } .product-photo-dialog .photo-viewer-stage { margin: 0 10px; } .photo-lightbox-footer { padding-bottom: max(16px, env(safe-area-inset-bottom)); } }
+@media (prefers-reduced-motion: reduce) { .product-photo-dialog .photo-viewer-stage > img { animation: none; } }
 .product-photo-field small, .form-group:has(> #apPrice) small, .form-group:has(> #epPrice) small { display: block; color: #949daf; line-height: 1.5; margin-top: 6px; }
 .form-group label[for="apPriceQuantity"], .form-group label[for="epPriceQuantity"] { display: block; margin-top: 12px; }
 html[data-dashboard-theme="light"] .password-guidance, html[data-admin-theme="light"] .password-guidance { color: #58677b; }
 html[data-dashboard-theme="light"] .password-guidance[data-state="valid"], html[data-admin-theme="light"] .password-guidance[data-state="valid"] { color: #166f4b; }
 html[data-dashboard-theme="light"] .password-guidance[data-state="invalid"], html[data-admin-theme="light"] .password-guidance[data-state="invalid"] { color: #ad2525; }
-.photo-viewer-stage { touch-action: none; cursor: grab; }
-.photo-viewer-stage:active { cursor: grabbing; }
-.photo-viewer-stage img { user-select: none; -webkit-user-drag: none; }
 
 /* The photo frame is the upload control; the native file input stays hidden. */
 .product-photo-field .product-photo-file-input { display: none; }
