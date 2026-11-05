@@ -2923,3 +2923,402 @@ ALTER DEFAULT PRIVILEGES FOR ROLE "postgres" IN SCHEMA "public" GRANT REFERENCES
 
 
 
+drop extension if exists "pg_net";
+
+revoke delete on table "public"."activity_logs" from "anon";
+
+revoke insert on table "public"."activity_logs" from "anon";
+
+revoke references on table "public"."activity_logs" from "anon";
+
+revoke select on table "public"."activity_logs" from "anon";
+
+revoke trigger on table "public"."activity_logs" from "anon";
+
+revoke truncate on table "public"."activity_logs" from "anon";
+
+revoke update on table "public"."activity_logs" from "anon";
+
+revoke delete on table "public"."activity_logs" from "authenticated";
+
+revoke insert on table "public"."activity_logs" from "authenticated";
+
+revoke references on table "public"."activity_logs" from "authenticated";
+
+revoke trigger on table "public"."activity_logs" from "authenticated";
+
+revoke truncate on table "public"."activity_logs" from "authenticated";
+
+revoke update on table "public"."activity_logs" from "authenticated";
+
+revoke delete on table "public"."activity_logs" from "service_role";
+
+revoke insert on table "public"."activity_logs" from "service_role";
+
+revoke select on table "public"."activity_logs" from "service_role";
+
+revoke update on table "public"."activity_logs" from "service_role";
+
+revoke delete on table "public"."attendance" from "anon";
+
+revoke insert on table "public"."attendance" from "anon";
+
+revoke references on table "public"."attendance" from "anon";
+
+revoke select on table "public"."attendance" from "anon";
+
+revoke trigger on table "public"."attendance" from "anon";
+
+revoke truncate on table "public"."attendance" from "anon";
+
+revoke update on table "public"."attendance" from "anon";
+
+revoke references on table "public"."attendance" from "authenticated";
+
+revoke trigger on table "public"."attendance" from "authenticated";
+
+revoke truncate on table "public"."attendance" from "authenticated";
+
+revoke delete on table "public"."attendance" from "service_role";
+
+revoke insert on table "public"."attendance" from "service_role";
+
+revoke select on table "public"."attendance" from "service_role";
+
+revoke update on table "public"."attendance" from "service_role";
+
+revoke delete on table "public"."members" from "anon";
+
+revoke insert on table "public"."members" from "anon";
+
+revoke references on table "public"."members" from "anon";
+
+revoke select on table "public"."members" from "anon";
+
+revoke trigger on table "public"."members" from "anon";
+
+revoke truncate on table "public"."members" from "anon";
+
+revoke update on table "public"."members" from "anon";
+
+revoke references on table "public"."members" from "authenticated";
+
+revoke trigger on table "public"."members" from "authenticated";
+
+revoke truncate on table "public"."members" from "authenticated";
+
+revoke delete on table "public"."members" from "service_role";
+
+revoke insert on table "public"."members" from "service_role";
+
+revoke select on table "public"."members" from "service_role";
+
+revoke update on table "public"."members" from "service_role";
+
+revoke delete on table "public"."membership_applications" from "anon";
+
+revoke insert on table "public"."membership_applications" from "anon";
+
+revoke references on table "public"."membership_applications" from "anon";
+
+revoke select on table "public"."membership_applications" from "anon";
+
+revoke trigger on table "public"."membership_applications" from "anon";
+
+revoke truncate on table "public"."membership_applications" from "anon";
+
+revoke update on table "public"."membership_applications" from "anon";
+
+revoke references on table "public"."membership_applications" from "authenticated";
+
+revoke trigger on table "public"."membership_applications" from "authenticated";
+
+revoke truncate on table "public"."membership_applications" from "authenticated";
+
+revoke delete on table "public"."membership_applications" from "service_role";
+
+revoke insert on table "public"."membership_applications" from "service_role";
+
+revoke select on table "public"."membership_applications" from "service_role";
+
+revoke update on table "public"."membership_applications" from "service_role";
+
+revoke delete on table "public"."membership_history" from "anon";
+
+revoke insert on table "public"."membership_history" from "anon";
+
+revoke references on table "public"."membership_history" from "anon";
+
+revoke select on table "public"."membership_history" from "anon";
+
+revoke trigger on table "public"."membership_history" from "anon";
+
+revoke truncate on table "public"."membership_history" from "anon";
+
+revoke update on table "public"."membership_history" from "anon";
+
+revoke references on table "public"."membership_history" from "authenticated";
+
+revoke trigger on table "public"."membership_history" from "authenticated";
+
+revoke truncate on table "public"."membership_history" from "authenticated";
+
+revoke delete on table "public"."membership_history" from "service_role";
+
+revoke insert on table "public"."membership_history" from "service_role";
+
+revoke select on table "public"."membership_history" from "service_role";
+
+revoke update on table "public"."membership_history" from "service_role";
+
+revoke delete on table "public"."mobile_attendance_pairing_policy" from "anon";
+
+revoke insert on table "public"."mobile_attendance_pairing_policy" from "anon";
+
+revoke references on table "public"."mobile_attendance_pairing_policy" from "anon";
+
+revoke select on table "public"."mobile_attendance_pairing_policy" from "anon";
+
+revoke trigger on table "public"."mobile_attendance_pairing_policy" from "anon";
+
+revoke truncate on table "public"."mobile_attendance_pairing_policy" from "anon";
+
+revoke update on table "public"."mobile_attendance_pairing_policy" from "anon";
+
+revoke delete on table "public"."mobile_attendance_pairing_policy" from "authenticated";
+
+revoke insert on table "public"."mobile_attendance_pairing_policy" from "authenticated";
+
+revoke references on table "public"."mobile_attendance_pairing_policy" from "authenticated";
+
+revoke select on table "public"."mobile_attendance_pairing_policy" from "authenticated";
+
+revoke trigger on table "public"."mobile_attendance_pairing_policy" from "authenticated";
+
+revoke truncate on table "public"."mobile_attendance_pairing_policy" from "authenticated";
+
+revoke update on table "public"."mobile_attendance_pairing_policy" from "authenticated";
+
+revoke delete on table "public"."mobile_attendance_pairing_policy" from "service_role";
+
+revoke insert on table "public"."mobile_attendance_pairing_policy" from "service_role";
+
+revoke select on table "public"."mobile_attendance_pairing_policy" from "service_role";
+
+revoke update on table "public"."mobile_attendance_pairing_policy" from "service_role";
+
+revoke delete on table "public"."mobile_attendance_scan_events" from "anon";
+
+revoke insert on table "public"."mobile_attendance_scan_events" from "anon";
+
+revoke references on table "public"."mobile_attendance_scan_events" from "anon";
+
+revoke select on table "public"."mobile_attendance_scan_events" from "anon";
+
+revoke trigger on table "public"."mobile_attendance_scan_events" from "anon";
+
+revoke truncate on table "public"."mobile_attendance_scan_events" from "anon";
+
+revoke update on table "public"."mobile_attendance_scan_events" from "anon";
+
+revoke insert on table "public"."mobile_attendance_scan_events" from "authenticated";
+
+revoke references on table "public"."mobile_attendance_scan_events" from "authenticated";
+
+revoke trigger on table "public"."mobile_attendance_scan_events" from "authenticated";
+
+revoke truncate on table "public"."mobile_attendance_scan_events" from "authenticated";
+
+revoke update on table "public"."mobile_attendance_scan_events" from "authenticated";
+
+revoke delete on table "public"."mobile_attendance_scan_events" from "service_role";
+
+revoke insert on table "public"."mobile_attendance_scan_events" from "service_role";
+
+revoke select on table "public"."mobile_attendance_scan_events" from "service_role";
+
+revoke update on table "public"."mobile_attendance_scan_events" from "service_role";
+
+revoke delete on table "public"."mobile_attendance_scan_sessions" from "anon";
+
+revoke insert on table "public"."mobile_attendance_scan_sessions" from "anon";
+
+revoke references on table "public"."mobile_attendance_scan_sessions" from "anon";
+
+revoke select on table "public"."mobile_attendance_scan_sessions" from "anon";
+
+revoke trigger on table "public"."mobile_attendance_scan_sessions" from "anon";
+
+revoke truncate on table "public"."mobile_attendance_scan_sessions" from "anon";
+
+revoke update on table "public"."mobile_attendance_scan_sessions" from "anon";
+
+revoke delete on table "public"."mobile_attendance_scan_sessions" from "authenticated";
+
+revoke insert on table "public"."mobile_attendance_scan_sessions" from "authenticated";
+
+revoke references on table "public"."mobile_attendance_scan_sessions" from "authenticated";
+
+revoke select on table "public"."mobile_attendance_scan_sessions" from "authenticated";
+
+revoke trigger on table "public"."mobile_attendance_scan_sessions" from "authenticated";
+
+revoke truncate on table "public"."mobile_attendance_scan_sessions" from "authenticated";
+
+revoke update on table "public"."mobile_attendance_scan_sessions" from "authenticated";
+
+revoke delete on table "public"."mobile_attendance_scan_sessions" from "service_role";
+
+revoke insert on table "public"."mobile_attendance_scan_sessions" from "service_role";
+
+revoke select on table "public"."mobile_attendance_scan_sessions" from "service_role";
+
+revoke update on table "public"."mobile_attendance_scan_sessions" from "service_role";
+
+revoke delete on table "public"."products" from "anon";
+
+revoke insert on table "public"."products" from "anon";
+
+revoke references on table "public"."products" from "anon";
+
+revoke select on table "public"."products" from "anon";
+
+revoke trigger on table "public"."products" from "anon";
+
+revoke truncate on table "public"."products" from "anon";
+
+revoke update on table "public"."products" from "anon";
+
+revoke references on table "public"."products" from "authenticated";
+
+revoke trigger on table "public"."products" from "authenticated";
+
+revoke truncate on table "public"."products" from "authenticated";
+
+revoke delete on table "public"."products" from "service_role";
+
+revoke insert on table "public"."products" from "service_role";
+
+revoke select on table "public"."products" from "service_role";
+
+revoke update on table "public"."products" from "service_role";
+
+revoke delete on table "public"."profiles" from "anon";
+
+revoke insert on table "public"."profiles" from "anon";
+
+revoke references on table "public"."profiles" from "anon";
+
+revoke select on table "public"."profiles" from "anon";
+
+revoke trigger on table "public"."profiles" from "anon";
+
+revoke truncate on table "public"."profiles" from "anon";
+
+revoke update on table "public"."profiles" from "anon";
+
+revoke delete on table "public"."profiles" from "authenticated";
+
+revoke insert on table "public"."profiles" from "authenticated";
+
+revoke references on table "public"."profiles" from "authenticated";
+
+revoke trigger on table "public"."profiles" from "authenticated";
+
+revoke truncate on table "public"."profiles" from "authenticated";
+
+revoke update on table "public"."profiles" from "authenticated";
+
+revoke delete on table "public"."profiles" from "service_role";
+
+revoke insert on table "public"."profiles" from "service_role";
+
+revoke select on table "public"."profiles" from "service_role";
+
+revoke update on table "public"."profiles" from "service_role";
+
+revoke delete on table "public"."sale_items" from "anon";
+
+revoke insert on table "public"."sale_items" from "anon";
+
+revoke references on table "public"."sale_items" from "anon";
+
+revoke select on table "public"."sale_items" from "anon";
+
+revoke trigger on table "public"."sale_items" from "anon";
+
+revoke truncate on table "public"."sale_items" from "anon";
+
+revoke update on table "public"."sale_items" from "anon";
+
+revoke references on table "public"."sale_items" from "authenticated";
+
+revoke trigger on table "public"."sale_items" from "authenticated";
+
+revoke truncate on table "public"."sale_items" from "authenticated";
+
+revoke delete on table "public"."sale_items" from "service_role";
+
+revoke insert on table "public"."sale_items" from "service_role";
+
+revoke select on table "public"."sale_items" from "service_role";
+
+revoke update on table "public"."sale_items" from "service_role";
+
+revoke delete on table "public"."sales" from "anon";
+
+revoke insert on table "public"."sales" from "anon";
+
+revoke references on table "public"."sales" from "anon";
+
+revoke select on table "public"."sales" from "anon";
+
+revoke trigger on table "public"."sales" from "anon";
+
+revoke truncate on table "public"."sales" from "anon";
+
+revoke update on table "public"."sales" from "anon";
+
+revoke references on table "public"."sales" from "authenticated";
+
+revoke trigger on table "public"."sales" from "authenticated";
+
+revoke truncate on table "public"."sales" from "authenticated";
+
+revoke delete on table "public"."sales" from "service_role";
+
+revoke insert on table "public"."sales" from "service_role";
+
+revoke select on table "public"."sales" from "service_role";
+
+revoke update on table "public"."sales" from "service_role";
+
+alter table "public"."members" drop constraint "members_status_check";
+
+alter table "public"."products" drop constraint "products_category_unit_check";
+
+alter table "public"."profiles" drop constraint "profiles_role_check";
+
+alter table "public"."sale_items" drop constraint "sale_items_unit_check";
+
+alter table "public"."members" add constraint "members_status_check" CHECK (((status)::text = ANY ((ARRAY['active'::character varying, 'expired'::character varying, 'suspended'::character varying, 'inactive'::character varying])::text[]))) not valid;
+
+alter table "public"."members" validate constraint "members_status_check";
+
+alter table "public"."products" add constraint "products_category_unit_check" CHECK (((((category)::text = 'supplement'::text) AND (((supplement_form = 'powder'::text) AND ((unit)::text = 'gram'::text)) OR ((supplement_form = 'drinkable'::text) AND ((unit)::text = 'milliliter'::text)) OR ((supplement_form = ANY (ARRAY['capsule'::text, 'tablet'::text])) AND ((unit)::text = ANY ((ARRAY['piece'::character varying, 'box'::character varying])::text[])) AND ((unit)::text = stock_unit)) OR ((supplement_form = 'other'::text) AND ((unit)::text = 'item'::text)))) OR (((category)::text = 'merchandise'::text) AND ((unit)::text = 'item'::text)))) not valid;
+
+alter table "public"."products" validate constraint "products_category_unit_check";
+
+alter table "public"."profiles" add constraint "profiles_role_check" CHECK (((role)::text = ANY ((ARRAY['admin'::character varying, 'staff'::character varying, 'member'::character varying])::text[]))) not valid;
+
+alter table "public"."profiles" validate constraint "profiles_role_check";
+
+alter table "public"."sale_items" add constraint "sale_items_unit_check" CHECK (((unit)::text = ANY ((ARRAY['gram'::character varying, 'kilogram'::character varying, 'ounce'::character varying, 'pound'::character varying, 'milliliter'::character varying, 'liter'::character varying, 'fluid_ounce'::character varying, 'item'::character varying, 'piece'::character varying, 'box'::character varying, 'membership'::character varying])::text[]))) not valid;
+
+alter table "public"."sale_items" validate constraint "sale_items_unit_check";
+
+CREATE TRIGGER on_auth_user_created AFTER INSERT ON auth.users FOR EACH ROW EXECUTE FUNCTION public.handle_new_auth_user();
+
+CREATE TRIGGER on_auth_user_email_updated AFTER UPDATE OF email ON auth.users FOR EACH ROW WHEN (((old.email)::text IS DISTINCT FROM (new.email)::text)) EXECUTE FUNCTION public.sync_auth_user_email();
+
+
