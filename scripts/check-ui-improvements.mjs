@@ -6,6 +6,14 @@ const elements = new Map();
 const context = vm.createContext({ console, setTimeout, MutationObserver: class { observe() {} }, document: { body: {}, querySelectorAll: () => [], addEventListener() {}, getElementById: id => elements.get(id) } });
 context.window = context;
 vm.runInContext(fs.readFileSync('assets/js/ui-improvements.js', 'utf8'), context);
+for (const [name, file] of [['BCAA Fruit Punch', 'bcaa-fruit-punch'], ['BCAA Peach Mango', 'bcaa-peach-mango'], ['ROAR (Fruitpunch)', 'roar-fruit-punch'], ['ROAR — Peach Mango', 'roar-peach-mango'], ['Whey Core Protein Strawberry', 'whey-strawberry']]) {
+    const path = context.catalogProductPhoto({ name, image: 'old-photo.jpg' });
+    assert.equal(path, `assets/images/products/transparent/${file}.png`);
+    assert.ok(fs.existsSync(path), `Missing catalog asset: ${path}`);
+}
+assert.equal(context.catalogProductPhoto({ name: 'BCAA Lemon', image: 'lemon.jpg' }), 'lemon.jpg');
+assert.equal(context.catalogProductPhoto({ name: 'ISO Strawberry Whey', image_path: 'isolate.png' }), 'isolate.png');
+assert.equal(context.catalogProductPhoto({ name: 'Shirt', image: 'shirt.jpg' }), 'shirt.jpg');
 assert.equal(context.productUnitPrice(80, 10), 8);
 assert.equal(context.productPriceQuote(8, 'gram').amount, 80);
 assert.equal(context.productPriceQuote(8, 'gram').quantity, 10);

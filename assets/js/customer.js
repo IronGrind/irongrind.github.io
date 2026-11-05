@@ -147,7 +147,8 @@ function saveExpiredMembershipSnapshot(member, renewed = false) {
 // Since there are no real product photos stored, generate a branded placeholder
 // using the product name. Swap `imgUrl` in your data with real image paths later.
 function productImage(p) {
-    if (p.image) return p.image;
+    const photo = catalogProductPhoto(p);
+    if (photo) return photo;
     const label = encodeURIComponent(p.name.replace(/[—-]/g, ' ').trim());
     const color = p.category === 'Supplement' ? '1e2533' : '2a1a1a';
     const accent = p.category === 'Supplement' ? '2ecc71' : 'd31212';

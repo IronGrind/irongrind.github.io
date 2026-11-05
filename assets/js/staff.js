@@ -191,7 +191,8 @@ function renderStaffProductCatalog() {
             const top = document.createElement('div'); top.className = 'staff-product-card-top';
             const icon = document.createElement('span'); icon.className = 'staff-product-icon'; icon.innerHTML = category === 'supplement' ? '<i class="fas fa-capsules" aria-hidden="true"></i>' : '<i class="fas fa-shirt" aria-hidden="true"></i>';
             const badge = document.createElement('span'); badge.className = `staff-stock-badge ${available ? 'available' : 'unavailable'}`; badge.textContent = available ? 'Available' : 'Unavailable';
-            if (product.image_path) { const photo = document.createElement('img'); photo.className = 'staff-product-photo'; photo.src = product.image_path; photo.alt = product.name; photo.loading = 'lazy'; card.append(photo); }
+            const imageSource = catalogProductPhoto(product);
+            if (imageSource) { const photo = document.createElement('img'); photo.className = 'staff-product-photo'; photo.src = imageSource; photo.alt = product.name; photo.loading = 'lazy'; card.append(photo); }
             top.append(icon, badge);
             const name = document.createElement('h5'); name.textContent = group.name;
             const details = document.createElement('p'); details.textContent = category === 'merchandise' ? `Size: ${product.size || 'One size'}` : 'Supplement';

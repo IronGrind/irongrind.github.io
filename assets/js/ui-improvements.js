@@ -1,5 +1,21 @@
 // Shared form guidance, product pricing presentation, and accessible photo viewer.
 (() => {
+    // Curated replacements for the five products whose cutouts were supplied.
+    // Require both product family and flavor so unrelated catalog items keep their photos.
+    window.catalogProductPhoto = product => {
+        const name = String(product?.name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+        let asset = '';
+        if (name.includes('bcaa')) {
+            if (name.includes('fruitpunch')) asset = 'bcaa-fruit-punch';
+            else if (name.includes('peachmango')) asset = 'bcaa-peach-mango';
+        } else if (name.includes('roar')) {
+            if (name.includes('fruitpunch')) asset = 'roar-fruit-punch';
+            else if (name.includes('peachmango')) asset = 'roar-peach-mango';
+        } else if (name.includes('whey') && name.includes('strawberry') && !name.includes('iso')) {
+            asset = 'whey-strawberry';
+        }
+        return asset ? `assets/images/products/transparent/${asset}.png` : (product?.image || product?.image_path || '');
+    };
     const quoteQuantity = unit => unit === 'gram' ? 10 : 1;
     const labels = { gram: 'g', milliliter: 'ml', item: 'item', piece: 'pc', box: 'box', kilogram: 'kg', liter: 'L', ounce: 'oz', pound: 'lb', fluid_ounce: 'fl oz' };
     window.productPriceQuote = (price, unit = 'item') => {

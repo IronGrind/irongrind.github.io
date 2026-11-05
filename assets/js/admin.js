@@ -2766,13 +2766,14 @@ function renderStore() {
 
 function productCard(p) {
     const supplement = p.category === 'Supplement';
+    const photo = catalogProductPhoto(p);
     const merchType = p.merchType || (p.size ? 'apparel' : 'other');
     const productType = supplement ? `${supplementTypeLabel(p.supplementType || 'other')} · ${supplementFormLabel(p.supplementForm || 'powder')}` : merchandiseTypeLabel(merchType);
     const low = productIsLowStock(p);
     const stockLabel = `${formatProductStock(p)} in stock`;
     return `
         <div class="product-card">
-            ${p.image ? `<div class="product-img-wrap"><img src="${p.image}" alt="${escapeHTML(p.name)}" loading="lazy"></div>` : ''}
+            ${photo ? `<div class="product-img-wrap"><img src="${escapeHTML(photo)}" alt="${escapeHTML(p.name)}" loading="lazy"></div>` : ''}
             <span class="cat">${p.category} · ${productType}</span>
             <h4>${p.name}${!supplement && p.size ? ' — ' + p.size : ''}</h4>
             <div class="price">${formatPeso(productPriceQuote(p.price, p.inventoryUnit).amount)} / ${productPriceQuote(p.price, p.inventoryUnit).quantity} ${productSaleUnitLabel(p)}</div>
@@ -3026,7 +3027,7 @@ function editProduct(id) {
     openModal(`
         <h3><i class="fas fa-edit"></i> Edit Product</h3>
         <p class="modal-sub">Supplement pricing and stock units follow the selected form. Supabase checks admin access when saving.</p>
-        ${productPhotoPicker('ep', p.image)}
+        ${productPhotoPicker('ep', catalogProductPhoto(p))}
         <div class="form-group" style="margin-bottom:14px;"><label>Name</label><input type="text" id="epName" value="${p.name}"></div>
         ${p.category === 'Merch' ? `<div class="form-group" style="margin-bottom:14px;"><label for="epMerchType">Merchandise type</label><select id="epMerchType" onchange="toggleEditProductSize('${p.id}')">${merchandiseTypeOptions()}</select></div><div id="epSizeGroup" class="form-group" style="margin-bottom:14px;"><label for="epSize">Size / variant (optional)</label><input id="epSize" list="epSizeSuggestions" maxlength="30" placeholder="Choose or type an available size"><datalist id="epSizeSuggestions">${merchandiseSizeOptions(p.size)}</datalist></div>` : `<div class="form-group" style="margin-bottom:14px;"><label for="epSupplementType">Supplement type</label><select id="epSupplementType">${supplementTypeOptions()}</select></div><div class="form-group" style="margin-bottom:14px;"><label for="epSupplementForm">Form</label><select id="epSupplementForm" onchange="toggleEditSupplementUnits()">${supplementFormOptions(p.supplementForm || 'powder')}</select></div>`}
         <div class="form-row">
