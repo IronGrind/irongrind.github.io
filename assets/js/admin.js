@@ -3173,9 +3173,12 @@ function getProductPhoto(inputId) {
                 canvas.width = Math.max(1, Math.round(img.width * scale));
                 canvas.height = Math.max(1, Math.round(img.height * scale));
                 const context = canvas.getContext('2d');
-                context.fillStyle = '#ffffff'; context.fillRect(0, 0, canvas.width, canvas.height);
+                const preserveTransparency = ['image/png', 'image/webp', 'image/gif', 'image/svg+xml'].includes(file.type);
+                if (!preserveTransparency) {
+                    context.fillStyle = '#ffffff'; context.fillRect(0, 0, canvas.width, canvas.height);
+                }
                 context.drawImage(img, 0, 0, canvas.width, canvas.height);
-                resolve(canvas.toDataURL('image/jpeg', 0.78));
+                resolve(preserveTransparency ? canvas.toDataURL('image/png') : canvas.toDataURL('image/jpeg', 0.78));
             };
             img.src = reader.result;
         };

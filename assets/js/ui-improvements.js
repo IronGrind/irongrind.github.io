@@ -88,8 +88,9 @@
             viewer.querySelector('[data-photo-action="out"]').addEventListener('click', () => setZoom(zoom - .25));
             viewer.querySelector('[data-photo-action="in"]').addEventListener('click', () => setZoom(zoom + .25));
             viewer.querySelector('[data-photo-action="fit"]').addEventListener('click', () => setZoom(1));
-            photo.addEventListener('dblclick', () => setZoom(zoom > 1 ? 1 : 2));
+            photo.addEventListener('dblclick', () => { if (!viewer.classList.contains('photo-bubble')) setZoom(zoom > 1 ? 1 : 2); });
             viewer.addEventListener('keydown', event => {
+                if (viewer.classList.contains('photo-bubble')) return;
                 if (event.key === '+' || event.key === '=') { event.preventDefault(); setZoom(zoom + .25); }
                 if (event.key === '-') { event.preventDefault(); setZoom(zoom - .25); }
             });
@@ -112,8 +113,14 @@
             stage.addEventListener('pointercancel', () => { drag = null; });
             viewer.querySelector('.photo-lightbox-close').addEventListener('click', () => viewer.close());
             stage.addEventListener('click', event => { if (event.target === stage && !moved) viewer.close(); });
+            viewer.addEventListener('click', event => {
+                if (event.target !== viewer) return;
+                const bounds = viewer.getBoundingClientRect();
+                if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) viewer.close();
+            });
             viewer.addEventListener('close', () => document.body.classList.remove('photo-lightbox-open'));
         }
+        viewer.classList.toggle('photo-bubble', document.body.classList.contains('member-dashboard'));
         const photo = viewer.querySelector('img'); photo.src = img.currentSrc || img.src; photo.alt = img.alt || 'Product photo';
         viewer.querySelector('.photo-lightbox-title').textContent = img.alt || 'Product photo';
         viewer.resetPhoto();

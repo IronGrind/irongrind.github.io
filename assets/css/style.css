@@ -1996,3 +1996,18 @@ html[data-dashboard-theme="light"] .password-guidance[data-state="invalid"], htm
 html[data-dashboard-theme="light"] body.admin-dashboard .product-photo-upload .product-photo-preview { background: #f5f6f9; border-color: #cbd2dd; }
 html[data-dashboard-theme="light"] body.admin-dashboard .product-photo-upload-button { color: #39465a; }
 html[data-dashboard-theme="light"] body.admin-dashboard .product-photo-upload.has-photo .product-photo-upload-button { color: #29364a; background: #fff; border-color: #d3d9e2; }
+
+/* Member catalog: a modest rounded photo popup instead of a full-screen viewer. */
+.product-photo-dialog.photo-bubble { width: min(440px, calc(100vw - 32px)); height: min(510px, 82dvh); max-width: calc(100vw - 32px); max-height: 82dvh; margin: auto; border: 1px solid rgba(255,255,255,.13); border-radius: 26px; background: #151a22; box-shadow: 0 24px 90px rgba(0,0,0,.45); animation: photo-bubble-enter .18s ease-out; }
+.product-photo-dialog.photo-bubble::backdrop { background: rgba(0,0,0,.42); backdrop-filter: blur(5px); }
+.photo-bubble .photo-lightbox { grid-template-rows: auto minmax(0,1fr); padding-bottom: 20px; box-sizing: border-box; }
+.photo-bubble .photo-lightbox-header { padding: 18px 18px 14px 22px; gap: 12px; }
+.photo-bubble .photo-lightbox-title { max-width: 300px; white-space: normal; font-size: .95rem; }
+.product-photo-dialog.photo-bubble .photo-lightbox-close { width: 32px; height: 32px; }
+.product-photo-dialog.photo-bubble .photo-viewer-stage { margin: 0 20px; border-radius: 16px; cursor: default; }
+.photo-bubble .photo-lightbox-footer { display: none; }
+html[data-dashboard-theme="light"] .product-photo-dialog.photo-bubble { background: #fff; border-color: #e2e6ed; }
+html[data-dashboard-theme="light"] .photo-bubble .photo-lightbox-title { color: #243044; }
+html[data-dashboard-theme="light"] .product-photo-dialog.photo-bubble .photo-lightbox-close { color: #43516a; border-color: #e1e5ed; background: #f1f3f7; }
+@keyframes photo-bubble-enter { from { opacity: 0; transform: scale(.95) translateY(8px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .product-photo-dialog.photo-bubble { animation: none; } }
