@@ -1,4 +1,6 @@
 $ErrorActionPreference='Stop'
+# Context/DFD output from this older generator is superseded by Chapter 3 Diagrams/gane-sarson.ps1.
+# Run the dedicated Gane-Sarson generator afterward to refresh those figures and their Word embeddings.
 Add-Type -AssemblyName System.Drawing
 $out=Join-Path (Get-Location) 'Documentations\Chapter 3 Diagrams'
 [void][IO.Directory]::CreateDirectory($out)
