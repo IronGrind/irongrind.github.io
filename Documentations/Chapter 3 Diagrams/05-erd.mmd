@@ -1,0 +1,21 @@
+﻿erDiagram
+    public_members ||--o{ private_attendance_scan_requests : member_id
+    auth_users ||--o{ private_attendance_scan_requests : operator_id
+    auth_users |o--o{ public_attendance : checked_out_by
+    public_members ||--o{ public_attendance : member_id
+    auth_users |o--o{ public_attendance : recorded_by
+    public_membership_applications |o--o{ public_members : application_id
+    auth_users |o--o| public_members : auth_user_id
+    auth_users |o--o{ public_membership_applications : auth_user_id
+    public_members |o--o{ public_membership_applications : member_id
+    public_profiles |o--o{ public_membership_applications : reviewed_by
+    public_members ||--o{ public_membership_history : member_id
+    auth_users |o--o{ public_membership_history : recorded_by
+    auth_users |o--o{ public_mobile_attendance_pairing_policy : updated_by
+    public_mobile_attendance_scan_sessions ||--o{ public_mobile_attendance_scan_events : session_id
+    auth_users ||--o{ public_mobile_attendance_scan_sessions : created_by
+    auth_users ||--o| public_profiles : id
+    public_products |o--o{ public_sale_items : product_id
+    public_sales ||--o{ public_sale_items : sale_id
+    public_members |o--o{ public_sales : member_id
+    auth_users |o--o{ public_sales : processed_by

@@ -1,0 +1,142 @@
+﻿[
+    {
+        "Child":  "private.attendance_scan_requests",
+        "Field":  "member_id",
+        "Parent":  "public.members",
+        "ParentField":  "id",
+        "Rule":  "ON DELETE CASCADE"
+    },
+    {
+        "Child":  "private.attendance_scan_requests",
+        "Field":  "operator_id",
+        "Parent":  "auth.users",
+        "ParentField":  "id",
+        "Rule":  "ON DELETE CASCADE"
+    },
+    {
+        "Child":  "public.attendance",
+        "Field":  "checked_out_by",
+        "Parent":  "auth.users",
+        "ParentField":  "id",
+        "Rule":  "ON DELETE SET NULL"
+    },
+    {
+        "Child":  "public.attendance",
+        "Field":  "member_id",
+        "Parent":  "public.members",
+        "ParentField":  "id",
+        "Rule":  "ON DELETE CASCADE"
+    },
+    {
+        "Child":  "public.attendance",
+        "Field":  "recorded_by",
+        "Parent":  "auth.users",
+        "ParentField":  "id",
+        "Rule":  "ON DELETE SET NULL"
+    },
+    {
+        "Child":  "public.members",
+        "Field":  "application_id",
+        "Parent":  "public.membership_applications",
+        "ParentField":  "id",
+        "Rule":  "ON DELETE SET NULL"
+    },
+    {
+        "Child":  "public.members",
+        "Field":  "auth_user_id",
+        "Parent":  "auth.users",
+        "ParentField":  "id",
+        "Rule":  "ON DELETE SET NULL"
+    },
+    {
+        "Child":  "public.membership_applications",
+        "Field":  "auth_user_id",
+        "Parent":  "auth.users",
+        "ParentField":  "id",
+        "Rule":  "ON DELETE CASCADE"
+    },
+    {
+        "Child":  "public.membership_applications",
+        "Field":  "member_id",
+        "Parent":  "public.members",
+        "ParentField":  "id",
+        "Rule":  "ON DELETE SET NULL"
+    },
+    {
+        "Child":  "public.membership_applications",
+        "Field":  "reviewed_by",
+        "Parent":  "public.profiles",
+        "ParentField":  "id",
+        "Rule":  ""
+    },
+    {
+        "Child":  "public.membership_history",
+        "Field":  "member_id",
+        "Parent":  "public.members",
+        "ParentField":  "id",
+        "Rule":  "ON DELETE RESTRICT"
+    },
+    {
+        "Child":  "public.membership_history",
+        "Field":  "recorded_by",
+        "Parent":  "auth.users",
+        "ParentField":  "id",
+        "Rule":  "ON DELETE SET NULL"
+    },
+    {
+        "Child":  "public.mobile_attendance_pairing_policy",
+        "Field":  "updated_by",
+        "Parent":  "auth.users",
+        "ParentField":  "id",
+        "Rule":  ""
+    },
+    {
+        "Child":  "public.mobile_attendance_scan_events",
+        "Field":  "session_id",
+        "Parent":  "public.mobile_attendance_scan_sessions",
+        "ParentField":  "id",
+        "Rule":  "ON DELETE CASCADE"
+    },
+    {
+        "Child":  "public.mobile_attendance_scan_sessions",
+        "Field":  "created_by",
+        "Parent":  "auth.users",
+        "ParentField":  "id",
+        "Rule":  "ON DELETE CASCADE"
+    },
+    {
+        "Child":  "public.profiles",
+        "Field":  "id",
+        "Parent":  "auth.users",
+        "ParentField":  "id",
+        "Rule":  "ON DELETE CASCADE"
+    },
+    {
+        "Child":  "public.sale_items",
+        "Field":  "product_id",
+        "Parent":  "public.products",
+        "ParentField":  "id",
+        "Rule":  "ON DELETE SET NULL"
+    },
+    {
+        "Child":  "public.sale_items",
+        "Field":  "sale_id",
+        "Parent":  "public.sales",
+        "ParentField":  "id",
+        "Rule":  "ON DELETE CASCADE"
+    },
+    {
+        "Child":  "public.sales",
+        "Field":  "member_id",
+        "Parent":  "public.members",
+        "ParentField":  "id",
+        "Rule":  "ON DELETE SET NULL"
+    },
+    {
+        "Child":  "public.sales",
+        "Field":  "processed_by",
+        "Parent":  "auth.users",
+        "ParentField":  "id",
+        "Rule":  "ON DELETE SET NULL"
+    }
+]
