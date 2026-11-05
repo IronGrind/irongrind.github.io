@@ -19,3 +19,203 @@
     public_sales ||--o{ public_sale_items : sale_id
     public_members |o--o{ public_sales : member_id
     auth_users |o--o{ public_sales : processed_by
+    auth_users {
+        uuid id PK
+    }
+    private_admin_login_attempts {
+        text bucket PK
+        timestamp_with_time_zone window_start
+        integer attempts
+    }
+    private_attendance_scan_requests {
+        uuid request_id PK
+        uuid operator_id FK
+        uuid member_id FK
+        jsonb result
+        timestamp_with_time_zone created_at
+    }
+    public_activity_logs {
+        bigint id PK
+        timestamp_with_time_zone occurred_at
+        uuid actor_id
+        text actor_name
+        text actor_role
+        text action
+        text entity_type
+        text entity_id
+        text record_label
+        text[] changed_fields
+        text details
+    }
+    public_attendance {
+        uuid id PK
+        uuid member_id FK
+        date date
+        timestamp_with_time_zone time_in
+        timestamp_with_time_zone time_out
+        timestamp_with_time_zone created_at
+        uuid recorded_by FK
+        uuid checked_out_by FK
+    }
+    public_members {
+        uuid id PK
+        uuid application_id FK
+        character_varying full_name
+        character_varying mobile
+        character_varying plan
+        date start_date
+        date end_date
+        character_varying status
+        numeric paid
+        text[] fitness_goals
+        numeric height
+        character_varying height_unit
+        numeric weight
+        text[] health_conditions
+        text other_medical_conditions
+        text signature_data
+        timestamp_with_time_zone created_at
+        uuid auth_user_id FK
+        character_varying email
+        character_varying username
+        date date_of_birth
+        smallint age
+        character_varying sex
+        numeric weight_kg
+        jsonb emergency_contact
+        numeric plan_price
+        date expiry_date
+        character_varying registration_source
+        text signature_path
+        timestamp_with_time_zone updated_at
+    }
+    public_membership_applications {
+        uuid id PK
+        character_varying full_name
+        date date_of_birth
+        integer age
+        character_varying sex
+        character_varying mobile
+        numeric height
+        character_varying height_unit
+        numeric weight
+        text emergency_name
+        text emergency_relationship
+        text emergency_contact
+        character_varying plan
+        numeric plan_price
+        date start_date
+        date end_date
+        text[] health_conditions
+        text other_medical_conditions
+        text[] fitness_goals
+        text signature_data
+        character_varying status
+        uuid reviewed_by FK
+        timestamp_with_time_zone reviewed_at
+        timestamp_with_time_zone created_at
+        uuid auth_user_id FK
+        uuid member_id FK
+        character_varying application_type
+        timestamp_with_time_zone submitted_at
+        character_varying email
+        character_varying username
+        jsonb emergency_contact_data
+        numeric weight_kg
+        text signature_path
+    }
+    public_membership_history {
+        uuid id PK
+        uuid member_id FK
+        character_varying event_type
+        character_varying previous_plan
+        character_varying new_plan
+        numeric previous_price
+        numeric new_price
+        date previous_start_date
+        date previous_expiry_date
+        date new_start_date
+        date new_expiry_date
+        text notes
+        timestamp_with_time_zone recorded_at
+        uuid recorded_by FK
+    }
+    public_mobile_attendance_pairing_policy {
+        boolean singleton PK
+        integer max_pairs
+        timestamp_with_time_zone updated_at
+        uuid updated_by FK
+        text pairing_password_hash
+        text pairing_removal_pin_hash
+    }
+    public_mobile_attendance_scan_events {
+        uuid id PK
+        uuid session_id FK
+        text qr_payload
+        timestamp_with_time_zone created_at
+    }
+    public_mobile_attendance_scan_sessions {
+        uuid id PK
+        text token_hash
+        uuid created_by FK
+        timestamp_with_time_zone created_at
+        timestamp_with_time_zone expires_at
+        text paired_device
+        timestamp_with_time_zone paired_at
+        boolean remember_phone
+    }
+    public_products {
+        uuid id PK
+        character_varying name
+        character_varying category
+        numeric price
+        numeric stock
+        character_varying size
+        timestamp_with_time_zone created_at
+        timestamp_with_time_zone updated_at
+        boolean is_active
+        timestamp_with_time_zone archived_at
+        text image_path
+        numeric price_per_unit
+        character_varying unit
+        text stock_unit
+        text merch_type
+        text supplement_form
+        text supplement_type
+    }
+    public_profiles {
+        uuid id PK,FK
+        character_varying username
+        character_varying full_name
+        character_varying role
+        text account_status
+        timestamp_with_time_zone created_at
+        timestamp_with_time_zone updated_at
+        character_varying email
+        boolean is_active
+        text phone_number
+        text gender
+    }
+    public_sale_items {
+        uuid id PK
+        uuid sale_id FK
+        uuid product_id FK
+        character_varying item_name
+        character_varying category
+        numeric quantity
+        character_varying unit
+        numeric unit_price
+        numeric line_total
+    }
+    public_sales {
+        uuid id PK
+        uuid member_id FK
+        character_varying customer_name
+        jsonb items
+        numeric total
+        character_varying status
+        timestamp_with_time_zone sold_at
+        character_varying receipt_number
+        character_varying customer_type
+        uuid processed_by FK
+    }

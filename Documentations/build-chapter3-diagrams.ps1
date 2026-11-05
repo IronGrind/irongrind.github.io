@@ -14,7 +14,9 @@ function Canvas($title,$subtitle,$height=2250) {
 }
 function Box($x,$y,$w,$h,$title,$text,$ellipse=$false) {
  $brush=[Drawing.SolidBrush]::new([Drawing.Color]::FromArgb(240,245,250));$rect=[Drawing.RectangleF]::new($x,$y,$w,$h)
- if($ellipse){$g.FillEllipse($brush,$rect);$g.DrawEllipse($pen,$rect)}else{$g.FillRectangle($brush,$rect);$g.DrawRectangle($pen,$x,$y,$w,$h)}
+ if($ellipse){$g.FillEllipse($brush,$rect);$g.DrawEllipse($pen,$rect)}elseif($title -match '^\d+\.\d|^0\.'){
+ $shape=[Drawing.Drawing2D.GraphicsPath]::new();$shape.AddArc($x,$y,30,30,180,90);$shape.AddArc($x+$w-30,$y,30,30,270,90);$shape.AddArc($x+$w-30,$y+$h-30,30,30,0,90);$shape.AddArc($x,$y+$h-30,30,30,90,90);$shape.CloseFigure();$g.FillPath($brush,$shape);$g.DrawPath($pen,$shape);$shape.Dispose()
+ }elseif($title -eq 'Read / write stores'){$g.FillRectangle($brush,$rect);$g.DrawLine($pen,$x,$y,$x+$w,$y);$g.DrawLine($pen,$x,$y+$h,$x+$w,$y+$h);$g.DrawLine($pen,$x,$y,$x,$y+$h)}else{$g.FillRectangle($brush,$rect);$g.DrawRectangle($pen,$x,$y,$w,$h)}
  $g.DrawString($title,$bold,$ink,[Drawing.RectangleF]::new($x+18,$y+14,$w-36,70))
  $g.DrawString($text,$font,$ink,[Drawing.RectangleF]::new($x+18,$y+80,$w-36,$h-90));$brush.Dispose()
 }
@@ -44,7 +46,7 @@ $rows=@(
 @('Administrator','Report query / activity filters','8.0 Reports and administration','Auth users; D1-D9; D10 for phone administration','Reports; staff controls; phone settings; activity records')
 )
 Canvas 'Figure 3. Level 1 data-flow diagram' 'Read each lane as actor input -> numbered process -> data stores. Return arrows represent retrieved data. Auth is managed by Supabase Auth.' 2580
-for($i=0;$i -lt $rows.Count;$i++){$y=220+$i*265;$r=$rows[$i];Box 45 $y 430 205 $r[0] $r[1];Box 650 $y 490 205 $r[2] $r[4];Box 1310 $y 445 205 'Read / write stores' $r[3];Arrow 475 ($y+65) 650 ($y+65);Arrow 650 ($y+155) 475 ($y+155);Arrow 1140 ($y+65) 1310 ($y+65);Arrow 1310 ($y+155) 1140 ($y+155)}
+for($i=0;$i -lt $rows.Count;$i++){$y=220+$i*265;$r=$rows[$i];Box 45 $y 430 205 $r[0] $r[1];Box 650 $y 490 205 $r[2] $r[4];Box 1310 $y 445 205 'Read / write stores' $r[3];Arrow 475 ($y+65) 650 ($y+65);Arrow 650 ($y+155) 475 ($y+155);Arrow 1140 ($y+65) 1310 ($y+65);Arrow 1310 ($y+155) 1140 ($y+155);$flowFont=[Drawing.Font]::new('Arial',14);$g.DrawString('Input data',$flowFont,$ink,485,$y+30);$g.DrawString('Results',$flowFont,$ink,485,$y+165);$g.DrawString('Query / update',$flowFont,$ink,1145,$y+30);$g.DrawString('Stored data',$flowFont,$ink,1145,$y+165);$flowFont.Dispose()}
 $g.DrawString("D1 profiles; D2 membership_applications; D3 members; D4 attendance; D5 products; D6 sales; D7 sale_items; D8 membership_history; D9 activity_logs; D10 mobile pairing tables.`nMutation triggers / logging functions also write D9. Staff and phone operations use authorized functions. Only administrators review online requests or maintain inventory.",$small,$ink,[Drawing.RectangleF]::new(60,2360,1680,200))
 Finish '03-data-flow.png'
 Canvas 'Figure 4. Use-case diagram' 'Actor associations are grouped by role inside the IronGrind boundary. Repeated shared use cases represent the same function.' 2400
@@ -69,6 +71,11 @@ foreach($fk in $fks){$parent=$fk.Parent.Replace('.','_');$child=$fk.Child.Replac
  $required=$definition -match ('"'+[regex]::Escape($fk.Field)+'" "uuid" NOT NULL')
  $card=if($fk.Child -eq 'public.profiles'){'||--o|'}elseif($fk.Child -eq 'public.members' -and $fk.Field -eq 'auth_user_id'){'|o--o|'}elseif($required){'||--o{'}else{'|o--o{'}
  $mmd.Add("    $parent $card $child : $($fk.Field)")
+}
+$mmd.Add('    auth_users {');$mmd.Add('        uuid id PK');$mmd.Add('    }')
+foreach($definition in [regex]::Matches($sql,'CREATE TABLE IF NOT EXISTS "(public|private)"\."([^"]+)" \(([\s\S]*?)\n\);')){
+ $schema=$definition.Groups[1].Value;$table=$definition.Groups[2].Value;$entity=$schema+'_'+$table;$mmd.Add("    $entity {")
+ foreach($line in ($definition.Groups[3].Value -split "`n")){$column=[regex]::Match($line,'^\s+"([^"]+)"\s+(.+?)(?:,)?\s*$');if(-not $column.Success){continue};$name=$column.Groups[1].Value;$type=([regex]::Split($column.Groups[2].Value,'\s+(?:DEFAULT|NOT NULL|GENERATED)\b'))[0].Trim().TrimEnd(',').Replace('"','');$type=$type -replace '\([^)]*\)','' -replace ' ','_';$keys=@();if($sql -match ('ALTER TABLE ONLY "'+$schema+'"\."'+$table+'"\s+ADD CONSTRAINT "[^"]+" PRIMARY KEY \("'+$name+'"\)')){$keys+='PK'};if(@($fks|Where-Object {$_.Child -eq "$schema.$table" -and $_.Field -eq $name}).Count){$keys+='FK'};$suffix=if($keys.Count){' '+($keys -join ',')}else{''};$mmd.Add("        $type $name$suffix")};$mmd.Add('    }')
 }
 $mmd|Set-Content (Join-Path $out '05-erd.mmd') -Encoding UTF8
 for($page=0;$page -lt 3;$page++){
