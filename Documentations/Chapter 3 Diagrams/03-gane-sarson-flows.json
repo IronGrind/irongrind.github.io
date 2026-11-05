@@ -91,13 +91,13 @@
                        [
                            "D1",
                            "profiles",
-                           "Role-scoped account data",
+                           "Own name / account provisioning",
                            "Own / permitted account"
                        ],
                        [
                            "D3",
                            "members",
-                           "Role-scoped member changes",
+                           "Own edits / membership operations",
                            "Own record / limited lookup"
                        ],
                        [

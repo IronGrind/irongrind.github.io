@@ -26,7 +26,7 @@ Reviewed against the checked-in system files on November 5, 2026 (Asia/Manila). 
 - Final page layout has not been rendered in Microsoft Word. Check pagination, caption placement, and image text size before submission.
 - Existing interface screenshots, other than the replaced receipt illustration, are historical prototype images and were not recaptured. Capture the current interfaces before presenting those figures as current screenshots.
 - The Agile illustration was inspected and retained. The Gantt chart remains the original planned schedule, not evidence of actual completion dates.
-- Some staff messages still use the word Ã¢â‚¬Å“receiptÃ¢â‚¬Â for the internal reference. No application code was changed in this documentation task.
+- Some staff messages still use the word ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œreceiptÃƒÂ¢Ã¢â€šÂ¬Ã‚Â for the internal reference. No application code was changed in this documentation task.
 - Illustrations and editable ERD source are in Chapter 3 Diagrams. build-chapter3-diagrams.ps1 regenerates those source images; regenerating the images alone does not replace images already embedded in Word.
 
 ## Diagram conventions
@@ -43,4 +43,14 @@ ERD panels repeat table boxes rather than drawing every relationship across one 
 
 The functional, input, and output requirements now share nine functions: User Login; Membership Applications; User Management; Renewals; QR Attendance; Products & Inventory; Sales; Generate Reports; Activity Logs. The DFD uses the same numbered responsibilities. Process 9.0 is read-only Activity Logs, while process 8.0 generates reports. Administrator staff-account changes belong to User Management, and phone-pairing controls belong to QR Attendance. Their recorded events are visible in Activity Logs; the viewer does not perform those changes.
 
-User Management has distinct actor arrows: administrator user/staff controls; staff counter registration, renewal and active-plan changes with limited lookup; and member own-profile queries/edits. Staff have no member-profile viewing or personal-detail editing function. New Auth/profile records created by registration services are backend writes, not staff profile-editing rights. The use-case illustration shows report generation and activity-log review separately. The physical ERD describes stored relationships rather than granting user permissions.
+User Management has distinct actor arrows: administrator read-only member-profile queries, separate membership operations, and staff-account controls; staff counter registration, renewal and active-plan changes with limited lookup; and member own-profile queries/edits. Staff have no member-profile viewing or personal-detail editing function. New Auth/profile records created by registration services are backend writes, not staff profile-editing rights. The use-case illustration shows report generation and activity-log review separately. The physical ERD describes stored relationships rather than granting user permissions.
+
+## Personal-profile permissions
+
+| Role | View member personal profile | Edit member personal profile |
+| --- | --- | --- |
+| Administrator | Yes | No |
+| Member | Own profile only | Own profile only |
+| Staff | No | No |
+
+Membership registration, renewal, plan changes, staff-account provisioning, and attendance are separate operational functions; their database writes must not be described as permission to edit an existing member's personal profile. Staff counter lookup supplies limited operation-specific details, not a profile page. The requirement descriptions, prototype narrative, User Management use case, member self-profile use case, context flows, and DFD actor arrows were checked and corrected to use this distinction.
