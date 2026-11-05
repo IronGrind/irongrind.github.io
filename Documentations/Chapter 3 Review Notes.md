@@ -1,5 +1,9 @@
 # Chapter 3 review
 
+The data dictionary has been expanded with substantive field purposes, declared character limits, numeric precision and scale, NULLability, foreign-key targets, and relevant validation details. All 169 entries have a populated Length / Precision / Scale cell: an actual declared size, Not declared, N/A, or the explicit QR-payload check range. No new database limits were invented or applied.
+
+Verified validation distinctions: register.html permits up to 300 characters in the online email input, while the corresponding varchar column allows 254; the staff email form allows 254. The online additional-medical-details textarea allows 500 characters, but the database column remains unbounded text. The paired-device registration function truncates its label to 100 characters while its column remains text. The retained QR-payload column is text with an explicit database CHECK requiring 1-500 characters. These workflow/check limits are distinct from the column type declaration. Application and database code were not changed by this documentation revision.
+
 Reviewed against the checked-in system files on November 5, 2026 (Asia/Manila). The local migration baseline is the database reference; this review does not assert that a remote deployment has the same schema.
 
 ## Updated in Chapter 3.docx
