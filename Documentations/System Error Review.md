@@ -27,3 +27,7 @@ The administrator/payment migration is applied to the linked Supabase database. 
 The tests include simulated browser logic and the real Supabase browser SDK with mocked Auth responses. Complete visual browser testing, physical two-phone testing, and Word pagination were not performed. Passing these checks is evidence for the tested behavior, not a guarantee that every possible error has been eliminated.
 
 To rerun the suite: node scripts/run-regression-checks.mjs <path-to-PGlite-dist/index.js> <path-to-cached-Supabase-browser-SDK.js>.
+
+## Follow-up: compound first names in member settings
+
+Saving a member's personal information previously rebuilt the name fields by splitting the combined `full_name`. That parser treated the second word in a compound first name as a middle name, so a first name such as “Anabelle Jean” appeared to move after saving. The save flow now updates the displayed account name without re-splitting the form fields; the entered first, middle, and last name values remain in their respective inputs after a successful save. The database continues to store the existing combined `full_name` value.

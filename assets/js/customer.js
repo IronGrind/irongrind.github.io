@@ -855,7 +855,10 @@ async function submitMemberSettings(event) {
             supabaseMember.healthConditions = profile.health_conditions;
             supabaseMember.otherMedicalConditions = profile.other_medical_conditions;
         }
-        updateCustomerName(fullName, true);
+        // Keep the three edited values as entered. Re-splitting the combined
+        // full name here would move a compound first name (for example,
+        // "Anabelle Jean") into the middle-name field immediately after save.
+        updateCustomerName(fullName);
         updateSettingsAge();
         settingsFormMessage('Your information was updated.', 'success');
         toast('Account information updated.', 'success');
