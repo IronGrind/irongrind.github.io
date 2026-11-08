@@ -423,27 +423,52 @@ async function recordStaffAttendance(value) {
 }
 document.getElementById('staffScanForm').addEventListener('submit', event => { event.preventDefault(); recordStaffAttendance(document.getElementById('staffIdentifier').value); });
 document.getElementById('refreshStaffAttendance').onclick = () => refreshStaffAttendance().catch(error => { staffStatus.textContent = error.message; });
+function staffCameraErrorMessage(error) {
+    if (['NotAllowedError', 'PermissionDeniedError', 'SecurityError'].includes(error?.name)) {
+        return 'Camera access is blocked. Allow camera access for this site in your browser and Windows privacy settings, then reload the page.';
+    }
+    if (['NotFoundError', 'DevicesNotFoundError'].includes(error?.name)) {
+        return 'No usable camera was found. Check that the laptop camera is enabled, or enter the member QR code below.';
+    }
+    if (['NotReadableError', 'TrackStartError', 'AbortError'].includes(error?.name)) {
+        return 'The camera may be in use by another app. Close apps such as Camera, Teams, or Zoom, then try again.';
+    }
+    if (typeof Html5Qrcode === 'undefined') return 'The QR scanner could not load. Check the internet connection and reload this page.';
+    return 'The camera could not start. Check browser and Windows camera permissions, close other camera apps, then try again.';
+}
 document.getElementById('startStaffCamera').onclick = async () => {
     if (!staffUser || staffScanner || staffBusy) return;
+    if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
+        staffStatus.textContent = 'Camera scanning needs a secure HTTPS page (or localhost) and a browser with camera support.';
+        return;
+    }
+    if (typeof Html5Qrcode === 'undefined') {
+        staffStatus.textContent = staffCameraErrorMessage();
+        return;
+    }
+    staffStatus.textContent = 'Starting the laptop camera…';
+    const scanner = new Html5Qrcode('staffCamera');
+    staffScanner = scanner;
     try {
-        staffScanner = new Html5Qrcode('staffCamera');
-        await staffScanner.start({ facingMode: 'environment' }, { fps: 10, qrbox: 250 }, async value => {
-            if (!staffScanner || staffBusy) return;
-            const scanner = staffScanner;
+        // A laptop's built-in webcam is usually user-facing. Prefer the rear
+        // camera on phones and the front camera on computers, while keeping
+        // the preference ideal so browsers can fall back to available hardware.
+        const preferRearCamera = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
+        const facingMode = preferRearCamera ? 'environment' : 'user';
+        await scanner.start({ facingMode: { ideal: facingMode } }, { fps: 10, qrbox: 250 }, async value => {
+            if (staffScanner !== scanner || staffBusy) return;
             staffScanner = null;
             staffBusy = true;
             try { await scanner.stop(); } finally { staffBusy = false; }
             await recordStaffAttendance(value);
         }, () => {});
+        staffStatus.textContent = 'Camera ready. Hold the member QR code in the frame.';
     } catch (error) {
-        staffScanner = null;
+        if (staffScanner === scanner) staffScanner = null;
+        try { await scanner.stop(); } catch { /* No active stream to stop. */ }
+        try { scanner.clear(); } catch { /* Scanner UI may not have initialized. */ }
         console.warn('Staff QR camera could not start:', error);
-        const message = ['NotAllowedError', 'PermissionDeniedError', 'SecurityError'].includes(error?.name)
-            ? 'Camera access is off. Allow camera access in your browser settings, then try again.'
-            : error?.name === 'NotFoundError'
-                ? 'No camera was found on this device. You can enter the member code below instead.'
-                : 'The camera is unavailable right now. You can enter the member code below instead.';
-        staffStatus.textContent = message;
+        staffStatus.textContent = staffCameraErrorMessage(error);
     }
 };
 document.getElementById('staffLogout').onclick = async () => {
