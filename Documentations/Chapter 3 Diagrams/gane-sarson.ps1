@@ -10,16 +10,30 @@ function Entity($x,$y,$w,$h,$name){$g.DrawRectangle($pen,$x,$y,$w,$h);Label $nam
 function Process($x,$y,$w,$h,$number,$name){$shape=[Drawing.Drawing2D.GraphicsPath]::new();$shape.AddArc($x,$y,36,36,180,90);$shape.AddArc($x+$w-36,$y,36,36,270,90);$shape.AddArc($x+$w-36,$y+$h-36,36,36,0,90);$shape.AddArc($x,$y+$h-36,36,36,90,90);$shape.CloseFigure();$g.DrawPath($pen,$shape);$shape.Dispose();$g.DrawLine($pen,$x,$y+65,$x+$w,$y+65);Label $number ($x+20) ($y+15) ($w-40) 45 $bold;Label $name ($x+30) ($y+100) ($w-60) ($h-120) $bold}
 function Store($x,$y,$w,$h,$id,$name){$g.DrawLine($pen,$x,$y,$x+$w,$y);$g.DrawLine($pen,$x,$y+$h,$x+$w,$y+$h);$g.DrawLine($pen,$x,$y,$x,$y+$h);$g.DrawLine($pen,$x+83,$y,$x+83,$y+$h);Label $id ($x+8) ($y+22) 75 40 $small;Label $name ($x+98) ($y+12) ($w-105) ($h-12) $small}
 function Flow($x1,$x2,$y,$text,$above=$true){$ap=[Drawing.Pen]::new([Drawing.Color]::Black,3);$ap.CustomEndCap=[Drawing.Drawing2D.AdjustableArrowCap]::new(5,6);$g.DrawLine($ap,$x1,$y,$x2,$y);$ap.Dispose();$x=[Math]::Min($x1,$x2);$w=[Math]::Abs($x2-$x1);$ly=if($above){$y-48}else{$y+8};Label $text ($x+10) $ly ($w-20) 48 $flowFont}
+function DirectedFlow($x1,$y1,$x2,$y2){$ap=[Drawing.Pen]::new([Drawing.Color]::Black,3);$ap.CustomEndCap=[Drawing.Drawing2D.AdjustableArrowCap]::new(5,6);$g.DrawLine($ap,$x1,$y1,$x2,$y2);$ap.Dispose()}
 function StoreFlow($x1,$x2,$y,$text){$ap=[Drawing.Pen]::new([Drawing.Color]::Black,3);$ap.CustomEndCap=[Drawing.Drawing2D.AdjustableArrowCap]::new(5,6);$g.DrawLine($ap,$x1,$y,$x2,$y);$ap.Dispose();$f=[Drawing.Font]::new('Arial',13);Label $text 1070 ($y-37) 285 36 $f;$f.Dispose()}
 function SaveFigure($name){$bmp.Save((Join-Path $out $name),[Drawing.Imaging.ImageFormat]::Png);$g.Dispose();$bmp.Dispose()}
-StartFigure 'Figure 2. Context diagram - Gane-Sarson' 1500
-Label 'One system process; external entities and named data flows. Internal stores are omitted.' 45 100 1700 70 $small
-Process 1130 240 600 1030 '0' 'IronGrind Membership and Operations Management System'
-$actors=@('Member / Applicant','Administrator','Authorized Staff')
-$inputs=@('Credentials; application, renewal and profile data','Review decisions; membership/stock changes; profile queries; staff controls; report queries','Credentials; counter details; request decisions; QR scans; sales')
-$outputs=@('Access result; own membership, status, visits and catalog','Access result; operational records, staff states, logs and reports','Access result; pending requests; review, counter and scan results; own sales')
-for($i=0;$i -lt 3;$i++){$y=240+$i*390;Entity 50 $y 420 250 $actors[$i];Flow 470 1130 ($y+95) $inputs[$i];Flow 1130 470 ($y+190) $outputs[$i] $false}
-Label 'Walk-in customers transact through an operator. Transaction records do not represent receipts issued to customers.' 50 1400 1700 80 $small
+StartFigure 'Figure 2. Context diagram - Gane-Sarson' 1800
+Label 'One system process; external entities and named data flows. Internal stores are omitted.' 45 100 1710 55 $small
+Entity 650 165 500 180 'Member / Applicant'
+Process 430 570 940 590 '0' 'IronGrind Membership and Operations Management System'
+Entity 60 1450 500 190 'Administrator'
+Entity 1240 1450 500 190 'Authorized Staff'
+# The applicant is above process 0; staff and administrator are below, matching the requested context layout.
+DirectedFlow 800 345 800 570
+DirectedFlow 1010 570 1010 345
+Label 'Credentials, registration details, renewal requests, and permitted profile changes' 60 395 680 125 $flowFont
+Label 'Sign-in and application results; own membership, QR, attendance history, and catalog' 1070 395 680 125 $flowFont
+# Parallel, separated arrows keep each lower actor's inputs and outputs readable.
+DirectedFlow 540 1450 800 1160
+DirectedFlow 620 1160 420 1450
+Label 'Review decisions, membership operations, inventory updates, staff and pairing controls, report and log queries' 35 1190 360 155 $flowFont
+Label 'Member records, operation results, staff states, pairing status, filtered activity logs, and reports' 35 1320 360 115 $flowFont
+DirectedFlow 1300 1450 1050 1160
+DirectedFlow 1150 1160 1400 1450
+Label 'Credentials, counter details, request decisions, QR scans, and product-sale entries' 1405 1190 350 120 $flowFont
+Label 'Access, pending-request, counter, and scan results; permitted attendance and own-sale records' 1405 1315 350 125 $flowFont
+Label 'Walk-in customers transact through an operator. Transaction records do not represent receipts issued to customers.' 45 1690 1710 55 $small
 SaveFigure '02-context.png'
 # Stores use stable identifiers across all continuation panels. The pairs are write/read data flows; blank means no arrow in that direction.
 $processes=@(
