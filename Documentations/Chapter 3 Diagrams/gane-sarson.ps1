@@ -16,23 +16,23 @@ function SaveFigure($name){$bmp.Save((Join-Path $out $name),[Drawing.Imaging.Ima
 StartFigure 'Figure 2. Context diagram - Gane-Sarson' 1800
 Label 'One system process; external entities and named data flows. Internal stores are omitted.' 45 100 1710 55 $small
 Entity 650 165 500 180 'Member / Applicant'
-Process 430 570 940 590 '0' 'IronGrind Membership and Operations Management System'
+Process 500 610 800 460 '0' 'IronGrind Membership and Operations Management System'
 Entity 60 1450 500 190 'Administrator'
 Entity 1240 1450 500 190 'Authorized Staff'
 # The applicant is above process 0; staff and administrator are below, matching the requested context layout.
-DirectedFlow 800 345 800 570
-DirectedFlow 1010 570 1010 345
+DirectedFlow 800 345 800 610
+DirectedFlow 1010 610 1010 345
 Label 'Credentials, registration details, renewal requests, and permitted profile changes' 60 395 680 125 $flowFont
 Label 'Sign-in and application results; own membership, QR, attendance history, and catalog' 1070 395 680 125 $flowFont
 # Parallel, separated arrows keep each lower actor's inputs and outputs readable.
-DirectedFlow 540 1450 800 1160
-DirectedFlow 620 1160 420 1450
-Label 'Review decisions, membership operations, inventory updates, staff and pairing controls, report and log queries' 35 1190 360 155 $flowFont
-Label 'Member records, operation results, staff states, pairing status, filtered activity logs, and reports' 35 1320 360 115 $flowFont
-DirectedFlow 1300 1450 1050 1160
-DirectedFlow 1150 1160 1400 1450
-Label 'Credentials, counter details, request decisions, QR scans, and product-sale entries' 1405 1190 350 120 $flowFont
-Label 'Access, pending-request, counter, and scan results; permitted attendance and own-sale records' 1405 1315 350 125 $flowFont
+DirectedFlow 540 1450 800 1070
+DirectedFlow 650 1070 420 1450
+Label 'Review decisions, membership operations, inventory updates, staff and pairing controls, report and log queries' 35 1090 360 125 $flowFont
+Label 'Member records, operation results, staff states, pairing status, filtered activity logs, and reports' 35 1295 360 125 $flowFont
+DirectedFlow 1300 1450 1100 1070
+DirectedFlow 1200 1070 1400 1450
+Label 'Credentials, counter details, request decisions, QR scans, and product-sale entries' 1405 1090 350 125 $flowFont
+Label 'Access, pending-request, counter, and scan results; permitted attendance and own-sale records' 1405 1295 350 125 $flowFont
 Label 'Walk-in customers transact through an operator. Transaction records do not represent receipts issued to customers.' 45 1690 1710 55 $small
 SaveFigure '02-context.png'
 # Stores use stable identifiers across all continuation panels. The pairs are write/read data flows; blank means no arrow in that direction.

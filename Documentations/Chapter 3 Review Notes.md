@@ -15,6 +15,7 @@ Reviewed against the checked-in system files on November 9, 2026 (Asia/Manila). 
 ## Updated in Chapter 3.docx
 
 - Replaced the context diagram with one whole-system process and separate member/applicant, administrator, and staff actors. Internal stores are excluded from the context view.
+- Arranged the Gane–Sarson context diagram in the requested vertical composition: Member / Applicant above process 0, Administrator and Authorized Staff below, with distinct labeled, directional input and output arrows.
 - Replaced the Level 1 data-flow figure and descriptions, distinguishing administrator review of online requests from staff counter operations.
 - Replaced the use-case figure with separate role associations. Actors are outside the system boundary. Shared use cases repeat for readability.
 - Replaced the ERD with three relationship panels derived from all 21 declared foreign keys. Panels show NULLability, parent/child cardinalities, and deletion actions. Full editable Mermaid ERD includes table attributes.
