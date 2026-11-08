@@ -43,3 +43,7 @@ The paper recheck confirmed Chapter 1 already describes staff and administrator 
 ## Follow-up: staff laptop camera
 
 The staff attendance scanner previously requested a facing mode directly from the QR library, while the working admin scanner first opened a camera through `getUserMedia`, captured the browser-selected device ID, and passed that ID to the QR library. The staff scanner now follows the admin sequence, preferring the front-facing camera on computers and the rear camera on phones, then retrying browser-enumerated cameras if needed. It also opens a centered scan modal with a live preview, QR frame, status text, processing indicator, and Cancel control, matching the admin scanning flow. Camera errors appear inside that modal. The error handler recognizes string-form media errors and shows more specific guidance. The source changes are local and still need physical laptop-camera verification; HTTPS, browser permission, Windows camera privacy, and hardware availability remain necessary.
+
+## Follow-up: Remember me persistence
+
+The login checkbox previously selected storage only for the dashboard's role marker; Supabase still persisted its authentication token in its default storage, so unchecked logins could survive browser restarts. The login checkbox now also selects the Supabase auth-token storage: checked uses local storage on that device, unchecked uses session storage. Logout and removal of the auth token clear the remembered preference. The label now says “Keep me signed in on this device” to make the behavior clearer.

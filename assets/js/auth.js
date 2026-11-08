@@ -169,6 +169,9 @@ async function handleLogin(event) {
 
     try {
         const supabaseClient = window.ironGrindSupabase;
+        window.ironGrindRememberSession = remember;
+        if (remember) localStorage.setItem('ig_remember_login', '1');
+        else localStorage.removeItem('ig_remember_login');
         let result;
         if (loginMode === 'admin') {
             const { data: response, error: loginError } = await supabaseClient.functions.invoke('admin-username-login', {

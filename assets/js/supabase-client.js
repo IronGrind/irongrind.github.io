@@ -3,12 +3,45 @@
 const IRON_GRIND_SUPABASE_URL = 'https://nttsrdassmzvtaamyogi.supabase.co';
 const IRON_GRIND_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_aJUpD0v8XUengFdItDJGQw_rZK4anzm';
 
-// Signing up a member must not replace an administrator's session in another
-// tab. Registration needs its own temporary session to submit the application;
-// email-confirmation callbacks can still establish it from the redirect URL.
+// Keep the real Supabase token in the same storage selected by Remember me.
+// The choice is set before sign-in and is read again on dashboard page loads.
+const IRON_GRIND_AUTH_STORAGE_KEY = 'sb-nttsrdassmzvtaamyogi-auth-token';
+const IRON_GRIND_REMEMBER_KEY = 'ig_remember_login';
+function ironGrindAuthStorageArea() {
+    if (typeof window.ironGrindRememberSession === 'boolean') {
+        return window.ironGrindRememberSession ? localStorage : sessionStorage;
+    }
+    if (localStorage.getItem(IRON_GRIND_REMEMBER_KEY) === '1' || localStorage.getItem('irongrind_session')) {
+        return localStorage;
+    }
+    return sessionStorage;
+}
+const ironGrindAuthStorage = {
+    getItem(key) {
+        return ironGrindAuthStorageArea().getItem(key);
+    },
+    setItem(key, value) {
+        const destination = ironGrindAuthStorageArea();
+        const other = destination === localStorage ? sessionStorage : localStorage;
+        other.removeItem(key);
+        destination.setItem(key, value);
+    },
+    removeItem(key) {
+        localStorage.removeItem(key);
+        sessionStorage.removeItem(key);
+        if (key === IRON_GRIND_AUTH_STORAGE_KEY) {
+            localStorage.removeItem(IRON_GRIND_REMEMBER_KEY);
+            localStorage.removeItem('irongrind_session');
+            sessionStorage.removeItem('irongrind_session');
+        }
+    }
+};
+
+// Registration must not replace an administrator's session in another tab.
+// It uses its own temporary session for the application submission.
 const IRON_GRIND_SUPABASE_OPTIONS = document.body?.classList.contains('register-body')
     ? { auth: { storageKey: 'irongrind-registration-auth', persistSession: false, detectSessionInUrl: true } }
-    : {};
+    : { auth: { storageKey: IRON_GRIND_AUTH_STORAGE_KEY, storage: ironGrindAuthStorage, persistSession: true, detectSessionInUrl: true } };
 
 window.ironGrindSupabase = window.supabase.createClient(
     IRON_GRIND_SUPABASE_URL,
