@@ -49,3 +49,12 @@ The staff attendance scanner previously requested a facing mode directly from th
 The login checkbox now remembers only the applicable sign-in identifier: member email or staff/admin username. It fills that value into the login field on the next visit. It does not save a password or preserve an authenticated session. Authentication tokens and the dashboard marker use session storage, and logout clears the authenticated session while leaving the explicitly remembered identifier available. The checkbox says “Remember my login” so it does not imply that members still use usernames.
 
 The paper recheck clarified Chapter 1's duplicate-identifier statement and updated Chapter 3's retained username-field descriptions so they do not imply that new members receive or use usernames. The login-page field itself is labeled Email; staff/admin authentication behavior remains unchanged.
+
+## Follow-up verification: paper and workspace audit
+
+- Rechecked all three chapter DOCX files for XML integrity, stale approval statements, garbled punctuation, image relationships, body/table formatting, and current chapter-specific requirements. Chapter 3 still has 20 tables, 174 dictionary fields, and 12 public plus 3 private application tables.
+- Updated the chapter verifier to enforce the member email and legacy username distinctions.
+- Fifteen browser JavaScript files passed `node --check`; all eight Node unit tests passed; the four focused UI/session/pairing/form checks passed; `git diff --check` passed.
+- Two standalone checks initially failed because their fixtures no longer matched the implementation. The session test now accounts for legacy-token cleanup at startup, and the name-validation fixture now includes its shared validator. Both checks pass after the fixture repairs.
+- The complete PGlite-backed regression runner was not rerun because its PGlite and cached Supabase SDK inputs are not present in this workspace. The previously saved 40-group result is historical evidence, not a fresh run for this follow-up.
+- No clearly disposable tracked files were identified. Word review backups, diagram sources, and local Supabase CLI metadata were retained. Word pagination and page-by-page appearance still require a visual review in Word.
