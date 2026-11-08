@@ -83,8 +83,43 @@
         input.form?.addEventListener('reset', () => setTimeout(update));
         update();
     }
+    function attachUsernameGuidance(input) {
+        if (!['regUsername', 'wiUsername', 'walkinUsername', 'staffUsername'].includes(input.id) || input.dataset.usernameGuidance) return;
+        input.dataset.usernameGuidance = 'true'; input.maxLength = 30;
+        const hint = document.createElement('small'); hint.className = 'password-guidance'; hint.id = `${input.id}Availability`;
+        hint.setAttribute('aria-live', 'polite'); input.insertAdjacentElement('afterend', hint);
+        input.setAttribute('aria-describedby', [input.getAttribute('aria-describedby'), hint.id].filter(Boolean).join(' '));
+        let timer; let revision = 0;
+        input.addEventListener('input', () => {
+            clearTimeout(timer); const current = ++revision;
+            const username = input.value.trim().toLowerCase();
+            input.setCustomValidity(''); hint.textContent = ''; hint.dataset.state = 'neutral';
+            if (!username) return;
+            const minimum = input.id === 'regUsername' ? 4 : 3;
+            const characters = input.id === 'staffUsername' ? 'a-z0-9_' : 'a-z0-9_.';
+            if (!new RegExp(`^[${characters}]{${minimum},30}$`).test(username)) {
+                const message = `Use ${minimum}–30 letters, numbers, and underscores${input.id === 'staffUsername' ? '.' : ', or dots.'}`;
+                input.setCustomValidity(message); hint.textContent = message; hint.dataset.state = 'invalid'; return;
+            }
+            hint.textContent = 'Checking username availability...';
+            timer = setTimeout(async () => {
+                try {
+                    const { data, error } = await window.ironGrindSupabase.rpc('is_registration_username_available', { p_username: username });
+                    if (current !== revision) return;
+                    if (error) throw error;
+                    const message = data ? 'Username is available.' : 'That username is already in use. Choose another username.';
+                    hint.textContent = message; hint.dataset.state = data ? 'valid' : 'invalid';
+                    input.setCustomValidity(data ? '' : message);
+                } catch {
+                    if (current !== revision) return;
+                    hint.textContent = 'Could not check availability. Try again before submitting.'; hint.dataset.state = 'invalid';
+                }
+            }, 400);
+        });
+    }
     function enhance(root = document) {
         root.querySelectorAll('input').forEach(attachPasswordGuidance);
+        root.querySelectorAll('input').forEach(attachUsernameGuidance);
         root.querySelectorAll('.product-img-wrap img, .product-photo-preview img, .staff-product-photo').forEach(img => {
             if (img.dataset.zoomReady) return;
             img.dataset.zoomReady = 'true'; img.tabIndex = 0; img.setAttribute('role', 'button');

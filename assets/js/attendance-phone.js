@@ -32,6 +32,12 @@ async function signInPhoneOperator(event) {
         if (!data?.session) throw new Error(data?.error || 'Sign-in failed.');
         const { error: sessionError } = await phoneOperatorClient.auth.setSession(data.session);
         if (sessionError) throw sessionError;
+        const { error: activationError } = await phoneOperatorClient.rpc('activate_account_session');
+        if (activationError) throw new Error('Could not secure your sign-in session. Sign in again.');
+        window.monitorAccountSession(phoneOperatorClient, async () => {
+            await changePhoneOperator();
+            setPhoneAttendanceStatus('Your account was signed in on another device. Sign in again to scan.', true);
+        });
         const { data: { user }, error: userError } = await phoneOperatorClient.auth.getUser();
         if (userError || !user) throw new Error('Could not verify your sign-in.');
         const { data: profile, error: profileError } = await phoneOperatorClient.from('profiles').select('role,full_name,is_active').eq('id', user.id).single();
@@ -51,7 +57,7 @@ async function signInPhoneOperator(event) {
 }
 async function changePhoneOperator() {
     await stopPhoneAttendanceScanner();
-    await phoneOperatorClient?.auth.signOut();
+    await phoneOperatorClient?.auth.signOut({ scope: 'local' });
     phoneOperator = null;
     pendingPhoneScan = null;
     document.getElementById('phoneOperatorIdentity').hidden = true;

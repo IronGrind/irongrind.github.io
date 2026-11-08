@@ -18,6 +18,10 @@ function hideError() {
 
 (function showAuthRedirectMessage() {
     const params = new URLSearchParams(window.location.search);
+    if (params.get('auth') === 'replaced') {
+        showError('Your account was signed in on another device. Sign in again to continue.');
+        return;
+    }
     if (params.get('auth') !== 'expired') return;
     showError('Your admin session expired. Sign in again to continue.');
     const username = document.getElementById('loginEmail');
@@ -186,15 +190,21 @@ async function handleLogin(event) {
         const { data, error } = result;
 
         if (!error && data.user) {
+            const { error: sessionError } = await supabaseClient.rpc('activate_account_session');
+            if (sessionError) {
+                await supabaseClient.auth.signOut({ scope: 'local' });
+                showError('Could not secure your sign-in session. Please sign in again.');
+                return;
+            }
             const recovery = loginMode === 'admin' ? { recovered: false } : await recoverConfirmedRegistration(supabaseClient, data.user);
             if (recovery.error) {
-                await supabaseClient.auth.signOut();
+                await supabaseClient.auth.signOut({ scope: 'local' });
                 console.error('Could not complete saved registration:', recovery.error);
                 showError('We could not submit your saved application. Please try again or contact the gym for help.');
                 return;
             }
             if (recovery.recovered) {
-                await supabaseClient.auth.signOut();
+                await supabaseClient.auth.signOut({ scope: 'local' });
                 showError('Your registration application has been submitted and is waiting for admin approval.');
                 return;
             }
@@ -206,7 +216,7 @@ async function handleLogin(event) {
                 .single();
 
             if (profileError || !profile) {
-                await supabaseClient.auth.signOut();
+                await supabaseClient.auth.signOut({ scope: 'local' });
                 console.error('Could not load the signed-in account profile:', profileError);
                 showError(profileError
                     ? `Your account profile could not be loaded (${profileError.code || 'database error'}): ${profileError.message}`
@@ -216,7 +226,7 @@ async function handleLogin(event) {
 
             const role = ['admin', 'staff'].includes(profile.role) ? profile.role : 'customer';
             if ((loginMode === 'admin') !== (['admin', 'staff'].includes(role))) {
-                await supabaseClient.auth.signOut();
+                await supabaseClient.auth.signOut({ scope: 'local' });
                 showError(loginMode === 'admin' ? 'Invalid username or password.' : 'Please sign in using your assigned username and password.');
                 return;
             }
@@ -227,7 +237,7 @@ async function handleLogin(event) {
                     .eq('auth_user_id', data.user.id)
                     .maybeSingle();
                 if (memberError) {
-                    await supabaseClient.auth.signOut();
+                    await supabaseClient.auth.signOut({ scope: 'local' });
                     showError('We could not check your membership. Please contact the gym admin.');
                     return;
                 }
@@ -239,7 +249,7 @@ async function handleLogin(event) {
                         .order('submitted_at', { ascending: false })
                         .limit(1)
                         .maybeSingle();
-                    await supabaseClient.auth.signOut();
+                    await supabaseClient.auth.signOut({ scope: 'local' });
                     if (applicationError) {
                         showError('We could not check your application status. Please contact the gym admin.');
                         return;
@@ -269,7 +279,7 @@ async function handleLogin(event) {
             return;
         }
 
-        if (error) await supabaseClient.auth.signOut();
+        if (error) await supabaseClient.auth.signOut({ scope: 'local' });
 
         if (loginMode === 'member' && (error?.code === 'email_not_confirmed' || /email not confirmed/i.test(error?.message || ''))) {
             showError('Please confirm the member account email first. Open the confirmation email, then sign in with that email and password.');

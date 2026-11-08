@@ -204,6 +204,14 @@ async function submitRegistration(event) {
         });
 
         if (error) {
+            const { data: stillAvailable, error: availabilityError } = await window.ironGrindSupabase.rpc(
+                'is_registration_username_available', { p_username: username }
+            );
+            if (!availabilityError && stillAvailable === false) {
+                showError('That username is already in use. Please choose another username.');
+                document.getElementById('regUsername').focus();
+                return;
+            }
             showError(error.message.includes('already registered')
                 ? 'An account already exists for this email. Sign in or contact the gym admin.'
                 : error.message);

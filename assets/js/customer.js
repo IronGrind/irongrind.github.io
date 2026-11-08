@@ -313,7 +313,7 @@ function logout() {
 
 async function completeLogout() {
     closeModal();
-    await window.ironGrindSupabase?.auth.signOut();
+    await window.ironGrindSupabase?.auth.signOut({ scope: 'local' });
     localStorage.removeItem('irongrind_session');
     sessionStorage.removeItem('irongrind_session');
     document.getElementById('page-loader')?.classList.remove('hidden-loader');

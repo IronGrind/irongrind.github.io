@@ -76,6 +76,9 @@ Deno.serve(async (request) => {
   const adminClient = createClient(url, serviceRoleKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
+  const { data: available, error: usernameError } = await callerClient.rpc('is_registration_username_available', { p_username: username });
+  if (usernameError) return response({ error: 'Could not check username availability. Please try again.' }, 503);
+  if (!available) return response({ error: 'That username is unavailable. Choose another username (3–30 letters, numbers, underscores, or dots).' }, 409);
   const { data: created, error: createError } = await adminClient.auth.admin.createUser({
     email,
     password,

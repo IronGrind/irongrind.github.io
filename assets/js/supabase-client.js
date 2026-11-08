@@ -15,3 +15,44 @@ window.ironGrindSupabase = window.supabase.createClient(
     IRON_GRIND_SUPABASE_PUBLISHABLE_KEY,
     IRON_GRIND_SUPABASE_OPTIONS
 );
+
+// A guard verifies the server-issued session; page reloads never reclaim a session.
+window.monitorAccountSession = (client, onReplaced) => {
+    if (client.__accountSessionMonitor) return;
+    client.__accountSessionMonitor = true;
+    let busy = false;
+    let stopping = false;
+    async function check() {
+        if (busy || stopping || document.hidden || navigator.onLine === false) return;
+        busy = true;
+        try {
+            const { data: { session } } = await client.auth.getSession();
+            if (!session) return;
+            const token = session.access_token;
+            const { data, error } = await client.rpc('current_account_session_is_active');
+            const { data: latest } = await client.auth.getSession();
+            // Ignore an in-flight check belonging to credentials that have changed.
+            if (latest.session?.access_token !== token) return;
+            if (data === false || error?.code === 'PT401' || error?.message === 'ACCOUNT_SESSION_REPLACED') {
+                stopping = true;
+                await client.auth.signOut({ scope: 'local' });
+                await onReplaced();
+            }
+        } catch (error) {
+            console.warn('Could not check the account session:', error);
+        } finally { busy = false; }
+    }
+    setInterval(check, 5000);
+    window.addEventListener('focus', check);
+    window.addEventListener('online', check);
+    document.addEventListener('visibilitychange', check);
+    client.auth.onAuthStateChange(() => { setTimeout(check, 0); });
+    check();
+};
+if (/(?:^|\/)(?:admin|customer|staff)\.html$/.test(window.location.pathname)) {
+    window.monitorAccountSession(window.ironGrindSupabase, async () => {
+        localStorage.removeItem('irongrind_session');
+        sessionStorage.removeItem('irongrind_session');
+        window.location.replace('index.html?auth=replaced');
+    });
+}

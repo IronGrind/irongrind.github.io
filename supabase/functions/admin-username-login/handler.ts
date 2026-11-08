@@ -60,13 +60,13 @@ export async function handleAdminLogin(request: Request) {
     const email = account?.user?.email || 'invalid-admin-login@example.invalid';
     const { data, error } = await login.auth.signInWithPassword({ email, password });
     if (error || !data.session || !profile || data.user?.id !== profile.id) {
-      if (data.session) await login.auth.signOut();
+      if (data.session) await login.auth.signOut({ scope: 'local' });
       return respond({ error: invalidCredentials }, 401);
     }
     const { data: verified, error: roleError } = await admin.from('profiles')
       .select('role,is_active').eq('id', data.user.id).single();
     if (roleError || !['admin', 'staff'].includes(verified?.role) || verified?.is_active !== true) {
-      await login.auth.signOut();
+      await login.auth.signOut({ scope: 'local' });
       if (roleError) {
         console.error('Admin role lookup failed:', roleError.code);
         return respond({ error: 'Username sign-in is unavailable. Contact the gym administrator.' }, 503);
