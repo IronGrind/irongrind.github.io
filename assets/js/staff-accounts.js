@@ -96,6 +96,10 @@ staffAccountForm?.addEventListener('submit', async event => {
     event.preventDefault();
     if (!staffAccountForm.reportValidity()) return;
     if (document.getElementById('staffPassword').value !== document.getElementById('staffConfirmPassword').value) return;
+    if (!newPasswordValid(document.getElementById('staffPassword').value, 12)) {
+        document.getElementById('staffPassword').reportValidity();
+        return;
+    }
     const button = staffAccountForm.querySelector('[type="submit"]');
     const status = document.getElementById('staffAccountStatus');
     button.disabled = true;

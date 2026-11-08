@@ -2,3 +2,7 @@
 # verifies the password and admin role, and throttles attempts server-side.
 [functions.admin-username-login]
 verify_jwt = false
+[auth]
+minimum_password_length = 8
+password_requirements = "lower_upper_letters_digits_symbols"
+

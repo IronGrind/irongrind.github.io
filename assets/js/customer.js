@@ -741,7 +741,7 @@ async function submitMembershipForm(event) {
             return;
         }
 
-        renewalFormMessage('Renewal request submitted to the admin for approval.', 'success');
+        renewalFormMessage('Renewal request submitted for staff or administrator approval.', 'success');
         memberHasPendingRenewal = true;
         renderRenewalEligibility(member);
         updateMemberStatus();

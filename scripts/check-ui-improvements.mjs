@@ -22,7 +22,12 @@ for (const pair of [[0, 10], [80, 0], [-1, 10], [80, 3], [Infinity, 1]]) assert.
 assert.equal(context.productUnitPrice(80, 2.5, true), null);
 assert.equal(context.newPasswordValid('letters', 6), false);
 assert.equal(context.newPasswordValid('123456', 6), false);
-assert.equal(context.newPasswordValid('Member123', 8), true);
+assert.equal(context.newPasswordValid('Member123', 8), false);
+assert.equal(context.newPasswordValid('Member123!', 8), true);
+for (const password of ['Ab1!', 'lowercase1!', 'UPPERCASE1!', 'NoDigits!!', 'NoSymbols123', `Aa1!${'x'.repeat(125)}`]) assert.equal(context.newPasswordValid(password), false);
+assert.equal(context.passwordStrength('abc').label, 'Weak');
+assert.equal(context.passwordStrength('Member123').label, 'Fair');
+assert.equal(context.passwordStrength('Member123!').label, 'Strong');
 assert.equal(context.newPasswordValid('Member123', 12), false);
 assert.equal(context.newPasswordValid(`a1${'x'.repeat(127)}`, 6), false);
 

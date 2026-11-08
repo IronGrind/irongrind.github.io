@@ -1118,9 +1118,9 @@ async function completeRejection(id) {
     if (application.supabaseRecord) {
         const { data: { user }, error: authError } = await window.ironGrindSupabase.auth.getUser();
         if (authError || !user) { toast('Your Supabase session expired. Please sign in again.', 'error'); return; }
-        const { error } = await window.ironGrindSupabase.from('membership_applications').update({
-            status: 'rejected', reviewed_at: new Date().toISOString(), reviewed_by: user.id
-        }).eq('id', application.id).eq('status', 'pending');
+        const { error } = await window.ironGrindSupabase.rpc('review_membership_request', {
+            p_application_id: application.id, p_decision: 'rejected'
+        });
         if (error) { toast(`Could not reject application: ${error.message}`, 'error'); return; }
     }
     pendingApprovals.splice(idx, 1);
@@ -1254,7 +1254,7 @@ function openAddMemberModal() {
             <div class="form-group"><label>Email Address *</label><input type="email" id="wiEmail" placeholder="member@example.com" autocomplete="email"></div>
             <div class="form-row">
                 <div class="form-group"><label>Username *</label><input type="text" id="wiUsername" placeholder="juan.delacruz" autocomplete="username"></div>
-                <div class="form-group"><label>Password *</label><input type="password" id="wiPassword" placeholder="At least 6 characters" autocomplete="new-password"></div>
+                <div class="form-group"><label>Password *</label><input type="password" id="wiPassword" placeholder="Create a strong password" autocomplete="new-password"></div>
             </div>
             <div class="form-group" style="margin-bottom:0;"><label>Confirm Password *</label><input type="password" id="wiConfirmPassword" placeholder="Re-enter the password" autocomplete="new-password"></div>
         </div>

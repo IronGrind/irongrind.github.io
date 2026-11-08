@@ -74,8 +74,8 @@
                            ""
                        ]
                    ],
-        "Actor":  "Applicant; Administrator",
-        "Input":  "Registration details / admin decision"
+        "Actor":  "Applicant; Administrator; Authorized Staff",
+        "Input":  "Registration details / operator decision"
     },
     {
         "Id":  "3.0",
@@ -170,8 +170,8 @@
                            ""
                        ]
                    ],
-        "Actor":  "Member; Administrator",
-        "Input":  "Renewal request / admin decision"
+        "Actor":  "Member; Administrator; Authorized Staff",
+        "Input":  "Renewal request / operator decision"
     },
     {
         "Id":  "5.0",

@@ -41,8 +41,8 @@ Deno.serve(async request => {
     const phoneNumber = typeof body.phoneNumber === 'string' ? body.phoneNumber.replace(/\D/g, '') : '';
     const gender = typeof body.gender === 'string' ? body.gender.trim() : '';
     const password = typeof body.password === 'string' ? body.password : '';
-    if (!/^[a-z0-9_]{3,30}$/.test(username) || !fullName || fullName.length > 150 || password.length < 12 || password.length > 128 || !/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {
-      return reply({ error: 'Enter a name, a 3–30 character username, and a password of 12–128 characters containing at least one letter and one number.' }, 400);
+    if (!/^[a-z0-9_]{3,30}$/.test(username) || !fullName || fullName.length > 150 || password.length < 12 || password.length > 128 || !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[^A-Za-z0-9\s]/.test(password)) {
+      return reply({ error: 'Enter a name, a 3–30 character username, and a password of 12–128 characters containing uppercase and lowercase letters, a number, and a symbol.' }, 400);
     }
     if (!/^[a-z0-9._%+-]+@gmail\.com$/.test(email)) return reply({ error: 'Enter a valid Gmail address ending in @gmail.com.' }, 400);
     if (!/^9\d{9}$/.test(phoneNumber)) return reply({ error: 'Enter a 10-digit mobile number beginning with 9 after +63.' }, 400);
