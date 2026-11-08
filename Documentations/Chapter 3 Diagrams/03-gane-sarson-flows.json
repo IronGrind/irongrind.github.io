@@ -46,20 +46,14 @@
                        [
                            "D3",
                            "members",
-                           "Approved member",
-                           "Linked member record"
-                       ],
-                       [
-                           "D0",
-                           "Auth accounts",
-                           "Applicant account",
+                           "Approved member record",
                            ""
                        ],
                        [
                            "D1",
                            "profiles",
-                           "Applicant profile",
-                           "Account record"
+                           "",
+                           "Reviewer role / active status"
                        ],
                        [
                            "D6",
