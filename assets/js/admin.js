@@ -739,7 +739,6 @@ function completeApproval(id) {
 
     users.push({
         email: p.email,
-        username: p.username,
         fullName: p.fullName,
         role: 'customer',
         createdAt: new Date().toISOString()
@@ -760,7 +759,6 @@ function completeApproval(id) {
         goal: p.goals[0] || 'General Fitness',
         contact: p.mobile,
         email: p.email || '',
-        username: p.username,
         height: p.height ?? null,
         heightUnit: p.heightUnit || null,
         weight: p.weight ?? null,

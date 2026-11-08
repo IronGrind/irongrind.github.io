@@ -96,7 +96,7 @@
         update();
     }
     function attachUsernameGuidance(input) {
-        if (!['regUsername', 'wiUsername', 'walkinUsername', 'staffUsername', 'regEmail', 'wiEmail', 'walkinEmail', 'staffEmail'].includes(input.id) || input.dataset.usernameGuidance) return;
+        if (!['staffUsername', 'regEmail', 'wiEmail', 'walkinEmail', 'staffEmail'].includes(input.id) || input.dataset.usernameGuidance) return;
         const isEmail = input.id.endsWith('Email');
         const fieldName = isEmail ? 'Email address' : 'Username';
         input.dataset.usernameGuidance = 'true'; input.maxLength = isEmail ? 254 : 30;
@@ -109,7 +109,7 @@
             const username = input.value.trim().toLowerCase();
             input.setCustomValidity(''); hint.textContent = ''; hint.dataset.state = 'neutral';
             if (!username) return;
-            const minimum = input.id === 'regUsername' ? 4 : 3;
+            const minimum = 3;
             const characters = input.id === 'staffUsername' ? 'a-z0-9_' : 'a-z0-9_.';
             if (isEmail ? !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username) : !new RegExp(`^[${characters}]{${minimum},30}$`).test(username)) {
                 const message = isEmail ? 'Enter a valid email address.' : `Use ${minimum}–30 letters, numbers, and underscores${input.id === 'staffUsername' ? '.' : ', or dots.'}`;

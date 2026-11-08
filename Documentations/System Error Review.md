@@ -31,3 +31,11 @@ To rerun the suite: node scripts/run-regression-checks.mjs <path-to-PGlite-dist/
 ## Follow-up: compound first names in member settings
 
 Saving a member's personal information previously rebuilt the name fields by splitting the combined `full_name`. That parser treated the second word in a compound first name as a middle name, so a first name such as “Anabelle Jean” appeared to move after saving. The save flow now updates the displayed account name without re-splitting the form fields; the entered first, middle, and last name values remain in their respective inputs after a successful save. The database continues to store the existing combined `full_name` value.
+
+## Follow-up: member names and account identifiers
+
+Member registration and staff walk-in registration now use email and password without collecting a separate member username. New members sign in with email; staff and administrators retain their assigned username workflow. Member-facing administrative reports no longer display member usernames. Existing username values are retained for compatibility with older records and are not cleared by this change.
+
+Person-name inputs now reject numeric characters in the browser and account-provisioning services. The database migration adds a trigger check for standard digit characters on profile, member, and application names, including a supplied emergency-contact name. It preserves existing rows so historical data is not rewritten. The name rule allows Unicode letters and punctuation, including compound names. Website changes remain local; the new database migration has not been applied to the linked project.
+
+The paper update was prepared but could not be applied because Microsoft Word currently holds Chapter 1.docx open. Chapter 1 still has an administrator-only renewal-approval sentence, and Chapter 3 has administrator-only application-review wording. The revision script is `update-name-login-paper.ps1`; rerun it after closing the open Word document. Chapter 3 pagination and prototype screenshots still need their previously noted visual review.

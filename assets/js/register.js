@@ -151,7 +151,7 @@ async function submitRegistration(event) {
 
     if (!fullName || !dob || !mobile) { showError('Please complete all required personal information.'); return; }
     const nameFields = ['regFirstName', 'regMiddleName', 'regLastName'].map(id => document.getElementById(id).value.trim()).filter(Boolean);
-    if (nameFields.some(name => !validPersonName(name)) || !validPersonName(ecName)) {
+    if (!validPersonName(fullName) || nameFields.some(name => !validPersonName(name)) || !validPersonName(ecName)) {
         showError('Names must contain letters and cannot contain numbers. Please check the member and emergency contact names.');
         return;
     }

@@ -791,7 +791,7 @@ async function submitMemberSettings(event) {
             settingsFormMessage('Enter your full name.', 'error');
             return;
         }
-        if (nameFields.some(name => !validPersonName(name)) || (emergencyName && !validPersonName(emergencyName))) {
+        if (!validPersonName(fullName) || nameFields.some(name => !validPersonName(name)) || (emergencyName && !validPersonName(emergencyName))) {
             settingsFormMessage('Names must contain letters and cannot contain numbers. Check your name and emergency contact name.', 'error');
             return;
         }
