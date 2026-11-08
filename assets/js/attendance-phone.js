@@ -51,7 +51,7 @@ async function signInPhoneOperator(event) {
         setPhoneCameraButton(false);
         const pairing = readPhonePairing();
         if (pairing) await startPhoneMemberScanner(pairing.sessionId, pairing.token, false);
-        else setPhoneAttendanceStatus('Signed in. Pair this phone to start scanning.');
+        else setPhoneAttendanceStatus('Phone not paired. You need to pair this phone before scanning attendance. Tap Open camera and scan the pairing QR from the administrator’s Attendance → Phone Camera page. Pairing lasts 30 days.');
     } catch (error) { setPhoneAttendanceStatus(error.message || 'Could not sign in.', true); }
     finally { document.getElementById('phoneOperatorPassword').value = ''; button.disabled = false; }
 }
@@ -127,7 +127,7 @@ function setPhoneCameraButton(running) {
     if (button) button.hidden = !phoneOperator;
     const reader = document.getElementById('phoneQrReader');
     if (reader && !running) reader.hidden = true;
-    if (button) button.textContent = running ? 'Stop camera' : phoneScannerMode === 'member' && activePhoneSession ? 'Open camera' : 'Pair this phone';
+    if (button) button.textContent = running ? 'Stop camera' : 'Open camera';
 }
 
 function setPhoneNextScanButton(visible, label = 'Scan next member') {
@@ -238,6 +238,7 @@ async function savePhoneModelAndContinue() {
 }
 
 function savePhonePairing(sessionId, token, remember, expiresAt = '') {
+    remember = true; // A paired phone is remembered for the full 30-day pairing.
     const value = JSON.stringify({ sessionId, token, expiresAt });
     const destination = remember ? localStorage : sessionStorage;
     const other = remember ? sessionStorage : localStorage;
@@ -249,7 +250,13 @@ function readPhonePairing() {
     for (const [storage, key] of [[localStorage, PHONE_PAIRING_STORAGE_KEY], [sessionStorage, TEMP_PHONE_PAIRING_STORAGE_KEY]]) {
         try {
             const value = JSON.parse(storage.getItem(key) || 'null');
-            if (value?.sessionId && value?.token) return value;
+            if (value?.sessionId && value?.token) {
+                if (storage === sessionStorage) {
+                    localStorage.setItem(PHONE_PAIRING_STORAGE_KEY, JSON.stringify(value));
+                    sessionStorage.removeItem(TEMP_PHONE_PAIRING_STORAGE_KEY);
+                }
+                return value;
+            }
         } catch { storage.removeItem(key); }
     }
     return null;
@@ -376,7 +383,7 @@ async function startPhoneMemberScanner(sessionId, token, openCamera = true) {
         clearPhonePairing();
         await startPhonePairingScanner(sessionError
             ? `Could not validate pairing: ${sessionError.message}`
-            : 'Supabase rejected this pairing. It may have expired, or the pairing migrations may not be applied. Scan a fresh QR from the admin page.');
+            : 'Phone not paired. The previous pairing expired or was removed. You need to pair again: scan a fresh QR from the administrator’s Attendance → Phone Camera page.');
         return;
     }
     const { error: deviceError, deviceLabel } = await registerPhoneAttendanceDevice(sessionId, token);
@@ -478,7 +485,7 @@ async function stopPhoneAttendanceScanner() {
         ? deviceLabel
             ? `Camera stopped. ${deviceLabel} is still paired. Tap Open camera to continue scanning.`
             : 'Camera stopped. Your pairing is still active. Tap Open camera to continue scanning.'
-        : 'Camera stopped. You can close this page.');
+        : 'Phone not paired. You need to pair this phone first. Tap Open camera to scan the administrator’s phone-pairing QR. Pairing lasts 30 days.');
 }
 
 async function togglePhoneAttendanceCamera() {
@@ -573,7 +580,7 @@ window.addEventListener('pagehide', () => {
 async function startPhoneAttendanceApp() {
     configurePhoneAppInstall();
     if ('serviceWorker' in navigator && window.isSecureContext) {
-    navigator.serviceWorker.register('attendance-phone-sw.js?v=20261105-phone-attendance-ui').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
+    navigator.serviceWorker.register('attendance-phone-sw.js?v=20261108-monthly-pairing').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
     }
     if (!window.ironGrindSupabase) {
         setPhoneAttendanceStatus('The attendance service could not load. Check your connection and reload.', true);
@@ -590,7 +597,7 @@ async function startPhoneAttendanceApp() {
     } else {
         requirePhoneOperator();
         setPhoneCameraButton(false);
-        setPhoneAttendanceStatus('Sign in, then pair this phone to begin.');
+        setPhoneAttendanceStatus(readPhonePairing() ? 'Saved pairing found. Sign in to open the attendance camera.' : 'Phone not paired. Sign in, then tap Open camera to scan the administrator’s pairing QR. Pairing lasts 30 days.');
     }
 }
 

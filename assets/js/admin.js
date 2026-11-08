@@ -1656,8 +1656,8 @@ function startQRScanner() {
     openModal(`<div class="qr-camera-modal">
         <h3><i class="fas fa-qrcode"></i> Choose a Camera</h3>
         <p class="modal-sub">Scan with a camera connected to this device or pair a phone camera.</p>
-        <label class="phone-pair-remember"><input id="rememberPhoneScanner" type="checkbox" checked> Remember this phone for 30 days</label>
-        <div class="modal-actions"><button class="btn-primary" onclick="startLocalQRScanner()"><i class="fas fa-laptop"></i> This device</button><button class="btn-primary" onclick="startPhoneQRPairing(document.getElementById('rememberPhoneScanner').checked)"><i class="fas fa-mobile-screen-button"></i> Phone camera</button><button class="btn-sm" onclick="closeModal()">Cancel</button></div>
+        <p class="phone-pair-remember">Paired phones stay connected for 30 days. Scan the pairing QR within 10 minutes.</p>
+        <div class="modal-actions"><button class="btn-primary" onclick="startLocalQRScanner()"><i class="fas fa-laptop"></i> This device</button><button class="btn-primary" onclick="startPhoneQRPairing(true)"><i class="fas fa-mobile-screen-button"></i> Phone camera</button><button class="btn-sm" onclick="closeModal()">Cancel</button></div>
     </div>`);
 }
 
