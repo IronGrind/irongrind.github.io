@@ -55,11 +55,11 @@ Canvas 'Figure 4. Use-case diagram' 'Actor associations are grouped by role insi
 $roles=@(
 @('Member / Applicant',@('Authenticate account','Submit registration application','View application status','View own membership and QR','View own attendance','Update own profile','Request membership renewal','Browse active catalog')),
 @('Authorized Staff',@('Authenticate account','Record QR attendance','View permitted attendance','Register walk-in member','Direct membership renewal','Change active member plan','Review online requests','Record product sale','View own product sales')),
-@('Administrator',@('Authenticate account','Review online applications / renewals','View member profiles','Record QR attendance','Record product sale','Manage products and stock','Manage staff accounts','Manage phone pairings','Generate reports','View activity logs'))
+@('Administrator',@('Authenticate account','Review online applications / renewals','View member profiles','Register walk-in / renew / change plan','Record QR attendance','Record product sale','Manage products and stock','Manage staff accounts','Manage phone pairings','Generate reports','View activity logs'))
 )
 $g.DrawRectangle($pen,35,445,1730,1825)
 for($col=0;$col -lt 3;$col++){$x=65+$col*575;$role=$roles[$col];$g.DrawString($role[0],$bold,$ink,$x+35,225);$g.DrawEllipse($pen,$x+245,285,45,45);$g.DrawLine($pen,$x+267,330,$x+267,385);$g.DrawLine($pen,$x+230,350,$x+304,350);$g.DrawLine($pen,$x+267,385,$x+240,415);$g.DrawLine($pen,$x+267,385,$x+295,415)
-for($i=0;$i -lt $role[1].Count;$i++){$y=470+$i*165;$g.DrawEllipse($pen,$x+25,$y,475,135);$g.DrawString($role[1][$i],$font,$ink,[Drawing.RectangleF]::new($x+65,$y+30,400,100));$g.DrawLine($pen,$x+10,350,$x+10,$y+67);$g.DrawLine($pen,$x+10,$y+67,$x+25,$y+67)};$g.DrawLine($pen,$x+10,350,$x+230,350)}
+for($i=0;$i -lt $role[1].Count;$i++){$y=470+$i*155;$g.DrawEllipse($pen,$x+25,$y,475,135);$g.DrawString($role[1][$i],$font,$ink,[Drawing.RectangleF]::new($x+65,$y+30,400,100));$g.DrawLine($pen,$x+10,350,$x+10,$y+67);$g.DrawLine($pen,$x+10,$y+67,$x+25,$y+67)};$g.DrawLine($pen,$x+10,350,$x+230,350)}
 $g.DrawString('Admin views member profiles; members alone edit their own profiles. Staff have no profile access or editing, inventory-maintenance, or administrator-report permissions.',$small,$ink,[Drawing.RectangleF]::new(75,2300,1650,90))
 Finish '04-use-cases.png'
 Canvas 'Figure 20. Staff workflow and access limits' 'After active-staff authentication, the staff portal offers four operational paths. Payment is received at the gym; IronGrind records the transaction.' 2260
