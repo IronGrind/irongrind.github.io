@@ -2011,3 +2011,4 @@ html[data-dashboard-theme="light"] .photo-bubble .photo-lightbox-title { color: 
 html[data-dashboard-theme="light"] .product-photo-dialog.photo-bubble .photo-lightbox-close { color: #43516a; border-color: #e1e5ed; background: #f1f3f7; }
 @keyframes photo-bubble-enter { from { opacity: 0; transform: scale(.95) translateY(8px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .product-photo-dialog.photo-bubble { animation: none; } }
+.password-strength-meter { display:block; width:100%; height:12px; margin:8px 0 4px; }

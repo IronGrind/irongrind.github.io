@@ -31,6 +31,7 @@ if (document.readyState === 'complete') startStaffLoaderMinimumDuration();
 else window.addEventListener('load', startStaffLoaderMinimumDuration, { once: true });
 
 function setStaffView(view) {
+    if (view === 'requests') loadStaffRequests();
     document.querySelectorAll('[data-staff-view]').forEach(button => {
         const active = button.dataset.staffView === view;
         button.classList.toggle('is-active', active);
@@ -126,8 +127,8 @@ async function submitStaffMembershipChange(eventType) {
         });
         if (error) throw error;
         status.textContent = isRenewal
-            ? `${member.full_name}'s membership renewed through ${data.expiry_date}. Receipt ${data.receipt_number}.`
-            : `${member.full_name}'s plan changed to ${plan}. Receipt ${data.receipt_number}.`;
+            ? `${member.full_name}'s membership renewed through ${data.expiry_date}.`
+            : `${member.full_name}'s plan changed to ${plan}.`;
         if (isRenewal) staffSelectedRenewalMember = null; else staffSelectedPlanChangeMember = null;
         document.getElementById(isRenewal ? 'staffRenewalSelected' : 'staffChangeSelected').hidden = true;
         document.getElementById(isRenewal ? 'staffRenewalResults' : 'staffChangeResults').replaceChildren();
@@ -346,7 +347,7 @@ async function submitStaffWalkin(event) {
     };
     button.disabled = true; status.textContent = 'Creating member account and recording payment…';
     try {
-        if (!newPasswordValid(body.password, 6)) throw new Error(newPasswordMessage(6));
+        if (!newPasswordValid(body.password, 8)) throw new Error(newPasswordMessage(8));
         if (body.password !== document.getElementById('walkinConfirmPassword').value) throw new Error('Passwords do not match.');
         const { data, error } = await staffClient.functions.invoke('admin-create-member', { body });
         if (error) {
@@ -453,6 +454,49 @@ document.getElementById('staffRenewalSearch').addEventListener('keydown', event 
 document.getElementById('staffChangeSearch').addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); document.getElementById('staffChangeSearchButton').click(); } });
 document.getElementById('staffRenewMembership').addEventListener('click', () => submitStaffMembershipChange('renewal'));
 document.getElementById('staffSavePlanChange').addEventListener('click', () => submitStaffMembershipChange('plan_change'));
+async function loadStaffRequests() {
+    const list = document.getElementById('staffRequestList');
+    const status = document.getElementById('staffRequestsStatus');
+    status.textContent = 'Loading requests...';
+    try {
+        const { data, error } = await staffClient.rpc('staff_pending_membership_requests');
+        if (error) throw error;
+        list.replaceChildren();
+        for (const request of data || []) {
+            const card = document.createElement('article'); card.className = 'staff-request-card';
+            const heading = document.createElement('h3'); heading.textContent = request.full_name;
+            const details = document.createElement('p');
+            details.textContent = `${request.application_type === 'renewal' ? 'Renewal' : 'Registration'} · ${request.plan} · ${formatStaffPeso(request.plan_price)}`;
+            const date = document.createElement('small'); date.textContent = `Submitted ${new Date(request.submitted_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })}`;
+            const actions = document.createElement('div'); actions.className = 'staff-form-actions';
+            for (const [decision, label] of [['approved', 'Approve'], ['rejected', 'Reject']]) {
+                const button = document.createElement('button'); button.type = 'button';
+                button.className = decision === 'approved' ? 'btn-primary' : 'btn-logout'; button.textContent = label;
+                button.addEventListener('click', async () => {
+                    const prompt = decision === 'approved'
+                        ? `Approve ${request.full_name}'s ${request.application_type} for ${formatStaffPeso(request.plan_price)}? Confirm their in-person payment has been received.`
+                        : `Reject ${request.full_name}'s ${request.application_type} request?`;
+                    if (!window.confirm(prompt)) return;
+                    actions.querySelectorAll('button').forEach(b => { b.disabled = true; });
+                    try {
+                        const { error } = await staffClient.rpc('review_membership_request', { p_application_id: request.id, p_decision: decision });
+                        if (error) throw error;
+                        await loadStaffRequests();
+                        status.textContent = `Request ${decision}.`;
+                    } catch (error) {
+                        status.textContent = error.message || 'Could not review the request.';
+                        actions.querySelectorAll('button').forEach(b => { b.disabled = false; });
+                    }
+                });
+                actions.append(button);
+            }
+            card.append(heading, details, date, actions); list.append(card);
+        }
+        status.textContent = data?.length ? `${data.length} pending request(s).` : 'No pending requests.';
+    } catch (error) { status.textContent = `Could not load requests: ${error.message}`; }
+}
+document.getElementById('refreshStaffRequests').addEventListener('click', loadStaffRequests);
+
 document.getElementById('staffSaleProduct').addEventListener('change', updateStaffSaleUnits);
 document.getElementById('staffSaleSize').addEventListener('change', updateStaffSaleSummary);
 document.getElementById('staffSaleQuantity').addEventListener('input', updateStaffSaleSummary);

@@ -155,7 +155,7 @@ async function submitRegistration(event) {
     if (!email || !document.getElementById('regEmail').checkValidity()) { showError('Enter a valid email address for your account.'); return; }
     if (username.length < 4) { showError('Username must be at least 4 characters.'); return; }
     if (!/^[a-z0-9_.]+$/.test(username)) { showError('Username can only contain letters, numbers, underscores, and dots.'); return; }
-    if (!newPasswordValid(password, 6)) { showError(newPasswordMessage(6)); return; }
+    if (!newPasswordValid(password, 8)) { showError(newPasswordMessage(8)); return; }
     if (password !== confirm) { showError('Passwords do not match.'); return; }
 
     const application = {
@@ -319,10 +319,10 @@ function showSuccessModal(app, confirmationRequired = false, emailJustConfirmed 
             </div>
             <h3 style="justify-content:center; display:flex;"><i class="fas ${confirmationRequired ? 'fa-envelope' : 'fa-check-circle'}"></i> ${confirmationRequired ? 'Confirm Your Email' : 'Application Submitted!'}</h3>
             <p class="modal-sub" style="text-align:center;">${confirmationRequired
-                ? `Your account was created, ${app.fullName}. Confirm your email to submit your application for admin review.`
+                ? `Your account was created, ${app.fullName}. Confirm your email to submit your application for staff or administrator review.`
                 : emailJustConfirmed
                     ? `Your application has been sent to the gym for review, ${app.fullName}, and is awaiting approval.`
-                    : `Thank you, <strong>${app.fullName}</strong>. Your application is now pending admin approval.`}</p>
+                    : `Thank you, <strong>${app.fullName}</strong>. Your application is now pending staff or administrator approval.`}</p>
             <div style="background:#0d1219; border:1px solid #1e2533; border-radius:16px; padding:16px; text-align:left; font-size:0.85rem;">
                 ${confirmationRequired ? '' : `<div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:#8b95a9;">Application ID:</span><code style="color:#ff6b2b;">${app.id}</code></div>`}
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:#8b95a9;">Plan:</span><strong>${app.plan}</strong></div>
@@ -336,7 +336,7 @@ function showSuccessModal(app, confirmationRequired = false, emailJustConfirmed 
                 ${confirmationRequired
                     ? 'Check your email and confirm your account. Return to this browser after confirmation to finish submitting your application. Your form is saved here temporarily; your password is not stored.'
                     : emailJustConfirmed
-                        ? 'The gym admin must approve your registration before you can access the member portal. Contact the gym if you need to follow up.'
+                        ? 'Authorized staff or the administrator must approve your registration before you can access the member portal. Contact the gym if you need to follow up.'
                         : 'Visit the gym to complete your payment. Once approved, sign in with your email and password.'}
             </div>
         </div>

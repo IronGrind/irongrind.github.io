@@ -31,10 +31,15 @@
         if (rounded <= 0 || Math.abs(raw - rounded) > 0.0000001) return null;
         return rounded;
     };
-    window.newPasswordValid = (value, minimum = 8) => typeof value === 'string' && value.length >= minimum && value.length <= 128 && /[A-Za-z]/.test(value) && /[0-9]/.test(value);
-    window.newPasswordMessage = minimum => `Use ${minimum}–128 characters, including at least one letter and one number.`;
+    window.newPasswordValid = (value, minimum = 8) => typeof value === 'string' && value.length >= Math.max(8, minimum) && value.length <= 128 && /[a-z]/.test(value) && /[A-Z]/.test(value) && /[0-9]/.test(value) && /[^A-Za-z0-9\s]/.test(value);
+    window.newPasswordMessage = minimum => `Use ${Math.max(8, minimum)}–128 characters with uppercase and lowercase letters, a number, and a symbol.`;
+    window.passwordStrength = (value, minimum = 8) => {
+        if (!value) return { label: 'Not entered', score: 0 };
+        const score = [value.length >= Math.max(8, minimum), /[a-z]/.test(value), /[A-Z]/.test(value), /[0-9]/.test(value), /[^A-Za-z0-9\s]/.test(value)].filter(Boolean).length;
+        return { label: window.newPasswordValid(value, minimum) ? 'Strong' : score >= 4 ? 'Fair' : 'Weak', score };
+    };
 
-    const passwordFields = { regPassword: 6, wiPassword: 6, walkinPassword: 6, staffPassword: 12, newPassword: 8, settingsPassword: 8 };
+    const passwordFields = { regPassword: 8, wiPassword: 8, walkinPassword: 8, staffPassword: 12, newPassword: 8, settingsPassword: 8 };
     const confirmationFields = { regConfirmPassword: 'regPassword', wiConfirmPassword: 'wiPassword', walkinConfirmPassword: 'walkinPassword', staffConfirmPassword: 'staffPassword', confirmPassword: 'newPassword', settingsPasswordConfirm: 'settingsPassword' };
     function attachPasswordGuidance(input) {
         if (input.dataset.passwordGuidance) return;
@@ -47,13 +52,22 @@
         input.setAttribute('aria-describedby', [input.getAttribute('aria-describedby'), hint.id].filter(Boolean).join(' '));
         const wrapper = input.closest('.password-wrapper') || input;
         wrapper.insertAdjacentElement('afterend', hint);
+        const meter = minimum ? document.createElement('meter') : null;
+        if (meter) {
+            meter.className = 'password-strength-meter'; meter.min = 0; meter.max = 5; meter.low = 3; meter.high = 5; meter.optimum = 5;
+            meter.setAttribute('aria-label', 'Password strength');
+            hint.insertAdjacentElement('beforebegin', meter);
+        }
         function update() {
             const value = input.value;
             if (minimum) {
                 input.minLength = minimum;
                 const valid = window.newPasswordValid(value, minimum);
                 input.setCustomValidity(value && !valid ? window.newPasswordMessage(minimum) : '');
-                hint.textContent = !value ? window.newPasswordMessage(minimum) : valid ? 'Password meets the letter, number, and length requirements.' : window.newPasswordMessage(minimum);
+                const strength = window.passwordStrength(value, minimum);
+                meter.value = valid ? 5 : Math.min(4, strength.score);
+                meter.setAttribute('aria-valuetext', strength.label);
+                hint.textContent = !value ? window.newPasswordMessage(minimum) : `${strength.label} password. ${valid ? 'Password requirements met.' : window.newPasswordMessage(minimum)}`;
                 hint.dataset.state = !value ? 'neutral' : valid ? 'valid' : 'invalid';
             } else {
                 const original = document.getElementById(confirmationFields[input.id]);

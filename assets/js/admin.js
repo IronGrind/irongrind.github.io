@@ -792,255 +792,20 @@ function completeApproval(id) {
 }
 
 async function completeSupabaseRegistrationApproval(application) {
-    const supabaseClient = window.ironGrindSupabase;
-    const { data: authResult, error: authError } = await supabaseClient.auth.getUser();
-    if (authError || !authResult.user) {
-        toast('Your Supabase session expired. Please sign in again.', 'error');
-        return;
-    }
-
-    const appRow = application.supabaseRecord;
-    const userId = appRow.auth_user_id;
-    if (!userId) {
-        toast('This application is missing its Auth user link.', 'error');
-        return;
-    }
-
-    // Reuse an existing member row if a previous approval attempt inserted it
-    // but failed before the application status could be updated.
-    let memberRow = null;
-    const existing = await supabaseClient.from('members').select('*').eq('auth_user_id', userId).maybeSingle();
-    if (existing.error) {
-        toast(`Could not check for an existing member: ${existing.error.message}`, 'error');
-        return;
-    }
-    memberRow = existing.data;
-
-    if (!memberRow) {
-        const emergency = appRow.emergency_contact_data && typeof appRow.emergency_contact_data === 'object'
-            ? appRow.emergency_contact_data
-            : appRow.emergency_contact && typeof appRow.emergency_contact === 'object'
-                ? appRow.emergency_contact
-            : {
-                name: appRow.emergency_name || '',
-                relationship: appRow.emergency_relationship || '',
-                contact: appRow.emergency_contact || ''
-            };
-        const expiry = appRow.end_date || application.endDate;
-        const memberPayload = {
-            auth_user_id: userId,
-            application_id: appRow.id,
-            full_name: appRow.full_name,
-            email: appRow.email,
-            username: appRow.username,
-            mobile: appRow.mobile,
-            date_of_birth: appRow.date_of_birth,
-            age: appRow.age,
-            sex: appRow.sex,
-            height: appRow.height,
-            height_unit: appRow.height_unit,
-            weight_kg: appRow.weight_kg ?? appRow.weight,
-            emergency_contact: emergency,
-            plan: appRow.plan,
-            plan_price: appRow.plan_price,
-            start_date: appRow.start_date,
-            end_date: expiry,
-            expiry_date: expiry,
-            status: 'active',
-            paid: Number(appRow.plan_price) || 0,
-            fitness_goals: appRow.fitness_goals || [],
-            health_conditions: appRow.health_conditions || [],
-            other_medical_conditions: appRow.other_medical_conditions || '',
-            signature_path: appRow.signature_path || appRow.signature_data || null,
-            registration_source: 'Online application'
-        };
-        const inserted = await supabaseClient.from('members').insert(memberPayload).select('*').single();
-        if (inserted.error) {
-            toast(`Could not create the member record: ${inserted.error.message}. Run the online-registration migration first.`, 'error');
-            return;
-        }
-        memberRow = inserted.data;
-    }
-
-    const registrationReference = `IG-REG-${String(appRow.id).slice(0, 8).toUpperCase()}`;
-    const { error: saleError } = await supabaseClient.rpc('admin_record_registration_sale', {
-        p_member_id: memberRow.id,
-        p_receipt_number: registrationReference
-    });
-    if (saleError) {
-        toast(`Member is saved, but the registration payment could not be recorded: ${saleError.message}`, 'error');
-        return;
-    }
-
-    const updated = await supabaseClient.from('membership_applications').update({
-        status: 'approved',
-        reviewed_at: new Date().toISOString(),
-        reviewed_by: authResult.user.id
-    }).eq('id', appRow.id).eq('status', 'pending');
-    if (updated.error) {
-        toast(`Member saved, but the application status could not be updated: ${updated.error.message}`, 'error');
-        return;
-    }
-
-    const member = mapSupabaseMember(memberRow, application.username, application.email);
-    const memberIndex = members.findIndex(item => String(item.id) === String(member.id));
-    if (memberIndex >= 0) members[memberIndex] = member;
-    else members.push(member);
-    saveDB('members', members);
-    pendingApprovals = pendingApprovals.filter(item => String(item.id) !== String(application.id));
-    saveDB('pendingApprovals', pendingApprovals);
-    await loadSupabaseOperationalData();
-    renderApprovals();
-    renderMembers();
-    renderDashboard();
-    toast(`${member.name}'s membership was approved and saved to Supabase.`, 'success');
+    return completeSupabaseRequestApproval(application);
 }
-
 async function completeSupabaseRenewalApproval(application) {
-    const client = window.ironGrindSupabase;
-    const { data: { user }, error: authError } = await client.auth.getUser();
-    if (authError || !user) {
-        toast('Your Supabase session expired. Please sign in again.', 'error');
-        return;
-    }
-
-    const appRow = application.supabaseRecord;
-    const memberId = appRow.member_id || application.memberId;
-    if (!memberId || !isUUID(memberId)) {
-        toast('This renewal request is not linked to a Supabase member record.', 'error');
-        return;
-    }
-
-    const { data: memberRow, error: memberError } = await client
-        .from('members').select('*').eq('id', memberId).maybeSingle();
-    if (memberError || !memberRow) {
-        toast(`Could not load the member for this renewal${memberError ? `: ${memberError.message}` : '.'}`, 'error');
-        return;
-    }
-
-    const plan = appRow.plan || application.plan || memberRow.plan;
-    const price = Number(appRow.plan_price ?? application.planPrice) || 0;
-    const startDate = todayStr();
-    const currentExpiry = memberRow.expiry_date || memberRow.end_date || '';
-    const extensionAnchor = currentExpiry >= startDate ? currentExpiry : startDate;
-    const endDate = addDays(extensionAnchor, getPlanDurationDays(plan));
-    const reviewedAt = new Date().toISOString();
-    const transactionReference = `IG-R-${String(appRow.id).slice(0, 8).toUpperCase()}`;
-    const historyNote = `Member portal renewal application ${appRow.id}`;
-
-    // Persist sales records first; an unavailable sales schema must not
-    // reactivate the membership while leaving its approval pending.
-    const { data: existingSale, error: saleLookupError } = await client
-        .from('sales').select('id').eq('receipt_number', transactionReference).maybeSingle();
-    if (saleLookupError) {
-        toast(`Could not check the renewal payment: ${saleLookupError.message}`, 'error');
-        return;
-    }
-    let saleId = existingSale?.id;
-    if (!existingSale) {
-        const { data: sale, error: saleError } = await client.from('sales').insert({
-            receipt_number: transactionReference,
-            customer_type: 'member',
-            customer_name: memberRow.full_name,
-            member_id: memberId,
-            total: price,
-            status: 'paid',
-            sold_at: reviewedAt,
-            processed_by: user.id
-        }).select('id').single();
-        if (saleError) {
-            toast(`Could not save the renewal sale record: ${saleError.message}`, 'error');
-            return;
-        }
-        saleId = sale.id;
-    }
-
-    const { data: existingItem, error: itemLookupError } = await client
-        .from('sale_items').select('id').eq('sale_id', saleId).eq('category', 'membership').limit(1).maybeSingle();
-    if (itemLookupError) {
-        toast(`Could not check the renewal payment details: ${itemLookupError.message}`, 'error');
-        return;
-    }
-    if (!existingItem) {
-        const { error: itemError } = await client.from('sale_items').insert({
-            sale_id: saleId,
-            item_name: `${plan} Membership Renewal`,
-            category: 'membership',
-            quantity: 1,
-            unit: 'membership',
-            unit_price: price,
-            line_total: price
-        });
-        if (itemError) {
-            toast(`Could not save the renewal payment details: ${itemError.message}`, 'error');
-            return;
-        }
-    }
-
-    // These checks make an approval retry safe if a later Supabase write failed.
-    const { data: priorHistory, error: historyLookupError } = await client
-        .from('membership_history').select('id,new_plan,new_price,new_start_date,new_expiry_date').eq('member_id', memberId)
-        .eq('event_type', 'renewal').eq('notes', historyNote).maybeSingle();
-    if (historyLookupError) {
-        toast(`Could not check renewal history: ${historyLookupError.message}`, 'error');
-        return;
-    }
-    if (!priorHistory) {
-        const { error } = await client.from('membership_history').insert({
-            member_id: memberId,
-            event_type: 'renewal',
-            previous_plan: memberRow.plan,
-            new_plan: plan,
-            previous_price: Number(memberRow.plan_price) || 0,
-            new_price: price,
-            previous_start_date: memberRow.start_date,
-            previous_expiry_date: memberRow.expiry_date || memberRow.end_date,
-            new_start_date: startDate,
-            new_expiry_date: endDate,
-            notes: historyNote,
-            recorded_by: user.id
-        });
-        if (error) {
-            toast(`Could not save the previous membership to history: ${error.message}`, 'error');
-            return;
-        }
-    }
-
-    // Reuse the dates stored by a previous attempt if it stopped after writing
-    // history. This prevents retrying an approval from extending the plan twice.
-    const renewalStartDate = priorHistory?.new_start_date || startDate;
-    const renewalExpiry = priorHistory?.new_expiry_date || endDate;
-    const approvedPlan = priorHistory?.new_plan || plan;
-    const approvedPrice = Number(priorHistory?.new_price ?? price);
-
-    const { error: updateMemberError } = await client.from('members').update({
-        plan: approvedPlan,
-        plan_price: approvedPrice,
-        start_date: renewalStartDate,
-        end_date: renewalExpiry,
-        expiry_date: renewalExpiry,
-        status: 'active',
-        mobile: appRow.mobile || memberRow.mobile,
-        updated_at: reviewedAt
-    }).eq('id', memberId);
-    if (updateMemberError) {
-        toast(`Payment is recorded, but the member's renewal could not be updated: ${updateMemberError.message}`, 'error');
-        return;
-    }
-
-    const { error: applicationError } = await client.from('membership_applications').update({
-        status: 'approved',
-        reviewed_at: reviewedAt,
-        reviewed_by: user.id
-    }).eq('id', appRow.id).eq('status', 'pending');
-    if (applicationError) {
-        toast(`Renewal details were saved, but the request could not be marked approved: ${applicationError.message}`, 'error');
-        return;
-    }
-
+    return completeSupabaseRequestApproval(application);
+}
+async function completeSupabaseRequestApproval(application) {
+    const { error } = await window.ironGrindSupabase.rpc('review_membership_request', {
+        p_application_id: application.supabaseRecord.id, p_decision: 'approved'
+    });
+    if (error) { toast(error.message, 'error'); return; }
     await loadSupabaseMembershipData();
     await loadSupabaseOperationalData();
-    toast(`${memberRow.full_name}'s renewal was approved and saved to Supabase.`, 'success');
+    renderApprovals(); renderMembers(); renderDashboard();
+    toast('Membership request approved and payment recorded.', 'success');
 }
 
 function mapSupabaseMember(row, username = '', email = '') {
@@ -1596,7 +1361,7 @@ async function submitNewMember() {
         toast('Username must be 4+ characters and use only letters, numbers, dots, or underscores.', 'error');
         return;
     }
-    if (!newPasswordValid(password, 6)) { toast(newPasswordMessage(6), 'error'); return; }
+    if (!newPasswordValid(password, 8)) { toast(newPasswordMessage(8), 'error'); return; }
     if (password !== confirmPassword) { toast('Passwords do not match.', 'error'); return; }
     if (users.some(user => user.username?.toLowerCase() === username) || members.some(member => member.username?.toLowerCase() === username) || pendingApprovals.some(application => application.username?.toLowerCase() === username)) {
         toast('That username is already in use.', 'error');

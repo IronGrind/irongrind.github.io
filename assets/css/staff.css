@@ -317,3 +317,7 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-search > d
   background: #fff;
   box-shadow: 0 5px 16px rgba(68,35,39,.055);
 }
+.staff-request-list { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr)); gap:16px; }
+.staff-request-card { border:1px solid var(--border-color,#343b48); border-radius:16px; padding:20px; }
+.staff-request-card p { margin:12px 0; }
+.staff-request-card .staff-form-actions { margin-top:18px; }

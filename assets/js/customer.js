@@ -577,7 +577,7 @@ function showQRCode() {
 // ===== RENEW MEMBERSHIP =====
 function renewMembership() {
     if (window.ironGrindSupabase) {
-        toast('Renewals must be submitted as a request for admin approval.', 'error');
+        toast('Renewals must be submitted as a request for staff or administrator approval.', 'error');
         return;
     }
     openModal(`
@@ -603,7 +603,7 @@ function renewMembership() {
 function confirmRenew() {
     if (window.ironGrindSupabase) {
         closeModal();
-        toast('Renewals must be submitted as a request for admin approval.', 'error');
+        toast('Renewals must be submitted as a request for staff or administrator approval.', 'error');
         return;
     }
     const m = getCurrentMember();
@@ -711,7 +711,7 @@ async function submitMembershipForm(event) {
             return;
         }
         if (existing) {
-            renewalFormMessage('You already have a renewal request waiting for admin approval.', 'error');
+            renewalFormMessage('You already have a renewal request waiting for staff or administrator approval.', 'error');
             return;
         }
 
