@@ -270,7 +270,7 @@
                        ]
                    ],
         "Actor":  "Administrator; Authorized Staff",
-        "Input":  "Products, quantities, customer and payment details"
+        "Input":  "Customer name, product, quantity and sale unit"
     },
     {
         "Id":  "8.0",

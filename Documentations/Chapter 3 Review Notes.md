@@ -4,35 +4,40 @@ Latest identifier review: members sign in with email and new member records do n
 
 Formatting pass: removed 252 empty layout-spacer paragraphs, converted the remaining 17 floating figures to inline placement, standardized body text to justified 1.5-line spacing with a true first-line indent, centered figure captions, left-aligned table captions, and used compact single-spaced table paragraphs. Bold formatting is restricted to section headings and table headers. Captions and body/data text use regular weight. Image dimensions were capped to the available page area. Word XML and image links were validated; final pagination has not been rendered in Word.
 
-Latest presentation correction: diagram explanations, rather than dictionary entries, are the expanded prose. Context, Level 1 DFD, UML use-case, physical ERD, and Gantt explanations now discuss interpretation, roles, flow boundaries, relationships, and relevant limitations in fuller paragraphs. The 169 dictionary entries have been shortened to a brief field-purpose sentence plus required/nullable status; their declared length, precision/scale, and key columns remain intact. The earlier notes about detailed dictionary descriptions below describe the prior revision and are superseded by this presentation correction.
+Latest presentation correction: diagram explanations, rather than dictionary entries, are the expanded prose. Context, Level 1 DFD, UML use-case, physical ERD, and Gantt explanations now discuss interpretation, roles, flow boundaries, relationships, and relevant limitations in fuller paragraphs. The 174 dictionary entries have been shortened to a brief field-purpose sentence plus required/nullable status; their declared length, precision/scale, and key columns remain intact. The earlier notes about detailed dictionary descriptions below describe the prior revision and are superseded by this presentation correction.
 
-The data dictionary has been expanded with substantive field purposes, declared character limits, numeric precision and scale, NULLability, foreign-key targets, and relevant validation details. All 169 entries have a populated Length / Precision / Scale cell: an actual declared size, Not declared, N/A, or the explicit QR-payload check range. No new database limits were invented or applied.
+The data dictionary has been expanded with substantive field purposes, declared character limits, numeric precision and scale, NULLability, foreign-key targets, and relevant validation details. All 174 entries have a populated Length / Precision / Scale cell: an actual declared size, Not declared, N/A, or the explicit QR-payload check range. No new database limits were invented or applied.
 
 Verified validation distinctions: register.html permits up to 300 characters in the online email input, while the corresponding varchar column allows 254; the staff email form allows 254. The online additional-medical-details textarea allows 500 characters, but the database column remains unbounded text. The paired-device registration function truncates its label to 100 characters while its column remains text. The retained QR-payload column is text with an explicit database CHECK requiring 1-500 characters. These workflow/check limits are distinct from the column type declaration. Application and database code were not changed by this documentation revision.
 
-Reviewed against the checked-in system files on November 5, 2026 (Asia/Manila). The local migration baseline is the database reference; this review does not assert that a remote deployment has the same schema.
+Reviewed against the checked-in system files on November 9, 2026 (Asia/Manila). The local migration baseline and subsequent migrations are the database reference; this review does not assert that a remote deployment has the same schema.
 
 ## Updated in Chapter 3.docx
 
 - Replaced the context diagram with one whole-system process and separate member/applicant, administrator, and staff actors. Internal stores are excluded from the context view.
 - Replaced the Level 1 data-flow figure and descriptions, distinguishing administrator review of online requests from staff counter operations.
 - Replaced the use-case figure with separate role associations. Actors are outside the system boundary. Shared use cases repeat for readability.
-- Replaced the ERD with three relationship panels derived from all 20 declared foreign keys. Panels show NULLability, parent/child cardinalities, and deletion actions. Full editable Mermaid ERD includes table attributes.
+- Replaced the ERD with three relationship panels derived from all 21 declared foreign keys. Panels show NULLability, parent/child cardinalities, and deletion actions. Full editable Mermaid ERD includes table attributes.
 - Added phone-pairing, activity-log, and private attendance-request/account-protection tables to the dictionary. Rebuilt dictionary fields from the baseline, including numeric stock and payment fields, actual contact field types, operator references, account controls, and product units.
 - Updated requirements, forms, permissions, transaction descriptions, and hardware requirements. Replaced the receipt illustration with a role workflow illustration.
 - Preserved the stated operating rule: transactions are recorded without providing customer receipts. The existing database column receipt_number remains documented as an internal reference.
+- Rechecked the Chapter 3 workflow narrative against current authentication, application-review, walk-in registration, attendance, inventory, sales, reporting, and activity-log code paths. Expanded the end-to-end flow and corrected applicant-versus-member terminology, the timing of Auth account creation, the initial-registration/member relationship, optional sale links, and attendance records with no recorded checkout.
+- Corrected functional input/output requirement rows to reflect authorized staff as well as administrators for online request review, and matched product-sale inputs to the actual customer/product/quantity/unit transaction fields.
+- Reworked the staff workflow figure as a distinct four-path staff process diagram, checked its labels against staff permissions, and corrected the context/DFD distinction between account registration and request approval. The DFD no longer implies the applicant Auth account is created on approval.
+- Replaced unsupported hardware minimum claims with indicative examples and stated that performance and bandwidth thresholds have not been measured. The OS row now advises using operating systems and browsers that receive vendor security updates.
+- Corrected the profile-table caption and updated entity relationship explanations to distinguish optional links and the registration application's source relationship.
 
 ## Sources used
 
-- supabase/migrations/20261105043517_remote_schema.sql
+- supabase/migrations/20261105043517_remote_schema.sql and subsequent migrations through 20261108
 - supabase/migrations/20261105043518_staff_active_plan_change_search.sql
-- assets/js/admin.js, staff.js, customer.js, attendance-phone.js, staff-accounts.js, activity-logs.js
+- assets/js/admin.js, staff.js, customer.js, attendance-phone.js, staff-accounts.js, activity-logs.js, register.js, auth.js
 - supabase/functions/admin-create-member/index.ts and the staff-provisioning workflow
 - Current page structure and package.json
 
 ## Validation and remaining presentation work
 
-- DOCX document XML and image relationships were checked. Replacement diagram images were visually inspected during preparation; updated figures use inline placement to reduce overlap.
+- DOCX document XML and image relationships were checked. Replacement diagram images were visually inspected during preparation; updated figures use inline placement to reduce overlap. The structural chapter verifier checks table counts, documented field counts, figures, and key implementation statements.
 - Final page layout has not been rendered in Microsoft Word. Check pagination, caption placement, and image text size before submission.
 - Existing interface screenshots, other than the replaced receipt illustration, are historical prototype images and were not recaptured. Capture the current interfaces before presenting those figures as current screenshots.
 - The Agile illustration was inspected and retained. The Gantt chart remains the original planned schedule, not evidence of actual completion dates.
