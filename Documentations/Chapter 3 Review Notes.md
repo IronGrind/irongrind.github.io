@@ -25,6 +25,7 @@ Reviewed against the checked-in system files on November 9, 2026 (Asia/Manila). 
 - Corrected functional input/output requirement rows to reflect authorized staff as well as administrators for online request review, and matched product-sale inputs to the actual customer/product/quantity/unit transaction fields.
 - Reworked the staff workflow figure as a distinct four-path staff process diagram, checked its labels against staff permissions, and corrected the context/DFD distinction between account registration and request approval. The DFD no longer implies the applicant Auth account is created on approval.
 - Replaced unsupported hardware minimum claims with indicative examples and stated that performance and bandwidth thresholds have not been measured. The OS row now advises using operating systems and browsers that receive vendor security updates.
+- Added Vercel to the software requirements and deployment description. The dashboard screenshot supplied for this review shows a Ready Production Deployment at `irongrind-github-io.vercel.app`, sourced from `main`; this status is described as deployment evidence, not as proof that all production workflows or evaluations have passed.
 - Corrected the profile-table caption and updated entity relationship explanations to distinguish optional links and the registration application's source relationship.
 
 ## Sources used
