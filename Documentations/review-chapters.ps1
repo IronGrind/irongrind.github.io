@@ -115,6 +115,9 @@ foreach($chapter in 1,2,3){
    elseif($heading){$bold=$true;Attr $jc 'val' 'left';Attr $sp 'line' 240;Attr $sp 'before' 200;Attr $sp 'after' 80;Attr $ind 'firstLine' 0;[void](Prop $pr 'keepNext');$headingCount++}
    elseif($caption -or $image){Attr $jc 'val' $(if($text.StartsWith('Table')){'left'}else{'center'});Attr $sp 'line' 240;Attr $sp 'before' 80;Attr $sp 'after' 100;Attr $ind 'firstLine' 0;if($text.StartsWith('Table') -or ($image -and $p.NextSibling -and (Txt $p.NextSibling) -match '^Figure\s+\d')){[void](Prop $pr 'keepNext')}}
    else{Attr $jc 'val' 'both';Attr $sp 'line' 360;Attr $sp 'before' 0;Attr $sp 'after' 100;if(-not $pr.SelectSingleNode('w:numPr',$n)){Attr $ind 'firstLine' 720};$bodyCount++}
+   if($text.StartsWith('Supabase. (n.d.-')){
+    [void]$ind.RemoveAll();Attr $ind 'left' 720;Attr $ind 'hanging' 720;Attr $jc 'val' 'left'
+   }
    [void](Prop $pr 'widowControl')
    $allProperties=@((Prop $pr 'rPr'))
    foreach($run in $p.SelectNodes('.//w:r',$n)){$rp=$run.SelectSingleNode('w:rPr',$n);if(-not $rp){$rp=$d.CreateElement('w','rPr',$n.LookupNamespace('w'));[void]$run.PrependChild($rp)};$allProperties+=,$rp}

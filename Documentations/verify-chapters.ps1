@@ -31,8 +31,14 @@ foreach($chapter in 1,2,3){
    for($i=0;$i -lt $paragraphs.Count;$i++){if((($paragraphs[$i].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim() -eq 'Background of the Study'){$background=$i;break}}
    $sdg=($paragraphs[$background+2].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join ''
    if($background -lt 0 -or $sdg -notmatch 'Sustainable Development Goals'){throw 'Chapter 1 SDG paragraph is not immediately after the first introduction paragraph.'}
+   foreach($phrase in @('Paired phones and unexpired pending QRs shared the configured slot limit','Staff account registration collected first name','Traffic capacity and a maximum number of simultaneous users were not established')){if(-not $all.Contains($phrase)){throw "Chapter 1 is missing a current scope statement: $phrase"}}
+  }
+  if($chapter -eq 2){
+   foreach($phrase in @('Supabase (n.d.-a)','Supabase (n.d.-b)','Supabase (n.d.-c)','Additional Technical References')){if(-not $all.Contains($phrase)){throw "Chapter 2 is missing technical support: $phrase"}}
+   foreach($url in @('https://supabase.com/docs/guides/deployment/going-into-prod','https://supabase.com/docs/guides/database/postgres/row-level-security','https://supabase.com/docs/guides/auth/sessions')){if(-not $all.Contains($url)){throw "Chapter 2 is missing a technical reference: $url"}}
   }
   if($chapter -eq 3){
+   foreach($phrase in @('Recorded verification as of November 8, 2026 comprised forty automated check groups','A separate performance evaluation remains necessary.','The Create Staff Account form collects first name','Phone pairing capacity counts both paired devices')){if(-not $all.Contains($phrase)){throw "Chapter 3 is missing a verified implementation statement: $phrase"}}
    if($doc.SelectNodes('//w:body/w:tbl',$ns).Count -ne 20){throw 'Expected five requirements tables and fifteen dictionary tables.'}
    $dictionary=@($doc.SelectNodes('//w:body/w:tbl',$ns)|Select-Object -Skip 5)
    $columns=0;foreach($table in $dictionary){$columns+=$table.SelectNodes('w:tr',$ns).Count-1}
