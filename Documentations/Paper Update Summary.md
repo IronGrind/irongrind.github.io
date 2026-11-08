@@ -36,3 +36,7 @@ Primary technical sources consulted:
 - https://supabase.com/docs/guides/deployment/going-into-prod
 - https://supabase.com/docs/guides/database/postgres/row-level-security
 - https://supabase.com/docs/guides/auth/sessions
+
+## Follow-up — November 8, 2026
+
+Chapter 3 now states that members sign in using email, staff and administrators retain username sign-in, and member registration does not collect a separate username. It also documents rejection of numeric characters in person-name fields and clarifies that authorized staff as well as administrators review membership applications. Chapter 1 was rechecked and already described the approval roles correctly. The Chapter 3 XML, figure links, punctuation, and dictionary-count verification passed. Full Word pagination remains unverified.

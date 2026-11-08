@@ -12,8 +12,11 @@ function Get-ParagraphText($paragraph, $namespace) {
 }
 
 function Replace-Paragraph($document, $namespace, $prefix, $replacement, $chapter) {
-    $matches = @($document.SelectNodes('//w:body/w:p', $namespace) | Where-Object { (Get-ParagraphText $_ $namespace).Trim().StartsWith($prefix) })
-    if ($matches.Count -ne 1) { throw "Chapter $chapter expected one paragraph beginning '$prefix'; found $($matches.Count)." }
+    $matches = @($document.SelectNodes('//w:body/w:p', $namespace) | Where-Object { (Get-ParagraphText $_ $namespace).Contains($prefix) })
+    if ($matches.Count -ne 1) {
+        $diagnostic = @($document.SelectNodes('//w:body/w:p', $namespace) | ForEach-Object { Get-ParagraphText $_ $namespace } | Where-Object { $_ -match 'stored and organized|renewal requests|Auth verifies|Register and Submit Membership' })
+        throw "Chapter $chapter expected one paragraph containing '$prefix'; found $($matches.Count). Candidate paragraphs: $($diagnostic -join ' | ')"
+    }
     $nodes = $matches[0].SelectNodes('.//w:t', $namespace)
     if (-not $nodes.Count) { throw "Chapter $chapter paragraph has no text nodes: $prefix" }
     $nodes[0].InnerText = $replacement
@@ -46,14 +49,10 @@ function Update-Chapter($chapter, $edits) {
     } finally { $zip.Dispose() }
 }
 
-Update-Chapter 1 @(
-    @{ Prefix = 'The system stored and organized member profiles and membership information'; Text = 'The system stored and organized member profiles and membership information, including membership plans, start dates, expiration dates, and membership status. Applicants could submit registration details online for review by authorized staff or the administrator. Members could submit renewal requests at any time, but each request required approval by authorized staff or the administrator. When an active membership was renewed, unused time was carried forward from its current expiry date. When a membership had expired, the renewed period started on the approval date.' }
-)
-
 Update-Chapter 3 @(
-    @{ Prefix = 'Supabase Auth verifies credentials.'; Text = 'Supabase Auth verifies credentials. Members sign in with the email address on their account; staff and administrators use their assigned usernames. Member registration collects an email and password, not a separate username, and the member dashboard displays the member’s full name. The profile role and active-account state determine administrator, staff, or member access, with protected operations checked by server-side authorization. New member registration uses a visible password-strength indicator and blocks passwords that do not meet the Strong requirements: 8 to 128 characters, uppercase and lowercase letters, at least one digit, and at least one symbol. Confirmation must match the selected password. Auth and the member-creation service enforce the password policy on the server; staff-account creation uses a minimum of 12 characters with the same character requirements. Existing sign-in forms continue to accept account credentials without imposing registration validation on login.' },
+    @{ Prefix = 'Supabase Auth verifies credentials.'; Text = 'Supabase Auth verifies credentials. Members sign in with the email address on their account; staff and administrators use their assigned usernames. Member registration collects an email and password, not a separate username, and the member dashboard displays the member''s full name. The profile role and active-account state determine administrator, staff, or member access, with protected operations checked by server-side authorization. New member registration uses a visible password-strength indicator and blocks passwords that do not meet the Strong requirements: 8 to 128 characters, uppercase and lowercase letters, at least one digit, and at least one symbol. Confirmation must match the selected password. Auth and the member-creation service enforce the password policy on the server; staff-account creation uses a minimum of 12 characters with the same character requirements. Existing sign-in forms continue to accept account credentials without imposing registration validation on login.' },
     @{ Prefix = '2. Register and Submit Membership Application'; Text = '2. Register and Submit Membership Application. This function allows a member to create an account using an email address and password, then submit personal and health information for review by authorized staff or the administrator. Name fields accept names containing letters and reject numeric characters.' },
-    @{ Prefix = '3. Review Membership Applications'; Text = '3. Review Membership Applications. Authorized staff and the administrator review pending application summaries and approve or reject requests according to the gym’s criteria, confirming in-person payment before approval.' }
+    @{ Prefix = '3. Review Membership Applications'; Text = '3. Review Membership Applications. Authorized staff and the administrator review pending application summaries and approve or reject requests according to the gym''s criteria, confirming in-person payment before approval.' }
 )
 
 $changed | Set-Content -Encoding UTF8 (Join-Path $PSScriptRoot 'Review Evidence/Name and Login Paper Update.txt')
