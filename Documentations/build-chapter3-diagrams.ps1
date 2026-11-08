@@ -65,6 +65,19 @@ Finish '04-use-cases.png'
 $staffBitmap=[Drawing.Bitmap]::new((Join-Path $out '04-use-cases.png'));$staffGraphics=[Drawing.Graphics]::FromImage($staffBitmap);$staffGraphics.FillRectangle([Drawing.Brushes]::White,0,0,1800,100);$staffGraphics.DrawString('Figure 20. Staff operations and access',[Drawing.Font]::new('Arial',34,[Drawing.FontStyle]::Bold),$ink,60,35);$staffGraphics.Dispose();$staffBitmap.Save((Join-Path $out '20-staff-operations.png'),[Drawing.Imaging.ImageFormat]::Png);$staffBitmap.Dispose()
 # Extract the physical schema and its declared foreign keys from the current baseline.
 $sql=Get-Content -Raw 'supabase\migrations\20261105043517_remote_schema.sql'
+$sql+=@'
+
+CREATE TABLE IF NOT EXISTS "private"."account_sessions" (
+    "user_id" "uuid" NOT NULL,
+    "session_id" "uuid" NOT NULL,
+    "session_created_at" timestamp with time zone NOT NULL,
+    "session_scope" "text" DEFAULT 'dashboard'::text NOT NULL
+);
+ALTER TABLE ONLY "private"."account_sessions"
+    ADD CONSTRAINT "account_sessions_pkey" PRIMARY KEY ("user_id", "session_scope");
+ALTER TABLE ONLY "private"."account_sessions"
+    ADD CONSTRAINT "account_sessions_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "auth"."users"("id") ON DELETE CASCADE;
+'@
 $fks=@([regex]::Matches($sql,'ALTER TABLE ONLY "([^"]+)"\."([^"]+)"\s+ADD CONSTRAINT "([^"]+)" FOREIGN KEY \("([^"]+)"\) REFERENCES "([^"]+)"\."([^"]+)"\("([^"]+)"\)([^;]*);')|ForEach-Object { [pscustomobject]@{Child="$($_.Groups[1].Value).$($_.Groups[2].Value)";Field=$_.Groups[4].Value;Parent="$($_.Groups[5].Value).$($_.Groups[6].Value)";ParentField=$_.Groups[7].Value;Rule=$_.Groups[8].Value.Trim()} })
 $fks|ConvertTo-Json -Depth 5|Set-Content (Join-Path $out 'schema-foreign-keys.json') -Encoding UTF8
 $mmd=[Collections.Generic.List[string]]::new();$mmd.Add('erDiagram')
@@ -78,6 +91,12 @@ $mmd.Add('    auth_users {');$mmd.Add('        uuid id PK');$mmd.Add('    }')
 foreach($definition in [regex]::Matches($sql,'CREATE TABLE IF NOT EXISTS "(public|private)"\."([^"]+)" \(([\s\S]*?)\n\);')){
  $schema=$definition.Groups[1].Value;$table=$definition.Groups[2].Value;$entity=$schema+'_'+$table;$mmd.Add("    $entity {")
  foreach($line in ($definition.Groups[3].Value -split "`n")){$column=[regex]::Match($line,'^\s+"([^"]+)"\s+(.+?)(?:,)?\s*$');if(-not $column.Success){continue};$name=$column.Groups[1].Value;$type=([regex]::Split($column.Groups[2].Value,'\s+(?:DEFAULT|NOT NULL|GENERATED)\b'))[0].Trim().TrimEnd(',').Replace('"','');$type=$type -replace '\([^)]*\)','' -replace ' ','_';$keys=@();if($sql -match ('ALTER TABLE ONLY "'+$schema+'"\."'+$table+'"\s+ADD CONSTRAINT "[^"]+" PRIMARY KEY \("'+$name+'"\)')){$keys+='PK'};if(@($fks|Where-Object {$_.Child -eq "$schema.$table" -and $_.Field -eq $name}).Count){$keys+='FK'};$suffix=if($keys.Count){' '+($keys -join ',')}else{''};$mmd.Add("        $type $name$suffix")};$mmd.Add('    }')
+}
+$insideSessions=$false
+for($mi=0;$mi -lt $mmd.Count;$mi++){
+ if($mmd[$mi] -eq '    private_account_sessions {'){$insideSessions=$true;continue}
+ if($insideSessions -and $mmd[$mi] -eq '    }'){$insideSessions=$false}
+ if($insideSessions){$mmd[$mi]=$mmd[$mi].Replace('uuid user_id FK','uuid user_id PK,FK').Replace('text session_scope','text session_scope PK')}
 }
 $mmd|Set-Content (Join-Path $out '05-erd.mmd') -Encoding UTF8
 for($page=0;$page -lt 3;$page++){

@@ -17,6 +17,12 @@
                            "Role and active status"
                        ],
                        [
+                           "D14",
+                           "private account sessions",
+                           "Selected session scope",
+                           "Session ownership"
+                       ],
+                       [
                            "D9",
                            "activity_logs",
                            "Session event",

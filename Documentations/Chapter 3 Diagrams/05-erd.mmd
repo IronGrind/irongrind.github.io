@@ -19,6 +19,7 @@
     public_sales ||--o{ public_sale_items : sale_id
     public_members |o--o{ public_sales : member_id
     auth_users |o--o{ public_sales : processed_by
+    auth_users ||--o{ private_account_sessions : user_id
     auth_users {
         uuid id PK
     }
@@ -218,4 +219,10 @@
         character_varying receipt_number
         character_varying customer_type
         uuid processed_by FK
+    }
+    private_account_sessions {
+        uuid user_id PK,FK
+        uuid session_id
+        timestamp_with_time_zone session_created_at
+        text session_scope PK
     }

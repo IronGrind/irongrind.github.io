@@ -5,6 +5,8 @@ $definitions=$source.Substring(0,$source.IndexOf("Canvas 'Figure 2."))
 $start=$source.IndexOf("Canvas 'Figure 4.")
 $end=$source.IndexOf('# Extract the physical schema')
 Invoke-Expression ($definitions+$source.Substring($start,$end-$start))
+$erdStart=$source.IndexOf('# Extract the physical schema')
+Invoke-Expression ($definitions+$source.Substring($erdStart))
 # Render Gane-Sarson figures without invoking the obsolete relationship mapping.
 $source=Get-Content -Raw (Join-Path $PSScriptRoot 'Chapter 3 Diagrams/gane-sarson.ps1')
 $end=$source.IndexOf('& (Join-Path $PSScriptRoot')
@@ -19,7 +21,7 @@ try {
  $ns=[Xml.XmlNamespaceManager]::new($doc.NameTable)
  $ns.AddNamespace('w','http://schemas.openxmlformats.org/wordprocessingml/2006/main');$ns.AddNamespace('a','http://schemas.openxmlformats.org/drawingml/2006/main');$ns.AddNamespace('r','http://schemas.openxmlformats.org/officeDocument/2006/relationships');$ns.AddNamespace('wp','http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing')
  foreach($b in @($doc.SelectNodes('//a:blip[starts-with(@r:embed,"rIdGaneDfd")]',$ns))){$p=$b;while($p.LocalName -ne 'p'){$p=$p.ParentNode};[void]$p.ParentNode.RemoveChild($p)}
- $images=@{'rId9'='02-context.png';'rId10'='03-data-flow-1.png';'rId11'='03-data-flow-2.png';'rId12'='03-data-flow-3.png';'rId13'='03-data-flow-4.png';'rId14'='03-data-flow-5.png';'rId15'='04-use-cases.png';'rId34'='20-staff-operations.png'}
+ $images=@{'rId9'='02-context.png';'rId10'='03-data-flow-1.png';'rId11'='03-data-flow-2.png';'rId12'='03-data-flow-3.png';'rId13'='03-data-flow-4.png';'rId14'='03-data-flow-5.png';'rId15'='04-use-cases.png';'rId34'='20-staff-operations.png';'rId16'='05-erd-1.png';'rId17'='05-erd-2.png';'rId18'='05-erd-3.png'}
  foreach($rid in $images.Keys){
   $rel=$rels.Relationships.Relationship|Where-Object Id -EQ $rid
   $part='word/'+$rel.Target;$old=$zip.GetEntry($part);$old.Delete()

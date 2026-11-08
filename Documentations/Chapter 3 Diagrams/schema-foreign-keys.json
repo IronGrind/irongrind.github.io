@@ -138,5 +138,12 @@
         "Parent":  "auth.users",
         "ParentField":  "id",
         "Rule":  "ON DELETE SET NULL"
+    },
+    {
+        "Child":  "private.account_sessions",
+        "Field":  "user_id",
+        "Parent":  "auth.users",
+        "ParentField":  "id",
+        "Rule":  "ON DELETE CASCADE"
     }
 ]
