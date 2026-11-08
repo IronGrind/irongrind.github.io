@@ -19,10 +19,10 @@ for(const name of ['renderPhonePairingSettings','refreshPairedAttendancePhones']
  vm.runInContext(end<0?source.slice(start):source.slice(start,start+1+end),context);
 }
 await context.refreshPairedAttendancePhones(true);
-assert.match(elements.get('phonePairingLimitSummary').textContent,/0 \/ 2 paired.*2 pending/);
+assert.match(elements.get('phonePairingLimitSummary').textContent,/2 \/ 2 slots used.*0 paired.*2 pending/);
 paired=true;
 await context.refreshPairedAttendancePhones(true);
-assert.match(elements.get('phonePairingLimitSummary').textContent,/1 \/ 2 paired.*0 pending/);
+assert.match(elements.get('phonePairingLimitSummary').textContent,/1 \/ 2 slots used.*1 paired.*0 pending/);
 assert.equal(elements.get('pairedPhonesCount').textContent,'1');
 assert.equal(elements.get('pendingPhonePairingsCount').textContent,'0');
 assert.match(elements.get('pairedPhonesList').innerHTML,/Reno 13F 5G/);
@@ -32,3 +32,20 @@ await context.refreshPairedAttendancePhones(true);
 assert.equal(vm.runInContext('pairedPhoneListRefreshBusy',context),true,'Guard stays active through the entire refresh');
 resolve();await refresh;assert.equal(vm.runInContext('pairedPhoneListRefreshBusy',context),false);
 console.log('Passed: paired/pending summary updates with the device list, and overlapping refreshes are prevented.');
+vm.runInContext('let phonePairingWasAtDeviceLimit=false;let phonePairQrManuallyHidden=false;',context);
+const makeNode=()=>({dataset:{},disabled:false,innerHTML:'',textContent:'',classes:new Map(),classList:{toggle(name,on){this.owner.classes.set(name,on);}},setAttribute(){}});
+for(const id of ['phonePairQr','phonePairQrVisibility','phonePairCapacityMessage','createPhonePairingQrButton','phonePairStatus']){
+ const node=makeNode();node.classList.owner=node;elements.set(id,node);
+}
+const start=source.indexOf('function applyPhonePairingCapacityState(');
+const end=source.indexOf('\nfunction ',start+1);
+vm.runInContext(source.slice(start,end),context);
+const qr=elements.get('phonePairQr');qr.dataset.pairingState='pending';
+context.applyPhonePairingCapacityState({paired_count:1,pending_count:1,active_count:2,max_pairs:2});
+assert.equal(qr.classes.get('hidden'),false,'A reserved QR remains scannable when all slots are used');
+assert.equal(elements.get('createPhonePairingQrButton').classes.get('hidden'),true,'No third slot can be created');
+assert.equal(elements.get('phonePairQrVisibility').disabled,false);
+qr.dataset.pairingState='unavailable';
+context.applyPhonePairingCapacityState({paired_count:2,pending_count:0,active_count:2,max_pairs:2});
+assert.equal(qr.classes.get('hidden'),true,'Claimed or expired QR cannot be reused');
+console.log('Passed: full capacity blocks new QRs while keeping an existing pending QR visible for completion.');
