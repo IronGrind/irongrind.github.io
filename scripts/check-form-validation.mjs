@@ -15,14 +15,16 @@ for(const email of ['staff@gmailXcom','staff@example.com','staff@gmail.com.evil'
 for(const initial of ['M','M.','ñ','Ñ.'])assert.equal(pattern('staffMiddleInitial').test(initial),true);
 assert.equal(pattern('staffMiddleInitial').test('Mae'),false);
 const source=fs.readFileSync('assets/js/staff-accounts.js','utf8');
-const start=source.indexOf('function composeStaffName('),end=source.indexOf('\nfunction ',start+1);
-const context=vm.createContext({});vm.runInContext(source.slice(start,end),context);
+const start=source.indexOf('function composeStaffName('),end=source.slice(start+1).search(/\n(?:async )?function /)+start+1;
+const staff=fs.readFileSync('assets/js/staff.js','utf8');
+const validatorStart=staff.indexOf('function validPersonName('),validatorEnd=staff.slice(validatorStart+1).search(/\n(?:async )?function /)+validatorStart+1;
+const context=vm.createContext({});
+vm.runInContext(staff.slice(validatorStart,validatorEnd)+'\n'+source.slice(start,end),context);
 assert.equal(context.composeStaffName(' Glenerine ','m',' Castro '),'Glenerine M. Castro');
 assert.equal(context.composeStaffName('Maria Clara','','Dela Cruz'),'Maria Clara Dela Cruz');
 assert.throws(()=>context.composeStaffName('Maria','Mae','Cruz'),/one letter/);
 assert.throws(()=>context.composeStaffName(' ','M','Cruz'),/first and last/);
 console.log('Passed: HTML validation patterns compile in modern browsers; Gmail and split staff-name validation accept valid inputs and reject invalid ones.');
-const staff=fs.readFileSync('assets/js/staff.js','utf8');
 for(const name of ['localDateString','staffMembershipDates']){
  const start=staff.indexOf(`function ${name}(`),end=staff.slice(start+1).search(/\n(?:async )?function /);
  vm.runInContext(staff.slice(start,start+1+end),context);

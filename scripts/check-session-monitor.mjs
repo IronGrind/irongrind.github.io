@@ -15,10 +15,11 @@ async function setup(path='/staff.html') {
 const app=await setup(); assert.equal(app.redirects.length,0);
 app.setResult({data:null,error:{message:'Network unavailable'}}); await app.intervals[0]();
 assert.equal(app.signouts.length,0,'Network failure is not proof of replacement');
+const removedBeforeReplacement=app.removed.length;
 app.setResult({data:false,error:null}); await app.intervals[0]();
 assert.equal(app.signouts[0].scope,'local','An old device never revokes the new device');
 assert.equal(app.redirects[0],'index.html?auth=replaced');
-assert.equal(app.removed.length,2);
+assert.equal(app.removed.length-removedBeforeReplacement,2,'Replacement clears both dashboard marker stores');
 await app.intervals[0](); assert.equal(app.signouts.length,1,'Only one replacement action');
 const offline=await setup(); offline.context.navigator.onLine=false; offline.setResult({data:false,error:null}); await offline.intervals[0](); assert.equal(offline.signouts.length,0);
 for(const path of ['/index.html','/register.html','/reset-password.html']) assert.equal((await setup(path)).intervals.length,0,'Public/recovery pages do not redirect while signing in');
