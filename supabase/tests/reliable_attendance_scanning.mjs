@@ -21,7 +21,7 @@ try {
         insert into mobile_attendance_scan_sessions values ('${session}',md5('secret'),now()+interval '30 days',now());
         grant usage on schema auth to authenticated;
     `);
-    const migration = await readFile(new URL('../migrations/20261104000026_reliable_attendance_scanning.sql', import.meta.url), 'utf8');
+    const migration = await readFile(new URL('../migrations_archive/pre-baseline-20261105/20261104000026_reliable_attendance_scanning.sql', import.meta.url), 'utf8');
     await db.exec(migration);
     await db.exec(migration);
     const login = async id => db.query("select set_config('request.jwt.claim.sub',$1,false)", [id]);

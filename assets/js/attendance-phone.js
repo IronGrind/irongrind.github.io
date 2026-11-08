@@ -331,10 +331,7 @@ async function startPhonePairingScanner(statusMessage = '') {
                         activePhoneSession = { sessionId, token };
                         phoneCameraPausedForNextMember = true;
                         setPhoneAttendanceMode('scan');
-                        if (deviceError) {
-                            setPhoneNextScanButton(false);
-                            setPhoneAttendanceStatus(`Pairing succeeded, but the phone model could not be saved: ${deviceError.message}`, true);
-                        } else if (!deviceLabel) {
+                        if (!deviceLabel) {
                             setPhoneNextScanButton(false);
                             requestPhoneModelSetup(true);
                         } else {
@@ -411,15 +408,13 @@ async function startPhoneMemberScanner(sessionId, token, openCamera = true) {
         setPhoneAttendanceStatus(`Could not confirm this phone pairing: ${deviceError.message}`, true);
         return;
     }
-    if (!deviceError && !deviceLabel) {
+    if (!deviceLabel) {
         requestPhoneModelSetup(openCamera);
         return;
     }
     if (!openCamera) {
         setPhoneCameraButton(false);
-        setPhoneAttendanceStatus(deviceError
-            ? 'This phone is paired, but its device name could not be updated. Ask the admin to check the latest phone-pairing migration; do not rerun older migrations.'
-            : `This phone is paired: ${deviceLabel}. Tap Open camera when ready.`);
+        setPhoneAttendanceStatus(`This phone is paired: ${deviceLabel}. Tap Open camera when ready.`);
         return;
     }
     let scanner;

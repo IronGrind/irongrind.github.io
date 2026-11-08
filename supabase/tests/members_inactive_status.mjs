@@ -16,7 +16,7 @@ try {
     await assert.rejects(db.exec(cleanup), /members_status_check/);
     await db.exec('rollback');
     assert.equal((await db.query("select count(*)::int n from members where status='active'")).rows[0].n, 9);
-    const migration = await readFile(new URL('../migrations/20261104000001_members_inactive_status.sql', import.meta.url), 'utf8');
+    const migration = await readFile(new URL('../migrations_archive/pre-baseline-20261105/20261104000001_members_inactive_status.sql', import.meta.url), 'utf8');
     await db.exec(migration);
     await db.exec(migration);
     await db.exec(cleanup);

@@ -15,7 +15,7 @@ try {
     `);
     await assert.rejects(db.query("select id from public.profiles where username ilike 'jarapan' and role = 'admin'"), /permission denied/);
     await db.exec('reset role');
-    const migration = await readFile(new URL('../migrations/20261104000000_admin_login_profile_read_access.sql', import.meta.url), 'utf8');
+    const migration = await readFile(new URL('../migrations_archive/pre-baseline-20261105/20261103000002_admin_login_profile_read_access.sql', import.meta.url), 'utf8');
     await db.exec(migration);
     await db.exec(migration);
     await db.exec('set role service_role');

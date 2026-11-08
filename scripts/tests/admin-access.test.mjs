@@ -14,10 +14,10 @@ const context = vm.createContext({
     window: { location: { replace(value) { redirectedTo = value; } } }
 });
 vm.runInContext(readFileSync(new URL('../../assets/js/admin-access.js', import.meta.url), 'utf8'), context);
-function client(role, profileError = null) {
+function client(role, profileError = null, isActive = true) {
     return {
         auth: { getUser: async () => ({ data: { user: role ? { id: 'verified-user' } : null } }) },
-        from: () => ({ select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: { role, username: 'account' }, error: profileError }) }) }) })
+        from: () => ({ select: () => ({ eq: () => ({ maybeSingle: async () => ({ data: { role, username: 'account', is_active: isActive }, error: profileError }) }) }) })
     };
 }
 test('pairing requires a verified admin login independently of UI storage', async () => {
@@ -27,6 +27,7 @@ test('pairing requires a verified admin login independently of UI storage', asyn
     await assert.rejects(check(client('member')), /current account has member access/);
     await assert.rejects(check(client('admin', { message: 'Network unavailable' })), /Could not verify your account: Network unavailable/);
     assert.equal((await check(client('admin'))).user.id, 'verified-user');
+    await assert.rejects(check(client('admin',null,false)),/inactive/);
 });
 
 test('expired admin auth clears stale UI state and redirects to sign-in', async () => {

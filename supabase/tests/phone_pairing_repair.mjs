@@ -19,7 +19,7 @@ try {
         $$;
         insert into mobile_attendance_scan_sessions values ('11111111-1111-4111-8111-111111111111',md5('token'),null,now()+interval '10 minutes',null,null,true);
     `);
-    const migration = await readFile(new URL('../migrations/20261104000028_repair_phone_pairing_verification.sql', import.meta.url), 'utf8');
+    const migration = await readFile(new URL('../migrations_archive/pre-baseline-20261105/20261104000028_repair_phone_pairing_verification.sql', import.meta.url), 'utf8');
     await db.exec(migration);
     await db.exec(migration);
     await db.exec('set role authenticated');

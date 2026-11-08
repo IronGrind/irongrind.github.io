@@ -24,7 +24,7 @@ try {
         create function private.is_admin() returns boolean language sql security definer set search_path = '' as $$select exists(select 1 from public.profiles where id = auth.uid() and role = 'admin')$$;
         insert into profiles values ('${admin}', 'Staff One', 'staff1', 'staff1@example.test', 'admin'), ('${member}', 'Member One', 'member1', 'member1@example.test', 'member');
     `);
-    const migration = await readFile(new URL('../migrations/20261103000000_activity_logs.sql', import.meta.url), 'utf8');
+    const migration = await readFile(new URL('../migrations_archive/pre-baseline-20261105/20261103000000_activity_logs.sql', import.meta.url), 'utf8');
     await db.exec(migration);
     await db.exec(migration); // Rerunning setup must not duplicate triggers.
     await db.query("select set_config('request.jwt.claim.sub', $1, false), set_config('request.jwt.claim.role', 'authenticated', false)", [admin]);

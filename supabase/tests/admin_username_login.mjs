@@ -6,7 +6,7 @@ const { PGlite } = await import(pathToFileURL(process.argv[2]).href);
 const db = new PGlite();
 try {
     await db.exec('create role anon; create role authenticated; create role service_role;');
-    const migration = await readFile(new URL('../migrations/20261103000001_admin_username_login.sql', import.meta.url), 'utf8');
+    const migration = await readFile(new URL('../migrations_archive/pre-baseline-20261105/20261103000001_admin_username_login.sql', import.meta.url), 'utf8');
     await db.exec(migration);
     await db.exec(migration);
     const bucket = `user:${'a'.repeat(64)}`;

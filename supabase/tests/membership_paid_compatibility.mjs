@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { pathToFileURL } from 'node:url';
 const { PGlite } = await import(pathToFileURL(process.argv[2]).href);
-const migration = await readFile(new URL('../migrations/20261104000029_membership_paid_type_compatibility.sql', import.meta.url), 'utf8');
+const migration = await readFile(new URL('../migrations_archive/pre-baseline-20261105/20261104000029_membership_paid_type_compatibility.sql', import.meta.url), 'utf8');
 for (const type of ['boolean', 'numeric']) {
     const db = new PGlite();
     try {

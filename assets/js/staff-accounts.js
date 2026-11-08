@@ -1,6 +1,17 @@
 const staffAccountsClient = window.ironGrindSupabase;
 const staffAccountForm = document.getElementById('staffAccountForm');
 
+function composeStaffName(firstName, middleInitial, lastName) {
+    const first = firstName.trim().replace(/\s+/g, ' ');
+    const last = lastName.trim().replace(/\s+/g, ' ');
+    const middle = middleInitial.trim();
+    if (!first || !last) throw new Error('Enter the staff member’s first and last name.');
+    if (middle && !/^\p{L}\.?$/u.test(middle)) throw new Error('Enter one letter for the middle initial, optionally followed by a period.');
+    const fullName = [first, middle ? `${middle.replace('.', '').toUpperCase()}.` : '', last].filter(Boolean).join(' ');
+    if (fullName.length > 150) throw new Error('The combined name must be 150 characters or fewer.');
+    return fullName;
+}
+
 function setStaffAccountsMessage(message, isError = false) {
     const status = document.getElementById('staffAccountsStatus');
     if (!status) return;
@@ -108,7 +119,7 @@ staffAccountForm?.addEventListener('submit', async event => {
     try {
         await callStaffAccountService({
             username: document.getElementById('staffUsername').value.trim(),
-            fullName: document.getElementById('staffName').value.trim(),
+            fullName: composeStaffName(document.getElementById('staffFirstName').value, document.getElementById('staffMiddleInitial').value, document.getElementById('staffLastName').value),
             email: document.getElementById('staffEmail').value.trim(),
             phoneNumber: document.getElementById('staffMobile').value.replace(/\D/g, ''),
             gender: document.getElementById('staffGender').value,

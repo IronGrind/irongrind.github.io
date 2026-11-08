@@ -108,8 +108,7 @@ async function submitStaffMembershipChange(eventType) {
     const select = document.getElementById(isRenewal ? 'staffRenewalPlan' : 'staffChangePlan');
     if (!member) { status.textContent = 'Search for and select a member first.'; return; }
     const [plan, priceText, daysText] = select.value.split('|');
-    const start = new Date(); start.setHours(0, 0, 0, 0);
-    const expiry = new Date(start); expiry.setDate(expiry.getDate() + Number(daysText));
+    const { startDate, expiryDate } = staffMembershipDates(Number(daysText));
     const receipt = `IG-${isRenewal ? 'SR' : 'SC'}-${crypto.randomUUID().replaceAll('-', '').slice(0, 16).toUpperCase()}`;
     status.textContent = isRenewal ? 'Recording renewal payment...' : 'Saving membership plan change...';
     const button = document.getElementById(isRenewal ? 'staffRenewMembership' : 'staffSavePlanChange'); button.disabled = true;
@@ -119,8 +118,8 @@ async function submitStaffMembershipChange(eventType) {
             p_event_type: eventType,
             p_new_plan: plan,
             p_new_price: Number(priceText),
-            p_new_start_date: localDateString(start),
-            p_new_expiry_date: localDateString(expiry),
+            p_new_start_date: startDate,
+            p_new_expiry_date: expiryDate,
             p_customer_name: member.full_name,
             p_mobile: member.mobile,
             p_receipt_number: receipt,
@@ -315,8 +314,14 @@ async function submitStaffProductSale(event) {
 }
 
 function localDateString(date) {
-    const year = date.getFullYear(); const month = String(date.getMonth() + 1).padStart(2, '0'); const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
+    const parts = new Intl.DateTimeFormat('en', { timeZone: 'Asia/Manila', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(date);
+    return ['year', 'month', 'day'].map(type => parts.find(part => part.type === type).value).join('-');
+}
+function staffMembershipDates(days, now = new Date()) {
+    const startDate = localDateString(now);
+    const [year, month, day] = startDate.split('-').map(Number);
+    const expiryDate = new Date(Date.UTC(year, month - 1, day + days)).toISOString().slice(0, 10);
+    return { startDate, expiryDate };
 }
 
 async function submitStaffWalkin(event) {
@@ -326,11 +331,12 @@ async function submitStaffWalkin(event) {
     if (!staffSignaturePad || staffSignaturePad.isEmpty()) { status.textContent = 'The member signature is required.'; return; }
     const [plan, priceText, daysText] = document.getElementById('walkinPlan').value.split('|');
     const price = Number(priceText); const days = Number(daysText);
-    const start = new Date(); start.setHours(0, 0, 0, 0);
-    const expiry = new Date(start); expiry.setDate(expiry.getDate() + days);
+    const { startDate, expiryDate } = staffMembershipDates(days);
     const birthDate = document.getElementById('walkinBirthDate').value;
-    const today = new Date(); let age = today.getFullYear() - new Date(`${birthDate}T00:00:00`).getFullYear();
-    const birthday = new Date(`${birthDate}T00:00:00`); if (today < new Date(today.getFullYear(), birthday.getMonth(), birthday.getDate())) age--;
+    const [year, month, day] = startDate.split('-').map(Number);
+    const [birthYear, birthMonth, birthDay] = birthDate.split('-').map(Number);
+    let age = year - birthYear;
+    if (month < birthMonth || (month === birthMonth && day < birthDay)) age--;
     const body = {
         fullName: document.getElementById('walkinFullName').value.trim(),
         email: document.getElementById('walkinEmail').value.trim(),
@@ -341,7 +347,7 @@ async function submitStaffWalkin(event) {
         emergencyName: document.getElementById('walkinEmergencyName').value.trim(),
         emergencyRelationship: document.getElementById('walkinEmergencyRelationship').value.trim(),
         emergencyContact: document.getElementById('walkinEmergencyPhone').value.trim(),
-        plan, planPrice: price, startDate: localDateString(start), expiryDate: localDateString(expiry),
+        plan, planPrice: price, startDate, expiryDate,
         signatureData: staffSignaturePad.toDataURL(), fitnessGoals: [], healthConditions: [],
         staffWalkinRegistration: true,
     };

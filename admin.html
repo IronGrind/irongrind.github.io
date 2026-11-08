@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IronGrind · Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261108-attendance-incomplete">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261108-separated-staff-names">
     <script src="assets/js/theme.js?v=20261105-login-toggle"></script>
 </head>
 <body class="dashboard-body admin-dashboard admin-auth-pending">
@@ -67,12 +67,16 @@
         <section class="panel staff-create-panel"><div class="panel-header"><div><h2><i class="fas fa-user-plus"></i> Create Staff Account</h2><p class="staff-panel-description">Add profile details and sign-in credentials.</p></div><span class="staff-required-note"><i class="fas fa-asterisk" aria-hidden="true"></i> Required fields</span></div>
             <form id="staffAccountForm">
                 <div class="staff-form-grid">
-                    <div class="form-group staff-form-field-wide"><label for="staffName">Full name</label><input id="staffName" required maxlength="150" autocomplete="name"></div>
+                    <div class="staff-name-fields staff-form-field-wide">
+                        <div class="form-group"><label for="staffFirstName">First name (FN)</label><input id="staffFirstName" required maxlength="70" autocomplete="given-name"></div>
+                        <div class="form-group"><label for="staffMiddleInitial">Middle initial (MI, optional)</label><input id="staffMiddleInitial" maxlength="2" pattern="\p{L}[.]?" autocomplete="additional-name" placeholder="M." title="Enter one letter, optionally followed by a period."></div>
+                        <div class="form-group"><label for="staffLastName">Last name (LN)</label><input id="staffLastName" required maxlength="70" autocomplete="family-name"></div>
+                    </div>
                     <div class="form-group"><label for="staffUsername">Username</label><input id="staffUsername" required pattern="[A-Za-z0-9_]{3,30}" maxlength="30" autocomplete="off"></div>
-                    <div class="form-group"><label for="staffEmail">Gmail address</label><input id="staffEmail" type="email" required pattern="[A-Za-z0-9._%+-]+@gmail\.com" maxlength="254" autocomplete="email" placeholder="name@gmail.com" title="Enter a Gmail address ending in @gmail.com"></div>
+                    <div class="form-group"><label for="staffEmail">Gmail address</label><input id="staffEmail" type="email" required pattern="[A-Za-z0-9._%+\-]+@[Gg][Mm][Aa][Ii][Ll][.][Cc][Oo][Mm]" maxlength="254" autocomplete="email" placeholder="name@gmail.com" title="Enter a Gmail address ending in @gmail.com"></div>
                     <div class="form-group"><label for="staffMobile">Mobile number</label><div class="ph-phone-input"><span>+63</span><input id="staffMobile" type="tel" required inputmode="numeric" maxlength="10" pattern="9[0-9]{9}" placeholder="9171234567" autocomplete="tel-national" title="Enter 10 digits beginning with 9"></div></div>
                     <div class="form-group"><label for="staffGender">Gender</label><select id="staffGender" required><option value="">Select gender</option><option value="Female">Female</option><option value="Male">Male</option><option value="Prefer not to say">Prefer not to say</option></select></div>
-                    <div class="form-group staff-form-field-wide"><label for="staffPassword">Password</label><input id="staffPassword" type="password" required minlength="12" maxlength="128" autocomplete="new-password" aria-describedby="staffPasswordHint"><small id="staffPasswordHint" class="field-hint">At least 12 characters, including one letter and one number.</small></div>
+                    <div class="form-group staff-form-field-wide"><label for="staffPassword">Password</label><input id="staffPassword" type="password" required minlength="12" maxlength="128" autocomplete="new-password" aria-describedby="staffPasswordHint"><small id="staffPasswordHint" class="field-hint">Use 12–128 characters with uppercase and lowercase letters, a number, and a symbol.</small></div>
                 </div>
                 <div class="form-group"><label for="staffConfirmPassword">Confirm staff password</label><input id="staffConfirmPassword" type="password" required minlength="12" maxlength="128" autocomplete="new-password"></div><div class="staff-form-footer"><button class="btn-primary" type="submit"><i class="fas fa-user-plus"></i> Create Account</button><p id="staffAccountStatus" class="activity-help" role="status" aria-live="polite"></p></div>
             </form>
@@ -322,6 +326,6 @@
 <script src="assets/js/activity-logs.js?v=20261104-phone-pairing-audit"></script>
 <script src="assets/js/admin-access.js?v=20261105-auth-gate"></script>
 <script src="assets/js/admin.js?v=20261108-clear-pairing-summary"></script>
-<script src="assets/js/staff-accounts.js?v=20261108-staff-reviews"></script>
+<script src="assets/js/staff-accounts.js?v=20261108-separated-staff-names"></script>
 </body>
 </html>

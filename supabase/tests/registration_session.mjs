@@ -31,7 +31,7 @@ function page(registration, hash = '') {
     const location = new URL(`https://example.test/${registration ? 'register' : 'admin'}.html${hash}`);
     const window = { document, location, localStorage, addEventListener() {}, removeEventListener() {} };
     const context = vm.createContext({
-        window, document, location, localStorage, console, URL, URLSearchParams,
+        window, document, location, localStorage, console, URL, URLSearchParams, navigator: { onLine: true },
         Headers, Request, Response, TextEncoder, TextDecoder, AbortController, WebSocket,
         crypto: globalThis.crypto, atob, btoa,
         setTimeout, clearTimeout, setInterval: (...args) => { const timer = setInterval(...args); timer.unref(); return timer; }, clearInterval,
@@ -40,6 +40,7 @@ function page(registration, hash = '') {
             if (url.includes('/auth/v1/token')) return Response.json(session(adminId));
             if (url.includes('/auth/v1/signup')) return Response.json(session(memberId));
             if (url.includes('/auth/v1/user')) return Response.json(user(memberId));
+            if (url.includes('/rest/v1/rpc/current_account_session_is_active')) return Response.json(true);
             throw new Error(`Unexpected network request: ${url}`);
         }
     });

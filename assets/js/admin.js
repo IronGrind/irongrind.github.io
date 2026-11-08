@@ -63,6 +63,7 @@ let phoneCameraAuthorization = null;
 let phoneCameraRememberPreference = true;
 let phonePairQrManuallyHidden = false;
 let phonePairingWasAtDeviceLimit = false;
+let phonePairingListPollTimer = null;
 let adminRealtimeChannel = null;
 let adminMembershipRefreshTimer = null;
 let adminMembershipRefreshBusy = false;
@@ -1760,6 +1761,19 @@ function showMobileAttendancePairingModal(sessionId, pairingUrl, persistent, cap
         document.getElementById('phonePairStatus').textContent = 'The pairing QR could not load. Reload the admin page while connected to the internet.';
     }
     refreshPairedAttendancePhones(true);
+    startPhonePairingListPolling();
+}
+
+function startPhonePairingListPolling() {
+    if (phonePairingListPollTimer !== null) return;
+    phonePairingListPollTimer = window.setInterval(() => {
+        if (!document.getElementById('pairedPhonesList')) {
+            window.clearInterval(phonePairingListPollTimer);
+            phonePairingListPollTimer = null;
+            return;
+        }
+        refreshPairedAttendancePhones().catch(error => console.warn('Could not refresh phone pairings:', error));
+    }, 5000);
 }
 
 function togglePhonePairingQrVisibility() {
