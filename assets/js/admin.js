@@ -1901,9 +1901,12 @@ function renderPhonePairingSettings(data) {
     window.currentPhonePairingSettings = data;
     applyPhonePairingCapacityState(data);
     const summary = document.getElementById('phonePairingLimitSummary');
-    if (summary) summary.textContent = `${Number(data.paired_count || 0) + Number(data.pending_count || 0)} / ${data.max_pairs} slots used · ${data.paired_count || 0} paired · ${data.pending_count || 0} pending`;
+    const paired = Number(data.paired_count || 0);
+    const reserved = Number(data.pending_count || 0);
+    const available = Math.max(0, Number(data.max_pairs) - paired - reserved);
+    if (summary) summary.textContent = `${paired} ${paired === 1 ? 'phone' : 'phones'} paired · ${reserved} ${reserved === 1 ? 'QR' : 'QRs'} reserved · ${available} ${available === 1 ? 'slot' : 'slots'} available`;
     const limit = document.getElementById('pairedPhonesLimit');
-    if (limit) limit.textContent = `of ${data.max_pairs} limit · ${data.pending_count || 0} pending`;
+    if (limit) limit.textContent = `Limit: ${data.max_pairs} · ${reserved} ${reserved === 1 ? 'QR' : 'QRs'} reserved`;
     const count = document.getElementById('activePhoneSessionCount');
     if (count) count.textContent = String(data.active_count);
 }

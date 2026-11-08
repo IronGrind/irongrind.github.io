@@ -19,10 +19,12 @@ for(const name of ['renderPhonePairingSettings','refreshPairedAttendancePhones']
  vm.runInContext(end<0?source.slice(start):source.slice(start,start+1+end),context);
 }
 await context.refreshPairedAttendancePhones(true);
-assert.match(elements.get('phonePairingLimitSummary').textContent,/2 \/ 2 slots used.*0 paired.*2 pending/);
+assert.equal(elements.get('phonePairingLimitSummary').textContent,'0 phones paired · 2 QRs reserved · 0 slots available');
 paired=true;
 await context.refreshPairedAttendancePhones(true);
-assert.match(elements.get('phonePairingLimitSummary').textContent,/1 \/ 2 slots used.*1 paired.*0 pending/);
+assert.equal(elements.get('phonePairingLimitSummary').textContent,'1 phone paired · 0 QRs reserved · 1 slot available');
+context.renderPhonePairingSettings({paired_count:1,pending_count:1,active_count:2,max_pairs:2});
+assert.equal(elements.get('phonePairingLimitSummary').textContent,'1 phone paired · 1 QR reserved · 0 slots available');
 assert.equal(elements.get('pairedPhonesCount').textContent,'1');
 assert.equal(elements.get('pendingPhonePairingsCount').textContent,'0');
 assert.match(elements.get('pairedPhonesList').innerHTML,/Reno 13F 5G/);
