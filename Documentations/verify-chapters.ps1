@@ -33,6 +33,7 @@ foreach($chapter in 1,2,3){
    $sdg=($paragraphs[$background+2].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join ''
    if($background -lt 0 -or $sdg -notmatch 'Sustainable Development Goals'){throw 'Chapter 1 SDG paragraph is not immediately after the first introduction paragraph.'}
    foreach($phrase in @('Paired phones and unexpired pending QRs shared the configured slot limit','Staff account registration collected first name','Traffic capacity and a maximum number of simultaneous users were not established')){if(-not $all.Contains($phrase)){throw "Chapter 1 is missing a current scope statement: $phrase"}}
+   foreach($phrase in @('A linked sign-in account is separate','A pending application awaits review by authorized staff or the administrator','authorized administrator or staff member scans the member QR code','available to authorized users according to their system role','information about a person''s health is sensitive personal information','The hosted platform IronGrind uses for Auth and its PostgreSQL database')){if(-not $all.Contains($phrase)){throw "Chapter 1 Definition of Terms is missing a current system distinction: $phrase"}}
   }
   if($chapter -eq 2){
    foreach($phrase in @('Supabase, n.d.-a','Supabase (n.d.-b)','Supabase (n.d.-c)','Supabase (n.d.-d)','References','102 scholarly articles and conference papers indexed in Scopus','ISO/IEC Standard No. 18004:2024','Section 3(l)(2) includes health information','[Project report]')){if(-not $all.Contains($phrase)){throw "Chapter 2 is missing verified source support: $phrase"}}
