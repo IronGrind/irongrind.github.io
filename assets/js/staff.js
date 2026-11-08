@@ -424,17 +424,23 @@ async function recordStaffAttendance(value) {
 document.getElementById('staffScanForm').addEventListener('submit', event => { event.preventDefault(); recordStaffAttendance(document.getElementById('staffIdentifier').value); });
 document.getElementById('refreshStaffAttendance').onclick = () => refreshStaffAttendance().catch(error => { staffStatus.textContent = error.message; });
 function staffCameraErrorMessage(error) {
-    if (['NotAllowedError', 'PermissionDeniedError', 'SecurityError'].includes(error?.name)) {
+    const detail = typeof error === 'string' ? error : error?.message || String(error || '');
+    const errorName = error?.name || detail.match(/\b(?:NotAllowedError|PermissionDeniedError|SecurityError|NotFoundError|DevicesNotFoundError|NotReadableError|TrackStartError|AbortError|OverconstrainedError|ConstraintNotSatisfiedError)\b/i)?.[0] || '';
+    const searchable = `${errorName} ${detail}`.toLowerCase();
+    if (['NotAllowedError', 'PermissionDeniedError', 'SecurityError'].includes(errorName) || /permission denied|permission dismissed|not allowed by system|permission policy/.test(searchable)) {
         return 'Camera access is blocked. Allow camera access for this site in your browser and Windows privacy settings, then reload the page.';
     }
-    if (['NotFoundError', 'DevicesNotFoundError'].includes(error?.name)) {
+    if (['NotFoundError', 'DevicesNotFoundError'].includes(errorName) || /no camera|device not found|no video input/.test(searchable)) {
         return 'No usable camera was found. Check that the laptop camera is enabled, or enter the member QR code below.';
     }
-    if (['NotReadableError', 'TrackStartError', 'AbortError'].includes(error?.name)) {
+    if (['NotReadableError', 'TrackStartError', 'AbortError'].includes(errorName) || /could not start video source|device in use|hardware error/.test(searchable)) {
         return 'The camera may be in use by another app. Close apps such as Camera, Teams, or Zoom, then try again.';
     }
+    if (['OverconstrainedError', 'ConstraintNotSatisfiedError'].includes(errorName) || /constraint.*not satisf|overconstrained/.test(searchable)) {
+        return 'The requested camera mode is unavailable. Check the laptop webcam or select another camera in the browser site settings.';
+    }
     if (typeof Html5Qrcode === 'undefined') return 'The QR scanner could not load. Check the internet connection and reload this page.';
-    return 'The camera could not start. Check browser and Windows camera permissions, close other camera apps, then try again.';
+    return `The camera could not start${errorName ? ` (${errorName})` : ''}. Check browser and Windows camera permissions, close other camera apps, then try again.`;
 }
 document.getElementById('startStaffCamera').onclick = async () => {
     if (!staffUser || staffScanner || staffBusy) return;
@@ -455,13 +461,36 @@ document.getElementById('startStaffCamera').onclick = async () => {
         // the preference ideal so browsers can fall back to available hardware.
         const preferRearCamera = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
         const facingMode = preferRearCamera ? 'environment' : 'user';
-        await scanner.start({ facingMode: { ideal: facingMode } }, { fps: 10, qrbox: 250 }, async value => {
+        const config = { fps: 10, qrbox: 250 };
+        const onDecoded = async value => {
             if (staffScanner !== scanner || staffBusy) return;
             staffScanner = null;
             staffBusy = true;
             try { await scanner.stop(); } finally { staffBusy = false; }
             await recordStaffAttendance(value);
-        }, () => {});
+        };
+        try {
+            await scanner.start({ facingMode: { ideal: facingMode } }, config, onDecoded, () => {});
+        } catch (firstError) {
+            const firstMessage = typeof firstError === 'string' ? firstError : firstError?.message || '';
+            if (/NotAllowedError|PermissionDeniedError|SecurityError|permission denied/i.test(`${firstError?.name || ''} ${firstMessage}`)) throw firstError;
+
+            // Some laptop drivers reject a facing-mode preference despite
+            // having a usable webcam. Retry the browser-enumerated devices.
+            const cameras = await Html5Qrcode.getCameras();
+            const preferLabel = preferRearCamera ? /back|rear|environment/i : /front|user|integrated|built.?in|webcam/i;
+            const candidates = [...cameras].sort((a, b) => Number(preferLabel.test(b.label || '')) - Number(preferLabel.test(a.label || '')));
+            if (!candidates.length) throw firstError;
+            let fallbackError = firstError;
+            for (const camera of candidates) {
+                try {
+                    await scanner.start(camera.id, config, onDecoded, () => {});
+                    fallbackError = null;
+                    break;
+                } catch (error) { fallbackError = error; }
+            }
+            if (fallbackError) throw fallbackError;
+        }
         staffStatus.textContent = 'Camera ready. Hold the member QR code in the frame.';
     } catch (error) {
         if (staffScanner === scanner) staffScanner = null;
