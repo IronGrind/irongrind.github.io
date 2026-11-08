@@ -466,7 +466,7 @@ function renderDashboard() {
             <thead><tr><th>Member</th><th>Time In</th><th>Time Out</th><th>Status</th></tr></thead>
             <tbody>${todayAtt.map(a => `
                 <tr><td>${a.memberName}</td><td>${formatAttendanceClock(a.timeIn)}</td><td>${formatAttendanceClock(a.timeOut)}</td>
-                <td>${a.timeOut ? '<span class="badge-status out">Checked Out</span>' : '<span class="badge-status in">Inside</span>'}</td></tr>
+                <td>${a.timeOut ? '<span class="badge-status out">Checked Out</span>' : attendanceVisitIncomplete(a.date, a.timeOut) ? '<span class="badge-status incomplete">Incomplete</span>' : '<span class="badge-status in">Inside</span>'}</td></tr>
             `).join('')}</tbody>
         </table>`;
 
@@ -1646,7 +1646,7 @@ function renderAttendance() {
             <thead><tr><th>Member</th><th>Time In</th><th>Time Out</th><th>Status</th><th>Action</th></tr></thead>
             <tbody>${dateAtt.map(a => `
                 <tr><td>${a.memberName}</td><td>${formatAttendanceClock(a.timeIn)}</td><td>${formatAttendanceClock(a.timeOut)}</td>
-                <td>${a.timeOut ? '<span class="badge-status out">Checked Out</span>' : '<span class="badge-status in">Inside</span>'}</td>
+                <td>${a.timeOut ? '<span class="badge-status out">Checked Out</span>' : attendanceVisitIncomplete(a.date, a.timeOut) ? '<span class="badge-status incomplete">Incomplete</span>' : '<span class="badge-status in">Inside</span>'}</td>
                 <td>${a.timeOut ? '' : `<button class="btn-sm" onclick="checkOut('${a.id}')">Check Out</button>`}</td></tr>
             `).join('')}</tbody>
         </table>`;

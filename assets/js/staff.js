@@ -376,12 +376,13 @@ async function refreshStaffAttendance() {
         }
         for (const visit of data || []) {
             const row = document.createElement('tr');
+            const incomplete = attendanceVisitIncomplete(visit.time_in, visit.time_out);
             for (const [index, value] of [visit.member_name, visit.time_in, visit.time_out].entries()) {
                 const cell = document.createElement('td');
                 cell.textContent = index === 0 ? value || 'Unknown member' : value
                     ? new Date(value).toLocaleString('en-PH', { timeZone: 'Asia/Manila', month: 'short', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })
-                    : 'Still checked in';
-                if (index === 2 && !value) cell.classList.add('staff-visit-open');
+                    : index === 2 ? (incomplete ? 'Incomplete' : 'Still checked in') : '—';
+                if (index === 2 && !value) cell.classList.add(incomplete ? 'staff-visit-incomplete' : 'staff-visit-open');
                 row.append(cell);
             }
             rows.append(row);

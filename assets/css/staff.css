@@ -321,3 +321,5 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-search > d
 .staff-request-card { border:1px solid var(--border-color,#343b48); border-radius:16px; padding:20px; }
 .staff-request-card p { margin:12px 0; }
 .staff-request-card .staff-form-actions { margin-top:18px; }
+.staff-history .staff-visit-incomplete { color:#d89627; font-weight:600; }
+.staff-visit-incomplete::before { content:"\f071"; font-family:"Font Awesome 6 Free"; font-weight:900; margin-right:7px; }

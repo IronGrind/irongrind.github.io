@@ -492,7 +492,7 @@ function renderAttendanceHistory() {
                     }
                     const status = a.timeOut
                         ? '<span class="badge-status out">Completed</span>'
-                        : '<span class="badge-status in">Inside</span>';
+                        : attendanceVisitIncomplete(a.date, a.timeOut) ? '<span class="badge-status incomplete">Incomplete</span>' : '<span class="badge-status in">Inside</span>';
                     return `<tr>
                         <td>${a.date}</td>
                         <td>${formatAttendanceClock(a.timeIn)}</td>

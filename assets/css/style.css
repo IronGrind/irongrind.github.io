@@ -2012,3 +2012,4 @@ html[data-dashboard-theme="light"] .product-photo-dialog.photo-bubble .photo-lig
 @keyframes photo-bubble-enter { from { opacity: 0; transform: scale(.95) translateY(8px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .product-photo-dialog.photo-bubble { animation: none; } }
 .password-strength-meter { display:block; width:100%; height:12px; margin:8px 0 4px; }
+.badge-status.incomplete { background:rgba(230,162,60,.15); color:#d89627; }

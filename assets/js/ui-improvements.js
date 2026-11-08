@@ -1,5 +1,17 @@
 // Shared form guidance, product pricing presentation, and accessible photo viewer.
 (() => {
+    window.attendanceVisitIncomplete = (timeIn, timeOut, now = new Date()) => {
+        if (timeOut || !timeIn) return false;
+        const dateKey = value => {
+            if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) return value;
+            const date = new Date(value);
+            if (Number.isNaN(date.getTime())) return '';
+            const parts = new Intl.DateTimeFormat('en', { timeZone: 'Asia/Manila', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(date);
+            return ['year', 'month', 'day'].map(type => parts.find(p => p.type === type).value).join('-');
+        };
+        const checkInDate = dateKey(timeIn), today = dateKey(now);
+        return Boolean(checkInDate && today && checkInDate < today);
+    };
     // Curated replacements for the five products whose cutouts were supplied.
     // Require both product family and flavor so unrelated catalog items keep their photos.
     window.catalogProductPhoto = product => {

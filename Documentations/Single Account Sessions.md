@@ -1,12 +1,13 @@
 Single account sessions — November 8, 2026
 
-A successful sign-in makes its server-issued Auth session the active session for that account. Member, administrator, staff, and phone-operator sign-ins use the same rule. Signing in to phone attendance with an account already open on a computer therefore replaces that account's computer session. Different accounts remain independent. Tabs sharing one browser session share its identity and are not treated as separate devices.
+A dashboard sign-in makes its server-issued Auth session the active dashboard session for that account. Phone attendance uses a separate attendance session for authorized staff and administrators, so the dashboard and scanner can remain open together. A new dashboard login replaces only the previous dashboard, while a new attendance login replaces only the previous scanner. Different accounts remain independent. Tabs sharing one browser session share its identity and are not treated as separate devices.
 
 The older dashboard checks its session every five seconds while visible and online, and checks again on focus, visibility changes, or reconnection. It signs out locally and returns to login with an explanation. Network failures alone do not prove replacement and do not force sign-out. An offline or suspended device shows the change when it reconnects or resumes.
 
 Server enforcement
 
-- private.account_sessions keeps one row per account: user_id (UUID primary key and foreign key to auth.users), session_id (UUID), and session_created_at (timestamp with time zone). All fields are required. The account row is removed when its Auth user is deleted. Direct browser table access is revoked and RLS is enabled.
+- private.account_sessions keeps one row per account and session scope: user_id (UUID foreign key to auth.users), session_scope (text: dashboard or attendance), session_id (UUID), and session_created_at (timestamp with time zone). The composite primary key is user_id plus session_scope. All fields are required. Rows are removed when their Auth user is deleted. Direct browser table access is revoked and RLS is enabled.
+- activate_attendance_session checks that the caller is an active staff member or administrator. It updates only the attendance scope and leaves the dashboard session unchanged. Dashboard activation likewise leaves the scanner session unchanged.
 - activate_account_session verifies the caller's signed session ID against auth.sessions and serializes updates for the account. An older session cannot claim ownership after a newer session. Reloading a page checks ownership and never activates an old session again.
 - Table policies and a Data API pre-request guard reject the previous session, including SECURITY DEFINER RPC access. An existing pre-request hook is preserved. The heartbeat RPC can return false for a replaced session without exposing another device's session details.
 - The old device signs out with local scope. It cannot revoke the newer device as a side effect of being logged out. The active-session marker remains after sign-out, preventing older Auth sessions from becoming eligible again.

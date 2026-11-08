@@ -51,5 +51,21 @@ try {
     await db.exec('reset role'); await db.query('delete from auth.sessions where id=$1',[fresh]);
     await login(user,old); assert.equal(await active(),false,'Signing out the latest device never restores older sessions');
     await login(user,third); await assert.rejects(db.exec('select activate_account_session()'),/ACCOUNT_SESSION_REPLACED/);
+    await db.exec('reset role');
+    await db.exec(`create table profiles(id uuid,role text,is_active boolean);
+      insert into profiles values('${user}','staff',true),('${other}','member',true);`);
+    await db.exec(fs.readFileSync('supabase/migrations/20261108000006_separate_attendance_sessions.sql','utf8'));
+    const dashboard='dddddddd-dddd-4ddd-8ddd-dddddddddddd',phone='eeeeeeee-eeee-4eee-8eee-eeeeeeeeeeee',phone2='ffffffff-ffff-4fff-8fff-ffffffffffff';
+    await db.query("insert into auth.sessions values($1,$4,now(),null),($2,$4,now()+interval '1 second',null),($3,$4,now()+interval '2 seconds',null)",[dashboard,phone,phone2,user]);
+    await login(user,dashboard);await db.exec('select activate_account_session()');
+    await login(user,phone);await db.exec('select activate_attendance_session()');assert.equal(await active(),true);
+    await login(user,dashboard);assert.equal(await active(),true,'Phone sign-in must keep dashboard active');
+    await db.exec('select activate_account_session()');
+    await login(user,phone);assert.equal(await active(),true,'Dashboard sign-in must keep phone active');
+    await login(user,phone2);await db.exec('select activate_attendance_session()');
+    await login(user,phone);assert.equal(await active(),false,'New scanner replaces only the old scanner');
+    await login(user,dashboard);assert.equal(await active(),true,'Replacing scanner never replaces dashboard');
+    await login(other,third);await assert.rejects(db.exec('select activate_attendance_session()'),/staff or admin/);
     console.log('Passed: new login replaces old, old sessions cannot reclaim, profile/table access blocked, old RPCs denied, previous API hook preserved, other users unaffected, and sign-out never restores an old session.');
+    console.log('Passed: dashboard and attendance sessions coexist; replacement stays within each session scope; members cannot activate operator sessions.');
 } finally { await db.close(); }
