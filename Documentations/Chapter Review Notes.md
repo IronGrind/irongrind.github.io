@@ -37,3 +37,18 @@ These checks verify the cited topics and identified claims; they are not a compl
 Verification and limits
 
 Review Evidence/Chapter Review Verification.txt records the XML, bolding, stale wording, figure-link, SDG-placement, dictionary-count, and field-count checks. Generated diagrams were visually inspected. The Word preview/export attempt stalled and was stopped; complete Word pagination and page-by-page appearance were not verified. The documents should not be described as guaranteed error-free.
+
+## Chapter 2 source audit - November 9, 2026
+
+Chapter 2 was rechecked against primary publisher, government, standards-body, and product-owner pages. Its in-text citations now have a complete References list in Chapter 2.
+
+- Replaced the Y Combinator product description with Supabase's official platform documentation. The paragraph now describes Supabase as a hosted platform and lists the services the official page confirms.
+- Added ISO/IEC 18004:2024 as the source for the QR Code symbology statement.
+- Corrected the DeLone and McLean review count: Al-Kofahi et al. reviewed 102 scholarly articles and conference papers indexed in Scopus, not simply 102 studies. The reported date range and weighted findings match the publisher abstract.
+- Tied the Data Privacy Act statements to Sections 11 and 3(l)(2), and used the NPC's own page for its March 7, 2016 constitution date.
+- Rephrased GymMaster and GYMMANAGER features as vendor-advertised functions, not independently verified product performance.
+- Verified the Villanueva et al. paper on its journal page and the Bulaclac et al. paper on the journal's full-text PDF. Their reported methods and outcomes are attributed to their respective studies and are not represented as IronGrind results.
+- Babili's GymFlow document is an author-posted project report hosted on ResearchGate and is not labeled a peer-reviewed journal article. Its numerical metrics remain explicitly identified as author-reported. The reference links to the report record and does not repeat the DOI because the report host's DOI metadata is inconsistent with the separate Zenodo record found during review.
+- Gymdesk is represented through its own founder-story page. GymMaster and GYMMANAGER are represented through their own product pages; these are vendor sources, appropriate for advertised feature descriptions but not independent product evaluations.
+
+The sources are authentic as publisher, government, standards-body, platform-owner, product-vendor, or author-hosted pages as identified above. Authenticity does not by itself establish that a study's methods are strong or its findings generalize. Chapter 2 reports study-specific claims with attribution and keeps them separate from IronGrind outcomes. This is a source and claim audit of Chapter 2, not an independent review of every study's methodology or a legal compliance opinion.
