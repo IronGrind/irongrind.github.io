@@ -142,6 +142,7 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-registration-form
 .staff-form-section-heading h3 { margin: 0 0 3px; font-size: .95rem; }
 .staff-form-section-heading p { margin: 0; color: #a4adc2; font-size: .76rem; }
 .staff-form-section .staff-form-grid { margin-top: 0; gap: 15px; }
+.staff-member-name-grid { grid-column: 1 / -1; grid-template-columns: repeat(3, minmax(0, 1fr)); margin-top: 0; }
 .staff-form-section .form-group label { margin-bottom: 7px; font-weight: 650; }
 .staff-plan-choice-wrap { display: grid; grid-template-columns: minmax(220px, .8fr) minmax(0, 1.2fr); align-items: end; gap: 16px; }
 .staff-plan-choice-wrap .form-group { margin: 0; }
@@ -214,6 +215,7 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-selected-member s
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-status { background: #e2e7ee; color: #354052; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-selected-member { background: #e5f3eb; border-color: #b7ddc8; color: #233d2d; }
 @media (max-width: 700px) { .staff-catalog-heading { align-items: flex-start; flex-direction: column; gap: 5px; } .staff-plan-choice-wrap { grid-template-columns: 1fr; } .staff-form-section { padding: 15px; } }
+@media (max-width: 650px) { .staff-member-name-grid { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .staff-membership-tabs { display: grid; grid-template-columns: 1fr; } .staff-membership-tab { justify-content: flex-start; } .staff-member-action-form { grid-template-columns: 1fr; } .staff-selected-member { flex-direction: column; } }
 .staff-member-search { gap: 9px; margin: 18px 0 16px; }
 .staff-member-search > label { color: #d6dce7; font-size: .76rem; font-weight: 750; letter-spacing: .035em; }

@@ -327,6 +327,23 @@ function validPersonName(value) {
     const name = String(value || '').trim();
     return name.length > 0 && name.length <= 150 && /\p{L}/u.test(name) && !/[\p{N}\p{Cc}\p{Cf}]/u.test(name);
 }
+function composeWalkinMemberName(firstName, middleInitial, lastName) {
+    const first = String(firstName || '').trim().replace(/\s+/g, ' ');
+    const middle = String(middleInitial || '').trim();
+    const last = String(lastName || '').trim().replace(/\s+/g, ' ');
+    if (!validPersonName(first) || !validPersonName(last)) {
+        throw new Error('Enter the member’s first and last names using letters only; numbers are not allowed.');
+    }
+    if (first.length > 70 || last.length > 70) {
+        throw new Error('First and last names must each be 70 characters or fewer.');
+    }
+    if (middle && !/^\p{L}\.?$/u.test(middle)) {
+        throw new Error('Enter one letter for the middle initial, optionally followed by a period.');
+    }
+    const fullName = [first, middle ? `${middle.replace('.', '').toUpperCase()}.` : '', last].filter(Boolean).join(' ');
+    if (fullName.length > 150) throw new Error('The combined name must be 150 characters or fewer.');
+    return fullName;
+}
 
 async function submitStaffWalkin(event) {
     event.preventDefault();
@@ -342,7 +359,7 @@ async function submitStaffWalkin(event) {
     let age = year - birthYear;
     if (month < birthMonth || (month === birthMonth && day < birthDay)) age--;
     const body = {
-        fullName: document.getElementById('walkinFullName').value.trim(),
+        fullName: '',
         email: document.getElementById('walkinEmail').value.trim(),
         password: document.getElementById('walkinPassword').value,
         mobile: document.getElementById('walkinMobile').value.trim(),
@@ -356,6 +373,11 @@ async function submitStaffWalkin(event) {
     };
     button.disabled = true; status.textContent = 'Creating member account and recording payment…';
     try {
+        body.fullName = composeWalkinMemberName(
+            document.getElementById('walkinFirstName').value,
+            document.getElementById('walkinMiddleInitial').value,
+            document.getElementById('walkinLastName').value
+        );
         if (!validPersonName(body.fullName) || !validPersonName(body.emergencyName)) {
             throw new Error('Names must contain letters and cannot contain numbers. Check the member and emergency contact names.');
         }
