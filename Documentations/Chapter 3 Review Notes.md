@@ -1,5 +1,7 @@
 # Chapter 3 review
 
+Latest identifier review: members sign in with email and new member records do not receive usernames. The three retained username dictionary fields now distinguish staff/admin sign-in from legacy member/application values kept for compatibility. These nullable schema fields do not imply that member usernames are collected or used for member sign-in.
+
 Formatting pass: removed 252 empty layout-spacer paragraphs, converted the remaining 17 floating figures to inline placement, standardized body text to justified 1.5-line spacing with a true first-line indent, centered figure captions, left-aligned table captions, and used compact single-spaced table paragraphs. Bold formatting is restricted to section headings and table headers. Captions and body/data text use regular weight. Image dimensions were capped to the available page area. Word XML and image links were validated; final pagination has not been rendered in Word.
 
 Latest presentation correction: diagram explanations, rather than dictionary entries, are the expanded prose. Context, Level 1 DFD, UML use-case, physical ERD, and Gantt explanations now discuss interpretation, roles, flow boundaries, relationships, and relevant limitations in fuller paragraphs. The 169 dictionary entries have been shortened to a brief field-purpose sentence plus required/nullable status; their declared length, precision/scale, and key columns remain intact. The earlier notes about detailed dictionary descriptions below describe the prior revision and are superseded by this presentation correction.
