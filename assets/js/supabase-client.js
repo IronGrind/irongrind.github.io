@@ -6,8 +6,6 @@ const IRON_GRIND_SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_aJUpD0v8XUengFdItDJG
 // Authentication lasts for the current browser session. The login form's
 // Remember me option stores only the login identifier, never this auth token.
 const IRON_GRIND_AUTH_STORAGE_KEY = 'sb-nttsrdassmzvtaamyogi-auth-token';
-const IRON_GRIND_REMEMBERED_LOGIN_KEY = 'ig_remembered_login_identifier';
-
 // Remove the auth token and UI marker left by the previous Remember me
 // implementation, which stored a persistent session regardless of the choice.
 if (!document.body?.classList.contains('register-body')) {

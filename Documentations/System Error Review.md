@@ -46,4 +46,4 @@ The staff attendance scanner previously requested a facing mode directly from th
 
 ## Follow-up: remembered login identifier
 
-The login checkbox now remembers only the member email or staff/admin username, which is filled into the login field on the next visit. It does not save a password or preserve an authenticated session. Authentication tokens and the dashboard marker use session storage, and logout clears the authenticated session while leaving the explicitly remembered identifier available. The label says “Remember my email or username” to describe the behavior.
+The login checkbox now remembers only the applicable sign-in identifier: member email or staff/admin username. It fills that value into the login field on the next visit. It does not save a password or preserve an authenticated session. Authentication tokens and the dashboard marker use session storage, and logout clears the authenticated session while leaving the explicitly remembered identifier available. The checkbox says “Remember my login” so it does not imply that members still use usernames.
