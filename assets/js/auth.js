@@ -23,10 +23,10 @@ function hideError() {
         return;
     }
     if (params.get('auth') !== 'expired') return;
-    showError('Your admin session expired. Sign in again to continue.');
+    showError('Your session expired. Sign in again to continue.');
     const username = document.getElementById('loginEmail');
     username?.focus();
-    window.history.replaceState(null, '', 'index.html?role=admin');
+    window.history.replaceState(null, '', 'index.html');
 })();
 
 function showForgotPassword() {

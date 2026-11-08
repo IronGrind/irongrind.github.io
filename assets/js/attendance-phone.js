@@ -34,9 +34,9 @@ async function signInPhoneOperator(event) {
         if (sessionError) throw sessionError;
         const { error: activationError } = await phoneOperatorClient.rpc('activate_account_session');
         if (activationError) throw new Error('Could not secure your sign-in session. Sign in again.');
-        window.monitorAccountSession(phoneOperatorClient, async () => {
+        window.monitorAccountSession(phoneOperatorClient, async reason => {
             await changePhoneOperator();
-            setPhoneAttendanceStatus('Your account was signed in on another device. Sign in again to scan.', true);
+            setPhoneAttendanceStatus(reason === 'expired' ? 'Your session ended. Sign in again to scan.' : 'Your account was signed in on another device. Sign in again to scan.', true);
         });
         const { data: { user }, error: userError } = await phoneOperatorClient.auth.getUser();
         if (userError || !user) throw new Error('Could not verify your sign-in.');

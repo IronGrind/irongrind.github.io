@@ -70,7 +70,10 @@ begin
     where s.setrole=(select oid from pg_roles where rolname='authenticator')
       and s.setdatabase=0 and setting like 'pgrst.db_pre_request=%';
   if old_hook='public.enforce_account_session' then return; end if;
-  if nullif(old_hook,'') is not null then old_call:=format('perform %s();',old_hook::regproc); end if;
+  if nullif(old_hook,'') is not null then
+    select format('perform %I.%I();',n.nspname,p.proname) into old_call
+      from pg_proc p join pg_namespace n on n.oid=p.pronamespace where p.oid=old_hook::regproc;
+  end if;
   execute format($function$
     create or replace function public.enforce_account_session() returns void
     language plpgsql set search_path='' as $body$

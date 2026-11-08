@@ -151,7 +151,7 @@ async function submitRegistration(event) {
     if (age < 12) { showError('You must be at least 12 years old to register.'); return; }
     if (!ecName || !ecRelation || !ecContact) { showError('Please complete the emergency contact details.'); return; }
     if (!/^9\d{9}$/.test(ecContactLocal)) { showError('Enter the emergency contact’s 10 digits after +63, beginning with 9.'); return; }
-    if (email.length > 300) { showError('Email address must be 300 characters or fewer.'); return; }
+    if (email.length > 254) { showError('Email address must be 254 characters or fewer.'); return; }
     if (!email || !document.getElementById('regEmail').checkValidity()) { showError('Enter a valid email address for your account.'); return; }
     if (username.length < 4) { showError('Username must be at least 4 characters.'); return; }
     if (!/^[a-z0-9_.]+$/.test(username)) { showError('Username can only contain letters, numbers, underscores, and dots.'); return; }
@@ -179,6 +179,12 @@ async function submitRegistration(event) {
     submitButton.disabled = true;
     submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating account…';
     try {
+        const { data: emailAvailable, error: emailCheckError } = await window.ironGrindSupabase.rpc('is_registration_email_available', { p_email: email });
+        if (emailCheckError) { showError('Could not check this email address. Please try again.'); return; }
+        if (!emailAvailable) {
+            showError('This email address is already registered. Sign in or recover your existing account.');
+            document.getElementById('regEmail').focus(); return;
+        }
         const { data: usernameAvailable, error: usernameCheckError } = await window.ironGrindSupabase.rpc(
             'is_registration_username_available',
             { p_username: username }
@@ -215,6 +221,10 @@ async function submitRegistration(event) {
             showError(error.message.includes('already registered')
                 ? 'An account already exists for this email. Sign in or contact the gym admin.'
                 : error.message);
+            return;
+        }
+        if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
+            showError('This email address is already registered. Sign in or recover your existing account.');
             return;
         }
         if (!data.user) {

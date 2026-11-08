@@ -22,12 +22,17 @@ window.monitorAccountSession = (client, onReplaced) => {
     client.__accountSessionMonitor = true;
     let busy = false;
     let stopping = false;
+    let hadSession = false;
     async function check() {
         if (busy || stopping || document.hidden || navigator.onLine === false) return;
         busy = true;
         try {
             const { data: { session } } = await client.auth.getSession();
-            if (!session) return;
+            if (!session) {
+                if (hadSession) { stopping = true; client.__accountSessionMonitor = false; await onReplaced('expired'); }
+                return;
+            }
+            hadSession = true;
             const token = session.access_token;
             const { data, error } = await client.rpc('current_account_session_is_active');
             const { data: latest } = await client.auth.getSession();
@@ -35,6 +40,7 @@ window.monitorAccountSession = (client, onReplaced) => {
             if (latest.session?.access_token !== token) return;
             if (data === false || error?.code === 'PT401' || error?.message === 'ACCOUNT_SESSION_REPLACED') {
                 stopping = true;
+                client.__accountSessionMonitor = false;
                 await client.auth.signOut({ scope: 'local' });
                 await onReplaced();
             }
@@ -50,9 +56,9 @@ window.monitorAccountSession = (client, onReplaced) => {
     check();
 };
 if (/(?:^|\/)(?:admin|customer|staff)\.html$/.test(window.location.pathname)) {
-    window.monitorAccountSession(window.ironGrindSupabase, async () => {
+    window.monitorAccountSession(window.ironGrindSupabase, async reason => {
         localStorage.removeItem('irongrind_session');
         sessionStorage.removeItem('irongrind_session');
-        window.location.replace('index.html?auth=replaced');
+        window.location.replace(`index.html?auth=${reason === 'expired' ? 'expired' : 'replaced'}`);
     });
 }

@@ -47,6 +47,9 @@ Deno.serve(async request => {
     if (!/^[a-z0-9._%+-]+@gmail\.com$/.test(email)) return reply({ error: 'Enter a valid Gmail address ending in @gmail.com.' }, 400);
     if (!/^9\d{9}$/.test(phoneNumber)) return reply({ error: 'Enter a 10-digit mobile number beginning with 9 after +63.' }, 400);
     if (!['Female', 'Male', 'Prefer not to say'].includes(gender)) return reply({ error: 'Select a gender.' }, 400);
+    const { data: emailAvailable, error: emailError } = await admin.rpc('is_registration_email_available', { p_email: email });
+    if (emailError) return reply({ error: 'Could not check email availability. Please try again.' }, 503);
+    if (!emailAvailable) return reply({ error: 'This email address is already registered. Use another email for the staff account.' }, 409);
     const { data: available, error: usernameError } = await admin.rpc('is_registration_username_available', { p_username: username });
     if (usernameError) return reply({ error: 'Could not check username availability. Please try again.' }, 503);
     if (!available) return reply({ error: 'That username is already in use. Choose another username.' }, 409);

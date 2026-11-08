@@ -1,0 +1,12 @@
+import fs from 'node:fs';
+import assert from 'node:assert/strict';
+const config=fs.readFileSync('assets/js/supabase-client.js','utf8');
+const url=config.match(/IRON_GRIND_SUPABASE_URL = '([^']+)'/)[1];
+const key=config.match(/IRON_GRIND_SUPABASE_PUBLISHABLE_KEY = '([^']+)'/)[1];
+const headers={apikey:key,'Content-Type':'application/json'};
+const available=await fetch(`${url}/rest/v1/rpc/is_registration_username_available`,{method:'POST',headers,body:JSON.stringify({p_username:'session_guard_smoke'})});
+assert.equal(available.status,200,`Anonymous registration availability remains accessible: ${available.ok ? '' : await available.clone().text()}`);
+assert.equal(typeof await available.json(),'boolean');
+const denied=await fetch(`${url}/rest/v1/rpc/activate_account_session`,{method:'POST',headers,body:'{}'});
+assert.ok([401,403].includes(denied.status),'Anonymous callers cannot activate account sessions');
+console.log('Passed live read-only smoke check: public registration check works, anonymous session activation is denied.');

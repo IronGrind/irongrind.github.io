@@ -173,7 +173,7 @@
                 <p style="font-size:0.8rem; color:#8b95a9; margin-bottom:16px;">Add your email and choose a username and password. You can sign in after authorized staff or the administrator approves your membership.</p>
                 <div class="form-group" style="margin-bottom:16px;">
                     <label for="regEmail">Email Address *</label>
-                    <input type="email" id="regEmail" placeholder="you@example.com" autocomplete="email" maxlength="300" required>
+                    <input type="email" id="regEmail" placeholder="you@example.com" autocomplete="email" maxlength="254" required>
                 </div>
                 <div class="form-row">
                     <div class="form-group"><label for="regUsername">Username *</label><input type="text" id="regUsername" placeholder="juan_dc" autocomplete="username" required minlength="4"></div>
@@ -219,11 +219,11 @@
     <div id="modalOverlay" class="modal-overlay hidden" onclick="if(event.target===this) closeModal()">
         <div class="modal-content" id="modalContent"></div>
     </div>
-    <script src="assets/js/ui-improvements.js?v=20261108-unique-usernames"></script>
+    <script src="assets/js/ui-improvements.js?v=20261108-unique-emails"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/supabase-client.js?v=20261104-isolated-registration"></script>
     <script src="assets/js/signature.js"></script>
     <script src="assets/js/button-feedback.js?v=20261102-return-to-login"></script>
-    <script src="assets/js/register.js?v=20261108-unique-usernames"></script>
+    <script src="assets/js/register.js?v=20261108-unique-emails"></script>
 </body>
 </html>

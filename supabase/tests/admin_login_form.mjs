@@ -2,13 +2,13 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import vm from 'node:vm';
 const code = await readFile(new URL('../../assets/js/auth.js', import.meta.url), 'utf8');
-function setup(role, unavailable = false) {
+function setup(role, unavailable = false, activationFails = false) {
     const elements = new Map();
     const element = id => {
         if (!elements.has(id)) elements.set(id, { value: '', disabled: false, checked: false, textContent: '', classList: { add() {}, remove() {} }, setAttribute(name, value) { this[name] = value; } });
         return elements.get(id);
     };
-    const counters = { password: 0, endpoint: 0, session: 0, signOut: 0, logs: 0 };
+    const counters = { password: 0, endpoint: 0, session: 0, signOut: 0, logs: 0, activation: 0 };
     const authResult = { data: { user: { id: 'account-id', email: 'account@example.test' } }, error: null };
     const client = {
         auth: {
@@ -24,7 +24,7 @@ function setup(role, unavailable = false) {
                 async maybeSingle() { return { data: table === 'members' ? { id: 'member-id' } : null, error: null }; }
             }; return query;
         },
-        async rpc() { counters.logs++; return { error: null }; }
+        async rpc(name) { if (name === 'activate_account_session') counters.activation++; else counters.logs++; return { error: name === 'activate_account_session' && activationFails ? { message: 'Session activation failed' } : null }; }
     };
     const storage = () => {
         const records = new Map();
@@ -35,7 +35,7 @@ function setup(role, unavailable = false) {
     vm.runInContext(code, context);
     return { context, element, counters, destination: () => destination };
 }
-for (const [mode, role, target] of [['admin', 'admin', 'admin.html'], ['member', 'member', 'customer.html']]) {
+for (const [mode, role, target] of [['admin', 'admin', 'admin.html'], ['admin', 'staff', 'staff.html'], ['member', 'member', 'customer.html']]) {
     const test = setup(role);
     test.element('loginEmail').value = mode === 'admin' ? 'staff' : 'member@example.test';
     test.element('loginPassword').value = 'password';
@@ -44,6 +44,7 @@ for (const [mode, role, target] of [['admin', 'admin', 'admin.html'], ['member',
     assert.equal(test.counters.endpoint, mode === 'admin' ? 1 : 0);
     assert.equal(test.counters.password, mode === 'member' ? 1 : 0);
     assert.equal(test.counters.logs, mode === 'admin' ? 1 : 0);
+    assert.equal(test.counters.activation, 1, 'Every successful login secures its session');
     assert.equal(test.element('submit').disabled, false);
 }
 for (const [role, unavailable] of [['member', false], ['admin', true]]) {
@@ -56,3 +57,8 @@ for (const [role, unavailable] of [['member', false], ['admin', true]]) {
     assert.ok(test.element('loginErrorText').textContent);
 }
 console.log('Passed: admin endpoint/session flow, unchanged member email flow, activity attribution call, non-admin rejection, unavailable-function recovery.');
+const failedActivation=setup('admin',false,true);
+failedActivation.element('loginEmail').value='admin'; failedActivation.element('loginPassword').value='password';
+await vm.runInContext('handleLogin({preventDefault(){}})',failedActivation.context);
+assert.equal(failedActivation.destination(),undefined);
+assert.equal(failedActivation.counters.signOut,1,'Failed activation cannot open a dashboard');

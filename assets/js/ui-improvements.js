@@ -84,8 +84,10 @@
         update();
     }
     function attachUsernameGuidance(input) {
-        if (!['regUsername', 'wiUsername', 'walkinUsername', 'staffUsername'].includes(input.id) || input.dataset.usernameGuidance) return;
-        input.dataset.usernameGuidance = 'true'; input.maxLength = 30;
+        if (!['regUsername', 'wiUsername', 'walkinUsername', 'staffUsername', 'regEmail', 'wiEmail', 'walkinEmail', 'staffEmail'].includes(input.id) || input.dataset.usernameGuidance) return;
+        const isEmail = input.id.endsWith('Email');
+        const fieldName = isEmail ? 'Email address' : 'Username';
+        input.dataset.usernameGuidance = 'true'; input.maxLength = isEmail ? 254 : 30;
         const hint = document.createElement('small'); hint.className = 'password-guidance'; hint.id = `${input.id}Availability`;
         hint.setAttribute('aria-live', 'polite'); input.insertAdjacentElement('afterend', hint);
         input.setAttribute('aria-describedby', [input.getAttribute('aria-describedby'), hint.id].filter(Boolean).join(' '));
@@ -97,17 +99,17 @@
             if (!username) return;
             const minimum = input.id === 'regUsername' ? 4 : 3;
             const characters = input.id === 'staffUsername' ? 'a-z0-9_' : 'a-z0-9_.';
-            if (!new RegExp(`^[${characters}]{${minimum},30}$`).test(username)) {
-                const message = `Use ${minimum}–30 letters, numbers, and underscores${input.id === 'staffUsername' ? '.' : ', or dots.'}`;
+            if (isEmail ? !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(username) : !new RegExp(`^[${characters}]{${minimum},30}$`).test(username)) {
+                const message = isEmail ? 'Enter a valid email address.' : `Use ${minimum}–30 letters, numbers, and underscores${input.id === 'staffUsername' ? '.' : ', or dots.'}`;
                 input.setCustomValidity(message); hint.textContent = message; hint.dataset.state = 'invalid'; return;
             }
-            hint.textContent = 'Checking username availability...';
+            hint.textContent = `Checking ${fieldName.toLowerCase()} availability...`;
             timer = setTimeout(async () => {
                 try {
-                    const { data, error } = await window.ironGrindSupabase.rpc('is_registration_username_available', { p_username: username });
+                    const { data, error } = await window.ironGrindSupabase.rpc(isEmail ? 'is_registration_email_available' : 'is_registration_username_available', isEmail ? { p_email: username } : { p_username: username });
                     if (current !== revision) return;
                     if (error) throw error;
-                    const message = data ? 'Username is available.' : 'That username is already in use. Choose another username.';
+                    const message = data ? `${fieldName} is available.` : isEmail ? 'This email address is already registered. Use your existing account or another email.' : 'That username is already in use. Choose another username.';
                     hint.textContent = message; hint.dataset.state = data ? 'valid' : 'invalid';
                     input.setCustomValidity(data ? '' : message);
                 } catch {
