@@ -323,6 +323,10 @@ function staffMembershipDates(days, now = new Date()) {
     const expiryDate = new Date(Date.UTC(year, month - 1, day + days)).toISOString().slice(0, 10);
     return { startDate, expiryDate };
 }
+function validPersonName(value) {
+    const name = String(value || '').trim();
+    return name.length > 0 && name.length <= 150 && /\p{L}/u.test(name) && !/[\p{N}\p{Cc}\p{Cf}]/u.test(name);
+}
 
 async function submitStaffWalkin(event) {
     event.preventDefault();
@@ -340,7 +344,6 @@ async function submitStaffWalkin(event) {
     const body = {
         fullName: document.getElementById('walkinFullName').value.trim(),
         email: document.getElementById('walkinEmail').value.trim(),
-        username: document.getElementById('walkinUsername').value.trim(),
         password: document.getElementById('walkinPassword').value,
         mobile: document.getElementById('walkinMobile').value.trim(),
         dateOfBirth: birthDate, age, sex: document.getElementById('walkinSex').value,
@@ -353,6 +356,9 @@ async function submitStaffWalkin(event) {
     };
     button.disabled = true; status.textContent = 'Creating member account and recording payment…';
     try {
+        if (!validPersonName(body.fullName) || !validPersonName(body.emergencyName)) {
+            throw new Error('Names must contain letters and cannot contain numbers. Check the member and emergency contact names.');
+        }
         if (!newPasswordValid(body.password, 8)) throw new Error(newPasswordMessage(8));
         if (body.password !== document.getElementById('walkinConfirmPassword').value) throw new Error('Passwords do not match.');
         const { data, error } = await staffClient.functions.invoke('admin-create-member', { body });

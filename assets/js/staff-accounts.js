@@ -5,7 +5,7 @@ function composeStaffName(firstName, middleInitial, lastName) {
     const first = firstName.trim().replace(/\s+/g, ' ');
     const last = lastName.trim().replace(/\s+/g, ' ');
     const middle = middleInitial.trim();
-    if (!first || !last) throw new Error('Enter the staff member’s first and last name.');
+    if (!validPersonName(first) || !validPersonName(last)) throw new Error('Staff first and last names must contain letters and cannot contain numbers.');
     if (middle && !/^\p{L}\.?$/u.test(middle)) throw new Error('Enter one letter for the middle initial, optionally followed by a period.');
     const fullName = [first, middle ? `${middle.replace('.', '').toUpperCase()}.` : '', last].filter(Boolean).join(' ');
     if (fullName.length > 150) throw new Error('The combined name must be 150 characters or fewer.');

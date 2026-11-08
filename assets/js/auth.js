@@ -122,7 +122,6 @@ async function recoverConfirmedRegistration(client, user) {
         application_type: 'registration',
         full_name: app.fullName,
         email: app.email || user.email,
-        username: app.username,
         mobile: app.mobile,
         date_of_birth: app.dob,
         age: app.age,

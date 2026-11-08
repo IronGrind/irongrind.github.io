@@ -12,6 +12,10 @@ function response(body: unknown, status = 200) {
     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
 }
+function validPersonName(value: string) {
+  const name = value.trim();
+  return name.length > 0 && name.length <= 150 && /\p{L}/u.test(name) && !/[\p{N}\p{Cc}\p{Cf}]/u.test(name);
+}
 
 Deno.serve(async (request) => {
   if (request.method === 'OPTIONS') return new Response('ok', { headers: corsHeaders });
@@ -44,11 +48,11 @@ Deno.serve(async (request) => {
     return response({ error: 'Invalid request body.' }, 400);
   }
   const email = String(body.email || '').trim().toLowerCase();
-  const username = String(body.username || '').trim().toLowerCase();
   const password = String(body.password || '');
   const fullName = String(body.fullName || '').trim();
   const mobile = String(body.mobile || '').trim();
   const emergencyContact = String(body.emergencyContact || '').trim();
+  const emergencyName = String(body.emergencyName || '').trim();
   const plan = String(body.plan || '').trim();
   const price = Number(body.planPrice);
   const startDate = String(body.startDate || '');
@@ -56,9 +60,9 @@ Deno.serve(async (request) => {
   if (password.length < 8 || password.length > 128 || !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[^A-Za-z0-9\s]/.test(password)) {
     return response({ error: 'Use 8–128 characters with uppercase and lowercase letters, a number, and a symbol.' }, 400);
   }
-  if (!email || !username || password.length < 8 || !fullName || !mobile || !plan
+  if (!email || password.length < 8 || !validPersonName(fullName) || !validPersonName(emergencyName) || !mobile || !plan
     || !Number.isFinite(price) || price <= 0 || !startDate || !expiryDate) {
-    return response({ error: 'Required member or membership details are missing.' }, 400);
+    return response({ error: 'Required member or membership details are missing, or a name contains numbers or invalid characters.' }, 400);
   }
   if (!/^09\d{9}$/.test(mobile) || !/^09\d{9}$/.test(emergencyContact)) {
     return response({ error: 'Mobile and emergency contact numbers must each be 11 digits and start with 09.' }, 400);
@@ -79,14 +83,11 @@ Deno.serve(async (request) => {
   const { data: emailAvailable, error: emailError } = await callerClient.rpc('is_registration_email_available', { p_email: email });
   if (emailError) return response({ error: 'Could not check email availability. Please try again.' }, 503);
   if (!emailAvailable) return response({ error: 'This email address is already registered. Use the existing account or choose another email.' }, 409);
-  const { data: available, error: usernameError } = await callerClient.rpc('is_registration_username_available', { p_username: username });
-  if (usernameError) return response({ error: 'Could not check username availability. Please try again.' }, 503);
-  if (!available) return response({ error: 'That username is unavailable. Choose another username (3–30 letters, numbers, underscores, or dots).' }, 409);
   const { data: created, error: createError } = await adminClient.auth.admin.createUser({
     email,
     password,
     email_confirm: true,
-    user_metadata: { username, full_name: fullName },
+    user_metadata: { full_name: fullName },
   });
   if (createError || !created.user) {
     return response({ error: createError?.message || 'Could not create Auth user.' }, 400);
@@ -98,7 +99,7 @@ Deno.serve(async (request) => {
     auth_user_id: userId,
     full_name: fullName,
     email,
-    username,
+    username: null,
     mobile,
     date_of_birth: body.dateOfBirth || null,
     age: body.age ?? null,
@@ -108,7 +109,7 @@ Deno.serve(async (request) => {
     weight_kg: body.weight || null,
     weight: body.weight || null,
     emergency_contact: {
-      name: body.emergencyName || '',
+      name: emergencyName,
       relationship: body.emergencyRelationship || '',
       contact: emergencyContact,
     },
@@ -142,5 +143,5 @@ Deno.serve(async (request) => {
       : '';
     return response({ error: `${saveError.message}${cleanupMessage}` }, 400);
   }
-  return response({ ...saved, email, username, full_name: fullName });
+  return response({ ...saved, email, full_name: fullName });
 });

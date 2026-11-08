@@ -1,5 +1,9 @@
 /* ========== AUTH GUARD ========== */
 let activeDashboardRole = 'admin';
+function validPersonName(value) {
+    const name = String(value || '').trim();
+    return name.length > 0 && name.length <= 150 && /\p{L}/u.test(name) && !/[\p{N}\p{Cc}\p{Cf}]/u.test(name);
+}
 (function guardAdmin() {
     let session = null;
     try {
@@ -595,7 +599,7 @@ function viewMemberDetails(id) {
     openModal(`<h3><i class="fas fa-user"></i> Member Details</h3>
         <p class="modal-sub">${escapeHTML(member.name)} · ${escapeHTML(member.registrationSource || 'Member record')}</p>
         <div class="member-detail-grid">
-            ${field('Email', member.email)}${field('Username', member.username)}${field('Mobile', member.contact)}
+            ${field('Email', member.email)}${field('Mobile', member.contact)}
             ${field('Date of birth', member.dob)}${field('Age', member.age ? String(member.age) : '')}${field('Sex', member.sex)}
             ${field('Height', member.height ? `${member.height} ${member.heightUnit || 'cm'}` : '')}${field('Weight', member.weight ? `${member.weight} kg` : '')}${field('Emergency contact', emergency)}
             ${field('Plan', member.plan)}${field('Plan price', member.planPrice ? formatPeso(member.planPrice) : '')}${field('Membership status', member.status)}
@@ -659,10 +663,6 @@ function renderApprovals(type = currentApprovalType) {
                     <div class="approval-detail">
                         <span class="approval-detail-label">Emergency Contact</span>
                         <span>${p.emergencyContact ? `${p.emergencyContact.name} (${p.emergencyContact.relationship}) · ${p.emergencyContact.contact}` : 'Not provided for renewal'}</span>
-                    </div>
-                    <div class="approval-detail">
-                        <span class="approval-detail-label">Username</span>
-                        <span><code class="approval-username">${p.username}</code></span>
                     </div>
                     ${p.email ? `<div class="approval-detail"><span class="approval-detail-label">Email</span><span>${escapeHTML(p.email)}</span></div>` : ''}
                     <div class="approval-detail">
@@ -1254,7 +1254,6 @@ function openAddMemberModal() {
             <p style="font-size:0.75rem; color:#8b95a9; margin-bottom:12px;">Create login credentials so the member can access their portal.</p>
             <div class="form-group"><label>Email Address *</label><input type="email" id="wiEmail" placeholder="member@example.com" autocomplete="email"></div>
             <div class="form-row">
-                <div class="form-group"><label>Username *</label><input type="text" id="wiUsername" placeholder="juan.delacruz" autocomplete="username"></div>
                 <div class="form-group"><label>Password *</label><input type="password" id="wiPassword" placeholder="Create a strong password" autocomplete="new-password"></div>
             </div>
             <div class="form-group" style="margin-bottom:0;"><label>Confirm Password *</label><input type="password" id="wiConfirmPassword" placeholder="Re-enter the password" autocomplete="new-password"></div>
@@ -1320,7 +1319,6 @@ async function submitNewMember() {
     const sex = document.getElementById('wiSex').value;
     const contact = document.getElementById('wiContact').value.trim();
     const email = document.getElementById('wiEmail').value.trim().toLowerCase();
-    const username = document.getElementById('wiUsername').value.trim().toLowerCase();
     const password = document.getElementById('wiPassword').value;
     const confirmPassword = document.getElementById('wiConfirmPassword').value;
     const height = document.getElementById('wiHeight').value;
@@ -1351,6 +1349,10 @@ async function submitNewMember() {
 
     // ---- Validation ----
     if (!name) { toast('Full Name is required.', 'error'); return; }
+    if (!validPersonName(name) || !validPersonName(ecName)) {
+        toast('Names must contain letters and cannot contain numbers. Check the member and emergency contact names.', 'error');
+        return;
+    }
     if (!dob) { toast('Date of Birth is required.', 'error'); return; }
     if (age < 12) { toast('Member must be at least 12 years old.', 'error'); return; }
     if (!contact) { toast('Mobile Number is required.', 'error'); return; }
@@ -1358,16 +1360,8 @@ async function submitNewMember() {
     if (!email || !document.getElementById('wiEmail').checkValidity()) { toast('Enter a valid email address for the member account.', 'error'); return; }
     if (!ecName || !ecRelation || !ecContact) { toast('Emergency contact is required.', 'error'); return; }
     if (!/^09\d{9}$/.test(ecContact)) { toast('Enter an 11-digit PH emergency contact number starting with 09.', 'error'); return; }
-    if (username.length < 4 || !/^[a-z0-9_.]+$/.test(username)) {
-        toast('Username must be 4+ characters and use only letters, numbers, dots, or underscores.', 'error');
-        return;
-    }
     if (!newPasswordValid(password, 8)) { toast(newPasswordMessage(8), 'error'); return; }
     if (password !== confirmPassword) { toast('Passwords do not match.', 'error'); return; }
-    if (users.some(user => user.username?.toLowerCase() === username) || members.some(member => member.username?.toLowerCase() === username) || pendingApprovals.some(application => application.username?.toLowerCase() === username)) {
-        toast('That username is already in use.', 'error');
-        return;
-    }
     if (users.some(user => user.email?.toLowerCase() === email) || members.some(member => member.email?.toLowerCase() === email) || pendingApprovals.some(application => application.email?.toLowerCase() === email)) {
         toast('That email address is already in use.', 'error');
         return;
@@ -1385,7 +1379,7 @@ async function submitNewMember() {
         if (authError || !authData.user) { toast('Your Supabase session expired. Please sign in again.', 'error'); return; }
         const { error } = await window.ironGrindSupabase.functions.invoke('admin-create-member', {
             body: {
-                email, username, password, fullName: name, mobile: contact,
+                email, password, fullName: name, mobile: contact,
                 dateOfBirth: dob, age, sex, height, heightUnit: height ? 'cm' : null,
                 weight, emergencyName: ecName, emergencyRelationship: ecRelation, emergencyContact: ecContact,
                 plan, planPrice: Number(price), startDate,
@@ -3655,8 +3649,8 @@ function viewReport(type) {
         const expiredMembers = members.filter(member => getMemberActivityStatus(member) === 'Expired');
         const inactiveMembers = members.filter(member => getMemberActivityStatus(member) === 'Inactive');
         const statusTable = (items, status) => `<h4 style="margin:18px 0 8px; color:${status === 'Active' ? '#2ecc71' : '#ff6b6b'};">${status} Members (${items.length})</h4>
-            <table class="attendance-table"><thead><tr><th>Name</th><th>Username</th><th>Registration Source</th><th>Plan</th><th>Expires</th></tr></thead><tbody>
-            ${items.map(member => `<tr><td>${escapeHTML(member.name)}</td><td>${escapeHTML(member.username || '—')}</td><td>${escapeHTML(member.registrationSource || 'Not recorded')}</td><td>${escapeHTML(member.plan || '—')}</td><td>${escapeHTML(member.expiry || '—')}</td></tr>`).join('') || '<tr><td colspan="5">No members in this group.</td></tr>'}</tbody></table>`;
+            <table class="attendance-table"><thead><tr><th>Name</th><th>Registration Source</th><th>Plan</th><th>Expires</th></tr></thead><tbody>
+            ${items.map(member => `<tr><td>${escapeHTML(member.name)}</td><td>${escapeHTML(member.registrationSource || 'Not recorded')}</td><td>${escapeHTML(member.plan || '—')}</td><td>${escapeHTML(member.expiry || '—')}</td></tr>`).join('') || '<tr><td colspan="4">No members in this group.</td></tr>'}</tbody></table>`;
         body = `<p class="modal-sub">Expired memberships remain in the five-day renewal window. After that, records without a pending renewal are tracked as inactive.</p>
             ${statusTable(activeMembers, 'Active')}${statusTable(expiredMembers, 'Expired')}${statusTable(inactiveMembers, 'Inactive')}`;
     } else if (type === 'archives') {
@@ -3664,7 +3658,7 @@ function viewReport(type) {
         const archivedPlans = [...planArchives].sort((a, b) => String(b.changedAt || '').localeCompare(String(a.changedAt || '')));
         const expiredMembers = membershipArchives.filter(isMembershipArchiveReady).sort((a, b) => String(b.expiry || '').localeCompare(String(a.expiry || '')));
         const expiredTable = expiredMembers.length
-            ? `<table class="attendance-table"><thead><tr><th>Member</th><th>Username</th><th>Plan</th><th>Started</th><th>Expired</th><th>Fee</th></tr></thead><tbody>${expiredMembers.map(record => `<tr><td>${escapeHTML(record.memberName)}</td><td>${escapeHTML(record.username || '—')}</td><td>${escapeHTML(record.plan)}</td><td>${escapeHTML(record.startDate || '—')}</td><td>${escapeHTML(record.expiry)}</td><td>${formatPeso(record.price || 0)}</td></tr>`).join('')}</tbody></table>`
+            ? `<table class="attendance-table"><thead><tr><th>Member</th><th>Plan</th><th>Started</th><th>Expired</th><th>Fee</th></tr></thead><tbody>${expiredMembers.map(record => `<tr><td>${escapeHTML(record.memberName)}</td><td>${escapeHTML(record.plan)}</td><td>${escapeHTML(record.startDate || '—')}</td><td>${escapeHTML(record.expiry)}</td><td>${formatPeso(record.price)}</td></tr>`).join('')}</tbody></table>`
             : '<div class="empty-state">No expired subscriptions have been archived.</div>';
         const planTable = archivedPlans.length
             ? `<table class="attendance-table"><thead><tr><th>Member</th><th>Previous Plan</th><th>New Plan</th><th>Previous Expiry</th><th>New Expiry</th><th>Previous Fee</th><th>New Fee</th><th>Changed</th></tr></thead><tbody>${archivedPlans.map(record => `<tr><td>${escapeHTML(record.memberName)}</td><td>${escapeHTML(record.previousPlan)}</td><td>${escapeHTML(record.newPlan)}</td><td>${escapeHTML(record.previousExpiry || '—')}</td><td>${escapeHTML(record.newExpiry || '—')}</td><td>${formatPeso(record.previousPrice || 0)}</td><td>${formatPeso(record.newPrice || 0)}</td><td>${escapeHTML(record.changedAt ? new Date(record.changedAt).toLocaleString() : '—')}</td></tr>`).join('')}</tbody></table>`
@@ -3801,17 +3795,17 @@ function printReportPDF(type, inAppPreview = false) {
         }));
         dateForRow = row => row.date;
     } else if (type === 'member-status') {
-        columns = ['Member', 'Username', 'Registration Source', 'Plan', 'Expires'];
+        columns = ['Member', 'Registration Source', 'Plan', 'Expires'];
         rows = members.map(member => ({
-            cells: [member.name, member.username || '—', member.registrationSource || 'Not recorded', member.plan || '—', member.expiry || '—'],
+            cells: [member.name, member.registrationSource || 'Not recorded', member.plan || '—', member.expiry || '—'],
             status: getMemberActivityStatus(member)
         }));
     } else if (type === 'archives') {
         captureExpiredMemberships();
-        columns = ['Record Type', 'Member / Product', 'Username / Category', 'Plan / Details', 'Previous Plan', 'New Plan', 'Started', 'Expired / Archived', 'New Expiry', 'Fee', 'New Fee', 'Recorded'];
+        columns = ['Record Type', 'Member / Product', 'Category / Details', 'Plan / Details', 'Previous Plan', 'New Plan', 'Started', 'Expired / Archived', 'New Expiry', 'Fee', 'New Fee', 'Recorded'];
         rows = [
             ...membershipArchives.filter(isMembershipArchiveReady).map(record => ({
-                cells: ['Expired subscription', record.memberName, record.username || '—', record.plan, '—', '—', record.startDate || '—', record.expiry, '—', formatPeso(record.price || 0), '—', record.expiry],
+                cells: ['Expired subscription', record.memberName, 'Membership', record.plan, '—', '—', record.startDate || '—', record.expiry, '—', formatPeso(record.price || 0), '—', record.expiry],
                 date: record.expiry
             })),
             ...planArchives.map(record => ({
@@ -3978,9 +3972,8 @@ function createMonthlyReportPDF(type, period) {
             ['Overall membership income', String(income.totalCount), `PHP ${income.totalIncome.toFixed(2)}`]
         ]));
     } else if (type === 'member-status') {
-        sections.push(rowsFor(['Member', 'Username', 'Registration Source', 'Plan', 'Expires'], members.map(member => [
+        sections.push(rowsFor(['Member', 'Registration Source', 'Plan', 'Expires'], members.map(member => [
             member.name,
-            member.username || '-',
             member.registrationSource || 'Not recorded',
             member.plan || '-',
             member.expiry || '-'
@@ -3990,13 +3983,13 @@ function createMonthlyReportPDF(type, period) {
         const archivedRows = [
             ...membershipArchives.filter(isMembershipArchiveReady)
                 .filter(record => reportDateMatchesPeriod(record.archivedAt || record.expiry, period))
-                .map(record => ['Expired membership', record.memberName, record.username || '-', record.plan, record.expiry || '-']),
+                .map(record => ['Expired membership', record.memberName, 'Membership', record.plan, record.expiry || '-']),
             ...planArchives.filter(record => reportDateMatchesPeriod(record.changedAt, period))
                 .map(record => ['Plan change', record.memberName, `${record.previousPlan || '-'} to ${record.newPlan || '-'}`, record.previousExpiry || '-', record.changedAt || '-']),
             ...archivedProducts.filter(record => reportDateMatchesPeriod(record.archivedAt, period))
                 .map(record => ['Archived product', record.name, record.category, record.size || '-', record.archivedAt || '-'])
         ];
-        sections.push(rowsFor(['Record Type', 'Member / Product', 'Username / Details', 'Plan / Previous Expiry', 'Archived / Changed'], archivedRows));
+        sections.push(rowsFor(['Record Type', 'Member / Product', 'Category / Details', 'Plan / Previous Expiry', 'Archived / Changed'], archivedRows));
     } else if (type === 'payment' || type === 'sales') {
         const filteredSales = sales.filter(sale => reportDateMatchesPeriod(sale.date || sale.createdAt, period));
         sections.push(rowsFor(['Transaction reference', 'Customer', 'Total', 'Date', 'Status'], filteredSales.map(sale => [sale.id || '-', sale.customer || 'Name not recorded', `PHP ${Number(sale.total || 0).toFixed(2)}`, sale.date || '-', sale.status || 'Unknown'])));

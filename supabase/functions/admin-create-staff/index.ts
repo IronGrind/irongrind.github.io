@@ -2,6 +2,8 @@ import { createClient } from '@supabase/supabase-js';
 
 const headers = { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Content-Type': 'application/json', 'Cache-Control': 'no-store' };
 const reply = (body: unknown, status = 200) => new Response(JSON.stringify(body), { status, headers });
+const validPersonName = (value: string) => value.trim().length > 0
+  && value.trim().length <= 150 && /\p{L}/u.test(value) && !/[\p{N}\p{Cc}\p{Cf}]/u.test(value);
 Deno.serve(async request => {
   if (request.method === 'OPTIONS') return new Response('ok', { headers });
   if (request.method !== 'POST') return reply({ error: 'Method not allowed.' }, 405);
@@ -41,8 +43,8 @@ Deno.serve(async request => {
     const phoneNumber = typeof body.phoneNumber === 'string' ? body.phoneNumber.replace(/\D/g, '') : '';
     const gender = typeof body.gender === 'string' ? body.gender.trim() : '';
     const password = typeof body.password === 'string' ? body.password : '';
-    if (!/^[a-z0-9_]{3,30}$/.test(username) || !fullName || fullName.length > 150 || password.length < 12 || password.length > 128 || !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[^A-Za-z0-9\s]/.test(password)) {
-      return reply({ error: 'Enter a name, a 3–30 character username, and a password of 12–128 characters containing uppercase and lowercase letters, a number, and a symbol.' }, 400);
+    if (!/^[a-z0-9_]{3,30}$/.test(username) || !validPersonName(fullName) || password.length < 12 || password.length > 128 || !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/[0-9]/.test(password) || !/[^A-Za-z0-9\s]/.test(password)) {
+      return reply({ error: 'Enter a valid name without numbers, a 3–30 character username, and a password of 12–128 characters containing uppercase and lowercase letters, a number, and a symbol.' }, 400);
     }
     if (!/^[a-z0-9._%+-]+@gmail\.com$/.test(email)) return reply({ error: 'Enter a valid Gmail address ending in @gmail.com.' }, 400);
     if (!/^9\d{9}$/.test(phoneNumber)) return reply({ error: 'Enter a 10-digit mobile number beginning with 9 after +63.' }, 400);

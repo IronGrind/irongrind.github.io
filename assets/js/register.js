@@ -18,6 +18,10 @@ function composeRegistrationName() {
     return ['regFirstName', 'regMiddleName', 'regLastName']
         .map(id => document.getElementById(id).value.trim()).filter(Boolean).join(' ');
 }
+function validPersonName(value) {
+    const name = String(value || '').trim();
+    return name.length > 0 && name.length <= 150 && /\p{L}/u.test(name) && !/[\p{N}\p{Cc}\p{Cf}]/u.test(name);
+}
 function phLocalToStored(value) {
     const digits = String(value || '').replace(/\D/g, '');
     return /^9\d{9}$/.test(digits) ? `0${digits}` : '';
@@ -142,19 +146,21 @@ async function submitRegistration(event) {
     if (!registrationSignature || registrationSignature.isEmpty()) { showError('Please add your digital signature.'); return; }
 
     const email = document.getElementById('regEmail').value.trim().toLowerCase();
-    const username = document.getElementById('regUsername').value.trim().toLowerCase();
     const password = document.getElementById('regPassword').value;
     const confirm = document.getElementById('regConfirmPassword').value;
 
     if (!fullName || !dob || !mobile) { showError('Please complete all required personal information.'); return; }
+    const nameFields = ['regFirstName', 'regMiddleName', 'regLastName'].map(id => document.getElementById(id).value.trim()).filter(Boolean);
+    if (nameFields.some(name => !validPersonName(name)) || !validPersonName(ecName)) {
+        showError('Names must contain letters and cannot contain numbers. Please check the member and emergency contact names.');
+        return;
+    }
     if (!/^9\d{9}$/.test(mobileLocal)) { showError('Enter the 10 digits after +63, beginning with 9.'); return; }
     if (age < 12) { showError('You must be at least 12 years old to register.'); return; }
     if (!ecName || !ecRelation || !ecContact) { showError('Please complete the emergency contact details.'); return; }
     if (!/^9\d{9}$/.test(ecContactLocal)) { showError('Enter the emergency contact’s 10 digits after +63, beginning with 9.'); return; }
     if (email.length > 254) { showError('Email address must be 254 characters or fewer.'); return; }
     if (!email || !document.getElementById('regEmail').checkValidity()) { showError('Enter a valid email address for your account.'); return; }
-    if (username.length < 4) { showError('Username must be at least 4 characters.'); return; }
-    if (!/^[a-z0-9_.]+$/.test(username)) { showError('Username can only contain letters, numbers, underscores, and dots.'); return; }
     if (!newPasswordValid(password, 8)) { showError(newPasswordMessage(8)); return; }
     if (password !== confirm) { showError('Passwords do not match.'); return; }
 
@@ -169,7 +175,7 @@ async function submitRegistration(event) {
         startDate, endDate,
         healthConditions, otherMedicalConditions, goals,
         signature: registrationSignature.toDataURL(),
-        email, username,
+        email,
         submittedAt: new Date().toISOString(),
         status: 'pending'
     };
@@ -185,39 +191,16 @@ async function submitRegistration(event) {
             showError('This email address is already registered. Sign in or recover your existing account.');
             document.getElementById('regEmail').focus(); return;
         }
-        const { data: usernameAvailable, error: usernameCheckError } = await window.ironGrindSupabase.rpc(
-            'is_registration_username_available',
-            { p_username: username }
-        );
-        if (usernameCheckError) {
-            console.error('Could not check registration username:', usernameCheckError);
-            showError('We could not check whether that username is available. Please try again shortly.');
-            return;
-        }
-        if (!usernameAvailable) {
-            showError('That username is already in use. Please choose another username.');
-            document.getElementById('regUsername').focus();
-            return;
-        }
-
         const { data, error } = await window.ironGrindSupabase.auth.signUp({
             email,
             password,
             options: {
-                data: { username, full_name: fullName },
+                data: { full_name: fullName },
                 emailRedirectTo: `${window.location.origin}${window.location.pathname}?completeApplication=1`
             }
         });
 
         if (error) {
-            const { data: stillAvailable, error: availabilityError } = await window.ironGrindSupabase.rpc(
-                'is_registration_username_available', { p_username: username }
-            );
-            if (!availabilityError && stillAvailable === false) {
-                showError('That username is already in use. Please choose another username.');
-                document.getElementById('regUsername').focus();
-                return;
-            }
             showError(error.message.includes('already registered')
                 ? 'An account already exists for this email. Sign in or contact the gym admin.'
                 : error.message);
@@ -268,7 +251,6 @@ async function insertSupabaseApplication(draft) {
         application_type: 'registration',
         full_name: app.fullName,
         email: app.email,
-        username: app.username,
         mobile: app.mobile,
         date_of_birth: app.dob,
         age: app.age,
@@ -345,7 +327,6 @@ function showSuccessModal(app, confirmationRequired = false, emailJustConfirmed 
                 ${confirmationRequired ? '' : `<div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:#8b95a9;">Application ID:</span><code style="color:#ff6b2b;">${app.id}</code></div>`}
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:#8b95a9;">Plan:</span><strong>${app.plan}</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:#8b95a9;">Amount:</span><strong>₱${app.planPrice.toLocaleString()}</strong></div>
-                <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:#8b95a9;">Username:</span><strong>${app.username}</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:#8b95a9;">Email:</span><strong>${app.email}</strong></div>
                 <div style="display:flex; justify-content:space-between;"><span style="color:#8b95a9;">Status:</span><span class="badge-status reserved">${confirmationRequired ? 'Confirm email first' : 'Pending review'}</span></div>
             </div>

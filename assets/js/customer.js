@@ -49,6 +49,10 @@ function composeSettingsFullName() {
     return ['settingsFirstName', 'settingsMiddleName', 'settingsLastName']
         .map(id => document.getElementById(id).value.trim()).filter(Boolean).join(' ');
 }
+function validPersonName(value) {
+    const name = String(value || '').trim();
+    return name.length > 0 && name.length <= 150 && /\p{L}/u.test(name) && !/[\p{N}\p{Cc}\p{Cf}]/u.test(name);
+}
 function storedPhoneToLocal(value) { return String(value || '').replace(/\D/g, '').replace(/^0/, '').slice(0, 10); }
 function phLocalToStored(value) {
     const digits = String(value || '').replace(/\D/g, '');
@@ -771,6 +775,9 @@ async function submitMemberSettings(event) {
     settingsFormMessage('');
     try {
         const fullName = composeSettingsFullName();
+        const nameFields = ['settingsFirstName', 'settingsMiddleName', 'settingsLastName']
+            .map(id => document.getElementById(id).value.trim()).filter(Boolean);
+        const emergencyName = document.getElementById('settingsEmergencyName').value.trim();
         const dob = document.getElementById('settingsDob').value;
         const mobileLocal = document.getElementById('settingsMobile').value.replace(/\D/g, '');
         const emergencyMobileLocal = document.getElementById('settingsEmergencyMobile').value.replace(/\D/g, '');
@@ -782,6 +789,10 @@ async function submitMemberSettings(event) {
         const otherMedicalConditions = otherMedicalChoice ? document.getElementById('settingsOtherMedical').value.trim() : '';
         if (!fullName) {
             settingsFormMessage('Enter your full name.', 'error');
+            return;
+        }
+        if (nameFields.some(name => !validPersonName(name)) || (emergencyName && !validPersonName(emergencyName))) {
+            settingsFormMessage('Names must contain letters and cannot contain numbers. Check your name and emergency contact name.', 'error');
             return;
         }
         if (!dob || dob > todayStr()) {
@@ -825,7 +836,7 @@ async function submitMemberSettings(event) {
             height_unit: document.getElementById('settingsHeightUnit').value,
             weight_kg: weightValue ? Number(weightValue) : null,
             emergency_contact: {
-                name: document.getElementById('settingsEmergencyName').value.trim(),
+                name: emergencyName,
                 relationship: document.getElementById('settingsEmergencyRelationship').value.trim(),
                 contact: emergencyMobile || ''
             },
