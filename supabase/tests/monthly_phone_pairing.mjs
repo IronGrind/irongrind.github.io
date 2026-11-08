@@ -22,4 +22,20 @@ try{
  await db.query('select register_mobile_attendance_device($1,$2,$3)',[id,'token','Phone']);
  assert.equal((await db.query('select expires_at from mobile_attendance_scan_sessions')).rows[0].expires_at.toISOString(),visit.expires_at.toISOString(),'Reopening does not reset the 30-day expiry');
  console.log('Passed: 10-minute QR window, 30-day paired-phone duration, and no extension when reopening.');
+ await db.exec('create role anon;create role authenticated');
+ await db.exec(fs.readFileSync('supabase/migrations/20261108000008_bind_pairing_to_device.sql','utf8'));
+ const phone1='aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',phone2='bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb',id2='22222222-2222-4222-8222-222222222222';
+ await db.exec('set role anon');
+ await db.query('select register_mobile_attendance_device($1,$2,$3,$4)',[id,'token','Phone 1',phone1]);
+ await assert.rejects(db.query('select register_mobile_attendance_device($1,$2,$3,$4)',[id,'token','Phone 2',phone2]),/already assigned to another phone/);
+ await assert.rejects(db.query('select register_mobile_attendance_device($1,$2,$3)',[id,'token','Phone 2']),/permission denied/);
+ await db.exec('reset role');
+ await db.query("insert into mobile_attendance_scan_sessions(id,token_hash,expires_at,remember_phone) values($1,md5('token2'),now()+interval '10 minutes',true)",[id2]);
+ await db.exec('set role anon');
+ await db.query('select register_mobile_attendance_device($1,$2,$3,$4)',[id2,'token2','Phone 2',phone2]);
+ await db.query('select register_mobile_attendance_device($1,$2,$3,$4)',[id,'token','Phone 1',phone1]);
+ await db.exec('reset role');
+ assert.equal(Number((await db.query('select count(*) as count from mobile_attendance_scan_sessions where paired_at is not null')).rows[0].count),2);
+ assert.equal((await db.query('select paired_device from mobile_attendance_scan_sessions where id=$1',[id])).rows[0].paired_device,'Phone 1','Second phone cannot rename the first');
+ console.log('Passed: one device per QR, separate records for two phones, same-phone reconnect, and legacy overwrite API blocked.');
 }finally{await db.close();}

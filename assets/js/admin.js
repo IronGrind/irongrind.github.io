@@ -1726,7 +1726,6 @@ async function createPhonePairingSession(rememberPhone = true, pairingPassword) 
     showMobileAttendancePairingModal(data.session_id, activeMobileAttendancePairingUrl, activeMobileAttendancePersistent);
     startMobileAttendancePolling(data.session_id);
     refreshPairedAttendancePhones(true);
-    refreshPhonePairingLimitSummary();
 }
 
 function showMobileAttendancePairingModal(sessionId, pairingUrl, persistent, capacityReached = false) {
@@ -1750,7 +1749,7 @@ function showMobileAttendancePairingModal(sessionId, pairingUrl, persistent, cap
             <h4 id="pendingPhonePairingsHeading">Pending QR codes <span id="pendingPhonePairingsCount" class="paired-phone-count">0</span></h4>
             <div id="pendingPhonePairingsList" class="paired-phone-list"><p class="paired-phone-empty">Loading pending QR codes...</p></div>
         </section>
-        <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Close window</button>${!pairingUrl ? `<button id="createPhonePairingQrButton" class="btn-primary ${capacityReached ? 'hidden' : ''}" onclick="startPhoneQRPairing(${Boolean(persistent)})">Create pairing QR</button>` : ''}${sessionId ? `<button class="btn-danger phone-pair-end-button" onclick="endMobileAttendanceSession('${sessionId}')">End this pairing</button>` : ''}</div>
+        <div class="modal-actions"><button class="btn-sm" onclick="closeModal()">Close window</button><button id="createPhonePairingQrButton" class="btn-primary ${capacityReached ? 'hidden' : ''}" onclick="startPhoneQRPairing(true)">${pairingUrl || sessionId ? 'Pair another phone' : 'Create pairing QR'}</button>${sessionId ? `<button class="btn-danger phone-pair-end-button" onclick="endMobileAttendanceSession('${sessionId}')">End this pairing</button>` : ''}</div>
     </div>`);
     if (pairingUrl && typeof QRCode !== 'undefined') {
         new QRCode(document.getElementById('phonePairQr'), {
@@ -1761,7 +1760,6 @@ function showMobileAttendancePairingModal(sessionId, pairingUrl, persistent, cap
         document.getElementById('phonePairStatus').textContent = 'The pairing QR could not load. Reload the admin page while connected to the internet.';
     }
     refreshPairedAttendancePhones(true);
-    refreshPhonePairingLimitSummary();
 }
 
 function togglePhonePairingQrVisibility() {
@@ -1892,6 +1890,18 @@ function cancelPairingRemovalPin() {
     resolve?.(null);
 }
 
+function renderPhonePairingSettings(data) {
+    if (!data) return;
+    window.currentPhonePairingSettings = data;
+    applyPhonePairingCapacityState(data);
+    const summary = document.getElementById('phonePairingLimitSummary');
+    if (summary) summary.textContent = `${data.paired_count} / ${data.max_pairs} paired · ${data.pending_count || 0} pending`;
+    const limit = document.getElementById('pairedPhonesLimit');
+    if (limit) limit.textContent = `of ${data.max_pairs} limit · ${data.pending_count || 0} pending`;
+    const count = document.getElementById('activePhoneSessionCount');
+    if (count) count.textContent = String(data.active_count);
+}
+
 async function refreshPhonePairingLimitSummary() {
     const target = document.getElementById('phonePairingLimitSummary');
     if (!target || !window.ironGrindSupabase) return;
@@ -1991,17 +2001,15 @@ async function refreshPairedAttendancePhones(force = false) {
     if (!list || !window.ironGrindSupabase || pairedPhoneListRefreshBusy) return;
     if (!force && Date.now() - pairedPhoneListLastRefreshAt < 5000) return;
     pairedPhoneListRefreshBusy = true;
+    try {
     let data;
     let error;
     try {
         ({ data, error } = await window.ironGrindSupabase.rpc('list_admin_mobile_attendance_devices'));
     } catch (requestError) {
         error = requestError;
-    } finally {
-        pairedPhoneListRefreshBusy = false;
-        pairedPhoneListLastRefreshAt = Date.now();
     }
-    if (!document.getElementById('pairedPhonesList')) return;
+    if (document.getElementById('pairedPhonesList') !== list) return;
     if (error) {
         const count = document.getElementById('pairedPhonesCount');
         if (count) count.textContent = '—';
@@ -2012,12 +2020,11 @@ async function refreshPairedAttendancePhones(force = false) {
     const count = document.getElementById('pairedPhonesCount');
     const pairedPhones = phones;
     const { data: pairingSettings, error: pairingSettingsError } = await window.ironGrindSupabase.rpc('get_mobile_attendance_pairing_settings');
-    if (!document.getElementById('pairedPhonesList')) return;
+    if (document.getElementById('pairedPhonesList') !== list) return;
     const actualPairedCount = Number(pairingSettings?.paired_count);
     if (count) count.textContent = String(Number.isFinite(actualPairedCount) ? actualPairedCount : pairedPhones.length);
     if (!pairingSettingsError && pairingSettings) {
-        window.currentPhonePairingSettings = pairingSettings;
-        applyPhonePairingCapacityState(pairingSettings);
+        renderPhonePairingSettings(pairingSettings);
     }
     const listOutOfSync = !pairingSettingsError && Number.isFinite(actualPairedCount) && actualPairedCount > pairedPhones.length;
     const activeSessionCount = document.getElementById('activePhoneSessionCount');
@@ -2061,7 +2068,7 @@ async function refreshPairedAttendancePhones(force = false) {
     const pendingList = document.getElementById('pendingPhonePairingsList');
     if (pendingList) {
         const { data: pendingSessions, error: pendingError } = await window.ironGrindSupabase.rpc('list_admin_mobile_attendance_pending_sessions');
-        if (!document.getElementById('pendingPhonePairingsList')) return;
+        if (document.getElementById('pairedPhonesList') !== list) return;
         const pendingCount = document.getElementById('pendingPhonePairingsCount');
         const pending = Array.isArray(pendingSessions) ? pendingSessions : [];
         if (pendingCount) pendingCount.textContent = pendingError ? '--' : String(pending.length);
@@ -2081,6 +2088,10 @@ async function refreshPairedAttendancePhones(force = false) {
                     </div>`;
                 }).join('')
                 : '<p class="paired-phone-empty">No pending pairing QR codes.</p>';
+    }
+    } finally {
+        pairedPhoneListRefreshBusy = false;
+        pairedPhoneListLastRefreshAt = Date.now();
     }
 }
 

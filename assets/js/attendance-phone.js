@@ -173,9 +173,19 @@ async function registerPhoneAttendanceDevice(sessionId, token) {
     const result = await phonePairingClient.rpc('register_mobile_attendance_device', {
         p_session_id: sessionId,
         p_token: token,
-        p_device_label: deviceLabel
+        p_device_label: deviceLabel,
+        p_device_id: getAttendancePhoneIdentity()
     });
     return { ...result, deviceLabel };
+}
+
+function getAttendancePhoneIdentity() {
+    const key = 'ig_attendance_phone_identity';
+    let id = localStorage.getItem(key);
+    if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id || '')) {
+        id = crypto.randomUUID(); localStorage.setItem(key, id);
+    }
+    return id;
 }
 
 function requestPhoneModelSetup(openCamera = true) {
@@ -209,7 +219,8 @@ async function savePhoneModelAndContinue() {
         const { error } = await phonePairingClient.rpc('register_mobile_attendance_device', {
             p_session_id: activePhoneSession.sessionId,
             p_token: activePhoneSession.token,
-            p_device_label: model
+            p_device_label: model,
+            p_device_id: getAttendancePhoneIdentity()
         });
         if (error) throw error;
         const setup = document.getElementById('phoneModelSetup');
@@ -311,6 +322,11 @@ async function startPhonePairingScanner(statusMessage = '') {
                             : 'Supabase rejected this pairing. It may have expired, or the pairing migrations may not be applied. Create a fresh QR on the admin page.', true);
                     } else {
                         const { error: deviceError, deviceLabel } = await registerPhoneAttendanceDevice(sessionId, token);
+                        if (deviceError) {
+                            clearPhonePairing(); activePhoneSession = null; phoneScannerMode = 'pair';
+                            setPhoneNextScanButton(false);
+                            throw new Error(`Phone not paired: ${deviceError.message}`);
+                        }
                         phoneScannerMode = 'member';
                         activePhoneSession = { sessionId, token };
                         phoneCameraPausedForNextMember = true;
@@ -387,7 +403,14 @@ async function startPhoneMemberScanner(sessionId, token, openCamera = true) {
         return;
     }
     const { error: deviceError, deviceLabel } = await registerPhoneAttendanceDevice(sessionId, token);
-    if (deviceError) console.warn('Could not register the paired attendance phone:', deviceError.message);
+    if (deviceError) {
+        if (/already assigned to another phone/i.test(deviceError.message || '')) {
+            clearPhonePairing(); activePhoneSession = null; phoneScannerMode = 'pair';
+            setPhoneAttendanceMode('pair'); setPhoneCameraButton(false);
+        }
+        setPhoneAttendanceStatus(`Could not confirm this phone pairing: ${deviceError.message}`, true);
+        return;
+    }
     if (!deviceError && !deviceLabel) {
         requestPhoneModelSetup(openCamera);
         return;
@@ -580,7 +603,7 @@ window.addEventListener('pagehide', () => {
 async function startPhoneAttendanceApp() {
     configurePhoneAppInstall();
     if ('serviceWorker' in navigator && window.isSecureContext) {
-    navigator.serviceWorker.register('attendance-phone-sw.js?v=20261108-monthly-pairing').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
+    navigator.serviceWorker.register('attendance-phone-sw.js?v=20261108-distinct-phones').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
     }
     if (!window.ironGrindSupabase) {
         setPhoneAttendanceStatus('The attendance service could not load. Check your connection and reload.', true);

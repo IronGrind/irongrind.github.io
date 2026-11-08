@@ -27,7 +27,11 @@ foreach($chapter in 1,2,3){
    $text=$text.Replace('The object model ensures','The use-case model identifies').Replace('ensures that all necessary functions are clearly defined, organized, and accessible only to authorized users to maintain security and accuracy.','the functions and actor permissions documented for the system.')
    $text=$text.Replace('The use-case model identifies that all necessary functions are clearly defined, organized, and accessible only to authorized users to maintain security and accuracy.','The use-case model identifies the documented functions and actor permissions.')
    $text=$text.Replace('D13 private attendance scan requests.','D13 private attendance scan requests, and D14 private account sessions.')
+   $text=$text.Replace('profile roles to distinguish administrators and members','profile roles to distinguish administrators, staff, and members').Replace('check the real-time status of their membership application upon logging in','check the current status of their membership application when signing in')
    $text=$text.Replace('twelve public-schema tables from two private supporting tables','twelve public-schema tables from three private supporting tables').Replace('same baseline rather than assuming','baseline and subsequent migrations rather than assuming')
+   if($chapter -eq 1 -and $text.Trim().StartsWith('Several gym management systems have been developed')){
+    $text='Several gym management systems have been developed to support the operational requirements of fitness establishments. For instance, GymMaster describes membership management, billing, point-of-sale, online sign-ups, and access-control features (GymMaster, n.d.). Similarly, GYMMANAGER describes sales, front-desk operations, scheduling, access control, and reporting within a centralized platform (GYMMANAGER, n.d.-a, n.d.-b). These platforms demonstrate the application of information systems in managing gym operations, particularly in organizing membership records, monitoring attendance, and recording business transactions.'
+   }
    if($chapter -eq 1 -and $text.Trim().StartsWith('The primary users of the system were')){
     $text='The primary users of the system were the gym administrator, authorized staff, and registered gym members. The administrator could view member personal profiles without editing their personal details and manage membership operations, attendance, inventory, sales, staff accounts, phone pairings, activity logs, and reports. Authorized staff could record attendance, register walk-in members, process direct renewals and active-member plan changes using limited member lookup, record product sales, and review their own product-sale records. Both staff and administrators could approve or reject online registration and renewal requests, confirming in-person payment before approval. Staff could not view or edit existing member personal profiles. Members could view and update their own permitted personal details, access their membership status, attendance history and QR code, browse active products, and request renewal. Walk-in product purchases could be recorded without a member account.'
    }
@@ -83,6 +87,16 @@ foreach($chapter in 1,2,3){
    }
   }
   $removed=0;$body=$d.SelectSingleNode('//w:body',$n)
+  if($chapter -eq 3){
+   foreach($table in $d.SelectNodes('//w:body/w:tbl',$n)){
+    $names=@($table.SelectNodes('w:tr/w:tc[1]',$n)|ForEach-Object {(Txt $_).Trim()})
+    if($names -contains 'paired_device' -and $names -notcontains 'paired_device_id'){
+     $row=$table.SelectNodes('w:tr',$n)[1].CloneNode($true)
+     $values=@('paired_device_id','uuid','N/A','','Identifies the browser installation assigned to the pairing. Nullable for legacy pairings.')
+     $cells=$row.SelectNodes('w:tc',$n);for($i=0;$i -lt 5;$i++){Put $cells[$i] $values[$i]};[void]$table.AppendChild($row)
+    }
+   }
+  }
   foreach($p in @($body.SelectNodes('w:p',$n))){if(-not (Txt $p).Trim() -and -not $p.SelectSingleNode('.//w:drawing | .//w:pict | .//w:object | .//w:sectPr | .//w:br | .//w:fldChar | .//w:instrText',$n) -and -not $p.SelectSingleNode('w:pPr/w:pageBreakBefore',$n)){[void]$body.RemoveChild($p);$removed++}}
   $headingCount=0;$bodyCount=0
   foreach($p in $d.SelectNodes('//w:p',$n)){
@@ -99,17 +113,22 @@ foreach($chapter in 1,2,3){
    if($inTable){$row=$p.SelectSingleNode('ancestor::w:tr',$n);$bold=-not $row.SelectSingleNode('preceding-sibling::w:tr',$n);Attr $sp 'line' 240;Attr $sp 'after' 40;Attr $jc 'val' 'left';Attr $ind 'firstLine' 0}
    elseif($chapterTitle){$bold=$true;Attr $jc 'val' 'center';Attr $sp 'line' 360;Attr $sp 'after' 120;Attr $ind 'firstLine' 0;[void](Prop $pr 'keepNext');$headingCount++}
    elseif($heading){$bold=$true;Attr $jc 'val' 'left';Attr $sp 'line' 240;Attr $sp 'before' 200;Attr $sp 'after' 80;Attr $ind 'firstLine' 0;[void](Prop $pr 'keepNext');$headingCount++}
-   elseif($caption -or $image){Attr $jc 'val' $(if($text.StartsWith('Table')){'left'}else{'center'});Attr $sp 'line' 240;Attr $sp 'before' 80;Attr $sp 'after' 100;Attr $ind 'firstLine' 0;if($text.StartsWith('Table')){[void](Prop $pr 'keepNext')}}
+   elseif($caption -or $image){Attr $jc 'val' $(if($text.StartsWith('Table')){'left'}else{'center'});Attr $sp 'line' 240;Attr $sp 'before' 80;Attr $sp 'after' 100;Attr $ind 'firstLine' 0;if($text.StartsWith('Table') -or ($image -and $p.NextSibling -and (Txt $p.NextSibling) -match '^Figure\s+\d')){[void](Prop $pr 'keepNext')}}
    else{Attr $jc 'val' 'both';Attr $sp 'line' 360;Attr $sp 'before' 0;Attr $sp 'after' 100;if(-not $pr.SelectSingleNode('w:numPr',$n)){Attr $ind 'firstLine' 720};$bodyCount++}
    [void](Prop $pr 'widowControl')
    $allProperties=@((Prop $pr 'rPr'))
    foreach($run in $p.SelectNodes('.//w:r',$n)){$rp=$run.SelectSingleNode('w:rPr',$n);if(-not $rp){$rp=$d.CreateElement('w','rPr',$n.LookupNamespace('w'));[void]$run.PrependChild($rp)};$allProperties+=,$rp}
    foreach($rp in $allProperties){foreach($tag in 'b','bCs'){Attr (Prop $rp $tag) 'val' $(if($bold){'1'}else{'0'})}}
   }
+  foreach($table in $d.SelectNodes('//w:body/w:tbl',$n)){
+   $rows=$table.SelectNodes('w:tr',$n)
+   for($ri=0;$ri -lt $rows.Count;$ri++){$trPr=Prop $rows[$ri] 'trPr';[void](Prop $trPr 'cantSplit');if($ri -eq 0){[void](Prop $trPr 'tblHeader')}}
+  }
   $entry.Delete();$entry=$zip.CreateEntry('word/document.xml');$writer=[IO.StreamWriter]::new($entry.Open(),[Text.UTF8Encoding]::new($false));$writer.Write($d.OuterXml);$writer.Dispose()
   $report.Add("Chapter ${chapter}: $headingCount headings; $bodyCount body paragraphs; $removed empty spacer paragraphs removed.")
  }finally{$zip.Dispose()}
 }
 $report.Add("Backups: $backup")
-$report|Set-Content -Encoding UTF8 (Join-Path $PSScriptRoot 'Chapter Formatting Verification.txt')
+[void][IO.Directory]::CreateDirectory((Join-Path $PSScriptRoot 'Review Evidence'))
+$report|Set-Content -Encoding UTF8 (Join-Path $PSScriptRoot 'Review Evidence/Chapter Formatting Verification.txt')
 $report

@@ -65,6 +65,7 @@ Finish '04-use-cases.png'
 $staffBitmap=[Drawing.Bitmap]::new((Join-Path $out '04-use-cases.png'));$staffGraphics=[Drawing.Graphics]::FromImage($staffBitmap);$staffGraphics.FillRectangle([Drawing.Brushes]::White,0,0,1800,100);$staffGraphics.DrawString('Figure 20. Staff operations and access',[Drawing.Font]::new('Arial',34,[Drawing.FontStyle]::Bold),$ink,60,35);$staffGraphics.Dispose();$staffBitmap.Save((Join-Path $out '20-staff-operations.png'),[Drawing.Imaging.ImageFormat]::Png);$staffBitmap.Dispose()
 # Extract the physical schema and its declared foreign keys from the current baseline.
 $sql=Get-Content -Raw 'supabase\migrations\20261105043517_remote_schema.sql'
+$sql=$sql.Replace('    "paired_device" "text",','    "paired_device" "text",'+"`n"+'    "paired_device_id" "uuid",')
 $sql+=@'
 
 CREATE TABLE IF NOT EXISTS "private"."account_sessions" (
@@ -101,10 +102,10 @@ for($mi=0;$mi -lt $mmd.Count;$mi++){
 $mmd|Set-Content (Join-Path $out '05-erd.mmd') -Encoding UTF8
 for($page=0;$page -lt 3;$page++){
  $subset=@($fks|Select-Object -Skip ($page*7) -First 7)
- Canvas "Figure 5$([char](97+$page)). Physical ERD relationships" 'Each row is an ER relationship. Repeated entity boxes denote the same table. Child FK NULLability and deletion actions follow the migration baseline.' 2180
+ Canvas "Figure 5$([char](97+$page)). Physical ERD relationships" 'Each row is an ER relationship. Repeated entity boxes denote the same table. Child FK NULLability and deletion actions follow the baseline and session migrations.' 2180
  for($i=0;$i -lt $subset.Count;$i++){$fk=$subset[$i];$y=220+$i*250
  $tableName=($fk.Child -split '\.')[1];$match=[regex]::Match($sql,('CREATE TABLE IF NOT EXISTS "[^" ]+"\."'+[regex]::Escape($tableName)+'" \(([\s\S]*?)\n\);'));$required=$match.Groups[1].Value -match ('"'+[regex]::Escape($fk.Field)+'" "uuid" NOT NULL')
- $parentCount=if($required){'1'}else{'0..1'};$childCount=if($fk.Child -eq 'public.profiles' -or ($fk.Child -eq 'public.members' -and $fk.Field -eq 'auth_user_id')){'0..1'}else{'0..*'}
+ $parentCount=if($required){'1'}else{'0..1'};$childCount=if($fk.Child -eq 'private.account_sessions'){'0..2'}elseif($fk.Child -eq 'public.profiles' -or ($fk.Child -eq 'public.members' -and $fk.Field -eq 'auth_user_id')){'0..1'}else{'0..*'}
  Box 55 $y 575 185 $fk.Parent "PK: $($fk.ParentField)";Box 1120 $y 625 185 $fk.Child "FK: $($fk.Field)"
  Arrow 630 ($y+95) 1120 ($y+95) "$parentCount                  $childCount"
  $g.DrawString($fk.Rule,$small,$ink,[Drawing.RectangleF]::new(655,$y+120,440,80))
