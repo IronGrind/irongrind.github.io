@@ -455,13 +455,14 @@ document.getElementById('startStaffCamera').onclick = async () => {
     staffStatus.textContent = 'Starting the laptop camera…';
     const scanner = new Html5Qrcode('staffCamera');
     staffScanner = scanner;
+    let permissionStream;
     try {
         // A laptop's built-in webcam is usually user-facing. Prefer the rear
         // camera on phones and the front camera on computers, while keeping
         // the preference ideal so browsers can fall back to available hardware.
         const preferRearCamera = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
         const facingMode = preferRearCamera ? 'environment' : 'user';
-        const config = { fps: 10, qrbox: 250 };
+        const config = { fps: 10, qrbox: { width: 240, height: 240 }, aspectRatio: 1 };
         const onDecoded = async value => {
             if (staffScanner !== scanner || staffBusy) return;
             staffScanner = null;
@@ -469,27 +470,45 @@ document.getElementById('startStaffCamera').onclick = async () => {
             try { await scanner.stop(); } finally { staffBusy = false; }
             await recordStaffAttendance(value);
         };
-        try {
-            await scanner.start({ facingMode: { ideal: facingMode } }, config, onDecoded, () => {});
-        } catch (firstError) {
-            const firstMessage = typeof firstError === 'string' ? firstError : firstError?.message || '';
-            if (/NotAllowedError|PermissionDeniedError|SecurityError|permission denied/i.test(`${firstError?.name || ''} ${firstMessage}`)) throw firstError;
+        // Match the admin scanner: ask the browser to open a camera first,
+        // then start the QR decoder with that exact device ID. This avoids
+        // differences between browser camera selection and library constraints.
+        permissionStream = await navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: { facingMode: { ideal: facingMode } }
+        });
+        if (staffScanner !== scanner) return;
+        const deviceId = permissionStream.getVideoTracks()[0]?.getSettings?.().deviceId;
+        permissionStream.getTracks().forEach(track => track.stop());
+        permissionStream = null;
 
-            // Some laptop drivers reject a facing-mode preference despite
-            // having a usable webcam. Retry the browser-enumerated devices.
+        let started = false;
+        let cameraError;
+        if (deviceId) {
+            try {
+                await scanner.start(deviceId, config, onDecoded, () => {});
+                started = true;
+            } catch (error) {
+                cameraError = error;
+                console.warn('Could not start the browser-selected staff camera; trying available cameras.', error);
+            }
+        }
+        if (!started) {
             const cameras = await Html5Qrcode.getCameras();
             const preferLabel = preferRearCamera ? /back|rear|environment/i : /front|user|integrated|built.?in|webcam/i;
-            const candidates = [...cameras].sort((a, b) => Number(preferLabel.test(b.label || '')) - Number(preferLabel.test(a.label || '')));
-            if (!candidates.length) throw firstError;
-            let fallbackError = firstError;
+            const candidates = [...(Array.isArray(cameras) ? cameras : [])]
+                .sort((a, b) => Number(preferLabel.test(b.label || '')) - Number(preferLabel.test(a.label || '')));
+            if (!candidates.length) throw cameraError || new Error('No camera device is available to the browser.');
             for (const camera of candidates) {
                 try {
                     await scanner.start(camera.id, config, onDecoded, () => {});
-                    fallbackError = null;
+                    started = true;
                     break;
-                } catch (error) { fallbackError = error; }
+                } catch (error) { cameraError = error; }
             }
-            if (fallbackError) throw fallbackError;
+        }
+        if (!started) {
+            throw cameraError || new Error('The browser could not start any available camera.');
         }
         staffStatus.textContent = 'Camera ready. Hold the member QR code in the frame.';
     } catch (error) {
@@ -498,7 +517,7 @@ document.getElementById('startStaffCamera').onclick = async () => {
         try { scanner.clear(); } catch { /* Scanner UI may not have initialized. */ }
         console.warn('Staff QR camera could not start:', error);
         staffStatus.textContent = staffCameraErrorMessage(error);
-    }
+    } finally { permissionStream?.getTracks().forEach(track => track.stop()); }
 };
 document.getElementById('staffLogout').onclick = async () => {
     try {
