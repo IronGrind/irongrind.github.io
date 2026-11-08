@@ -1,4 +1,4 @@
-const CACHE_NAME = 'iron-grind-attendance-shell-v16';
+const CACHE_NAME = 'iron-grind-attendance-shell-v17';
 const APP_SHELL = [
     './attendance-phone.html',
     './attendance-app.webmanifest',

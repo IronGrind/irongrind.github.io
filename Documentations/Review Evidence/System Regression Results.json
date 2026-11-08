@@ -1,0 +1,206 @@
+{
+  "completedAt": "2026-11-08T12:54:12.945Z",
+  "passed": 40,
+  "failed": 0,
+  "checks": [
+    {
+      "name": "Syntax: activity-logs.js",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "name": "Syntax: admin-access.js",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "name": "Syntax: admin.js",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "name": "Syntax: attendance-phone.js",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "name": "Syntax: auth.js",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "name": "Syntax: button-feedback.js",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "name": "Syntax: customer.js",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "name": "Syntax: register.js",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "name": "Syntax: reset-password.js",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "name": "Syntax: signature.js",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "name": "Syntax: staff-accounts.js",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "name": "Syntax: staff.js",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "name": "Syntax: supabase-client.js",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "name": "Syntax: theme.js",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "name": "Syntax: ui-improvements.js",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "name": "HTML local script/style references and unique IDs",
+      "passed": true
+    },
+    {
+      "name": "Browser unit tests",
+      "passed": true,
+      "output": "✔ pairing requires a verified admin login independently of UI storage (3.8248ms)\n✔ expired admin auth clears stale UI state and redirects to sign-in (0.2504ms)\n✔ admin scans use the atomic RPC and reuse uncertain request identifiers (8.6534ms)\n✔ remembered phone pairing survives a new app instance (8.6998ms)\n✔ every camera entry requires operator identity (2.7692ms)\n✔ transient validation failure retains saved pairing and does not start pairing camera (1.1735ms)\n✔ uncertain scan response reuses request id on retry and reports saved outcome (1.7019ms)\nPassed: success\nPassed: unauthorized\nPassed: missing-account\nPassed: mismatch\nPassed: partial\n✔ scripts\\tests\\reset-admin-passwords.test.mjs (2545.1436ms)\nℹ tests 8\nℹ suites 0\nℹ pass 8\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 2600.6684"
+    },
+    {
+      "name": "check-ui-improvements",
+      "passed": true,
+      "output": "Passed: password rules, pricing conversions, add/edit product saves, custom sizes, invalid-input rejection, script loading, and unique page IDs."
+    },
+    {
+      "name": "check-session-monitor",
+      "passed": true,
+      "output": "Passed: active session retained, replacement clears local session and redirects, network failures do not log users out, and public/recovery pages are excluded."
+    },
+    {
+      "name": "check-pairing-summary",
+      "passed": true,
+      "output": "Passed: paired/pending summary updates with the device list, and overlapping refreshes are prevented.\nPassed: full capacity blocks new QRs while keeping an existing pending QR visible for completion.\nPassed: the pairing dialog refreshes without a locally created scanner session and stops polling when closed."
+    },
+    {
+      "name": "check-form-validation",
+      "passed": true,
+      "output": "Passed: HTML validation patterns compile in modern browsers; Gmail and split staff-name validation accept valid inputs and reject invalid ones.\nPassed: staff membership dates use Philippine time across midnight and month boundaries."
+    },
+    {
+      "name": "registration_submission",
+      "passed": true,
+      "output": "Passed: submission succeeds only for a saved pending application linked to the registering account; failures preserve the draft."
+    },
+    {
+      "name": "admin_membership_sync",
+      "passed": true,
+      "output": "Passed: new registrations show the admin dashboard notice and badge, deleted rows do not reappear, read failures/offline mode preserve the existing view."
+    },
+    {
+      "name": "admin_login_form",
+      "passed": true,
+      "output": "Passed: admin endpoint/session flow, unchanged member email flow, activity attribution call, non-admin rejection, unavailable-function recovery."
+    },
+    {
+      "name": "Registration SDK isolation",
+      "passed": true,
+      "output": "Passed: signup and email confirmation retain their temporary member session without replacing a signed-in admin in the same browser."
+    },
+    {
+      "name": "activity_logs",
+      "passed": true,
+      "output": "Passed: triggers, replay, actor attribution, rollback, field filtering, admin read-only access, member isolation, session validation, service-only registration attribution."
+    },
+    {
+      "name": "admin_username_login",
+      "passed": true,
+      "output": "Passed: throttling, five-minute reset, invalid input, migration rerun, anonymous/authenticated isolation."
+    },
+    {
+      "name": "admin_login_profile_access",
+      "passed": true,
+      "output": "Passed: reproduced BYPASSRLS permission failure; repair enables exact case-insensitive username lookup and reset-script reads without granting browser, email, or write access."
+    },
+    {
+      "name": "members_inactive_status",
+      "passed": true,
+      "output": "Passed: reproduced legacy constraint failure and rollback; repair archives the nine records, preserves suspended and related records, rejects invalid statuses, and aborts changed record matches."
+    },
+    {
+      "name": "phone_pairing_repair",
+      "passed": true,
+      "output": "Passed: repair rerun, verifier error distinction, anonymous isolation, remembered pairing duration, reopen stability, configured hash preserved."
+    },
+    {
+      "name": "membership_paid_compatibility",
+      "passed": true,
+      "output": "Passed: boolean/numeric payment schemas, migration rerun, existing values unchanged."
+    },
+    {
+      "name": "reliable_attendance_scanning",
+      "passed": true,
+      "output": "Passed: migration rerun, operator attribution, check-out attribution, safe retries, rapid duplicate protection, expiry, pairing validity, inactive/member/anonymous isolation."
+    },
+    {
+      "name": "unique_usernames",
+      "passed": true,
+      "output": "Passed: case/space duplicate insertion, duplicate update, normalization, availability checks, and all registration roles."
+    },
+    {
+      "name": "unique_registration_emails",
+      "passed": true,
+      "output": "Passed: duplicate Gmail checks across roles, case/spacing variations, unconfirmed Auth accounts, invalid input, and database uniqueness."
+    },
+    {
+      "name": "staff_service_profile_access",
+      "passed": true,
+      "output": "Passed: service role can list and update staff profiles; browser roles gain no read or write permissions."
+    },
+    {
+      "name": "staff_request_reviews",
+      "passed": true,
+      "output": "Passed: staff review, renewal extension, duplicate prevention, rejection, invalid prices, inactive/member/anonymous denial, and profile isolation."
+    },
+    {
+      "name": "single_account_session",
+      "passed": true,
+      "output": "Passed: new login replaces old, old sessions cannot reclaim, profile/table access blocked, old RPCs denied, previous API hook preserved, other users unaffected, and sign-out never restores an old session.\nPassed: dashboard and attendance sessions coexist; replacement stays within each session scope; members cannot activate operator sessions."
+    },
+    {
+      "name": "shared_pairing_capacity",
+      "passed": true,
+      "output": "Passed: paired plus pending shares the limit, overflow pending QR expires without disconnecting paired phones, pairing a reserved slot stays within capacity, and reducing the limit trims pending reservations."
+    },
+    {
+      "name": "monthly_phone_pairing",
+      "passed": true,
+      "output": "Passed: 10-minute QR window, 30-day paired-phone duration, and no extension when reopening.\nPassed: one device per QR, separate records for two phones, same-phone reconnect, and legacy overwrite API blocked."
+    },
+    {
+      "name": "admin_membership_validation",
+      "passed": true,
+      "output": "Passed: active-admin authorization, inactive-admin denial, numeric renewal and plan-change payments, and inactive-staff denial."
+    }
+  ]
+}
