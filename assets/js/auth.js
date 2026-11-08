@@ -16,6 +16,24 @@ function hideError() {
     document.getElementById('loginError').classList.add('hidden');
 }
 
+const REMEMBERED_LOGIN_KEY = 'ig_remembered_login_identifier';
+(function restoreRememberedLogin() {
+    const identifier = document.getElementById('loginEmail');
+    const remember = document.getElementById('rememberMe');
+    try {
+        const savedIdentifier = localStorage.getItem(REMEMBERED_LOGIN_KEY);
+        if (savedIdentifier && identifier && remember) {
+            identifier.value = savedIdentifier;
+            remember.checked = true;
+        }
+    } catch (error) {
+        console.warn('Could not restore the remembered login identifier:', error);
+    }
+    remember?.addEventListener('change', () => {
+        if (!remember.checked) localStorage.removeItem(REMEMBERED_LOGIN_KEY);
+    });
+})();
+
 (function showAuthRedirectMessage() {
     const params = new URLSearchParams(window.location.search);
     if (params.get('auth') === 'replaced') {
@@ -157,6 +175,7 @@ async function handleLogin(event) {
     const loginMode = email.includes('@') ? 'member' : 'admin';
     const password = document.getElementById('loginPassword').value;
     const remember = document.getElementById('rememberMe').checked;
+    if (!remember) localStorage.removeItem(REMEMBERED_LOGIN_KEY);
     if (!email || !password) {
         showError('Please fill in all fields.');
         return;
@@ -169,9 +188,6 @@ async function handleLogin(event) {
 
     try {
         const supabaseClient = window.ironGrindSupabase;
-        window.ironGrindRememberSession = remember;
-        if (remember) localStorage.setItem('ig_remember_login', '1');
-        else localStorage.removeItem('ig_remember_login');
         let result;
         if (loginMode === 'admin') {
             const { data: response, error: loginError } = await supabaseClient.functions.invoke('admin-username-login', {
@@ -277,7 +293,7 @@ async function handleLogin(event) {
                     if (logError) console.error('Could not record staff/admin sign-in:', logError);
                 } catch (logError) { console.error('Could not record staff/admin sign-in:', logError); }
             }
-            saveLoginSession(session, remember);
+            saveLoginSession(session, remember, email);
             return;
         }
 
@@ -299,14 +315,15 @@ async function handleLogin(event) {
     }
 }
 
-function saveLoginSession(session, remember) {
+function saveLoginSession(session, remember, loginIdentifier) {
     if (session.role === 'admin' && session.username) {
         const storeUnlockKey = `ig_store_unlocked:${encodeURIComponent(String(session.username).trim().toLowerCase())}`;
         localStorage.removeItem(storeUnlockKey);
     }
     localStorage.removeItem('irongrind_session');
     sessionStorage.removeItem('irongrind_session');
-    (remember ? localStorage : sessionStorage).setItem('irongrind_session', JSON.stringify(session));
+    sessionStorage.setItem('irongrind_session', JSON.stringify(session));
+    if (remember && loginIdentifier) localStorage.setItem(REMEMBERED_LOGIN_KEY, loginIdentifier);
             window.location.replace(session.role === 'admin' ? 'admin.html' : session.role === 'staff' ? 'staff.html' : 'customer.html');
 }
 // Remove plaintext passwords written by the retired browser-only login flow.
