@@ -442,18 +442,40 @@ function staffCameraErrorMessage(error) {
     if (typeof Html5Qrcode === 'undefined') return 'The QR scanner could not load. Check the internet connection and reload this page.';
     return `The camera could not start${errorName ? ` (${errorName})` : ''}. Check browser and Windows camera permissions, close other camera apps, then try again.`;
 }
+async function closeStaffCameraModal(stopCamera = true) {
+    const modal = document.getElementById('staffCameraModal');
+    modal?.classList.add('hidden');
+    const scanner = staffScanner;
+    staffScanner = null;
+    if (stopCamera && scanner) {
+        try { await scanner.stop(); } catch { /* The camera may not have started yet. */ }
+        try { scanner.clear(); } catch { /* The scanner surface may not be initialized. */ }
+    }
+    const processing = document.getElementById('staffScanProcessing');
+    if (processing) processing.hidden = true;
+}
+document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && !document.getElementById('staffCameraModal')?.classList.contains('hidden')) {
+        closeStaffCameraModal();
+    }
+});
 document.getElementById('startStaffCamera').onclick = async () => {
     if (!staffUser || staffScanner || staffBusy) return;
+    const modal = document.getElementById('staffCameraModal');
+    const modalStatus = document.getElementById('staffCameraModalStatus');
+    const processing = document.getElementById('staffScanProcessing');
+    modal?.classList.remove('hidden');
+    if (processing) processing.hidden = true;
+    if (modalStatus) modalStatus.textContent = 'Starting camera…';
     if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
-        staffStatus.textContent = 'Camera scanning needs a secure HTTPS page (or localhost) and a browser with camera support.';
+        if (modalStatus) modalStatus.textContent = 'Camera scanning needs a secure HTTPS page (or localhost) and a browser with camera support.';
         return;
     }
     if (typeof Html5Qrcode === 'undefined') {
-        staffStatus.textContent = staffCameraErrorMessage();
+        if (modalStatus) modalStatus.textContent = staffCameraErrorMessage();
         return;
     }
-    staffStatus.textContent = 'Starting the laptop camera…';
-    const scanner = new Html5Qrcode('staffCamera');
+    const scanner = new Html5Qrcode('staffCameraReader');
     staffScanner = scanner;
     let permissionStream;
     try {
@@ -465,10 +487,15 @@ document.getElementById('startStaffCamera').onclick = async () => {
         const config = { fps: 10, qrbox: { width: 240, height: 240 }, aspectRatio: 1 };
         const onDecoded = async value => {
             if (staffScanner !== scanner || staffBusy) return;
-            staffScanner = null;
+            if (processing) processing.hidden = false;
+            if (modalStatus) modalStatus.textContent = 'QR detected. Recording attendance…';
             staffBusy = true;
-            try { await scanner.stop(); } finally { staffBusy = false; }
+            try { await scanner.stop(); } catch { /* Stop the stream before saving the attendance scan. */ }
+            staffScanner = null;
+            try { scanner.clear(); } catch { /* The scanner surface may already be cleared. */ }
+            staffBusy = false;
             await recordStaffAttendance(value);
+            await closeStaffCameraModal(false);
         };
         // Match the admin scanner: ask the browser to open a camera first,
         // then start the QR decoder with that exact device ID. This avoids
@@ -510,13 +537,13 @@ document.getElementById('startStaffCamera').onclick = async () => {
         if (!started) {
             throw cameraError || new Error('The browser could not start any available camera.');
         }
-        staffStatus.textContent = 'Camera ready. Hold the member QR code in the frame.';
+        if (modalStatus) modalStatus.textContent = 'Camera is on. Point it at the member’s QR code.';
     } catch (error) {
         if (staffScanner === scanner) staffScanner = null;
         try { await scanner.stop(); } catch { /* No active stream to stop. */ }
         try { scanner.clear(); } catch { /* Scanner UI may not have initialized. */ }
         console.warn('Staff QR camera could not start:', error);
-        staffStatus.textContent = staffCameraErrorMessage(error);
+        if (modalStatus) modalStatus.textContent = staffCameraErrorMessage(error);
     } finally { permissionStream?.getTracks().forEach(track => track.stop()); }
 };
 document.getElementById('staffLogout').onclick = async () => {
