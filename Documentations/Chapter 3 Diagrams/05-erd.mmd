@@ -4,7 +4,7 @@
     auth_users |o--o{ public_attendance : checked_out_by
     public_members ||--o{ public_attendance : member_id
     auth_users |o--o{ public_attendance : recorded_by
-    public_membership_applications |o--o{ public_members : application_id
+    public_membership_applications |o--o| public_members : application_id
     auth_users |o--o| public_members : auth_user_id
     auth_users |o--o{ public_membership_applications : auth_user_id
     public_members |o--o{ public_membership_applications : member_id
