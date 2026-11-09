@@ -24,15 +24,15 @@ const actors=[
 let leftLane=0,rightLane=0;
 for(const actor of actors){
  actor.id=vertex('', 'group;',actor.x,actor.y,90,160);
- vertex('','ellipse;fillColor=#e5e7eb;strokeColor=#9ca3af;strokeWidth=1;',0,25,90,90,actor.id);
- vertex('','ellipse;fillColor=#64748b;strokeColor=none;',31,40,28,28,actor.id);
- vertex('','rounded=1;arcSize=80;fillColor=#64748b;strokeColor=none;',17,80,56,27,actor.id);
+ vertex('','ellipse;fillColor=#64748b;strokeColor=none;',25,30,40,40,actor.id);
+ vertex('','ellipse;fillColor=#64748b;strokeColor=none;',5,80,80,40,actor.id);
+ vertex('','shape=trapezoid;direction=south;size=0.17;fillColor=#64748b;strokeColor=none;',10,100,70,44,actor.id);
  const cx=actor.x+45;
- shapes.push(`<circle cx="${cx}" cy="${actor.y+70}" r="45" fill="#e5e7eb" stroke="#9ca3af"/><circle cx="${cx}" cy="${actor.y+54}" r="14" fill="#64748b"/><rect x="${actor.x+17}" y="${actor.y+80}" width="56" height="27" rx="13" fill="#64748b"/>`);
+ shapes.push(`<circle cx="${cx}" cy="${actor.y+50}" r="20" fill="#64748b"/><ellipse cx="${cx}" cy="${actor.y+100}" rx="40" ry="20" fill="#64748b"/><path d="M ${actor.x+10} ${actor.y+100} H ${actor.x+80} L ${actor.x+68} ${actor.y+144} H ${actor.x+22} Z" fill="#64748b"/>`);
  text(actor.name,actor.x-95,actor.y+180,280,28);
  actor.useCases.forEach((ui,k)=>{
   const u=uses[ui],left=actor.side==='left';
-  const sx=actor.x+(left?90:0),sy=actor.y+70;
+  const sx=actor.x+(left?85:5),sy=actor.y+100;
   const offset=left?(actor.name==='Member / Applicant'?-17:17):0;
   const ey=u.y+70+offset;
   const ex=left?u.x+250-250*Math.sqrt(1-(offset/70)**2):u.x+500;
@@ -40,7 +40,7 @@ for(const actor of actors){
   const points=[[sx,sy],[left?780:1420,ey],[ex,ey]];
   const id='e'+edges.length;
   const way=points.slice(1,-1).map(([x,y])=>`<mxPoint x="${x}" y="${y}"/>`).join('');
-  cells.push(`<mxCell id="${id}" style="edgeStyle=none;startArrow=none;endArrow=none;strokeColor=#000000;strokeWidth=1.6;exitX=${left?1:0};exitY=${70/160};entryX=${(ex-u.x)/u.w};entryY=${(ey-u.y)/u.h};exitPerimeter=0;entryPerimeter=0;" edge="1" parent="1" source="${actor.id}" target="${u.id}"><mxGeometry relative="1" as="geometry"><Array as="points">${way}</Array></mxGeometry></mxCell>`);
+  cells.push(`<mxCell id="${id}" style="edgeStyle=none;startArrow=none;endArrow=none;strokeColor=#000000;strokeWidth=1.6;exitX=${left?85/90:5/90};exitY=${100/160};entryX=${(ex-u.x)/u.w};entryY=${(ey-u.y)/u.h};exitPerimeter=0;entryPerimeter=0;" edge="1" parent="1" source="${actor.id}" target="${u.id}"><mxGeometry relative="1" as="geometry"><Array as="points">${way}</Array></mxGeometry></mxCell>`);
   edges.push({actor:actor.name,useCase:u.label,points});
  });
 }
