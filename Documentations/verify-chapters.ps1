@@ -1,12 +1,13 @@
+param([ValidateSet(1,2,3)][int[]]$Chapters=@(1,2,3))
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $results=[Collections.Generic.List[string]]::new()
-foreach($chapter in 1,2,3){
+foreach($chapter in $Chapters){
  $zip=[IO.Compression.ZipFile]::OpenRead((Join-Path $PSScriptRoot "Chapter $chapter.docx"))
  try{
   $reader=[IO.StreamReader]::new($zip.GetEntry('word/document.xml').Open());[xml]$doc=$reader.ReadToEnd();$reader.Dispose()
   $ns=[Xml.XmlNamespaceManager]::new($doc.NameTable);$ns.AddNamespace('w','http://schemas.openxmlformats.org/wordprocessingml/2006/main');$ns.AddNamespace('a','http://schemas.openxmlformats.org/drawingml/2006/main');$ns.AddNamespace('r','http://schemas.openxmlformats.org/officeDocument/2006/relationships')
-  $texts=@($doc.SelectNodes('//w:t',$ns)|ForEach-Object InnerText);$all=$texts -join ' '
+  $all=(@($doc.SelectNodes('//w:p',$ns)|ForEach-Object {($_.SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join ''})) -join ' '
   if($all -match 'Only administrators review online|do not grant staff permission to review online|sent to the Admin for review|awaits administrator review|two private supporting tables'){throw "Chapter $chapter contains an outdated permission or schema statement."}
   $garbled=[string][char]0xE2+[char]0x20AC
   if($all.Contains($garbled) -or $all.Contains([string][char]0xFFFD)){throw "Chapter $chapter contains garbled punctuation."}
@@ -40,6 +41,20 @@ foreach($chapter in 1,2,3){
    foreach($url in @('https://supabase.com/docs/guides/platform','https://supabase.com/docs/guides/deployment/going-into-prod','https://supabase.com/docs/guides/database/postgres/row-level-security','https://supabase.com/docs/guides/auth/sessions','https://doi.org/10.1504/IJBIS.2025.145551','https://doi.org/10.28945/5650','https://doi.org/10.46932/sfjdv6n4-030','https://www.iso.org/standard/83389.html')){if(-not $all.Contains($url)){throw "Chapter 2 is missing a reference-list source: $url"}}
    if($all.Contains('Y Combinator (n.d.)') -or $all.Contains('Additional Technical References')){throw 'Chapter 2 contains a superseded citation or heading.'}
    foreach($url in @('https://doi.org/10.1504/IJBIS.2025.145551','https://doi.org/10.28945/5650','https://doi.org/10.46932/sfjdv6n4-030')){if(([regex]::Matches($all,[regex]::Escape($url))).Count -ne 1){throw "Chapter 2 has a duplicate or missing DOI reference: $url"}}
+   $refHeading=@($doc.SelectNodes('//w:body/w:p',$ns)|Where-Object {(($_.SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim() -ceq 'REFERENCES'})
+   if($refHeading.Count -ne 1 -or $refHeading[0].SelectSingleNode('w:pPr/w:jc',$ns).val -ne 'center' -or -not $refHeading[0].SelectSingleNode('.//w:rPr/w:b',$ns)){throw 'Chapter 2 reference heading is not centered, bold REFERENCES.'}
+   $refEntries=@($refHeading[0].SelectNodes('following-sibling::w:p',$ns)|Where-Object {(($_.SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim()})
+   $refTexts=@($refEntries|ForEach-Object {($_.SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join ''})
+   $sorted=@($refTexts|Sort-Object { $_.ToLowerInvariant() })
+   if($refTexts.Count -ne 14 -or ($refTexts -join "`n") -cne ($sorted -join "`n")){throw 'Chapter 2 references are not the expected fourteen alphabetized entries.'}
+   $italicCount=0
+   foreach($ref in $refEntries){
+    $indent=$ref.SelectSingleNode('w:pPr/w:ind',$ns)
+    if($indent.GetAttribute('left',$ns.LookupNamespace('w')) -ne '720' -or $indent.GetAttribute('hanging',$ns.LookupNamespace('w')) -ne '720'){throw 'Chapter 2 reference hanging indent is incorrect.'}
+    foreach($run in $ref.SelectNodes('w:r[w:rPr/w:i]',$ns)){$italicCount++;$italicText=($run.SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '';if($italicText -match 'https?://'){throw 'Chapter 2 reference URL is incorrectly italicized.'}}
+   }
+   if($italicCount -ne 13){throw 'Chapter 2 is missing an expected italic reference title or journal/volume span.'}
+   $results.Add('Chapter 2: reference heading, fourteen-entry alphabetical order, hanging indents, thirteen italic spans, and Supabase source labels verified.')
   }
   if($chapter -eq 3){
    foreach($phrase in @('Recorded verification as of November 8, 2026 comprised forty automated check groups','A separate performance evaluation remains necessary.','The Create Staff Account form collects first name','Phone pairing capacity counts both paired devices')){if(-not $all.Contains($phrase)){throw "Chapter 3 is missing a verified implementation statement: $phrase"}}
@@ -56,5 +71,6 @@ foreach($chapter in 1,2,3){
  }finally{$zip.Dispose()}
 }
 [void][IO.Directory]::CreateDirectory((Join-Path $PSScriptRoot 'Review Evidence'))
-$results|Set-Content -Encoding UTF8 (Join-Path $PSScriptRoot 'Review Evidence/Chapter Review Verification.txt')
+$report=if($Chapters.Count -eq 3){'Chapter Review Verification.txt'}else{'Chapter '+($Chapters -join '-')+' Review Verification.txt'}
+$results|Set-Content -Encoding UTF8 (Join-Path $PSScriptRoot ('Review Evidence/'+$report))
 $results

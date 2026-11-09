@@ -21,7 +21,8 @@ try {
   }
   function Run($p,$text,$italic=$false,$bold=$false){
    if(-not $text.Length){return};$r=$doc.CreateElement('w','r',$w);[void]$r.AppendChild((FontProperties $italic $bold));$t=$doc.CreateElement('w','t',$w)
-   [void]$t.SetAttribute('space','http://www.w3.org/XML/1998/namespace','preserve');$t.InnerText=$text;[void]$r.AppendChild($t);[void]$p.AppendChild($r)
+   $space=$doc.CreateAttribute('xml','space','http://www.w3.org/XML/1998/namespace');$space.Value='preserve';[void]$t.Attributes.Append($space)
+   $t.InnerText=$text;[void]$r.AppendChild($t);[void]$p.AppendChild($r)
   }
   $paragraphs=@($doc.SelectNodes('//w:body/w:p',$ns));$heading=$null;$entries=[Collections.Generic.List[object]]::new();$body=[Collections.Generic.List[object]]::new()
   foreach($p in $paragraphs){$text=(TextOf $p).Trim();if($text -ieq 'References'){$heading=$p;continue};if(-not $heading){$body.Add($p)}elseif($text){$entries.Add([pscustomobject]@{Paragraph=$p;Text=$text;Italic=''})}}
