@@ -7,4 +7,4 @@ Older ERD exports, including the previous PDFs, are in `_Archive/Previous ERD Ve
 
 `_Sources` contains generator data, not a separate diagram version. Other numbered figures belong to other sections of Chapter 3.
 
-Chapter 3.docx still contains its previously embedded figure; this cleanup does not replace that figure.
+Chapter 3.docx now embeds this current SVG figure, with a PNG compatibility preview and matching explanation.

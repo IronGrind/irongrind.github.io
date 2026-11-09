@@ -10,7 +10,7 @@
 
 Previous ERD versions are in `Chapter 3 Diagrams/_Archive/Previous ERD Versions/`. Generator data is in `Chapter 3 Diagrams/_Sources/`.
 
-Chapter 3 still contains its previously embedded ERD. Organizing these files does not replace that figure.
+Chapter 3 now embeds the current SVG ERD, with a PNG compatibility preview, revised relationship explanations, and the complete fifteen-table data dictionary.
 
 From the project root, verify the chapters with:
 
