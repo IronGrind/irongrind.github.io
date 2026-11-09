@@ -65,15 +65,27 @@ async function loadStaffAccounts() {
             const detailsPanel = document.createElement('div');
             detailsPanel.className = 'staff-account-details';
             detailsPanel.hidden = true;
-            detailsPanel.textContent = [
-                account.email,
-                account.phone_number,
-                account.gender,
-                account.created_at ? `Created ${new Date(account.created_at).toLocaleDateString()}` : '',
-            ].filter(Boolean).join(' · ');
+            const fields = document.createElement('dl');
+            const created = account.created_at ? new Date(account.created_at) : null;
+            for (const [label, value] of [
+                ['Email', account.email],
+                ['Mobile number', account.phone_number],
+                ['Gender', account.gender],
+                ['Created', created && !Number.isNaN(created.getTime()) ? created.toLocaleDateString('en-PH', { timeZone: 'Asia/Manila' }) : ''],
+            ]) {
+                const field = document.createElement('div');
+                const title = document.createElement('dt');
+                title.textContent = label;
+                const content = document.createElement('dd');
+                content.textContent = value || 'Not provided';
+                field.append(title, content);
+                fields.append(field);
+            }
+            detailsPanel.append(fields);
             details.addEventListener('click', () => {
                 detailsPanel.hidden = !detailsPanel.hidden;
                 details.setAttribute('aria-expanded', String(!detailsPanel.hidden));
+                details.textContent = detailsPanel.hidden ? 'Details' : 'Hide details';
             });
 
             const toggle = document.createElement('button');

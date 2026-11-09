@@ -496,6 +496,16 @@ label:has(input[name="wiPlan"]:checked) {
 .login-form-panel .form-group input { width: 100%; padding: 14px 16px; background: #101010; border: 1px solid #282828; border-radius: 14px; color: #e8edf5; font-size: 0.95rem; outline: none; font-family: inherit; }
 .password-wrapper { position: relative; }
 .password-wrapper input { padding-right: 48px !important; }
+.password-visibility-wrapper { width:100%; min-width:0; }
+.staff-account-details { grid-column:1 / -1; border-top:1px solid #8884; padding-top:14px; }
+.staff-account-details[hidden] { display:none !important; }
+.staff-account-details dl { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px 20px; margin:0; }
+.staff-account-details dt { font-size:.75rem; opacity:.7; margin-bottom:4px; }
+.staff-account-details dd { margin:0; font-size:.88rem; overflow-wrap:anywhere; }
+@media(max-width:520px) { .staff-account-details dl { grid-template-columns:minmax(0,1fr); } }
+.password-input-group > .password-visibility-wrapper { flex:1 1 0; width:auto; }
+.password-visibility-wrapper .toggle-password { min-height:36px; padding:0; color:inherit; opacity:.75; display:grid; place-items:center; }
+.password-visibility-wrapper .toggle-password:hover { opacity:1; background:#8882; }
 .toggle-password { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: transparent; border: none; color: #6a748b; cursor: pointer; font-size: 1rem; width: 36px; height: 36px; border-radius: 10px; }
 .form-options { margin-bottom: 20px; font-size: 0.8rem; display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .remember-me { display: flex; align-items: center; gap: 8px; color: #8b95a9; cursor: pointer; }
@@ -2012,6 +2022,34 @@ html[data-dashboard-theme="light"] .product-photo-dialog.photo-bubble .photo-lig
 @keyframes photo-bubble-enter { from { opacity: 0; transform: scale(.95) translateY(8px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .product-photo-dialog.photo-bubble { animation: none; } }
 .password-strength-meter { display:block; width:100%; height:12px; margin:8px 0 4px; }
+/* Shared dashboard interaction and narrow-screen form refinements. */
+body.dashboard-body :is(button, a, summary, input, select, textarea):focus-visible {
+    outline:3px solid #d44b4b; outline-offset:3px;
+}
+body.dashboard-body .form-group :is(input:not([type="checkbox"]):not([type="radio"]), select, textarea) { min-height:44px; }
+body.dashboard-body .form-group label { line-height:1.45; }
+body.dashboard-body .form-group :is(input, textarea)[readonly] { cursor:default; border-style:dashed; }
+body.dashboard-body .form-group :is(input, select, textarea):user-invalid { border-color:#df6565; }
+body.dashboard-body :is(.btn-sm, .btn-primary, .btn-danger, .btn-submit, .btn-restock, .btn-edit, .btn-delete) { min-height:40px; line-height:1.35; }
+body.dashboard-body button:disabled { opacity:.6; cursor:not-allowed; }
+body.dashboard-body button.is-loading { cursor:wait; }
+body.dashboard-body .btn-danger { background:transparent; border:1px solid #cf5757; color:#ef9696; }
+body.dashboard-body .btn-danger:hover { background:#8b0000; color:#fff; }
+html[data-dashboard-theme="light"] body.dashboard-body .btn-danger { background:#fff5f5; border-color:#b93535; color:#9b2020; }
+body.dashboard-body .panel-header { flex-wrap:wrap; gap:12px; }
+body.dashboard-body :is(.table-scroll, #attendanceLogTable, #dashboardAttendanceTable, #salesTable) { overscroll-behavior-x:contain; }
+.phone-scanner-install-action { margin:18px 0 24px; }
+.qr-camera-modal .paired-phones-section { padding-top:18px; border-top:1px solid #8884; }
+.qr-camera-modal .paired-phone-row { gap:12px; }
+@media(max-width:640px) {
+    body.dashboard-body .form-group :is(input, select, textarea) { font-size:16px; }
+    body.dashboard-body .modal-actions { flex-direction:column; align-items:stretch; }
+    body.dashboard-body .modal-actions > button { flex:0 0 auto !important; min-height:44px; width:100%; }
+    body.dashboard-body .panel-header > :is(input, select) { width:100%; min-width:0; }
+    .qr-camera-modal .paired-phone-row { flex-wrap:wrap; }
+    .qr-camera-modal .paired-phone-row .btn-danger { min-height:44px; }
+    .phone-scanner-install-action .scanner-install-link { width:100%; }
+}
 .scanner-install-card { margin:16px 0 24px; padding:16px; border:1px solid var(--border-color, #303038); border-radius:14px; }
 .inventory-toolbar { display:grid; grid-template-columns:minmax(0,2fr) minmax(160px,1fr); gap:16px; margin:20px 0 8px; }
 .inventory-result-count { font-size:.8rem; opacity:.7; margin-bottom:20px; }

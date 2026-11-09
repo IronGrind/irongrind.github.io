@@ -131,7 +131,42 @@
             }, 400);
         });
     }
+    function attachPasswordVisibility(input) {
+        if (input.type !== 'password' || input.dataset.visibilityReady) return;
+        input.dataset.visibilityReady = 'true';
+        let wrapper = input.closest('.password-wrapper');
+        if (wrapper?.querySelector('.toggle-password')) return;
+        if (!wrapper) {
+            wrapper = document.createElement('div');
+            wrapper.className = 'password-wrapper password-visibility-wrapper';
+            input.parentNode.insertBefore(wrapper, input);
+            wrapper.appendChild(input);
+        }
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'toggle-password';
+        if (input.id) button.setAttribute('aria-controls', input.id);
+        function conceal() {
+            input.type = 'password';
+            button.setAttribute('aria-label', 'Show password');
+            button.setAttribute('aria-pressed', 'false');
+            button.innerHTML = '<i class="fas fa-eye" aria-hidden="true"></i>';
+        }
+        conceal();
+        button.addEventListener('click', () => {
+            if (input.type === 'text') conceal();
+            else {
+                input.type = 'text';
+                button.setAttribute('aria-label', 'Hide password');
+                button.setAttribute('aria-pressed', 'true');
+                button.innerHTML = '<i class="fas fa-eye-slash" aria-hidden="true"></i>';
+            }
+        });
+        input.form?.addEventListener('reset', conceal);
+        wrapper.appendChild(button);
+    }
     function enhance(root = document) {
+        root.querySelectorAll('input[type="password"]').forEach(attachPasswordVisibility);
         root.querySelectorAll('input').forEach(attachPasswordGuidance);
         root.querySelectorAll('input').forEach(attachUsernameGuidance);
         root.querySelectorAll('.product-img-wrap img, .product-photo-preview img, .staff-product-photo').forEach(img => {
