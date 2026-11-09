@@ -30,6 +30,29 @@ foreach($n in @($nodes[($index+1)],$nodes[($index+2)])){
  $n.SetAttribute('y1',[string]([double]$n.GetAttribute('y1')+14))
  $n.SetAttribute('y2',[string]([double]$n.GetAttribute('y2')+14))
 }
+# Match the user's Gane-Sarson palette; use FK* rather than color to identify Auth references.
+foreach($n in @($root.ChildNodes)){
+ if($n.LocalName -eq 'text'){
+  if($n.InnerText -eq 'FK' -and $n.PreviousSibling.LocalName -eq 'rect' -and $n.PreviousSibling.GetAttribute('fill') -eq '#7c3aed'){$n.InnerText='FK*'}
+  if($n.InnerText -eq 'Target of every purple FK badge'){$n.InnerText='Target of every FK* badge'}
+ }
+}
+foreach($n in @($root.ChildNodes)){
+ if($n.LocalName -eq 'text'){$n.SetAttribute('fill','#000000')}
+ elseif($n.LocalName -eq 'rect'){
+  if($n.HasAttribute('opacity')){$n.SetAttribute('opacity','0')}
+  $fill=$n.GetAttribute('fill')
+  if($fill -and $fill -notin @('#fff','#ffffff','white','none')){
+   $n.SetAttribute('fill',$(if([double]$n.GetAttribute('height') -eq 11){'#d5e2f5'}else{'#ffffff'}))
+  }
+  if($n.HasAttribute('stroke')){$n.SetAttribute('stroke','#000000')}
+ }elseif($n.LocalName -eq 'path'){
+  if($n.GetAttribute('fill') -ne 'none'){$n.SetAttribute('fill','#d5e2f5')}
+  if($n.HasAttribute('stroke')){$n.SetAttribute('stroke','#000000')}
+ }elseif($n.LocalName -in @('line','circle')){
+  if($n.HasAttribute('stroke')){$n.SetAttribute('stroke','#000000')}
+ }
+}
 $target=Join-Path $out '05-gym-erd-editable.svg'
 $doc.Save($target)
 $elements=@(foreach($n in $root.ChildNodes){
