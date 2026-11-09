@@ -7,6 +7,7 @@ $model=Get-Content -Raw -LiteralPath (Join-Path $out 'schema-visualizer.json')|C
 if($PublicOnly){$model.Tables=@($model.Tables|Where-Object Name -Like 'public.*');$model.Relations=@($model.Relations|Where-Object Child -Like 'public.*')}
 $expectedTables=if($PublicOnly){13}else{16};$expectedLinks=if($PublicOnly){18}else{21};$stem=if($PublicOnly){'05-public-schema-erd'}else{'05-erd-one-page'}
 if($SimpleStyle){$stem='05-public-schema-erd-simple'}
+if($SimpleStyle){$model.Relations=@($model.Relations|Where-Object Parent -ne 'auth.users');$expectedLinks=9}
 $tables=@{};foreach($table in $model.Tables){$tables[$table.Name]=$table}
 $tables['auth.users']=[pscustomobject]@{Name='auth.users';Columns=@([pscustomobject]@{Name='id';Type='uuid';Required=$true;Keys=@('PK')})}
 $width=3508;$height=2480;$cw=740;$hh=86;$rh=46
@@ -40,10 +41,30 @@ function LinePath($points,$segments,$color,$tooltip){
  $primitives.Add(@{Kind='path';Points=$points;Segments=$segments;Color=$color})
  $portIndex=0
  foreach($point in @($points[0],$points[$points.Count-1])){
+  if($SimpleStyle){continue}
   $radius=if($portIndex -eq 0){1.3}else{3.5};$portIndex++
   $brush=[Drawing.SolidBrush]::new([Drawing.ColorTranslator]::FromHtml($color));try{$g.FillEllipse($brush,($point[0]-$radius),($point[1]-$radius),(2*$radius),(2*$radius))}finally{$brush.Dispose()}
   $svg.Add('<circle cx="'+$point[0]+'" cy="'+$point[1]+'" r="'+$radius+'" fill="'+$color+'"/>');$primitives.Add(@{Kind='dot';X=$point[0];Y=$point[1];Radius=$radius;Color=$color})
  }
+}
+function SymbolLine($a,$b){
+ $pen=[Drawing.Pen]::new([Drawing.ColorTranslator]::FromHtml('#475569'),3.2)
+ try{$g.DrawLine($pen,[single]$a[0],[single]$a[1],[single]$b[0],[single]$b[1])}finally{$pen.Dispose()}
+ $svg.Add('<path d="M '+($a -join ' ')+' L '+($b -join ' ')+'" fill="none" stroke="#475569" stroke-width="3.2"/>')
+ $primitives.Add(@{Kind='line';Points=@($a,$b);Color='#475569'})
+}
+function Cardinality($point,$toward,$many,$optional){
+ $dx=[Math]::Sign($toward[0]-$point[0]);$dy=[Math]::Sign($toward[1]-$point[1]);$nx=-$dy;$ny=$dx
+ if($many){
+  foreach($side in @(-1,1)){SymbolLine @(($point[0]+$nx*9*$side),($point[1]+$ny*9*$side)) @(($point[0]+$dx*18),($point[1]+$dy*18))}
+ }else{SymbolLine @(($point[0]+$dx*9+$nx*9),($point[1]+$dy*9+$ny*9)) @(($point[0]+$dx*9-$nx*9),($point[1]+$dy*9-$ny*9))}
+ $cx=$point[0]+$dx*29;$cy=$point[1]+$dy*29
+ if($optional){
+  $pen=[Drawing.Pen]::new([Drawing.ColorTranslator]::FromHtml('#475569'),3.2)
+  try{$g.FillEllipse([Drawing.Brushes]::White,[single]($cx-6),[single]($cy-6),12,12);$g.DrawEllipse($pen,[single]($cx-6),[single]($cy-6),12,12)}finally{$pen.Dispose()}
+  $svg.Add('<circle cx="'+$cx+'" cy="'+$cy+'" r="6" fill="white" stroke="#475569" stroke-width="3.2"/>')
+  $primitives.Add(@{Kind='circle';X=$cx;Y=$cy;Radius=6;Fill='#ffffff';Stroke='#475569';LineWidth=3.2})
+ }else{SymbolLine @(($cx+$nx*9),($cy+$ny*9)) @(($cx-$nx*9),($cy-$ny*9))}
 }
 try {
  $svg.Add('<svg xmlns="http://www.w3.org/2000/svg" width="297mm" height="210mm" viewBox="0 0 3508 2480"><rect width="3508" height="2480" fill="white"/>')
@@ -170,6 +191,11 @@ try {
   }
   $route.Segments=@($visible);$r=$route.Relation
   LinePath $route.Points $route.Segments $palette[$route.Index%$palette.Count] ($r.Parent+'.'+$r.ParentField+' -> '+$r.Child+'.'+$r.Field+'; ON DELETE '+$r.Delete)
+  if($SimpleStyle){
+   $fk=@($tables[$r.Child].Columns|Where-Object Name -eq $r.Field)[0]
+   Cardinality $route.Points[0] $route.Points[1] $false (-not $fk.Required)
+   Cardinality $route.Points[-1] $route.Points[-2] ('UQ' -notin $fk.Keys -and 'PK' -notin $fk.Keys) $true
+  }
  }
  foreach($card in ($cards.Values|Sort-Object X,Y)){
   $x=$card.X;$y=$card.Y;$schema,$name=$card.Name -split '\.',2;$fill=if($schema -eq 'private'){'#ece8f7'}elseif($schema -eq 'auth'){'#e2e8f0'}else{'#dbeafe'}
@@ -180,7 +206,9 @@ try {
   for($i=0;$i -lt $card.Columns.Count;$i++){
    $col=$card.Columns[$i];$ry=$y+$hh+$rh*$i
    if($i%2 -eq 0){Box ($x+1) $ry ($cw-2) $rh '#f7f9fc' '#f7f9fc'}
-   Text ((@('PK','FK','UQ')|Where-Object {$_ -in $col.Keys})-join '/') ($x+10) ($ry+11) 20 '#1d4ed8' $true
+   $keyText=(@('PK','FK','UQ')|Where-Object {$_ -in $col.Keys})-join '/'
+   if($SimpleStyle -and 'FK' -in $col.Keys -and -not @($model.Relations|Where-Object {$_.Child -eq $card.Name -and $_.Field -eq $col.Name}).Count){$keyText=$keyText.Replace('FK','AUTH')}
+   Text $keyText ($x+10) ($ry+11) 20 '#1d4ed8' $true
    Text $col.Name ($x+108) ($ry+6) $(if($PublicOnly){35}else{30})
    $typeText=$col.Type+$(if($col.Required){' *'}else{''});$typeSize=if($PublicOnly){25}else{23}
    $measureFont=[Drawing.Font]::new('Arial',$typeSize,[Drawing.FontStyle]::Regular,[Drawing.GraphicsUnit]::Pixel)
@@ -188,8 +216,8 @@ try {
    Text $typeText ($x+565) ($ry+10) $typeSize '#52657b'
   }
  }
- Text 'PK = primary key   FK = foreign key   UQ = unique constraint/index   * = NOT NULL. Lines connect referenced keys to foreign-key columns.' 40 2300 28
- Text $(if($PublicOnly){'12 public tables + auth.users reference; 18 public foreign keys. All PK/FK columns are shown; other attributes are selected for readability.'}else{'15 application tables + auth.users reference; 21 declared foreign keys. All key columns are shown; other attributes are selected for readability.'}) 40 2345 28 '#52657b'
+ Text $(if($SimpleStyle){'PK = primary key   FK = foreign key   AUTH = FK to auth.users   UQ = unique   * = NOT NULL. Circle = zero; bar = one; fork = many.'}else{'PK = primary key   FK = foreign key   UQ = unique constraint/index   * = NOT NULL. Lines connect referenced keys to foreign-key columns.'}) 40 2300 28
+ Text $(if($SimpleStyle){'12 public tables; 18 foreign keys: 9 drawn relationships and 9 AUTH references. All PK/FK fields are shown; other fields are selected.'}elseif($PublicOnly){'12 public tables + auth.users reference; 18 public foreign keys. All PK/FK columns are shown; other attributes are selected for readability.'}else{'15 application tables + auth.users reference; 21 declared foreign keys. All key columns are shown; other attributes are selected for readability.'}) 40 2345 28 '#52657b'
  Text $(if($PublicOnly){'All 162 public fields and the 3 private tables remain in the data dictionary. Gaps at crossings indicate separate links, not junctions.'}else{'Full 174-column definitions: see the data dictionary. Gaps at line crossings indicate separate relationships, not junctions.'}) 40 2390 28 '#52657b'
  Text 'Source: project pgAdmin schema export and checked migration baseline. Layout: A4 landscape, one page.' 40 2433 25 '#52657b'
  $svg.Add('</svg>')
