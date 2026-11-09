@@ -1,8 +1,8 @@
 param([string]$DocumentPath=(Join-Path $PSScriptRoot 'Chapter 3.docx'),[switch]$SeparatePanels)
 $ErrorActionPreference='Stop'
 if(-not $SeparatePanels){
- & (Join-Path $PSScriptRoot 'build-core-business-erd.ps1')
- & (Join-Path $PSScriptRoot 'update-core-business-erd.ps1') -DocumentPath $DocumentPath
+ & (Join-Path $PSScriptRoot 'build-erd-one-page.ps1') -PublicOnly
+ & (Join-Path $PSScriptRoot 'update-public-schema-erd.ps1') -DocumentPath $DocumentPath
  return
 }
 Add-Type -AssemblyName System.IO.Compression

@@ -172,13 +172,16 @@ try {
   $x=$card.X;$y=$card.Y;$schema,$name=$card.Name -split '\.',2;$fill=if($schema -eq 'private'){'#ece8f7'}elseif($schema -eq 'auth'){'#e2e8f0'}else{'#dbeafe'}
   Box $x $y $cw $card.H '#ffffff';Box $x $y $cw $hh $fill
   Text $(if($schema -eq 'auth'){'auth | managed reference'}else{$schema}) ($x+15) ($y+6) 24 '#52657b'
-  Text $name ($x+15) ($y+38) 28 '#172b46' $true
+  Text $name ($x+15) ($y+38) $(if($PublicOnly){32}else{28}) '#172b46' $true
   for($i=0;$i -lt $card.Columns.Count;$i++){
    $col=$card.Columns[$i];$ry=$y+$hh+$rh*$i
    if($i%2 -eq 0){Box ($x+1) $ry ($cw-2) $rh '#f7f9fc' '#f7f9fc'}
-   Text ((@($col.Keys)|Sort-Object)-join '/') ($x+10) ($ry+11) 20 '#1d4ed8' $true
-   Text $col.Name ($x+108) ($ry+6) 30
-   Text ($col.Type+$(if($col.Required){' *'}else{''})) ($x+565) ($ry+10) 23 '#52657b'
+   Text ((@('PK','FK','UQ')|Where-Object {$_ -in $col.Keys})-join '/') ($x+10) ($ry+11) 20 '#1d4ed8' $true
+   Text $col.Name ($x+108) ($ry+6) $(if($PublicOnly){35}else{30})
+   $typeText=$col.Type+$(if($col.Required){' *'}else{''});$typeSize=if($PublicOnly){25}else{23}
+   $measureFont=[Drawing.Font]::new('Arial',$typeSize,[Drawing.FontStyle]::Regular,[Drawing.GraphicsUnit]::Pixel)
+   while($g.MeasureString($typeText,$measureFont).Width -gt $cw-575){$measureFont.Dispose();$typeSize--;$measureFont=[Drawing.Font]::new('Arial',$typeSize,[Drawing.FontStyle]::Regular,[Drawing.GraphicsUnit]::Pixel)};$measureFont.Dispose()
+   Text $typeText ($x+565) ($ry+10) $typeSize '#52657b'
   }
  }
  Text 'PK = primary key   FK = foreign key   UQ = unique constraint/index   * = NOT NULL. Lines connect referenced keys to foreign-key columns.' 40 2300 28
