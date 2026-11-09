@@ -1,0 +1,53 @@
+{
+  "functions": [
+    "User Login",
+    "Membership Application",
+    "User Management",
+    "Renewals",
+    "QR Attendance",
+    "Product & Inventory",
+    "Sales",
+    "Generate Reports",
+    "Activity Logs"
+  ],
+  "actors": [
+    {
+      "name": "Member / Applicant",
+      "functions": [
+        "User Login",
+        "Membership Application",
+        "User Management",
+        "Renewals",
+        "QR Attendance",
+        "Product & Inventory"
+      ]
+    },
+    {
+      "name": "Authorized Staff",
+      "functions": [
+        "User Login",
+        "Membership Application",
+        "User Management",
+        "Renewals",
+        "QR Attendance",
+        "Product & Inventory",
+        "Sales"
+      ]
+    },
+    {
+      "name": "Administrator",
+      "functions": [
+        "User Login",
+        "Membership Application",
+        "User Management",
+        "Renewals",
+        "QR Attendance",
+        "Product & Inventory",
+        "Sales",
+        "Generate Reports",
+        "Activity Logs"
+      ]
+    }
+  ],
+  "associationCount": 22
+}
