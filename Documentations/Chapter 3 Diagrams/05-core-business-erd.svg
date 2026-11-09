@@ -68,7 +68,7 @@
 <text x="836.11930847168" y="215" font-family="Arial, sans-serif" font-size="26" font-weight="700">members</text>
 <text x="660" y="264" font-family="Arial, sans-serif" font-size="26" font-weight="400">id (PK)</text>
 <text x="1000" y="261" font-family="Arial, sans-serif" font-size="21" font-weight="400">uuid</text>
-<text x="660" y="306" font-family="Arial, sans-serif" font-size="26" font-weight="400">application_id (UQ,FK)</text>
+<text x="660" y="306" font-family="Arial, sans-serif" font-size="26" font-weight="400">application_id (FK,UQ)</text>
 <text x="1000" y="303" font-family="Arial, sans-serif" font-size="21" font-weight="400">uuid</text>
 <text x="660" y="348" font-family="Arial, sans-serif" font-size="26" font-weight="400">full_name</text>
 <text x="1000" y="345" font-family="Arial, sans-serif" font-size="21" font-weight="400">varchar</text>

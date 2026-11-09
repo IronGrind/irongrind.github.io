@@ -75,7 +75,7 @@ try{
   $font=[Drawing.Font]::new('Arial',26,[Drawing.FontStyle]::Bold,[Drawing.GraphicsUnit]::Pixel);$measure=$g.MeasureString($card.Name,$font);$font.Dispose()
   Text $card.Name ($x+($cw-$measure.Width)/2) ($y+9) 26 $true
   for($i=0;$i -lt $card.Columns.Count;$i++){
-   $col=$card.Columns[$i];$keys=@($col.Keys|Where-Object {$_ -in @('PK','FK','UQ')})
+   $col=$card.Columns[$i];$keys=@(@('PK','FK','UQ')|Where-Object {$_ -in $col.Keys})
    $label=$col.Name+$(if($keys.Count){' ('+($keys-join ',')+')'}else{''})
    $size=26;$font=[Drawing.Font]::new('Arial',$size,[Drawing.FontStyle]::Regular,[Drawing.GraphicsUnit]::Pixel)
    while($g.MeasureString($label,$font).Width -gt 320){$font.Dispose();$size--;$font=[Drawing.Font]::new('Arial',$size,[Drawing.FontStyle]::Regular,[Drawing.GraphicsUnit]::Pixel)};$font.Dispose()

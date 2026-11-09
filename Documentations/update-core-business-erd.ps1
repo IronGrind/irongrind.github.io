@@ -46,6 +46,7 @@ Check 'private.account_sessions' 'session_scope' 'account_sessions_scope_check' 
 $work=Join-Path ([IO.Path]::GetTempPath()) ('chapter3-core-erd-'+[guid]::NewGuid().ToString('N')+'.docx')
 Copy-Item -LiteralPath $DocumentPath -Destination $work
 try{
+ & (Join-Path $PSScriptRoot 'fit-core-erd-page.ps1') -DocumentPath $work
  $zip=[IO.Compression.ZipArchive]::new([IO.File]::Open($work,'Open','ReadWrite'),[IO.Compression.ZipArchiveMode]::Update)
  try{
   function ReadXml($name){$r=[IO.StreamReader]::new($zip.GetEntry($name).Open());try{$xml=[Xml.XmlDocument]::new();$xml.PreserveWhitespace=$true;$xml.LoadXml($r.ReadToEnd());return ,$xml}finally{$r.Dispose()}}
@@ -62,12 +63,12 @@ try{
    }
    $ts[0].InnerText=$text;for($i=1;$i -lt $ts.Count;$i++){$ts[$i].InnerText=''}
   }
-  foreach($rid in @('rId17','rId18','rIdSchemaErd4')){
-   $node=$d.SelectSingleNode("//a:blip[@r:embed='$rid']",$ns);if($node){while($node.LocalName -ne 'p'){$node=$node.ParentNode};[void]$node.ParentNode.RemoveChild($node)}
-  }
-  $rel=$rels.DocumentElement.ChildNodes|Where-Object Id -EQ 'rId16';if(-not $rel){throw 'Missing Figure 5 image relationship.'}
+  $heading=@($d.SelectNodes('//w:body/w:p',$ns)|Where-Object {(Txt $_).Trim() -eq 'Entity Relationship Diagram'})
+  if($heading.Count -ne 1){throw 'Cannot locate the ERD heading.'};$pic=$heading[0].NextSibling
+  if(-not $pic.SelectSingleNode('.//a:blip',$ns)){throw 'Missing ERD picture after its heading.'}
+  $rid=$pic.SelectSingleNode('.//a:blip',$ns).GetAttribute('embed',$ns.LookupNamespace('r'))
+  $rel=$rels.DocumentElement.ChildNodes|Where-Object Id -EQ $rid;if(-not $rel){throw 'Missing Figure 5 image relationship.'}
   $part='word/'+$rel.GetAttribute('Target');$zip.GetEntry($part).Delete();$entry=$zip.CreateEntry($part);$s=$entry.Open();$file=Join-Path $out '05-core-business-erd.png';$bytes=[IO.File]::ReadAllBytes($file);$s.Write($bytes,0,$bytes.Length);$s.Dispose()
-  $pic=$d.SelectSingleNode('//a:blip[@r:embed="rId16"]',$ns);while($pic.LocalName -ne 'p'){$pic=$pic.ParentNode}
   $image=[Drawing.Image]::FromFile($file);$cx=[long]5486400;$cy=[long]($cx*$image.Height/$image.Width);$image.Dispose();foreach($extent in $pic.SelectNodes('.//wp:extent | .//a:xfrm/a:ext',$ns)){$extent.SetAttribute('cx',"$cx");$extent.SetAttribute('cy',"$cy")}
   $pr=$pic.SelectSingleNode('.//wp:docPr',$ns);if($pr){$pr.SetAttribute('name','Core Business ERD');$pr.SetAttribute('descr','Seven core business entities and seven enforced relationships. Selected attributes; complete schema constraints are documented in the data dictionary.')}
   foreach($p in $d.SelectNodes('//w:body/w:p',$ns)){
@@ -106,7 +107,7 @@ try{
     $purpose=(Txt $cells[4]) -replace '\s+Constraints:.*$','' -replace '\s+(Required|Nullable)\.$',''
     if($name -eq 'private.account_sessions' -and $field -eq 'user_id'){$purpose='Identifies the Auth account owning the scoped session.'}
     $keys=@(@('PK','FK','UQ')|Where-Object {$_ -in $col.Keys});Put $cells[3] ($keys-join ', ')
-    $notes=[Collections.Generic.List[string]]::new();$notes.Add($(if($col.Required){'NOT NULL.'}else{'NULL allowed.'}))
+    $notes=[Collections.Generic.List[string]]::new();$notes.Add($(if($col.Required){'NOT NULL.'}else{'Nullable at column level.'}))
     $fk=@($model.Relations|Where-Object {$_.Child -eq $name -and $_.Field -eq $field})
     if($fk.Count -gt 1){throw 'Unexpected multiple foreign keys on one column.'}
     if($fk.Count){$notes.Add('References '+$fk[0].Parent+'('+$fk[0].ParentField+'); ON DELETE '+$fk[0].Delete+'; ON UPDATE NO ACTION.');$fkCount++}

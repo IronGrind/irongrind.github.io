@@ -81,7 +81,7 @@ q 0.3307 0 0 -0.3307 0 768.189 cm
 0 0 0 rg BT /F2 26 Tf 1 0 0 -1 836.1193 215 Tm (members) Tj ET
 0 0 0 rg BT /F1 26 Tf 1 0 0 -1 660 264 Tm (id \(PK\)) Tj ET
 0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1000 261 Tm (uuid) Tj ET
-0 0 0 rg BT /F1 26 Tf 1 0 0 -1 660 306 Tm (application_id \(UQ,FK\)) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 660 306 Tm (application_id \(FK,UQ\)) Tj ET
 0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1000 303 Tm (uuid) Tj ET
 0 0 0 rg BT /F1 26 Tf 1 0 0 -1 660 348 Tm (full_name) Tj ET
 0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1000 345 Tm (varchar) Tj ET

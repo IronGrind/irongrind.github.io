@@ -65,6 +65,33 @@ foreach($chapter in $Chapters){
    $columns=0;foreach($table in $dictionary){$columns+=$table.SelectNodes('w:tr',$ns).Count-1}
    if($columns -ne 174){throw "Expected 174 documented fields, found $columns"}
    if(([regex]::Matches($all,'The fifteen application-owned tables comprise')).Count -ne 1){throw 'Duplicate or missing schema-count explanation.'}
+   if(-not $all.Contains('Figure 5. Core Business Entity Relationship Diagram') -or -not $all.Contains('seven core business entities and seven foreign-key relationships')){throw 'Chapter 3 is missing the simplified ERD scope.'}
+   $erdHeading=@($doc.SelectNodes('//w:body/w:p',$ns)|Where-Object {(($_.SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim() -eq 'Entity Relationship Diagram'})
+   if($erdHeading.Count -ne 1){throw 'Expected one ERD section heading.'};$erdImages=0;$erdNode=$erdHeading[0].NextSibling
+   while($erdNode -and ((($erdNode.SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim() -notmatch '^Figure 5\.')){if($erdNode.SelectSingleNode('.//a:blip',$ns)){$erdImages++};$erdNode=$erdNode.NextSibling}
+   if($erdImages -ne 1 -or -not $erdNode){throw 'Expected one complete ERD image before its caption.'}
+   if(-not $erdHeading[0].SelectSingleNode('w:pPr/w:pageBreakBefore',$ns) -or $erdNode.SelectSingleNode('w:pPr/w:keepNext',$ns) -or -not $erdNode.NextSibling.SelectSingleNode('w:pPr/w:pageBreakBefore',$ns)){throw 'ERD figure is not isolated on one dedicated page.'}
+   $schema=Get-Content -Raw -LiteralPath (Join-Path $PSScriptRoot 'Chapter 3 Diagrams/schema-visualizer.json')|ConvertFrom-Json
+   $order=@('public.profiles','public.members','public.membership_applications','public.attendance','public.products','public.sales','public.sale_items','public.membership_history','public.activity_logs','public.mobile_attendance_pairing_policy','public.mobile_attendance_scan_sessions','public.mobile_attendance_scan_events','private.attendance_scan_requests','private.admin_login_attempts','private.account_sessions')
+   $verifiedFKs=0;$verifiedUnique=0
+   for($ti=0;$ti -lt $dictionary.Count;$ti++){
+    $tableName=$order[$ti];$modelTable=$schema.Tables|Where-Object Name -EQ $tableName
+    foreach($row in ($dictionary[$ti].SelectNodes('w:tr',$ns)|Select-Object -Skip 1)){
+     $cells=$row.SelectNodes('w:tc',$ns);$field=(($cells[0].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim()
+     $column=@($modelTable.Columns|Where-Object Name -EQ $field);if($column.Count -ne 1){throw "Unknown dictionary field $tableName.$field"};$column=$column[0]
+     $keyText=(($cells[3].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim();$actualKeys=@($keyText -split ',\s*'|Where-Object {$_})
+     if(@(Compare-Object @($column.Keys|Sort-Object) @($actualKeys|Sort-Object)).Count){throw "Incorrect dictionary keys: $tableName.$field"}
+     $details=($cells[4].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join ''
+     $required=if($column.Required){'Constraints: NOT NULL.'}else{'Constraints: Nullable at column level.'};if(-not $details.Contains($required)){throw "Incorrect nullability: $tableName.$field"}
+     foreach($fk in @($schema.Relations|Where-Object {$_.Child -eq $tableName -and $_.Field -eq $field})){
+      if(-not $details.Contains('References '+$fk.Parent+'('+$fk.ParentField+'); ON DELETE '+$fk.Delete+'; ON UPDATE NO ACTION.')){throw "Missing FK target or rule: $tableName.$field"};$verifiedFKs++
+     }
+     if('UQ' -in $actualKeys){if($details -notmatch '(?i)must be unique'){throw "Missing uniqueness explanation: $tableName.$field"};$verifiedUnique++}
+     if($tableName -eq 'private.account_sessions' -and $field -in @('user_id','session_scope') -and -not $details.Contains('Part of composite PK (user_id, session_scope)')){throw 'Scoped-session composite key explanation is missing.'}
+    }
+   }
+   if($verifiedFKs -ne 21 -or $verifiedUnique -ne 5){throw 'Incomplete FK or unique-key dictionary coverage.'}
+   $results.Add('Chapter 3: simplified core ERD scope, all 174 field key/nullability definitions, 21 FK targets and actions, five unique fields, and scoped-session composite PK verified.')
    $results.Add('Chapter 3: 12 public and 3 private dictionary tables, 174 fields, 20 total tables, and linked figures verified.')
   }
   $results.Add("Chapter ${chapter}: XML opens; no unexpected body/data-row bold, stale approval wording, garbled punctuation, or missing figure links detected.")
