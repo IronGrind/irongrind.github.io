@@ -29,6 +29,19 @@ async function callStaffAccountService(body) {
     return data;
 }
 
+function filterStaffDirectory() {
+    const query = (document.getElementById('staffDirectorySearch')?.value || '').trim().toLowerCase();
+    const cards = document.querySelectorAll('#staffAccountsList .staff-account-card');
+    let matches = 0;
+    cards.forEach(card => {
+        card.hidden = !card.dataset.searchText.includes(query);
+        if (!card.hidden) matches++;
+    });
+    setStaffAccountsMessage(query
+        ? matches ? `${matches} of ${cards.length} staff accounts.` : 'No matching staff accounts.'
+        : `${cards.length} staff account${cards.length === 1 ? '' : 's'}.`);
+}
+
 async function loadStaffAccounts() {
     const list = document.getElementById('staffAccountsList');
     if (!list) return;
@@ -45,6 +58,7 @@ async function loadStaffAccounts() {
         staff.forEach(account => {
             const card = document.createElement('article');
             card.className = 'staff-account-card';
+            card.dataset.searchText = [account.full_name, account.username, account.email].filter(Boolean).join(' ').toLowerCase();
             const identity = document.createElement('div');
             identity.className = 'staff-account-identity';
             const name = document.createElement('strong');
@@ -106,7 +120,7 @@ async function loadStaffAccounts() {
             card.append(identity, actions, detailsPanel);
             list.append(card);
         });
-        setStaffAccountsMessage(`${staff.length} staff account${staff.length === 1 ? '' : 's'}.`);
+        filterStaffDirectory();
     } catch (error) {
         list.replaceChildren();
         setStaffAccountsMessage(error.message || 'Could not load staff accounts.', true);

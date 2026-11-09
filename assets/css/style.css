@@ -499,6 +499,8 @@ label:has(input[name="wiPlan"]:checked) {
 .password-visibility-wrapper { width:100%; min-width:0; }
 .staff-account-details { grid-column:1 / -1; border-top:1px solid #8884; padding-top:14px; }
 .staff-account-details[hidden] { display:none !important; }
+.staff-account-card[hidden] { display:none !important; }
+.staff-directory-search { margin:16px 0; }
 .staff-account-details dl { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px 20px; margin:0; }
 .staff-account-details dt { font-size:.75rem; opacity:.7; margin-bottom:4px; }
 .staff-account-details dd { margin:0; font-size:.88rem; overflow-wrap:anywhere; }

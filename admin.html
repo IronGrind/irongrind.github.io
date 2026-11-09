@@ -83,6 +83,7 @@
             </form>
         </section>
         <section class="panel staff-directory-panel"><div class="panel-header"><div><h2><i class="fas fa-users-gear"></i> Staff Directory</h2><p class="modal-sub">View account details and control attendance access.</p></div><button class="btn-sm" type="button" onclick="loadStaffAccounts()"><i class="fas fa-rotate"></i> Refresh</button></div>
+            <div class="form-group staff-directory-search"><label for="staffDirectorySearch">Search staff</label><input id="staffDirectorySearch" type="search" placeholder="Name, username, or email" oninput="filterStaffDirectory()" aria-controls="staffAccountsList"></div>
             <div id="staffAccountsStatus" class="activity-help" role="status" aria-live="polite"></div>
             <div id="staffAccountsList" class="staff-account-list"></div>
         </section>

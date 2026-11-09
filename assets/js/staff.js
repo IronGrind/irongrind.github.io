@@ -109,6 +109,7 @@ async function submitStaffMembershipChange(eventType) {
     if (!member) { status.textContent = 'Search for and select a member first.'; return; }
     const [plan, priceText, daysText] = select.value.split('|');
     const { startDate, expiryDate } = staffMembershipDates(Number(daysText));
+    if (!window.confirm(`${isRenewal ? 'Renew membership' : 'Change membership plan'}\n\nMember: ${member.full_name}\nCurrent plan: ${member.plan || 'No plan'}\nCurrent expiry: ${member.expiry_date || 'Not set'}\nNew plan: ${plan}\nPayment: ${formatStaffPeso(Number(priceText))}\nStarts: ${startDate}\nNew expiry: ${expiryDate}\n\nThe new dates replace the current membership dates. Confirm payment has been received before continuing.`)) return;
     const receipt = `IG-${isRenewal ? 'SR' : 'SC'}-${crypto.randomUUID().replaceAll('-', '').slice(0, 16).toUpperCase()}`;
     status.textContent = isRenewal ? 'Recording renewal payment...' : 'Saving membership plan change...';
     const button = document.getElementById(isRenewal ? 'staffRenewMembership' : 'staffSavePlanChange'); button.disabled = true;
@@ -151,6 +152,13 @@ function formatStaffPeso(value) {
 
 function staffProductAvailable(product) { return Number(product.stock || 0) > 0; }
 
+function staffSupplementForm(product) {
+    if (['powder', 'capsule', 'tablet', 'drinkable', 'other'].includes(product.supplement_form)) return product.supplement_form;
+    if (product.unit === 'gram') return 'powder';
+    if (product.unit === 'milliliter') return 'drinkable';
+    return 'other';
+}
+
 function groupStaffProducts(products) {
     const groups = new Map();
     products.forEach(product => {
@@ -181,11 +189,22 @@ function renderStaffProductCatalog() {
         const label = document.createElement('h4'); label.textContent = heading;
         const count = document.createElement('span'); count.textContent = `${items.length} ${items.length === 1 ? 'item' : 'items'}`;
         title.append(label, count); section.append(title);
+        const forms = category === 'supplement'
+            ? [['powder', 'Powders'], ['capsule', 'Capsules'], ['tablet', 'Tablets'], ['drinkable', 'Liquids / drinks'], ['other', 'Other supplements']]
+            : [['merchandise', 'Merchandise']];
+        for (const [form, formLabel] of forms) {
+        const formItems = category === 'supplement' ? items.filter(group => staffSupplementForm(group.variants[0]) === form) : items;
+        if (!formItems.length && items.length) continue;
+        if (!formItems.length && form !== forms[0][0]) continue;
+        if (category === 'supplement' && formItems.length) {
+            const subheading = document.createElement('h5'); subheading.className = 'staff-catalog-form-title';
+            subheading.textContent = `${formLabel} (${formItems.length})`; section.append(subheading);
+        }
         const grid = document.createElement('div'); grid.className = 'staff-product-grid';
         if (!items.length) {
             const empty = document.createElement('p'); empty.className = 'staff-empty-catalog'; empty.textContent = `No ${heading.toLowerCase()} are listed.`; grid.append(empty);
         }
-        items.forEach(group => group.variants.forEach(product => {
+        formItems.forEach(group => group.variants.forEach(product => {
             const available = staffProductAvailable(product);
             const card = document.createElement('article'); card.className = `staff-product-card ${available ? 'is-available' : 'is-unavailable'}`;
             const top = document.createElement('div'); top.className = 'staff-product-card-top';
@@ -195,13 +214,15 @@ function renderStaffProductCatalog() {
             if (imageSource) { const photo = document.createElement('img'); photo.className = 'staff-product-photo'; photo.src = imageSource; photo.alt = product.name; photo.loading = 'lazy'; card.append(photo); }
             top.append(icon, badge);
             const name = document.createElement('h5'); name.textContent = group.name;
-            const details = document.createElement('p'); details.textContent = category === 'merchandise' ? `Size: ${product.size || 'One size'}` : 'Supplement';
+            const details = document.createElement('p'); details.textContent = category === 'merchandise' ? `Size: ${product.size || 'One size'}` : formLabel;
             const bottom = document.createElement('div'); bottom.className = 'staff-product-card-bottom';
             const price = document.createElement('strong'); price.textContent = `${formatStaffPeso(productPriceQuote(product.price_per_unit, product.unit).amount)} / ${productPriceQuote(product.price_per_unit, product.unit).quantity} ${productPriceQuote(product.price_per_unit, product.unit).unit}`;
             const stock = document.createElement('span'); stock.textContent = `${product.stock ?? 0} ${product.stock_unit || product.unit} in stock`;
             bottom.append(price, stock); card.append(top, name, details, bottom); grid.append(card);
         }));
-        section.append(grid); target.append(section);
+        section.append(grid);
+        }
+        target.append(section);
     }
 }
 
@@ -212,12 +233,15 @@ function updateStaffSaleSummary() {
     const factors = { gram: 1, kilogram: 1000, ounce: 28.349523125, pound: 453.59237, milliliter: 1, liter: 1000, fluid_ounce: 29.5735295625, item: 1, piece: 1, box: 1 };
     const total = product ? Number(product.price_per_unit) * quantity * (factors[unit] || 1) : 0;
     document.getElementById('staffSaleTotal').textContent = formatStaffPeso(total);
+    const info = document.getElementById('staffSaleStockInfo');
+    if (info) info.textContent = product
+        ? `Available: ${product.stock} ${product.stock_unit || product.unit} · Selling: ${quantity} ${unit}` : '';
 }
 
 async function loadStaffProducts() {
     const select = document.getElementById('staffSaleProduct');
     const { data, error } = await staffClient.from('products')
-        .select('id,name,category,size,price_per_unit,unit,stock_unit,stock,is_active,image_path')
+        .select('id,name,category,size,price_per_unit,unit,stock_unit,stock,is_active,image_path,supplement_form,supplement_type')
         .eq('is_active', true).order('name');
     if (error) throw error;
     staffProducts = data || [];
@@ -437,10 +461,13 @@ async function recordStaffAttendance(value) {
         });
         if (error) { if (error.code) pendingStaffScan = null; throw error; }
         pendingStaffScan = null;
-        staffStatus.textContent = data.member_name + (data.action === 'duplicate' ? ' was already scanned just now.' : data.action === 'check_out' ? ' checked out.' : ' checked in.');
+        staffStatus.classList.remove('error');
+        staffStatus.classList.add('staff-scan-result');
+        const scanTime = new Date().toLocaleTimeString('en-PH', { timeZone: 'Asia/Manila', hour: 'numeric', minute: '2-digit' });
+        staffStatus.textContent = data.member_name + (data.action === 'duplicate' ? ' — Already scanned just now' : data.action === 'check_out' ? ' — Checked out' : ' — Checked in') + ` · ${scanTime}`;
         document.getElementById('staffIdentifier').value = '';
         await refreshStaffAttendance();
-    } catch (error) { staffStatus.textContent = error.message; }
+    } catch (error) { staffStatus.classList.remove('staff-scan-result'); staffStatus.classList.add('error'); staffStatus.textContent = error.message; }
     finally { staffBusy = false; }
 }
 document.getElementById('staffScanForm').addEventListener('submit', event => { event.preventDefault(); recordStaffAttendance(document.getElementById('staffIdentifier').value); });
@@ -589,6 +616,18 @@ document.getElementById('staffRenewalSearch').addEventListener('keydown', event 
 document.getElementById('staffChangeSearch').addEventListener('keydown', event => { if (event.key === 'Enter') { event.preventDefault(); document.getElementById('staffChangeSearchButton').click(); } });
 document.getElementById('staffRenewMembership').addEventListener('click', () => submitStaffMembershipChange('renewal'));
 document.getElementById('staffSavePlanChange').addEventListener('click', () => submitStaffMembershipChange('plan_change'));
+function filterStaffRequests() {
+    const query = (document.getElementById('staffRequestSearch')?.value || '').trim().toLowerCase();
+    const type = document.getElementById('staffRequestType')?.value || 'all';
+    const cards = document.querySelectorAll('#staffRequestList .staff-request-card');
+    let visible = 0;
+    cards.forEach(card => {
+        card.hidden = !card.dataset.searchText.includes(query) || (type !== 'all' && card.dataset.requestType !== type);
+        if (!card.hidden) visible++;
+    });
+    document.getElementById('staffRequestsStatus').textContent = visible ? `${visible} pending request(s).` : 'No matching pending requests.';
+}
+
 async function loadStaffRequests() {
     const list = document.getElementById('staffRequestList');
     const status = document.getElementById('staffRequestsStatus');
@@ -599,6 +638,8 @@ async function loadStaffRequests() {
         list.replaceChildren();
         for (const request of data || []) {
             const card = document.createElement('article'); card.className = 'staff-request-card';
+            card.dataset.searchText = `${request.full_name} ${request.plan}`.toLowerCase();
+            card.dataset.requestType = request.application_type === 'renewal' ? 'renewal' : 'registration';
             const heading = document.createElement('h3'); heading.textContent = request.full_name;
             const details = document.createElement('p');
             details.textContent = `${request.application_type === 'renewal' ? 'Renewal' : 'Registration'} · ${request.plan} · ${formatStaffPeso(request.plan_price)}`;
@@ -627,7 +668,7 @@ async function loadStaffRequests() {
             }
             card.append(heading, details, date, actions); list.append(card);
         }
-        status.textContent = data?.length ? `${data.length} pending request(s).` : 'No pending requests.';
+        filterStaffRequests();
     } catch (error) { status.textContent = `Could not load requests: ${error.message}`; }
 }
 document.getElementById('refreshStaffRequests').addEventListener('click', loadStaffRequests);
