@@ -234,6 +234,11 @@
                             <h2><i class="fas fa-store"></i> Store &amp; Inventory</h2>
                             <button class="btn-sm" onclick="openAddProductModal()"><i class="fas fa-plus"></i> Add Product</button>
                         </div>
+                        <div class="inventory-toolbar">
+                            <div class="form-group"><label for="inventorySearch">Search inventory</label><input id="inventorySearch" type="search" placeholder="Product, type, or size" oninput="renderStore()"></div>
+                            <div class="form-group"><label for="inventoryStockFilter">Stock status</label><select id="inventoryStockFilter" onchange="renderStore()"><option value="all">All products</option><option value="low">Low stock</option><option value="out">Out of stock</option><option value="available">In stock</option></select></div>
+                        </div>
+                        <p id="inventoryResultCount" class="inventory-result-count" role="status" aria-live="polite"></p>
                         <h3 style="font-size:0.9rem; font-weight:600; margin-bottom:12px; color:#8b95a9;">Supplements</h3>
                         <div class="product-grid" id="supplementsGrid"></div>
                         <h3 style="font-size:0.9rem; font-weight:600; margin:24px 0 12px; color:#8b95a9;">Gym Merchandise</h3>

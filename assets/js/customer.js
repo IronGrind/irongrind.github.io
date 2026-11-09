@@ -278,9 +278,8 @@ function showMemberWelcome() {
     const firstName = escapeHTML((session?.fullName || session?.username || 'Member').trim().split(/\s+/)[0]);
     openModal(`<section class="member-onboarding" role="dialog" aria-modal="true" aria-labelledby="memberTourTitle">
         <div class="onboarding-mark"><i class="fas fa-dumbbell"></i></div>
-        <p class="onboarding-eyebrow">IRON GRIND MEMBER PORTAL</p>
         <h2 id="memberTourTitle">Welcome, ${firstName}!</h2>
-        <p class="onboarding-copy">Use your QR code at the gym, check your membership and visits, and send a renewal request here.</p>
+        <p class="onboarding-copy">Show your QR code at the gym to check in and out.</p>
         <div class="onboarding-actions"><button class="btn-primary" onclick="finishMemberTour()">Got it</button></div>
     </section>`);
 }
@@ -586,7 +585,6 @@ function renewMembership() {
     }
     openModal(`
         <h3><i class="fas fa-sync-alt"></i> Renew Membership</h3>
-        <p class="modal-sub">Choose a plan to renew your membership.</p>
         <div class="form-group" style="margin-bottom:14px;">
             <label>Plan</label>
             <select id="renewPlan">

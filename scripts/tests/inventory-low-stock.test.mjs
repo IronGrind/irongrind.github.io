@@ -40,3 +40,28 @@ test('pounds and ounces trigger the same powder alerts as equivalent metric stoc
         }
     }
 });
+
+test('inventory card separates selling price, pounds on hand, and converted alert level', () => {
+    const cardContext = vm.createContext({
+        catalogProductPhoto: () => '',
+        supplementTypeLabel: value => value,
+        supplementFormLabel: value => value,
+        merchandiseTypeLabel: value => value,
+        escapeHTML: value => String(value).replaceAll('<', '&lt;'),
+        productPriceQuote: price => ({ amount: price, quantity: 1 }),
+        formatPeso: value => `PHP ${value}`
+    });
+    vm.runInContext(source.slice(source.indexOf('const INVENTORY_UNIT_TO_BASE'), source.indexOf('function mapSupabaseProduct(') > 0 ? source.indexOf('function mapSupabaseProduct(') : source.indexOf('function formatProductStock(')), cardContext);
+    const formatStart = source.indexOf('function formatProductStock(');
+    const formatEnd = source.indexOf('\n}', formatStart) + 2;
+    vm.runInContext(source.slice(formatStart, formatEnd), cardContext);
+    vm.runInContext(source.slice(source.indexOf('function productCard('), source.indexOf('function restockProduct(')), cardContext);
+    const html = cardContext.productCard({ id: 'example', name: '<Protein>', category: 'Supplement', supplementType: 'protein', supplementForm: 'powder', inventoryUnit: 'gram', stockUnit: 'pound', stock: 2, price: 3 });
+    assert.match(html, /Selling price/);
+    assert.match(html, /Stock on hand/);
+    assert.match(html, /2 lb/);
+    assert.match(html, /907\.18 g/);
+    assert.match(html, /2\.205 lb/);
+    assert.match(html, /Low stock/);
+    assert.match(html, /&lt;Protein>/);
+});

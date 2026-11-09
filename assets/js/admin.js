@@ -2582,8 +2582,18 @@ async function unlockStore() {
 }
 
 function renderStore() {
-    const supp = products.filter(p => p.category === 'Supplement');
-    const merch = products.filter(p => p.category === 'Merch');
+    const query = (document.getElementById('inventorySearch')?.value || '').trim().toLowerCase();
+    const status = document.getElementById('inventoryStockFilter')?.value || 'all';
+    const visible = products.filter(p => {
+        const stock = productStockInSaleUnits(p);
+        return `${p.name} ${p.size || ''} ${productClassification(p)}`.toLowerCase().includes(query)
+            && (status === 'all' || (status === 'low' && stock > 0 && productIsLowStock(p))
+                || (status === 'out' && stock <= 0) || (status === 'available' && stock > 0));
+    });
+    const count = document.getElementById('inventoryResultCount');
+    if (count) count.textContent = `${visible.length} of ${products.length} products`;
+    const supp = visible.filter(p => p.category === 'Supplement');
+    const merch = visible.filter(p => p.category === 'Merch');
     document.getElementById('supplementsGrid').innerHTML = supp.map(productCard).join('') || '<div class="empty-state">No supplements.</div>';
     document.getElementById('merchGrid').innerHTML = merch.map(productCard).join('') || '<div class="empty-state">No merchandise.</div>';
 }
@@ -2594,14 +2604,20 @@ function productCard(p) {
     const merchType = p.merchType || (p.size ? 'apparel' : 'other');
     const productType = supplement ? `${supplementTypeLabel(p.supplementType || 'other')} · ${supplementFormLabel(p.supplementForm || 'powder')}` : merchandiseTypeLabel(merchType);
     const low = productIsLowStock(p);
-    const stockLabel = `${formatProductStock(p)} in stock`;
+    const stock = productStockInSaleUnits(p);
+    const stockLabel = formatProductStock(p);
+    const threshold = lowStockThreshold(p) * (INVENTORY_UNIT_TO_BASE[p.inventoryUnit || 'item'] || 1) / (INVENTORY_UNIT_TO_BASE[p.stockUnit || 'item'] || 1);
+    const thresholdLabel = `${Number(threshold.toFixed(3)).toLocaleString('en-PH')} ${stockUnitLabel(p.stockUnit || 'item')}`;
+    const quote = productPriceQuote(p.price, p.inventoryUnit);
+    const conversion = supplement && p.stockUnit !== p.inventoryUnit && ['gram', 'milliliter'].includes(p.inventoryUnit)
+        ? `≈ ${Number(stock.toFixed(2)).toLocaleString('en-PH')} ${stockUnitLabel(p.inventoryUnit)}` : '';
     return `
-        <div class="product-card">
+        <div class="product-card inventory-product-card">
             ${photo ? `<div class="product-img-wrap"><img src="${escapeHTML(photo)}" alt="${escapeHTML(p.name)}" loading="lazy"></div>` : ''}
-            <span class="cat">${p.category} · ${productType}</span>
-            <h4>${p.name}${!supplement && p.size ? ' — ' + p.size : ''}</h4>
-            <div class="price">${formatPeso(productPriceQuote(p.price, p.inventoryUnit).amount)} / ${productPriceQuote(p.price, p.inventoryUnit).quantity} ${productSaleUnitLabel(p)}</div>
-            <div class="stock ${low ? 'low' : ''}">${low ? '⚠ ' : ''}${stockLabel}</div>
+            <div class="inventory-card-top"><span class="cat">${escapeHTML(productType)}</span><span class="inventory-status ${stock <= 0 ? 'out' : low ? 'low' : 'available'}">${stock <= 0 ? 'Out of stock' : low ? 'Low stock' : 'In stock'}</span></div>
+            <h4>${escapeHTML(p.name)}${!supplement && p.size ? ' — ' + escapeHTML(p.size) : ''}</h4>
+            <div class="inventory-price"><span class="inventory-field-label">Selling price</span><strong>${formatPeso(quote.amount)}</strong><span>per ${escapeHTML(String(quote.quantity))} ${escapeHTML(productSaleUnitLabel(p))}</span></div>
+            <div class="inventory-stock-block"><span class="inventory-field-label">Stock on hand</span><strong>${escapeHTML(stockLabel)}</strong>${conversion ? `<span>${escapeHTML(conversion)}</span>` : ''}<small>Low-stock alert: ≤ ${escapeHTML(thresholdLabel)}</small></div>
             <div class="product-actions">
                 <button class="btn-restock" onclick="restockProduct('${p.id}')">Restock</button>
                 <button class="btn-edit" onclick="editProduct('${p.id}')">Edit</button>

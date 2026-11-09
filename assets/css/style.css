@@ -2013,6 +2013,29 @@ html[data-dashboard-theme="light"] .product-photo-dialog.photo-bubble .photo-lig
 @media (prefers-reduced-motion: reduce) { .product-photo-dialog.photo-bubble { animation: none; } }
 .password-strength-meter { display:block; width:100%; height:12px; margin:8px 0 4px; }
 .scanner-install-card { margin:16px 0 24px; padding:16px; border:1px solid var(--border-color, #303038); border-radius:14px; }
+.inventory-toolbar { display:grid; grid-template-columns:minmax(0,2fr) minmax(160px,1fr); gap:16px; margin:20px 0 8px; }
+.inventory-result-count { font-size:.8rem; opacity:.7; margin-bottom:20px; }
+.inventory-product-card { display:flex; flex-direction:column; gap:14px; }
+.inventory-product-card > .product-img-wrap { margin-bottom:0; }
+.inventory-card-top { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
+.inventory-product-card .cat { color:inherit; opacity:.7; font-size:.7rem; text-transform:none; }
+.inventory-product-card h4 { margin:0; line-height:1.45; overflow-wrap:anywhere; }
+.inventory-status { border:1px solid currentColor; border-radius:20px; padding:4px 8px; font-size:.65rem; font-weight:700; white-space:nowrap; }
+.inventory-status.available { color:#38b979; }
+.inventory-status.low { color:#c99024; }
+.inventory-status.out { color:#e65d5d; }
+.inventory-field-label { font-size:.7rem; font-weight:600; opacity:.65; }
+.inventory-price, .inventory-stock-block { display:flex; flex-direction:column; gap:5px; }
+.inventory-price strong { font-size:1.25rem; }
+.inventory-price > span:last-child, .inventory-stock-block > span:not(.inventory-field-label) { font-size:.8rem; opacity:.75; }
+.inventory-stock-block { border-top:1px solid #8884; padding-top:12px; }
+.inventory-stock-block strong { font-size:1.05rem; }
+.inventory-stock-block small { font-size:.72rem; opacity:.7; line-height:1.5; }
+.inventory-product-card .product-actions { margin-top:auto; padding-top:6px; }
+html[data-dashboard-theme="light"] .inventory-status.available { color:#17683e; }
+html[data-dashboard-theme="light"] .inventory-status.low { color:#8a5b00; }
+html[data-dashboard-theme="light"] .inventory-status.out { color:#a60000; }
+@media(max-width:600px) { .inventory-toolbar { grid-template-columns:minmax(0,1fr); gap:0; } }
 .scanner-install-card p { margin:10px 0 0; font-size:.85rem; line-height:1.5; color:inherit; opacity:.75; }
 .scanner-install-link { display:inline-flex; align-items:center; justify-content:center; gap:10px; max-width:100%; box-sizing:border-box; padding:12px 18px; border:1px solid #a60000; border-radius:24px; background:#a60000; color:#fff; text-decoration:none; font-size:.9rem; font-weight:600; line-height:1.4; transition:background .15s ease; }
 .scanner-install-link:hover { background:#800000; color:#fff; text-decoration:none; }
