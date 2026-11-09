@@ -2,16 +2,16 @@ import {writeFileSync} from 'node:fs';
 import {dirname,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
 const dir=join(dirname(fileURLToPath(import.meta.url)),'..','Chapter 3 Diagrams');
-const W=2600,H=2400,cells=[],shapes=[],edges=[];let serial=0;
+const W=2200,H=2400,cells=[],shapes=[],edges=[];let serial=0;
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
-function vertex(value,style,x,y,w,h){const id='v'+(++serial);cells.push(`<mxCell id="${id}" value="${esc(value)}" style="${style}" vertex="1" parent="1"><mxGeometry x="${x}" y="${y}" width="${w}" height="${h}" as="geometry"/></mxCell>`);return id;}
+function vertex(value,style,x,y,w,h,parent='1'){const id='v'+(++serial);cells.push(`<mxCell id="${id}" value="${esc(value)}" style="${style}" vertex="1" parent="${parent}"><mxGeometry x="${x}" y="${y}" width="${w}" height="${h}" as="geometry"/></mxCell>`);return id;}
 function text(value,x,y,w,size=30){vertex(value,`text;html=0;whiteSpace=wrap;align=center;fontFamily=Arial;fontSize=${size};`,x,y,w,50);shapes.push(`<text x="${x+w/2}" y="${y+35}" text-anchor="middle" font-family="Arial" font-size="${size}">${esc(value)}</text>`);}
 const labels=['User Login','Membership Application','User Management','Renewals','QR Attendance','Product & Inventory','Sales','Generate Reports','Activity Logs'];
-const boundary=vertex('','rounded=0;fillColor=#d5e2f5;strokeColor=#000000;strokeWidth=2;',900,70,800,2200);
-const background=`<rect x="900" y="70" width="800" height="2200" fill="#d5e2f5" stroke="black" stroke-width="2"/>`;
-text('IronGrind',900,82,800,32);
+const boundary=vertex('','rounded=0;fillColor=#d5e2f5;strokeColor=#000000;strokeWidth=2;',700,70,800,2200);
+const background=`<rect x="700" y="70" width="800" height="2200" fill="#d5e2f5" stroke="black" stroke-width="2"/>`;
+text('IronGrind',700,82,800,32);
 const uses=labels.map((label,i)=>{
- const c={x:1050,y:150+i*240,w:500,h:140,label};
+ const c={x:850,y:150+i*240,w:500,h:140,label};
  c.id=vertex(label,'ellipse;whiteSpace=wrap;html=0;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;fontFamily=Arial;fontSize=30;',c.x,c.y,c.w,c.h);
  shapes.push(`<ellipse cx="${c.x+250}" cy="${c.y+70}" rx="250" ry="70" fill="white" stroke="black" stroke-width="2"/><text x="${c.x+250}" y="${c.y+80}" text-anchor="middle" font-family="Arial" font-size="30">${esc(label)}</text>`);
  return c;
@@ -19,24 +19,28 @@ const uses=labels.map((label,i)=>{
 const actors=[
  {name:'Member / Applicant',x:125,y:500,side:'left',useCases:[0,1,2,3,4,5]},
  {name:'Authorized Staff',x:125,y:1500,side:'left',useCases:[0,1,2,3,4,5,6]},
- {name:'Administrator',x:2390,y:1100,side:'right',useCases:[0,1,2,3,4,5,6,7,8]}
+ {name:'Administrator',x:1950,y:1100,side:'right',useCases:[0,1,2,3,4,5,6,7,8]}
 ];
 let leftLane=0,rightLane=0;
 for(const actor of actors){
- actor.id=vertex('', 'shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2;',actor.x,actor.y,90,160);
+ actor.id=vertex('', 'group;',actor.x,actor.y,90,160);
+ vertex('','ellipse;fillColor=#e5e7eb;strokeColor=#9ca3af;strokeWidth=1;',0,25,90,90,actor.id);
+ vertex('','ellipse;fillColor=#64748b;strokeColor=none;',31,40,28,28,actor.id);
+ vertex('','rounded=1;arcSize=80;fillColor=#64748b;strokeColor=none;',17,80,56,27,actor.id);
  const cx=actor.x+45;
- shapes.push(`<circle cx="${cx}" cy="${actor.y+23}" r="22" fill="white" stroke="black" stroke-width="2"/><path d="M ${cx} ${actor.y+45} V ${actor.y+105} M ${actor.x} ${actor.y+70} H ${actor.x+90} M ${cx} ${actor.y+105} L ${actor.x+12} ${actor.y+158} M ${cx} ${actor.y+105} L ${actor.x+78} ${actor.y+158}" fill="none" stroke="black" stroke-width="2"/>`);
+ shapes.push(`<circle cx="${cx}" cy="${actor.y+70}" r="45" fill="#e5e7eb" stroke="#9ca3af"/><circle cx="${cx}" cy="${actor.y+54}" r="14" fill="#64748b"/><rect x="${actor.x+17}" y="${actor.y+80}" width="56" height="27" rx="13" fill="#64748b"/>`);
  text(actor.name,actor.x-95,actor.y+180,280,28);
  actor.useCases.forEach((ui,k)=>{
   const u=uses[ui],left=actor.side==='left';
-  const lane=left?350+leftLane++*34:1850+rightLane++*40;
-  const oy=left?(actor.name==='Member / Applicant'?-17:17):0;
-  const ey=u.y+70+oy,ex=left?u.x+250-250*Math.sqrt(1-(oy/70)**2):u.x+500;
-  const sx=actor.x+(left?90:0),sy=actor.y+70,fanY=actor.y+20+k*17;
-  const points=[[sx,sy],[lane,fanY],[lane,ey],[ex,ey]];
+  const sx=actor.x+(left?90:0),sy=actor.y+70;
+  const offset=left?(actor.name==='Member / Applicant'?-17:17):0;
+  const ey=u.y+70+offset;
+  const ex=left?u.x+250-250*Math.sqrt(1-(offset/70)**2):u.x+500;
+  // Keep the fan outside the ovals, then enter the target horizontally.
+  const points=[[sx,sy],[left?780:1420,ey],[ex,ey]];
   const id='e'+edges.length;
   const way=points.slice(1,-1).map(([x,y])=>`<mxPoint x="${x}" y="${y}"/>`).join('');
-  cells.push(`<mxCell id="${id}" style="edgeStyle=segmentEdgeStyle;startArrow=none;endArrow=none;jumpStyle=arc;jumpSize=6;strokeColor=#000000;strokeWidth=1.6;exitX=${left?1:0};exitY=${70/160};entryX=${(ex-u.x)/u.w};entryY=${(ey-u.y)/u.h};exitPerimeter=0;entryPerimeter=0;" edge="1" parent="1" source="${actor.id}" target="${u.id}"><mxGeometry relative="1" as="geometry"><Array as="points">${way}</Array></mxGeometry></mxCell>`);
+  cells.push(`<mxCell id="${id}" style="edgeStyle=none;startArrow=none;endArrow=none;strokeColor=#000000;strokeWidth=1.6;exitX=${left?1:0};exitY=${70/160};entryX=${(ex-u.x)/u.w};entryY=${(ey-u.y)/u.h};exitPerimeter=0;entryPerimeter=0;" edge="1" parent="1" source="${actor.id}" target="${u.id}"><mxGeometry relative="1" as="geometry"><Array as="points">${way}</Array></mxGeometry></mxCell>`);
   edges.push({actor:actor.name,useCase:u.label,points});
  });
 }
