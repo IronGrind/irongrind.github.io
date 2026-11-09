@@ -14,7 +14,7 @@ const specs=[
  ['Operational report sources','D2-D8','Report source records','Administrator','Report query / report output'],
  ['Activity-log store','D9','Recorded activity data','Administrator','Log query / filtered results']
 ];
-const W=3200,H=3300,cells=[],svg=[];let serial=0;const segments=[];
+const W=3600,H=3300,cells=[],svg=[];let serial=0;const segments=[];
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 function v(t,style,x,y,w,h){const id='c'+(++serial);cells.push(`<mxCell id="${id}" value="${esc(t)}" style="${style}" vertex="1" parent="1"><mxGeometry x="${x}" y="${y}" width="${w}" height="${h}" as="geometry"/></mxCell>`);return id;}
 function text(t,x,y,w,size=27){size=Math.min(size,w/(Math.max(1,t.length)*.55));v(t,`text;html=0;whiteSpace=wrap;align=center;verticalAlign=middle;fontFamily=Arial;fontSize=${size};`,x,y,w,42);svg.push(`<text x="${x+w/2}" y="${y+30}" text-anchor="middle" font-family="Arial" font-size="${size}">${esc(t)}</text>`);}
@@ -26,18 +26,18 @@ function arrow(from,to,y,label,x1,x2,both){
 const actorFlows=JSON.parse(readFileSync(join(dir,'_Sources/dfd-actor-flows.json'),'utf8').replace(/^\uFEFF/,''));
 const users=new Map();
 for(const [name,y] of [['Administrator',2150],['Authorized Staff',1400],['Member / Applicant',650]]){
- const u={x:2740,y,w:425,h:250,uses:0};u.id=box(u.x,u.y,u.w,u.h);text(name,u.x,u.y+105,u.w,28);users.set(name,u);
+ const u={x:3120,y,w:425,h:250,uses:0};u.id=box(u.x,u.y,u.w,u.h);text(name,u.x,u.y+105,u.w,28);users.set(name,u);
 }
 const routed=[];
 function userRoute(p,u,cy,label){
   const index=u.uses++,uy=u.y+20+index*25;
  const role=u===users.get('Administrator')?'A':u===users.get('Authorized Staff')?'S':'M';
- const lane=(role==='A'?2500:role==='S'?2260:1980)+index*(role==='A'?22:28);
+ const lane=(role==='A'?2670:role==='S'?2310:1990)+index*42;
  const tag=role+(index+1);
  const points=[[p.x+p.w,cy],[lane,cy],[lane,uy],[u.x,uy]];
  const id='e'+(++serial);
- cells.push(`<mxCell id="${id}" style="edgeStyle=segmentEdgeStyle;jumpStyle=arc;jumpSize=8;strokeColor=#000000;strokeWidth=1.5;startArrow=block;endArrow=block;exitX=1;exitY=${(cy-p.y)/p.h};entryX=0;entryY=${(uy-u.y)/u.h};exitPerimeter=0;entryPerimeter=0;" edge="1" parent="1" source="${p.id}" target="${u.id}"><mxGeometry relative="1" as="geometry"><Array as="points">${points.slice(1,-1).map(([x,y])=>`<mxPoint x="${x}" y="${y}"/>`).join('')}</Array></mxGeometry></mxCell>`);
- routed.push(points);text(tag+'  '+label,1445,cy-40,515,24);text(tag,u.x+6,uy-28,45,15);
+ cells.push(`<mxCell id="${id}" style="edgeStyle=segmentEdgeStyle;jumpStyle=arc;jumpSize=8;strokeColor=#000000;strokeWidth=1.4;startArrow=block;endArrow=block;exitX=1;exitY=${(cy-p.y)/p.h};entryX=0;entryY=${(uy-u.y)/u.h};exitPerimeter=0;entryPerimeter=0;" edge="1" parent="1" source="${p.id}" target="${u.id}"><mxGeometry relative="1" as="geometry"><Array as="points">${points.slice(1,-1).map(([x,y])=>`<mxPoint x="${x}" y="${y}"/>`).join('')}</Array></mxGeometry></mxCell>`);
+ points.role=role;points.cellIndex=cells.length-1;routed.push(points);text(label,1445,cy-40,515,24);
 }
 for(let i=0;i<9;i++){
  const [storeName,ids,data,role,userData]=specs[i],top=50+i*350;
@@ -65,6 +65,32 @@ for(let i=0;i<9;i++){
  });
 }
 for(let i=0;i<segments.length;i++)for(let j=i+1;j<segments.length;j++){const a=segments[i],b=segments[j];if(a.y===b.y&&Math.min(a.b,b.b)>Math.max(a.a,b.a))throw Error('Overlap');}
+// Reorder tracks within each role's corridor to reduce crossings.
+function crossingCost(){
+ const ss=routed.flatMap((p,ri)=>p.slice(1).map((b,k)=>({a:p[k],b,ri})));
+ let cost=0;for(let i=0;i<ss.length;i++)for(let j=i+1;j<ss.length;j++){
+ const a=ss[i],b=ss[j];if(a.ri===b.ri)continue;
+ const ah=a.a[1]===a.b[1],bh=b.a[1]===b.b[1];if(ah===bh)continue;
+ const h=ah?a:b,v=ah?b:a;
+ if(v.a[0]>Math.min(h.a[0],h.b[0])&&v.a[0]<Math.max(h.a[0],h.b[0])&&h.a[1]>Math.min(v.a[1],v.b[1])&&h.a[1]<Math.max(v.a[1],v.b[1]))cost++;
+ }return cost;
+}
+const initialCrossings=crossingCost();let best=initialCrossings;
+for(let pass=0;pass<8;pass++){
+ let improved=false;
+ for(let a=0;a<routed.length;a++)for(let b=a+1;b<routed.length;b++){
+ 
+ const x=routed[a][1][0],y=routed[b][1][0];
+ routed[a][1][0]=routed[a][2][0]=y;routed[b][1][0]=routed[b][2][0]=x;
+ const score=crossingCost();if(score<best){best=score;improved=true;}
+ else{routed[a][1][0]=routed[a][2][0]=x;routed[b][1][0]=routed[b][2][0]=y;}
+ }if(!improved)break;
+}
+for(const p of routed){
+ const way=p.slice(1,-1).map(([x,y])=>`<mxPoint x="${x}" y="${y}"/>`).join('');
+ cells[p.cellIndex]=cells[p.cellIndex].replace(/<Array as="points">.*?<\/Array>/,`<Array as="points">${way}</Array>`);
+}
+console.log(`Reduced crossings from ${initialCrossings} to ${best}; every connector keeps its own track.`);
 // Use continuous bridge arcs at crossings instead of visually broken tracks.
 const parts=routed.flatMap((points,ri)=>points.slice(1).map((b,j)=>({a:points[j],b,ri})));
 let bridgeCount=0;
@@ -78,10 +104,10 @@ for(let ri=0;ri<routed.length;ri++){
   for(const y of cuts){d+=` L ${x} ${y-sign*7} C ${x+10} ${y-sign*7} ${x+10} ${y+sign*7} ${x} ${y+sign*7}`;bridgeCount++;}
   d+=' L '+b.join(' ');
  }
- svg.push(`<path d="${d}" fill="none" stroke="white" stroke-width="5.5"/><path d="${d}" fill="none" stroke="black" stroke-width="1.8" marker-start="url(#arrow)" marker-end="url(#arrow)"/>`);
+ svg.push(`<path d="${d}" fill="none" stroke="white" stroke-width="5.5"/><path d="${d}" fill="none" stroke="black" stroke-width="1.4" marker-start="url(#arrow)" marker-end="url(#arrow)"/>`);
 }
-text('Summary view: grouped labels reference existing actors and stores; they do not create new tables or grant shared permissions.',35,3215,3130,25);
-text('Two arrowheads summarize related input/output flows. Detailed operations and role restrictions are explained in Chapter 3.',35,3260,3130,25);
+text('Summary view: grouped labels reference existing actors and stores; they do not create new tables or grant shared permissions.',35,3215,3530,25);
+text('Two arrowheads summarize related input/output flows. Detailed operations and role restrictions are explained in Chapter 3.',35,3260,3530,25);
 writeFileSync(join(dir,'03-dfd-simple.svg'),`<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}"><defs><marker id="arrow" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto-start-reverse"><path d="M0 0 L8 3 L0 6 Z"/></marker></defs><rect width="${W}" height="${H}" fill="white"/>${svg.join('')}</svg>`);
 writeFileSync(join(dir,'03-dfd-simple.drawio'),`<mxfile host="app.diagrams.net"><diagram id="summary" name="Level 1 summary"><mxGraphModel page="1" pageWidth="${W}" pageHeight="${H}"><root><mxCell id="0"/><mxCell id="1" parent="0"/>${cells.join('')}</root></mxGraphModel></diagram></mxfile>`);
-console.log('Created one diagram with nine processes, three shared actors, nine grouped store connections and '+routed.length+' role-specific summary connections. Tracks are spaced 32 units apart; crossings use continuous bridge arcs.');
+console.log('Created one diagram with nine processes, three shared actors, nine grouped store connections and '+routed.length+' role-specific summary connections. Tracks are spaced 42 units apart; crossings use continuous bridge arcs.');
