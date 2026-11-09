@@ -194,11 +194,14 @@ function productClassification(product) {
         : merchandiseTypeLabel(product.merchType || (product.size ? 'apparel' : 'other'));
 }
 function lowStockThreshold(product) {
+    // Starting alert levels, expressed in sale units. Review against actual demand
+    // and supplier lead times; these are not minimum sale quantities.
     if (product.category === 'Merch') return 4;
     if (product.inventoryUnit === 'milliliter') return 1000;
-    if (product.inventoryUnit === 'item' || product.inventoryUnit === 'piece') return 30;
+    if (product.inventoryUnit === 'piece') return 30;
     if (product.inventoryUnit === 'box') return 4;
-    return 2000;
+    if (product.inventoryUnit === 'item') return 10;
+    return ({ protein: 1000, creatine: 250, pre_workout: 250, amino_acids: 250, vitamins: 250 })[product.supplementType] || 500;
 }
 function productIsLowStock(product) {
     return productStockInSaleUnits(product) <= lowStockThreshold(product);
@@ -1153,7 +1156,6 @@ function openAddMemberModal() {
     signaturePad = null;
     openModal(`
         <h3 style="display:flex; align-items:center; gap:10px;"><i class="fas fa-user-plus"></i> Add New Member</h3>
-        <p class="modal-sub">Enter the member’s details, choose a membership plan, and capture their digital signature.</p>
 
         <!-- PERSONAL INFORMATION -->
         <div style="background:#0d1219; border:1px solid #1e2533; border-radius:14px; padding:18px; margin-bottom:16px;">
@@ -1759,7 +1761,6 @@ function showMobileAttendancePairingModal(sessionId, pairingUrl, persistent, cap
         ${localOnly ? '<p class="qr-camera-status">This is localhost, which phones cannot reach. Open the hosted HTTPS admin site to pair.</p>' : ''}
         <section class="paired-phones-section">
             <a class="scanner-install-link" href="attendance-phone.html" target="_blank" rel="noopener"><i class="fas fa-mobile-screen-button" aria-hidden="true"></i> Open / install scanner <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
-            <p class="qr-camera-status">Already paired? Open this link on your phone to reinstall.</p>
         </section>
         ${pairingUrl ? `<div class="phone-pair-qr-shell"><div id="phonePairQr" data-session-id="${sessionId}" data-pairing-state="pending" class="phone-pair-qr" aria-label="Phone scanner pairing QR code"></div><button id="phonePairQrVisibility" class="btn-sm phone-pair-qr-visibility" type="button" onclick="togglePhonePairingQrVisibility()" aria-pressed="false"><i class="fas fa-eye-slash" aria-hidden="true"></i> Hide QR</button></div>` : ''}
         <p id="phonePairStatus" class="qr-camera-status" role="status">${capacityReached ? 'Pairing limit reached.' : pairingUrl ? 'Waiting for phone…' : 'Ready to pair.'}</p>

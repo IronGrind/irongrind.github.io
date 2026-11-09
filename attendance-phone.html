@@ -52,7 +52,7 @@
 <div id="phoneQrReader" hidden></div>
         <p id="phoneQrStatus" role="status" aria-live="polite">Preparing your attendance scanner…</p>
         <button id="phoneInstallButton" class="phone-install-button" type="button" onclick="installPhoneAttendanceApp()">Install attendance app</button>
-        <p id="phoneInstallHelp" class="phone-install-help">To add this app: open your browser menu, then choose <strong>Add to Home Screen</strong> or <strong>Install app</strong>. Use this page directly to reinstall; you do not need a new pairing QR if your saved pairing is still active in this browser.</p>
+        <p id="phoneInstallHelp" class="phone-install-help">Open your browser menu and choose <strong>Add to Home Screen</strong> or <strong>Install app</strong>.</p>
         <section id="phoneModelSetup" class="phone-model-setup" hidden>
             <label for="phoneModelInput">Phone model</label>
             <input id="phoneModelInput" type="text" maxlength="100" autocomplete="off" placeholder="Example: Samsung Galaxy A15" onkeydown="if(event.key==='Enter'){event.preventDefault();savePhoneModelAndContinue()}">

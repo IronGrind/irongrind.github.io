@@ -63,7 +63,7 @@
 
         <main class="main-content">
 <div id="section-staff" class="admin-section hidden">
-    <div class="section-heading-block staff-section-heading"><h1>Staff Accounts</h1><p>Create and manage individual attendance-only staff access.</p></div>
+    <div class="section-heading-block staff-section-heading"><h1>Staff Accounts</h1></div>
     <div class="staff-management-grid">
         <section class="panel staff-create-panel"><div class="panel-header"><div><h2><i class="fas fa-user-plus"></i> Create Staff Account</h2><p class="staff-panel-description">Add profile details and sign-in credentials.</p></div><span class="staff-required-note"><i class="fas fa-asterisk" aria-hidden="true"></i> Required fields</span></div>
             <form id="staffAccountForm">
@@ -206,7 +206,6 @@
                     <p id="attendancePhoneStatus" class="attendance-phone-status" role="status">No phone camera paired.</p>
                     <div class="scanner-install-card">
                         <a class="scanner-install-link" href="attendance-phone.html" target="_blank" rel="noopener"><i class="fas fa-mobile-screen-button" aria-hidden="true"></i> Open / install scanner <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
-                        <p>Reinstall on your phone without creating a new pairing QR.</p>
                     </div>
                     <div class="attendance-log-controls">
                         <h3><i class="fas fa-list"></i> Attendance Log</h3>
@@ -265,7 +264,6 @@
                     <div class="panel-header">
                         <div>
                             <h2><i class="fas fa-chart-line"></i> Daily Product Income</h2>
-                            <p class="modal-sub" style="margin-top:6px;">Product totals and transactions for the selected period.</p>
                         </div>
                         <div class="walkin-sales-actions report-export-controls">
                             <label>Period<select id="productSalesPeriodMode" onchange="updateProductSalesPeriodControls(); renderSales();"><option value="day">Specific day</option><option value="range">Date range</option><option value="year">Full year</option></select></label>

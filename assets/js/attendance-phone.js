@@ -641,7 +641,7 @@ async function startPhoneAttendanceApp() {
         setPhoneCameraButton(false);
         setPhoneAttendanceStatus(readPhonePairing()
             ? 'Saved pairing found. Sign in to continue.'
-            : 'Welcome. Sign in to get started, or install the attendance app below.');
+            : 'Sign in to get started.');
     }
 }
 
