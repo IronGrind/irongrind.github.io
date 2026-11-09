@@ -2,7 +2,7 @@
     {
         "A":  {
                   "width":  "1700",
-                  "height":  "770",
+                  "height":  "1100",
                   "fill":  "#fff"
               },
         "Tag":  "rect",
@@ -845,7 +845,7 @@
                   "font-weight":  "700"
               },
         "Tag":  "text",
-        "Text":  "FK*"
+        "Text":  "FK"
     },
     {
         "A":  {
@@ -861,7 +861,7 @@
     {
         "A":  {
                   "y":  "135",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "282"
@@ -918,13 +918,13 @@
     {
         "A":  {
                   "y":  "157",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "282"
               },
         "Tag":  "text",
-        "Text":  "varchar"
+        "Text":  "varchar(30)"
     },
     {
         "A":  {
@@ -940,13 +940,13 @@
     {
         "A":  {
                   "y":  "179",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "282"
               },
         "Tag":  "text",
-        "Text":  "varchar"
+        "Text":  "varchar(150)"
     },
     {
         "A":  {
@@ -973,13 +973,13 @@
     {
         "A":  {
                   "y":  "201",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "282"
               },
         "Tag":  "text",
-        "Text":  "varchar"
+        "Text":  "varchar(20)"
     },
     {
         "A":  {
@@ -995,7 +995,7 @@
     {
         "A":  {
                   "y":  "223",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "282"
@@ -1028,13 +1028,13 @@
     {
         "A":  {
                   "y":  "245",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "282"
               },
         "Tag":  "text",
-        "Text":  "varchar"
+        "Text":  "varchar(254)"
     },
     {
         "A":  {
@@ -1121,7 +1121,7 @@
     {
         "A":  {
                   "y":  "135",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "622"
@@ -1178,7 +1178,7 @@
     {
         "A":  {
                   "y":  "157",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "622"
@@ -1224,7 +1224,7 @@
     {
         "A":  {
                   "y":  "179",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "622"
@@ -1265,7 +1265,7 @@
                   "font-weight":  "700"
               },
         "Tag":  "text",
-        "Text":  "FK*"
+        "Text":  "FK"
     },
     {
         "A":  {
@@ -1281,7 +1281,7 @@
     {
         "A":  {
                   "y":  "201",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "622"
@@ -1303,13 +1303,13 @@
     {
         "A":  {
                   "y":  "223",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "622"
               },
         "Tag":  "text",
-        "Text":  "varchar"
+        "Text":  "varchar(150)"
     },
     {
         "A":  {
@@ -1336,13 +1336,13 @@
     {
         "A":  {
                   "y":  "245",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "622"
               },
         "Tag":  "text",
-        "Text":  "varchar"
+        "Text":  "varchar(30)"
     },
     {
         "A":  {
@@ -1358,13 +1358,13 @@
     {
         "A":  {
                   "y":  "267",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "622"
               },
         "Tag":  "text",
-        "Text":  "varchar"
+        "Text":  "varchar(20)"
     },
     {
         "A":  {
@@ -1391,13 +1391,13 @@
     {
         "A":  {
                   "y":  "289",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "622"
               },
         "Tag":  "text",
-        "Text":  "varchar"
+        "Text":  "varchar(20)"
     },
     {
         "A":  {
@@ -1484,7 +1484,7 @@
     {
         "A":  {
                   "y":  "135",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "962"
@@ -1565,7 +1565,7 @@
     {
         "A":  {
                   "y":  "157",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "962"
@@ -1595,7 +1595,7 @@
                   "font-weight":  "700"
               },
         "Tag":  "text",
-        "Text":  "FK*"
+        "Text":  "FK"
     },
     {
         "A":  {
@@ -1611,7 +1611,7 @@
     {
         "A":  {
                   "y":  "179",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "962"
@@ -1644,13 +1644,13 @@
     {
         "A":  {
                   "y":  "201",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "962"
               },
         "Tag":  "text",
-        "Text":  "varchar"
+        "Text":  "varchar(150)"
     },
     {
         "A":  {
@@ -1666,13 +1666,13 @@
     {
         "A":  {
                   "y":  "223",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "962"
               },
         "Tag":  "text",
-        "Text":  "varchar"
+        "Text":  "varchar(30)"
     },
     {
         "A":  {
@@ -1699,7 +1699,7 @@
     {
         "A":  {
                   "y":  "245",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "962"
@@ -1721,7 +1721,7 @@
     {
         "A":  {
                   "y":  "267",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "962"
@@ -1754,13 +1754,13 @@
     {
         "A":  {
                   "y":  "289",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "962"
               },
         "Tag":  "text",
-        "Text":  "varchar"
+        "Text":  "varchar(20)"
     },
     {
         "A":  {
@@ -1847,7 +1847,7 @@
     {
         "A":  {
                   "y":  "135",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1302"
@@ -1904,7 +1904,7 @@
     {
         "A":  {
                   "y":  "157",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1302"
@@ -1934,7 +1934,7 @@
                   "font-weight":  "700"
               },
         "Tag":  "text",
-        "Text":  "FK*"
+        "Text":  "FK"
     },
     {
         "A":  {
@@ -1950,7 +1950,7 @@
     {
         "A":  {
                   "y":  "179",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1302"
@@ -1983,13 +1983,13 @@
     {
         "A":  {
                   "y":  "201",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1302"
               },
         "Tag":  "text",
-        "Text":  "varchar"
+        "Text":  "varchar(150)"
     },
     {
         "A":  {
@@ -2005,13 +2005,13 @@
     {
         "A":  {
                   "y":  "223",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1302"
               },
         "Tag":  "text",
-        "Text":  "numeric"
+        "Text":  "numeric(10,2)"
     },
     {
         "A":  {
@@ -2038,13 +2038,13 @@
     {
         "A":  {
                   "y":  "245",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1302"
               },
         "Tag":  "text",
-        "Text":  "varchar"
+        "Text":  "varchar(12)"
     },
     {
         "A":  {
@@ -2060,7 +2060,7 @@
     {
         "A":  {
                   "y":  "267",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1302"
@@ -2093,13 +2093,13 @@
     {
         "A":  {
                   "y":  "289",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1302"
               },
         "Tag":  "text",
-        "Text":  "varchar"
+        "Text":  "varchar(64)"
     },
     {
         "A":  {
@@ -2186,7 +2186,7 @@
     {
         "A":  {
                   "y":  "135",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1642"
@@ -2243,7 +2243,7 @@
     {
         "A":  {
                   "y":  "157",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1642"
@@ -2289,7 +2289,7 @@
     {
         "A":  {
                   "y":  "179",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1642"
@@ -2322,13 +2322,13 @@
     {
         "A":  {
                   "y":  "201",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1642"
               },
         "Tag":  "text",
-        "Text":  "varchar"
+        "Text":  "varchar(150)"
     },
     {
         "A":  {
@@ -2344,13 +2344,13 @@
     {
         "A":  {
                   "y":  "223",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1642"
               },
         "Tag":  "text",
-        "Text":  "numeric"
+        "Text":  "numeric(12,3)"
     },
     {
         "A":  {
@@ -2377,13 +2377,13 @@
     {
         "A":  {
                   "y":  "245",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1642"
               },
         "Tag":  "text",
-        "Text":  "numeric"
+        "Text":  "numeric(12,2)"
     },
     {
         "A":  {
@@ -2399,13 +2399,13 @@
     {
         "A":  {
                   "y":  "267",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1642"
               },
         "Tag":  "text",
-        "Text":  "numeric"
+        "Text":  "numeric(12,2)"
     },
     {
         "A":  {
@@ -2492,7 +2492,7 @@
     {
         "A":  {
                   "y":  "425",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "622"
@@ -2525,7 +2525,7 @@
     {
         "A":  {
                   "y":  "447",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "622"
@@ -2547,7 +2547,7 @@
     {
         "A":  {
                   "y":  "469",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "622"
@@ -2580,7 +2580,7 @@
     {
         "A":  {
                   "y":  "491",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "622"
@@ -2602,7 +2602,7 @@
     {
         "A":  {
                   "y":  "513",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "622"
@@ -2635,7 +2635,7 @@
     {
         "A":  {
                   "y":  "535",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "622"
@@ -2657,7 +2657,7 @@
     {
         "A":  {
                   "y":  "557",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "622"
@@ -2750,7 +2750,7 @@
     {
         "A":  {
                   "y":  "425",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "962"
@@ -2807,7 +2807,7 @@
     {
         "A":  {
                   "y":  "447",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "962"
@@ -2837,7 +2837,7 @@
                   "font-weight":  "700"
               },
         "Tag":  "text",
-        "Text":  "FK*"
+        "Text":  "FK"
     },
     {
         "A":  {
@@ -2853,7 +2853,7 @@
     {
         "A":  {
                   "y":  "469",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "962"
@@ -2894,7 +2894,7 @@
                   "font-weight":  "700"
               },
         "Tag":  "text",
-        "Text":  "FK*"
+        "Text":  "FK"
     },
     {
         "A":  {
@@ -2910,7 +2910,7 @@
     {
         "A":  {
                   "y":  "491",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "962"
@@ -2932,7 +2932,7 @@
     {
         "A":  {
                   "y":  "513",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "962"
@@ -2965,7 +2965,7 @@
     {
         "A":  {
                   "y":  "535",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "962"
@@ -2987,7 +2987,7 @@
     {
         "A":  {
                   "y":  "557",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "962"
@@ -3080,7 +3080,7 @@
     {
         "A":  {
                   "y":  "425",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1302"
@@ -3137,7 +3137,7 @@
     {
         "A":  {
                   "y":  "447",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1302"
@@ -3167,7 +3167,7 @@
                   "font-weight":  "700"
               },
         "Tag":  "text",
-        "Text":  "FK*"
+        "Text":  "FK"
     },
     {
         "A":  {
@@ -3183,7 +3183,7 @@
     {
         "A":  {
                   "y":  "469",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1302"
@@ -3216,13 +3216,13 @@
     {
         "A":  {
                   "y":  "491",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1302"
               },
         "Tag":  "text",
-        "Text":  "varchar"
+        "Text":  "varchar(30)"
     },
     {
         "A":  {
@@ -3238,13 +3238,13 @@
     {
         "A":  {
                   "y":  "513",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1302"
               },
         "Tag":  "text",
-        "Text":  "varchar"
+        "Text":  "varchar(30)"
     },
     {
         "A":  {
@@ -3271,13 +3271,13 @@
     {
         "A":  {
                   "y":  "535",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1302"
               },
         "Tag":  "text",
-        "Text":  "varchar"
+        "Text":  "varchar(30)"
     },
     {
         "A":  {
@@ -3293,7 +3293,7 @@
     {
         "A":  {
                   "y":  "557",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1302"
@@ -3386,7 +3386,7 @@
     {
         "A":  {
                   "y":  "425",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1642"
@@ -3419,13 +3419,13 @@
     {
         "A":  {
                   "y":  "447",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1642"
               },
         "Tag":  "text",
-        "Text":  "varchar"
+        "Text":  "varchar(120)"
     },
     {
         "A":  {
@@ -3441,13 +3441,13 @@
     {
         "A":  {
                   "y":  "469",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1642"
               },
         "Tag":  "text",
-        "Text":  "varchar"
+        "Text":  "varchar(20)"
     },
     {
         "A":  {
@@ -3474,13 +3474,13 @@
     {
         "A":  {
                   "y":  "491",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1642"
               },
         "Tag":  "text",
-        "Text":  "numeric"
+        "Text":  "numeric(10,2)"
     },
     {
         "A":  {
@@ -3496,13 +3496,13 @@
     {
         "A":  {
                   "y":  "513",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1642"
               },
         "Tag":  "text",
-        "Text":  "numeric"
+        "Text":  "numeric(14,6)"
     },
     {
         "A":  {
@@ -3529,13 +3529,13 @@
     {
         "A":  {
                   "y":  "535",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "1642"
               },
         "Tag":  "text",
-        "Text":  "bool"
+        "Text":  "boolean"
     },
     {
         "A":  {
@@ -3622,7 +3622,7 @@
     {
         "A":  {
                   "y":  "425",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "282"
@@ -3663,7 +3663,7 @@
                   "font-weight":  "700"
               },
         "Tag":  "text",
-        "Text":  "FK*"
+        "Text":  "FK"
     },
     {
         "A":  {
@@ -3679,7 +3679,7 @@
     {
         "A":  {
                   "y":  "447",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "282"
@@ -3701,7 +3701,7 @@
     {
         "A":  {
                   "y":  "469",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "282"
@@ -3734,7 +3734,7 @@
     {
         "A":  {
                   "y":  "491",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "282"
@@ -3756,7 +3756,7 @@
     {
         "A":  {
                   "y":  "513",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "282"
@@ -3849,7 +3849,7 @@
     {
         "A":  {
                   "y":  "645",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "282"
@@ -3906,7 +3906,7 @@
     {
         "A":  {
                   "y":  "667",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "282"
@@ -3928,7 +3928,7 @@
     {
         "A":  {
                   "y":  "689",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "282"
@@ -3961,7 +3961,7 @@
     {
         "A":  {
                   "y":  "711",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "282"
@@ -4054,13 +4054,13 @@
     {
         "A":  {
                   "y":  "645",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "622"
               },
         "Tag":  "text",
-        "Text":  "bool"
+        "Text":  "boolean"
     },
     {
         "A":  {
@@ -4095,7 +4095,7 @@
                   "font-weight":  "700"
               },
         "Tag":  "text",
-        "Text":  "FK*"
+        "Text":  "FK"
     },
     {
         "A":  {
@@ -4111,7 +4111,7 @@
     {
         "A":  {
                   "y":  "667",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "622"
@@ -4133,13 +4133,13 @@
     {
         "A":  {
                   "y":  "689",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "622"
               },
         "Tag":  "text",
-        "Text":  "int"
+        "Text":  "integer"
     },
     {
         "A":  {
@@ -4166,384 +4166,13 @@
     {
         "A":  {
                   "y":  "711",
-                  "font-size":  "10.5",
+                  "font-size":  "9.5",
                   "fill":  "#000000",
                   "text-anchor":  "end",
                   "x":  "622"
               },
         "Tag":  "text",
         "Text":  "timestamptz"
-    },
-    {
-        "A":  {
-                  "width":  "240",
-                  "height":  "70",
-                  "x":  "730",
-                  "rx":  "7",
-                  "y":  "600",
-                  "fill":  "#ffffff",
-                  "stroke":  "#000000",
-                  "stroke-dasharray":  "6 4",
-                  "stroke-width":  "1.6"
-              },
-        "Tag":  "rect",
-        "Text":  ""
-    },
-    {
-        "A":  {
-                  "y":  "628",
-                  "font-size":  "13",
-                  "x":  "850.0",
-                  "fill":  "#000000",
-                  "text-anchor":  "middle",
-                  "font-weight":  "700"
-              },
-        "Tag":  "text",
-        "Text":  "auth.users (Supabase)"
-    },
-    {
-        "A":  {
-                  "y":  "648",
-                  "font-size":  "10.5",
-                  "fill":  "#000000",
-                  "text-anchor":  "middle",
-                  "x":  "850.0"
-              },
-        "Tag":  "text",
-        "Text":  "Target of every FK* badge"
-    },
-    {
-        "A":  {
-                  "y":  "662",
-                  "font-size":  "10.5",
-                  "fill":  "#000000",
-                  "text-anchor":  "middle",
-                  "x":  "850.0"
-              },
-        "Tag":  "text",
-        "Text":  "(not drawn as lines)"
-    },
-    {
-        "A":  {
-                  "width":  "580",
-                  "height":  "130",
-                  "x":  "1070",
-                  "rx":  "7",
-                  "y":  "600",
-                  "fill":  "#ffffff",
-                  "stroke":  "#000000"
-              },
-        "Tag":  "rect",
-        "Text":  ""
-    },
-    {
-        "A":  {
-                  "y":  "622",
-                  "font-size":  "13",
-                  "fill":  "#000000",
-                  "font-weight":  "700",
-                  "x":  "1084"
-              },
-        "Tag":  "text",
-        "Text":  "Legend"
-    },
-    {
-        "A":  {
-                  "width":  "20",
-                  "height":  "11",
-                  "x":  "1084",
-                  "rx":  "2.5",
-                  "y":  "632",
-                  "fill":  "#d5e2f5"
-              },
-        "Tag":  "rect",
-        "Text":  ""
-    },
-    {
-        "A":  {
-                  "y":  "640.5",
-                  "font-size":  "8",
-                  "x":  "1094",
-                  "fill":  "#000000",
-                  "text-anchor":  "middle",
-                  "font-weight":  "700"
-              },
-        "Tag":  "text",
-        "Text":  "PK"
-    },
-    {
-        "A":  {
-                  "y":  "642",
-                  "font-size":  "12",
-                  "fill":  "#000000",
-                  "x":  "1112"
-              },
-        "Tag":  "text",
-        "Text":  "Primary key"
-    },
-    {
-        "A":  {
-                  "width":  "20",
-                  "height":  "11",
-                  "x":  "1084",
-                  "rx":  "2.5",
-                  "y":  "654",
-                  "fill":  "#d5e2f5"
-              },
-        "Tag":  "rect",
-        "Text":  ""
-    },
-    {
-        "A":  {
-                  "y":  "662.5",
-                  "font-size":  "8",
-                  "x":  "1094",
-                  "fill":  "#000000",
-                  "text-anchor":  "middle",
-                  "font-weight":  "700"
-              },
-        "Tag":  "text",
-        "Text":  "FK"
-    },
-    {
-        "A":  {
-                  "y":  "664",
-                  "font-size":  "12",
-                  "fill":  "#000000",
-                  "x":  "1112"
-              },
-        "Tag":  "text",
-        "Text":  "Foreign key to a public table (line)"
-    },
-    {
-        "A":  {
-                  "width":  "20",
-                  "height":  "11",
-                  "x":  "1084",
-                  "rx":  "2.5",
-                  "y":  "676",
-                  "fill":  "#d5e2f5"
-              },
-        "Tag":  "rect",
-        "Text":  ""
-    },
-    {
-        "A":  {
-                  "y":  "684.5",
-                  "font-size":  "8",
-                  "x":  "1094",
-                  "fill":  "#000000",
-                  "text-anchor":  "middle",
-                  "font-weight":  "700"
-              },
-        "Tag":  "text",
-        "Text":  "FK*"
-    },
-    {
-        "A":  {
-                  "y":  "686",
-                  "font-size":  "12",
-                  "fill":  "#000000",
-                  "x":  "1112"
-              },
-        "Tag":  "text",
-        "Text":  "Foreign key to auth.users (no line)"
-    },
-    {
-        "A":  {
-                  "width":  "20",
-                  "height":  "11",
-                  "x":  "1084",
-                  "rx":  "2.5",
-                  "y":  "698",
-                  "fill":  "#d5e2f5"
-              },
-        "Tag":  "rect",
-        "Text":  ""
-    },
-    {
-        "A":  {
-                  "y":  "706.5",
-                  "font-size":  "8",
-                  "x":  "1094",
-                  "fill":  "#000000",
-                  "text-anchor":  "middle",
-                  "font-weight":  "700"
-              },
-        "Tag":  "text",
-        "Text":  "UQ"
-    },
-    {
-        "A":  {
-                  "y":  "708",
-                  "font-size":  "12",
-                  "fill":  "#000000",
-                  "x":  "1112"
-              },
-        "Tag":  "text",
-        "Text":  "Unique"
-    },
-    {
-        "A":  {
-                  "x2":  "1470",
-                  "stroke":  "#000000",
-                  "x1":  "1400",
-                  "stroke-width":  "1.8",
-                  "y1":  "648",
-                  "y2":  "648"
-              },
-        "Tag":  "line",
-        "Text":  ""
-    },
-    {
-        "A":  {
-                  "x2":  "1408.0",
-                  "stroke":  "#000000",
-                  "x1":  "1408.0",
-                  "stroke-width":  "1.8",
-                  "y1":  "641.0",
-                  "y2":  "655.0"
-              },
-        "Tag":  "line",
-        "Text":  ""
-    },
-    {
-        "A":  {
-                  "x2":  "1414.0",
-                  "stroke":  "#000000",
-                  "x1":  "1414.0",
-                  "stroke-width":  "1.8",
-                  "y1":  "641.0",
-                  "y2":  "655.0"
-              },
-        "Tag":  "line",
-        "Text":  ""
-    },
-    {
-        "A":  {
-                  "y":  "652",
-                  "font-size":  "12",
-                  "fill":  "#000000",
-                  "x":  "1484"
-              },
-        "Tag":  "text",
-        "Text":  "exactly one"
-    },
-    {
-        "A":  {
-                  "x2":  "1470",
-                  "stroke":  "#000000",
-                  "x1":  "1400",
-                  "stroke-width":  "1.8",
-                  "y1":  "676",
-                  "y2":  "676"
-              },
-        "Tag":  "line",
-        "Text":  ""
-    },
-    {
-        "A":  {
-                  "x2":  "1408.0",
-                  "stroke":  "#000000",
-                  "x1":  "1408.0",
-                  "stroke-width":  "1.8",
-                  "y1":  "669.0",
-                  "y2":  "683.0"
-              },
-        "Tag":  "line",
-        "Text":  ""
-    },
-    {
-        "A":  {
-                  "stroke-width":  "1.8",
-                  "cx":  "1417.0",
-                  "fill":  "#fff",
-                  "stroke":  "#000000",
-                  "cy":  "676.0",
-                  "r":  "4.5"
-              },
-        "Tag":  "circle",
-        "Text":  ""
-    },
-    {
-        "A":  {
-                  "y":  "680",
-                  "font-size":  "12",
-                  "fill":  "#000000",
-                  "x":  "1484"
-              },
-        "Tag":  "text",
-        "Text":  "zero or one (optional)"
-    },
-    {
-        "A":  {
-                  "x2":  "1470",
-                  "stroke":  "#000000",
-                  "x1":  "1400",
-                  "stroke-width":  "1.8",
-                  "y1":  "704",
-                  "y2":  "704"
-              },
-        "Tag":  "line",
-        "Text":  ""
-    },
-    {
-        "A":  {
-                  "x2":  "1400.0",
-                  "stroke":  "#000000",
-                  "x1":  "1414.0",
-                  "stroke-width":  "1.8",
-                  "y1":  "704.0",
-                  "y2":  "697.0"
-              },
-        "Tag":  "line",
-        "Text":  ""
-    },
-    {
-        "A":  {
-                  "x2":  "1400.0",
-                  "stroke":  "#000000",
-                  "x1":  "1414.0",
-                  "stroke-width":  "1.8",
-                  "y1":  "704.0",
-                  "y2":  "711.0"
-              },
-        "Tag":  "line",
-        "Text":  ""
-    },
-    {
-        "A":  {
-                  "x2":  "1400.0",
-                  "stroke":  "#000000",
-                  "x1":  "1414.0",
-                  "stroke-width":  "1.8",
-                  "y1":  "704.0",
-                  "y2":  "704.0"
-              },
-        "Tag":  "line",
-        "Text":  ""
-    },
-    {
-        "A":  {
-                  "stroke-width":  "1.8",
-                  "cx":  "1421.0",
-                  "fill":  "#fff",
-                  "stroke":  "#000000",
-                  "cy":  "704.0",
-                  "r":  "4.5"
-              },
-        "Tag":  "circle",
-        "Text":  ""
-    },
-    {
-        "A":  {
-                  "y":  "708",
-                  "font-size":  "12",
-                  "fill":  "#000000",
-                  "x":  "1484"
-              },
-        "Tag":  "text",
-        "Text":  "zero or many"
     },
     {
         "A":  {
@@ -4616,5 +4245,198 @@
               },
         "Tag":  "text",
         "Text":  "UQ"
+    },
+    {
+        "A":  {
+                  "width":  "240",
+                  "height":  "70",
+                  "x":  "730",
+                  "rx":  "7",
+                  "y":  "990",
+                  "fill":  "#fff",
+                  "stroke":  "#000000",
+                  "stroke-width":  "1.6"
+              },
+        "Tag":  "rect",
+        "Text":  ""
+    },
+    {
+        "A":  {
+                  "d":  "M 730 1020 V 997 Q 730 990 737 990 H 963 Q 970 990 970 997 V 1020 Z",
+                  "fill":  "#d5e2f5"
+              },
+        "Tag":  "path",
+        "Text":  ""
+    },
+    {
+        "A":  {
+                  "y":  "1010",
+                  "font-size":  "14",
+                  "x":  "850",
+                  "fill":  "#000000",
+                  "text-anchor":  "middle",
+                  "font-weight":  "700"
+              },
+        "Tag":  "text",
+        "Text":  "auth.users"
+    },
+    {
+        "A":  {
+                  "y":  "1041",
+                  "font-size":  "8",
+                  "x":  "748",
+                  "fill":  "#000000",
+                  "text-anchor":  "middle",
+                  "font-weight":  "700"
+              },
+        "Tag":  "text",
+        "Text":  "PK"
+    },
+    {
+        "A":  {
+                  "y":  "1041",
+                  "font-size":  "12.5",
+                  "x":  "766",
+                  "fill":  "#000000"
+              },
+        "Tag":  "text",
+        "Text":  "id"
+    },
+    {
+        "A":  {
+                  "y":  "1041",
+                  "font-size":  "9.5",
+                  "text-anchor":  "end",
+                  "x":  "962",
+                  "fill":  "#000000"
+              },
+        "Tag":  "text",
+        "Text":  "uuid"
+    },
+    {
+        "A":  {
+                  "d":  "M 750 990 L 750 780 L 320 780 L 320 131 L 290 131",
+                  "data-auth":  "true",
+                  "fill":  "none",
+                  "stroke":  "#aab2bd",
+                  "data-required":  "True",
+                  "data-unique":  "True",
+                  "stroke-width":  "1.2",
+                  "stroke-dasharray":  "6 5"
+              },
+        "Tag":  "path",
+        "Text":  ""
+    },
+    {
+        "A":  {
+                  "d":  "M 775 990 L 775 794 L 360 794 L 360 197 L 390 197",
+                  "data-auth":  "true",
+                  "fill":  "none",
+                  "stroke":  "#aab2bd",
+                  "data-required":  "False",
+                  "data-unique":  "False",
+                  "stroke-width":  "1.2",
+                  "stroke-dasharray":  "6 5"
+              },
+        "Tag":  "path",
+        "Text":  ""
+    },
+    {
+        "A":  {
+                  "d":  "M 800 990 L 800 808 L 1010 808 L 1010 175 L 970 175",
+                  "data-auth":  "true",
+                  "fill":  "none",
+                  "stroke":  "#aab2bd",
+                  "data-required":  "False",
+                  "data-unique":  "True",
+                  "stroke-width":  "1.2",
+                  "stroke-dasharray":  "6 5"
+              },
+        "Tag":  "path",
+        "Text":  ""
+    },
+    {
+        "A":  {
+                  "d":  "M 825 990 L 825 822 L 1340 822 L 1340 175 L 1310 175",
+                  "data-auth":  "true",
+                  "fill":  "none",
+                  "stroke":  "#aab2bd",
+                  "data-required":  "False",
+                  "data-unique":  "False",
+                  "stroke-width":  "1.2",
+                  "stroke-dasharray":  "6 5"
+              },
+        "Tag":  "path",
+        "Text":  ""
+    },
+    {
+        "A":  {
+                  "d":  "M 850 990 L 850 836 L 700 836 L 700 465 L 730 465",
+                  "data-auth":  "true",
+                  "fill":  "none",
+                  "stroke":  "#aab2bd",
+                  "data-required":  "False",
+                  "data-unique":  "False",
+                  "stroke-width":  "1.2",
+                  "stroke-dasharray":  "6 5"
+              },
+        "Tag":  "path",
+        "Text":  ""
+    },
+    {
+        "A":  {
+                  "d":  "M 875 990 L 875 850 L 680 850 L 680 487 L 730 487",
+                  "data-auth":  "true",
+                  "fill":  "none",
+                  "stroke":  "#aab2bd",
+                  "data-required":  "False",
+                  "data-unique":  "False",
+                  "stroke-width":  "1.2",
+                  "stroke-dasharray":  "6 5"
+              },
+        "Tag":  "path",
+        "Text":  ""
+    },
+    {
+        "A":  {
+                  "d":  "M 900 990 L 900 864 L 1380 864 L 1380 465 L 1310 465",
+                  "data-auth":  "true",
+                  "fill":  "none",
+                  "stroke":  "#aab2bd",
+                  "data-required":  "False",
+                  "data-unique":  "False",
+                  "stroke-width":  "1.2",
+                  "stroke-dasharray":  "6 5"
+              },
+        "Tag":  "path",
+        "Text":  ""
+    },
+    {
+        "A":  {
+                  "d":  "M 925 990 L 925 878 L 25 878 L 25 443 L 50 443",
+                  "data-auth":  "true",
+                  "fill":  "none",
+                  "stroke":  "#aab2bd",
+                  "data-required":  "True",
+                  "data-unique":  "False",
+                  "stroke-width":  "1.2",
+                  "stroke-dasharray":  "6 5"
+              },
+        "Tag":  "path",
+        "Text":  ""
+    },
+    {
+        "A":  {
+                  "d":  "M 950 990 L 950 892 L 660 892 L 660 663 L 630 663",
+                  "data-auth":  "true",
+                  "fill":  "none",
+                  "stroke":  "#aab2bd",
+                  "data-required":  "False",
+                  "data-unique":  "False",
+                  "stroke-width":  "1.2",
+                  "stroke-dasharray":  "6 5"
+              },
+        "Tag":  "path",
+        "Text":  ""
     }
 ]

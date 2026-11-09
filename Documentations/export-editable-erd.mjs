@@ -8,7 +8,7 @@ let serial=0;const cells=[];
 const cell=(value,style,geometry,parent='1',extra='')=>{const id='e'+(++serial);cells.push(`<mxCell id="${id}" value="${esc(value)}" style="${esc(style)}" parent="${parent}" ${extra}>${geometry}</mxCell>`);return id;};
 const geo=(x,y,w,h)=>`<mxGeometry x="${x}" y="${y}" width="${w}" height="${h}" as="geometry"/>`;
 const cards=es.filter(e=>e.Tag==='rect'&&e.A.width==='240'&&e.A.fill==='#fff'&&e.A.stroke);
-if(cards.length!==12)throw Error('Expected 12 tables');
+if(cards.length!==13)throw Error('Expected 12 public tables and Auth reference');
 for(const c of cards){c.x=+c.A.x;c.y=+c.A.y;c.w=240;c.h=+c.A.height;c.id=cell('','group;',geo(c.x,c.y,c.w,c.h),'1','vertex="1" connectable="0"');}
 const owner=(x,y)=>cards.find(c=>x>=c.x&&x<=c.x+c.w&&y>=c.y&&y<=c.y+c.h);
 // Each table is a movable group of native rectangles and editable text cells.
@@ -33,17 +33,20 @@ for(const e of es){
 }
 // Preserve the SVG paint order: card background, header, then editable labels.
 const paths=es.filter(e=>e.Tag==='path'&&e.A.fill==='none');
-if(paths.length!==9)throw Error('Expected nine public-table relationships');
+if(paths.length!==18)throw Error('Expected 18 foreign-key relationships');
 const labels=['reviewed_by','application_id','member_id','member_id','member_id','member_id','sale_id','product_id','session_id'];
 const start=['ERzeroToOne','ERzeroToOne','ERzeroToOne','ERzeroToOne','ERmandOne','ERmandOne','ERmandOne','ERzeroToOne','ERmandOne'];
 for(let i=0;i<paths.length;i++){
  const ns=paths[i].A.d.match(/-?\d+(?:\.\d+)?/g).map(Number);const ps=[];for(let j=0;j<ns.length;j+=2)ps.push({x:ns[j],y:ns[j+1]});
  const first=ps[0],last=ps.at(-1),s=owner(first.x,first.y),t=owner(last.x,last.y);if(!s||!t)throw Error('Unattached connector');
  const way=ps.slice(1,-1).map(p=>`<mxPoint x="${p.x}" y="${p.y}"/>`).join('');
- cell('',`edgeStyle=segmentEdgeStyle;rounded=0;html=0;strokeColor=#000000;strokeWidth=1.8;startArrow=${start[i]};startFill=0;startSize=12;endArrow=${i===1?'ERzeroToOne':'ERzeroToMany'};endFill=0;endSize=12;exitX=${(first.x-s.x)/s.w};exitY=${(first.y-s.y)/s.h};exitPerimeter=0;entryX=${(last.x-t.x)/t.w};entryY=${(last.y-t.y)/t.h};entryPerimeter=0;`, `<mxGeometry relative="1" as="geometry"><Array as="points">${way}</Array></mxGeometry>`,'1',`edge="1" source="${s.id}" target="${t.id}"`);
+ const auth=paths[i].A['data-auth']==='true';
+ const startMarker=auth?(paths[i].A['data-required']==='True'?'ERmandOne':'ERzeroToOne'):start[i];
+ const endMarker=auth?(paths[i].A['data-unique']==='True'?'ERzeroToOne':'ERzeroToMany'):(i===1?'ERzeroToOne':'ERzeroToMany');
+ cell('',`edgeStyle=segmentEdgeStyle;rounded=0;html=0;strokeColor=${auth?'#aab2bd':'#000000'};strokeWidth=${auth?1.2:1.8};dashed=${auth?1:0};dashPattern=6 5;startArrow=${startMarker};startFill=0;startSize=12;endArrow=${endMarker};endFill=0;endSize=12;exitX=${(first.x-s.x)/s.w};exitY=${(first.y-s.y)/s.h};exitPerimeter=0;entryX=${(last.x-t.x)/t.w};entryY=${(last.y-t.y)/t.h};entryPerimeter=0;`, `<mxGeometry relative="1" as="geometry"><Array as="points">${way}</Array></mxGeometry>`,'1',`edge="1" source="${s.id}" target="${t.id}"`);
 }
 // Native legend symbols, independent of the relationship edge markers.
 for(const e of es){const a=e.A;if(e.Tag==='line'&&+a.x1>=1400&&+a.y1>=620){cell('','strokeColor=#000000;endArrow=none;',`<mxGeometry relative="1" as="geometry"><mxPoint x="${a.x1}" y="${a.y1}" as="sourcePoint"/><mxPoint x="${a.x2}" y="${a.y2}" as="targetPoint"/></mxGeometry>`,'1','edge="1"');}else if(e.Tag==='circle'&&+a.cx>=1400&&+a.cy>=620){cell('','ellipse;fillColor=#ffffff;strokeColor=#000000;',geo(+a.cx-+a.r,+a.cy-+a.r,+a.r*2,+a.r*2),'1','vertex="1"');}}
-const xml=`<?xml version="1.0" encoding="UTF-8"?><mxfile host="app.diagrams.net"><diagram id="irongrind" name="IronGrind ERD"><mxGraphModel dx="1700" dy="770" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" page="1" pageScale="1" pageWidth="1700" pageHeight="770"><root><mxCell id="0"/><mxCell id="1" parent="0"/>${cells.join('')}</root></mxGraphModel></diagram></mxfile>`;
+const xml=`<?xml version="1.0" encoding="UTF-8"?><mxfile host="app.diagrams.net"><diagram id="irongrind" name="IronGrind ERD"><mxGraphModel dx="1700" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" page="1" pageScale="1" pageWidth="1700" pageHeight="1100"><root><mxCell id="0"/><mxCell id="1" parent="0"/>${cells.join('')}</root></mxGraphModel></diagram></mxfile>`;
 writeFileSync(join(out,'05-gym-erd-editable.drawio'),xml);
-console.log(`Exported 12 editable table groups and 9 attached crow's-foot connectors (${serial} native cells).`);
+console.log(`Exported 12 public tables, Auth reference, and 18 attached connectors (${serial} native cells).`);
