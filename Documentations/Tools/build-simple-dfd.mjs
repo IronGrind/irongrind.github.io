@@ -1,1 +1,1 @@
-import './build-dfd-shared-stores.mjs';
+import './build-dfd-individual-stores.mjs';

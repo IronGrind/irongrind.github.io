@@ -1,60 +1,66 @@
 {
   "processes": 9,
   "actors": 3,
-  "storeGroups": [
+  "individualStores": [
     {
-      "ids": [
-        "D0",
-        "D1",
-        "D14"
-      ],
-      "name": "Account and session records"
+      "id": "D0",
+      "name": "auth.users"
     },
     {
-      "ids": [
-        "D2",
-        "D3",
-        "D8"
-      ],
-      "name": "Application and membership records"
+      "id": "D1",
+      "name": "profiles"
     },
     {
-      "ids": [
-        "D4",
-        "D10",
-        "D11",
-        "D13"
-      ],
-      "name": "Attendance and scanner records"
+      "id": "D2",
+      "name": "membership_applications"
     },
     {
-      "ids": [
-        "D5"
-      ],
-      "name": "Product and inventory records"
+      "id": "D3",
+      "name": "members"
     },
     {
-      "ids": [
-        "D6",
-        "D7"
-      ],
-      "name": "Sales and sale-item records"
+      "id": "D4",
+      "name": "attendance"
     },
     {
-      "ids": [
-        "D2-D8"
-      ],
-      "name": "Operational report sources"
+      "id": "D5",
+      "name": "products"
     },
     {
-      "ids": [
-        "D9"
-      ],
-      "name": "Recorded activity logs"
+      "id": "D6",
+      "name": "sales"
+    },
+    {
+      "id": "D7",
+      "name": "sale_items"
+    },
+    {
+      "id": "D8",
+      "name": "membership_history"
+    },
+    {
+      "id": "D9",
+      "name": "activity_logs"
+    },
+    {
+      "id": "D10",
+      "name": "mobile_attendance_pairing_policy"
+    },
+    {
+      "id": "D11",
+      "name": "mobile_attendance_scan_sessions"
+    },
+    {
+      "id": "D13",
+      "name": "private.attendance_scan_requests"
+    },
+    {
+      "id": "D14",
+      "name": "private.account_sessions"
     }
   ],
-  "connectors": 45,
-  "representedDirectionalFlows": 96,
-  "crossingsBefore": 198,
-  "crossingsAfter": 115
+  "connectors": 65,
+  "representedDirectionalFlows": 102,
+  "crossingsBefore": 635,
+  "crossingsAfter": 395
 }

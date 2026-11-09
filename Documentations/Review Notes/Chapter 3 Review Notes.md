@@ -1,3 +1,9 @@
+## DFD individual-store correction - November 10, 2026
+
+Per the adviser's requirement, Figure 3 now shows fourteen individual data-store symbols: D0-D11, D13, and D14. Each has its own name and identifier; no comma-separated or range-based store groups remain. Report generation reads seven separately drawn stores, D2 through D8. All nine processes remain. Chapter 3 embeds the revised SVG and PNG and explains the individual-store model. Earlier grouped-store diagram files are archived under Chapter 3 Diagrams/_Archive/Previous DFD Versions. Prototype screenshots and their formatting were not changed by this correction.
+
+---
+
 ## Prototype update - November 10, 2026
 
 Chapter 3 now uses all 27 screenshots supplied in UI AND FEATURRES.zip, arranged as Figures 6-32 by access, administrator, staff, member, and session workflows. Long captures are presented in 38 total readable parts. Complete originals are retained in Prototype Screenshots/Originals; the figure index identifies every source. The existing Gantt image and date narrative are unchanged; its caption is now Figure 33.

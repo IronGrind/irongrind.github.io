@@ -1,5 +1,5 @@
 ﻿Prototype verification passed.
 27 supplied original screenshots represented in 38 readable figure parts.
-Figures 6-32: each caption and explanation appears once; all embedded PNGs match the approved full captures or their lossless parts.
+Figures 6-32: each caption and explanation appears once; screenshots match source bytes or verified same-aspect normalized appearance after Word compression (1 recompressed images).
 Gantt caption renumbered to Figure 33; schedule content retained.
 All picture placements resolve to embedded media; drawing identifiers are unique.
