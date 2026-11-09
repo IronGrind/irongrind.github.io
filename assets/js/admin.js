@@ -4,6 +4,23 @@ function validPersonName(value) {
     const name = String(value || '').trim();
     return name.length > 0 && name.length <= 150 && /\p{L}/u.test(name) && !/[\p{N}\p{Cc}\p{Cf}]/u.test(name);
 }
+function composeAdminMemberName(firstName, middleInitial, lastName) {
+    const first = String(firstName || '').trim().replace(/\s+/g, ' ');
+    const middle = String(middleInitial || '').trim();
+    const last = String(lastName || '').trim().replace(/\s+/g, ' ');
+    if (!validPersonName(first) || !validPersonName(last)) {
+        throw new Error('Enter the member’s first and last names; numbers are not allowed.');
+    }
+    if (first.length > 70 || last.length > 70) {
+        throw new Error('First and last names must each be 70 characters or fewer.');
+    }
+    if (middle && !/^\p{L}\.?$/u.test(middle)) {
+        throw new Error('Enter one letter for the middle initial, optionally followed by a period.');
+    }
+    const fullName = [first, middle ? `${middle.replace('.', '').toUpperCase()}.` : '', last].filter(Boolean).join(' ');
+    if (fullName.length > 150) throw new Error('The combined name must be 150 characters or fewer.');
+    return fullName;
+}
 (function guardAdmin() {
     let session = null;
     try {
@@ -1143,9 +1160,13 @@ function openAddMemberModal() {
             <div style="display:flex; align-items:center; gap:8px; font-size:0.85rem; font-weight:600; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid #1e2533;">
                 <i class="fas fa-user" style="color:#ff6b2b;"></i><span>Personal Information</span>
             </div>
+            <div class="form-row" style="grid-template-columns:repeat(3,minmax(0,1fr));">
+                <div class="form-group"><label for="wiFirstName">First name (FN) *</label><input type="text" id="wiFirstName" required maxlength="70" autocomplete="given-name" placeholder="Juan"></div>
+                <div class="form-group"><label for="wiMiddleInitial">Middle initial (MI, optional)</label><input type="text" id="wiMiddleInitial" maxlength="2" autocomplete="additional-name" placeholder="M." title="Enter one letter, optionally followed by a period."></div>
+                <div class="form-group"><label for="wiLastName">Last name (LN) *</label><input type="text" id="wiLastName" required maxlength="70" autocomplete="family-name" placeholder="Dela Cruz"></div>
+            </div>
             <div class="form-row">
-                <div class="form-group"><label>Full Name *</label><input type="text" id="wiName" placeholder="Juan Dela Cruz"></div>
-                <div class="form-group"><label>Date of Birth *</label><input type="date" id="wiDob"></div>
+                <div class="form-group"><label for="wiDob">Date of Birth *</label><input type="date" id="wiDob"></div>
             </div>
             <div class="form-row" style="grid-template-columns:1fr 1fr 1fr;">
                 <div class="form-group"><label>Age</label><input type="number" id="wiAge" readonly></div>
@@ -1311,7 +1332,17 @@ function clearSignature() {
 
 async function submitNewMember() {
     // ---- Personal ----
-    const name = document.getElementById('wiName').value.trim();
+    let name;
+    try {
+        name = composeAdminMemberName(
+            document.getElementById('wiFirstName').value,
+            document.getElementById('wiMiddleInitial').value,
+            document.getElementById('wiLastName').value
+        );
+    } catch (error) {
+        toast(error.message, 'error');
+        return;
+    }
     const dob = document.getElementById('wiDob').value;
     const age = Number(document.getElementById('wiAge').value);
     const sex = document.getElementById('wiSex').value;
@@ -1346,7 +1377,6 @@ async function submitNewMember() {
     const goals = Array.from(document.querySelectorAll('input[name="wiGoal"]:checked')).map(g => g.value);
 
     // ---- Validation ----
-    if (!name) { toast('Full Name is required.', 'error'); return; }
     if (!validPersonName(name) || !validPersonName(ecName)) {
         toast('Names must contain letters and cannot contain numbers. Check the member and emergency contact names.', 'error');
         return;
