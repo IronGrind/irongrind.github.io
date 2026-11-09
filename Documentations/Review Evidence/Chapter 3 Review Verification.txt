@@ -1,3 +1,3 @@
-﻿Chapter 3: twelve-table public ERD scope and landscape figure section, all 174 field key/nullability definitions, 21 FK targets and actions, five unique fields, and scoped-session composite PK verified.
+﻿Chapter 3: four-column dictionary layout with 174 descriptions, declared types/sizes and key/nullability definitions; 21 FK targets/actions, five unique fields, identity generation and composite PK verified; public ERD landscape section retained.
 Chapter 3: 12 public and 3 private dictionary tables, 174 fields, 20 total tables, and linked figures verified.
 Chapter 3: XML opens; no unexpected body/data-row bold, stale approval wording, garbled punctuation, or missing figure links detected.

@@ -76,22 +76,27 @@ foreach($chapter in $Chapters){
    $verifiedFKs=0;$verifiedUnique=0
    for($ti=0;$ti -lt $dictionary.Count;$ti++){
     $tableName=$order[$ti];$modelTable=$schema.Tables|Where-Object Name -EQ $tableName
+    $heads=@($dictionary[$ti].SelectSingleNode('w:tr',$ns).SelectNodes('w:tc',$ns)|ForEach-Object {($_.SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join ''})
+    if(($heads -join '|') -cne 'Name|Type|Constraints|Description'){throw "Incorrect four-column dictionary header: $tableName"}
     foreach($row in ($dictionary[$ti].SelectNodes('w:tr',$ns)|Select-Object -Skip 1)){
-     $cells=$row.SelectNodes('w:tc',$ns);$field=(($cells[0].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim()
+     $cells=$row.SelectNodes('w:tc',$ns);if($cells.Count -ne 4){throw "Dictionary row does not have four columns: $tableName"};$field=(($cells[0].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim()
+     $description=(($cells[3].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim();if(-not $description){throw "Missing dictionary description: $tableName.$field"}
      $column=@($modelTable.Columns|Where-Object Name -EQ $field);if($column.Count -ne 1){throw "Unknown dictionary field $tableName.$field"};$column=$column[0]
-     $keyText=(($cells[3].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim();$actualKeys=@($keyText -split ',\s*'|Where-Object {$_})
+     $actualType=(($cells[1].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim();if($actualType -cne $column.Type){throw "Incorrect declared type or size: $tableName.$field"}
+     $details=($cells[2].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join ''
+     $keyMatch=[regex]::Match($details,'^((?:PK|FK|UQ)(?:, (?:PK|FK|UQ))*)\.\s');$actualKeys=@($keyMatch.Groups[1].Value -split ',\s*'|Where-Object {$_})
      if(@(Compare-Object @($column.Keys|Sort-Object) @($actualKeys|Sort-Object)).Count){throw "Incorrect dictionary keys: $tableName.$field"}
-     $details=($cells[4].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join ''
-     $required=if($column.Required){'Constraints: NOT NULL.'}else{'Constraints: Nullable at column level.'};if(-not $details.Contains($required)){throw "Incorrect nullability: $tableName.$field"}
+     $required=if($column.Required){'NOT NULL.'}else{'Nullable at column level.'};if(-not $details.Contains($required)){throw "Incorrect nullability: $tableName.$field"}
      foreach($fk in @($schema.Relations|Where-Object {$_.Child -eq $tableName -and $_.Field -eq $field})){
       if(-not $details.Contains('References '+$fk.Parent+'('+$fk.ParentField+'); ON DELETE '+$fk.Delete+'; ON UPDATE NO ACTION.')){throw "Missing FK target or rule: $tableName.$field"};$verifiedFKs++
      }
      if('UQ' -in $actualKeys){if($details -notmatch '(?i)must be unique'){throw "Missing uniqueness explanation: $tableName.$field"};$verifiedUnique++}
      if($tableName -eq 'private.account_sessions' -and $field -in @('user_id','session_scope') -and -not $details.Contains('Part of composite PK (user_id, session_scope)')){throw 'Scoped-session composite key explanation is missing.'}
+     if($tableName -eq 'public.activity_logs' -and $field -eq 'id' -and -not $details.Contains('Identity (GENERATED ALWAYS).')){throw 'Activity-log identity generation is missing.'}
     }
    }
    if($verifiedFKs -ne 21 -or $verifiedUnique -ne 5){throw 'Incomplete FK or unique-key dictionary coverage.'}
-   $results.Add('Chapter 3: twelve-table public ERD scope and landscape figure section, all 174 field key/nullability definitions, 21 FK targets and actions, five unique fields, and scoped-session composite PK verified.')
+   $results.Add('Chapter 3: four-column dictionary layout with 174 descriptions, declared types/sizes and key/nullability definitions; 21 FK targets/actions, five unique fields, identity generation and composite PK verified; public ERD landscape section retained.')
    $results.Add('Chapter 3: 12 public and 3 private dictionary tables, 174 fields, 20 total tables, and linked figures verified.')
   }
   $results.Add("Chapter ${chapter}: XML opens; no unexpected body/data-row bold, stale approval wording, garbled punctuation, or missing figure links detected.")
