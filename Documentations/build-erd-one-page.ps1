@@ -1,10 +1,12 @@
-param([switch]$PublicOnly)
+param([switch]$PublicOnly,[switch]$SimpleStyle)
+if($SimpleStyle){$PublicOnly=$true}
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.Drawing
 $out=Join-Path $PSScriptRoot 'Chapter 3 Diagrams'
 $model=Get-Content -Raw -LiteralPath (Join-Path $out 'schema-visualizer.json')|ConvertFrom-Json
 if($PublicOnly){$model.Tables=@($model.Tables|Where-Object Name -Like 'public.*');$model.Relations=@($model.Relations|Where-Object Child -Like 'public.*')}
 $expectedTables=if($PublicOnly){13}else{16};$expectedLinks=if($PublicOnly){18}else{21};$stem=if($PublicOnly){'05-public-schema-erd'}else{'05-erd-one-page'}
+if($SimpleStyle){$stem='05-public-schema-erd-simple'}
 $tables=@{};foreach($table in $model.Tables){$tables[$table.Name]=$table}
 $tables['auth.users']=[pscustomobject]@{Name='auth.users';Columns=@([pscustomobject]@{Name='id';Type='uuid';Required=$true;Keys=@('PK')})}
 $width=3508;$height=2480;$cw=740;$hh=86;$rh=46
@@ -83,6 +85,7 @@ try {
   for($j=$i+1;$j -lt $allCards.Count;$j++){$b=$allCards[$j];if($a.X -lt $b.X+$cw -and $a.X+$cw -gt $b.X -and $a.Y -lt $b.Y+$b.H -and $a.Y+$a.H -gt $b.Y){throw 'Table cards overlap.'}}
  }
  $palette=@('#1d4ed8','#0f766e','#7c3aed','#a16207','#be185d','#475569','#0369a1')
+ if($SimpleStyle){$palette=@('#475569')}
  $routes=[Collections.Generic.List[object]]::new();$parentUse=@{};$longTop=0;$longBottom=0
  foreach($r in $model.Relations){
   $i=$routes.Count;$p=$cards[$r.Parent];$c=$cards[$r.Child];$parentKey=$r.Parent+'.'+$r.ParentField
@@ -170,9 +173,10 @@ try {
  }
  foreach($card in ($cards.Values|Sort-Object X,Y)){
   $x=$card.X;$y=$card.Y;$schema,$name=$card.Name -split '\.',2;$fill=if($schema -eq 'private'){'#ece8f7'}elseif($schema -eq 'auth'){'#e2e8f0'}else{'#dbeafe'}
+  if($SimpleStyle){$fill='#078daf'}
   Box $x $y $cw $card.H '#ffffff';Box $x $y $cw $hh $fill
-  Text $(if($schema -eq 'auth'){'auth | managed reference'}else{$schema}) ($x+15) ($y+6) 24 '#52657b'
-  Text $name ($x+15) ($y+38) $(if($PublicOnly){32}else{28}) '#172b46' $true
+  Text $(if($schema -eq 'auth'){'auth | managed reference'}else{$schema}) ($x+15) ($y+6) 24 $(if($SimpleStyle){'#ffffff'}else{'#52657b'})
+  Text $name ($x+15) ($y+38) $(if($PublicOnly){32}else{28}) $(if($SimpleStyle){'#ffffff'}else{'#172b46'}) $true
   for($i=0;$i -lt $card.Columns.Count;$i++){
    $col=$card.Columns[$i];$ry=$y+$hh+$rh*$i
    if($i%2 -eq 0){Box ($x+1) $ry ($cw-2) $rh '#f7f9fc' '#f7f9fc'}

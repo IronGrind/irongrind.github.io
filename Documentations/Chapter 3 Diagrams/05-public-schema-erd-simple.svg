@@ -1,0 +1,347 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="297mm" height="210mm" viewBox="0 0 3508 2480"><rect width="3508" height="2480" fill="white"/>
+<text x="40" y="63" font-family="Arial, sans-serif" font-size="43" font-weight="700" fill="#172b46">Figure 5. Public-Schema Entity Relationship Diagram</text>
+<text x="40" y="109" font-family="Arial, sans-serif" font-size="29" font-weight="400" fill="#52657b">All 12 public tables and their declared foreign keys; selected attributes; auth.users shown as a reference.</text>
+<path d="M 780 300.21299999999997 L 870 300.21299999999997 M 870 145 L 870 300.21299999999997 M 870 145 L 1733.3333333333333 145 M 1733.3333333333333 145 L 1733.3333333333333 447 M 1733.3333333333333 447.023 L 1780 447.023" fill="none" stroke="#475569" stroke-width="3.2"><title>auth.users.id -&gt; public.attendance.checked_out_by; ON DELETE SET NULL</title></path>
+<circle cx="780" cy="300.21299999999997" r="1.3" fill="#475569"/>
+<circle cx="1780" cy="447.023" r="3.5" fill="#475569"/>
+<path d="M 1650 954.626 L 1757.7777777777778 954.626 M 1757.7777777777778 355.046 L 1757.7777777777778 395.069 M 1757.7777777777778 407.069 L 1757.7777777777778 441.023 M 1757.7777777777778 453.023 L 1757.7777777777778 954.626 M 1757.7777777777778 355.046 L 1780 355.046" fill="none" stroke="#475569" stroke-width="3.2"><title>public.members.id -&gt; public.attendance.member_id; ON DELETE CASCADE</title></path>
+<circle cx="1650" cy="954.626" r="1.3" fill="#475569"/>
+<circle cx="1780" cy="355.046" r="3.5" fill="#475569"/>
+<path d="M 780 295.839 L 860 295.839 M 860 135 L 860 295.839 M 860 135 L 1745.5555555555557 135 M 1745.5555555555557 135 L 1745.5555555555557 401 M 1745.5555555555557 401.069 L 1780 401.069" fill="none" stroke="#475569" stroke-width="3.2"><title>auth.users.id -&gt; public.attendance.recorded_by; ON DELETE SET NULL</title></path>
+<circle cx="780" cy="295.839" r="1.3" fill="#475569"/>
+<circle cx="1780" cy="401.069" r="3.5" fill="#475569"/>
+<path d="M 1650 309.052 L 1708.888888888889 309.052 M 1708.888888888889 309.052 L 1708.888888888889 948.626 M 1708.888888888889 960.626 L 1708.888888888889 1051.092 M 1708.888888888889 1051.092 L 1650 1051.092" fill="none" stroke="#475569" stroke-width="3.2"><title>public.membership_applications.id -&gt; public.members.application_id; ON DELETE SET NULL</title></path>
+<circle cx="1650" cy="309.052" r="1.3" fill="#475569"/>
+<circle cx="1650" cy="1051.092" r="3.5" fill="#475569"/>
+<path d="M 780 313.465 L 840 313.465 M 840 313.465 L 840 583.104 M 840 595.104 L 840 1005.115 M 840 1005.115 L 910 1005.115" fill="none" stroke="#475569" stroke-width="3.2"><title>auth.users.id -&gt; public.members.auth_user_id; ON DELETE SET NULL</title></path>
+<circle cx="780" cy="313.465" r="1.3" fill="#475569"/>
+<circle cx="910" cy="1005.115" r="3.5" fill="#475569"/>
+<path d="M 780 309.078 L 850 309.078 M 850 309.078 L 850 355.138 M 850 355.138 L 910 355.138" fill="none" stroke="#475569" stroke-width="3.2"><title>auth.users.id -&gt; public.membership_applications.auth_user_id; ON DELETE CASCADE</title></path>
+<circle cx="780" cy="309.078" r="1.3" fill="#475569"/>
+<circle cx="910" cy="355.138" r="3.5" fill="#475569"/>
+<path d="M 1650 945.891 L 1684.4444444444443 945.891 M 1684.4444444444443 401.161 L 1684.4444444444443 945.891 M 1684.4444444444443 401.161 L 1650 401.161" fill="none" stroke="#475569" stroke-width="3.2"><title>public.members.id -&gt; public.membership_applications.member_id; ON DELETE SET NULL</title></path>
+<circle cx="1650" cy="945.891" r="1.3" fill="#475569"/>
+<circle cx="1650" cy="401.161" r="3.5" fill="#475569"/>
+<path d="M 780 589.104 L 890 589.104 M 890 447.184 L 890 589.104 M 890 447.184 L 910 447.184" fill="none" stroke="#475569" stroke-width="3.2"><title>public.profiles.id -&gt; public.membership_applications.reviewed_by; ON DELETE NO ACTION</title></path>
+<circle cx="780" cy="589.104" r="1.3" fill="#475569"/>
+<circle cx="910" cy="447.184" r="3.5" fill="#475569"/>
+<path d="M 1650 972.317 L 1672.2222222222222 972.317 M 1672.2222222222222 972.317 L 1672.2222222222222 1045.092 M 1672.2222222222222 1057.092 L 1672.2222222222222 1755.207 M 1672.2222222222222 1755.207 L 1650 1755.207" fill="none" stroke="#475569" stroke-width="3.2"><title>public.members.id -&gt; public.membership_history.member_id; ON DELETE RESTRICT</title></path>
+<circle cx="1650" cy="972.317" r="1.3" fill="#475569"/>
+<circle cx="1650" cy="1755.207" r="3.5" fill="#475569"/>
+<path d="M 780 317.93 L 830 317.93 M 830 317.93 L 830 583.104 M 830 595.104 L 830 1801.23 M 830 1801.23 L 910 1801.23" fill="none" stroke="#475569" stroke-width="3.2"><title>auth.users.id -&gt; public.membership_history.recorded_by; ON DELETE SET NULL</title></path>
+<circle cx="780" cy="317.93" r="1.3" fill="#475569"/>
+<circle cx="910" cy="1801.23" r="3.5" fill="#475569"/>
+<path d="M 780 322.34299999999996 L 810 322.34299999999996 M 810 322.34299999999996 L 810 583.104 M 810 595.104 L 810 1255.253 M 810 1255.253 L 780 1255.253" fill="none" stroke="#475569" stroke-width="3.2"><title>auth.users.id -&gt; public.mobile_attendance_pairing_policy.updated_by; ON DELETE NO ACTION</title></path>
+<circle cx="780" cy="322.34299999999996" r="1.3" fill="#475569"/>
+<circle cx="780" cy="1255.253" r="3.5" fill="#475569"/>
+<path d="M 2520 1109.156 L 2585 1109.156 M 2585 1109.156 L 2585 1755.276 M 2585 1755.276 L 2520 1755.276" fill="none" stroke="#475569" stroke-width="3.2"><title>public.mobile_attendance_scan_sessions.id -&gt; public.mobile_attendance_scan_events.session_id; ON DELETE CASCADE</title></path>
+<circle cx="2520" cy="1109.156" r="1.3" fill="#475569"/>
+<circle cx="2520" cy="1755.276" r="3.5" fill="#475569"/>
+<path d="M 780 304.769 L 880 304.769 M 880 155 L 880 304.769 M 880 155 L 1721.111111111111 155 M 1721.111111111111 155 L 1721.111111111111 949 M 1721.111111111111 961 L 1721.111111111111 1155 M 1721.111111111111 1155.299 L 1780 1155.299" fill="none" stroke="#475569" stroke-width="3.2"><title>auth.users.id -&gt; public.mobile_attendance_scan_sessions.created_by; ON DELETE CASCADE</title></path>
+<circle cx="780" cy="304.769" r="1.3" fill="#475569"/>
+<circle cx="1780" cy="1155.299" r="3.5" fill="#475569"/>
+<path d="M 780 326.78200000000004 L 800 326.78200000000004 M 800 326.78200000000004 L 800 583.104 M 800 589.322 L 780 589.322" fill="none" stroke="#475569" stroke-width="3.2"><title>auth.users.id -&gt; public.profiles.id; ON DELETE CASCADE</title></path>
+<circle cx="780" cy="326.78200000000004" r="1.3" fill="#475569"/>
+<circle cx="780" cy="589.322" r="3.5" fill="#475569"/>
+<path d="M 3390 309.195 L 3452 309.195 M 3452 309.195 L 3452 1801.345 M 3452 1801.345 L 3390 1801.345" fill="none" stroke="#475569" stroke-width="3.2"><title>public.products.id -&gt; public.sale_items.product_id; ON DELETE SET NULL</title></path>
+<circle cx="3390" cy="309.195" r="1.3" fill="#475569"/>
+<circle cx="3390" cy="1801.345" r="3.5" fill="#475569"/>
+<path d="M 3390 959.208 L 3426 959.208 M 3426 959.208 L 3426 1755.368 M 3426 1755.368 L 3390 1755.368" fill="none" stroke="#475569" stroke-width="3.2"><title>public.sales.id -&gt; public.sale_items.sale_id; ON DELETE CASCADE</title></path>
+<circle cx="3390" cy="959.208" r="1.3" fill="#475569"/>
+<circle cx="3390" cy="1755.368" r="3.5" fill="#475569"/>
+<path d="M 1650 963.621 L 1696.6666666666667 963.621 M 1696.6666666666667 963.621 L 1696.6666666666667 1045.092 M 1696.6666666666667 1057.092 L 1696.6666666666667 2230 M 1696.6666666666667 2230 L 2612.5 2230 M 2612.5 1005 L 2612.5 1045 M 2612.5 1057 L 2612.5 2230 M 2612.5 1005.391 L 2650 1005.391" fill="none" stroke="#475569" stroke-width="3.2"><title>public.members.id -&gt; public.sales.member_id; ON DELETE SET NULL</title></path>
+<circle cx="1650" cy="963.621" r="1.3" fill="#475569"/>
+<circle cx="2650" cy="1005.391" r="3.5" fill="#475569"/>
+<path d="M 780 291.63399999999996 L 820 291.63399999999996 M 820 125 L 820 291.63399999999996 M 820 125 L 2557.5 125 M 2557.5 125 L 2557.5 1051 M 2557.5 1051.414 L 2650 1051.414" fill="none" stroke="#475569" stroke-width="3.2"><title>auth.users.id -&gt; public.sales.processed_by; ON DELETE SET NULL</title></path>
+<circle cx="780" cy="291.63399999999996" r="1.3" fill="#475569"/>
+<circle cx="2650" cy="1051.414" r="3.5" fill="#475569"/>
+<rect x="40" y="200" width="740" height="132" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="40" y="200" width="740" height="86" fill="#078daf" stroke="#cbd5e1"/>
+<text x="55" y="230" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#ffffff">auth | managed reference</text>
+<text x="55" y="270" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#ffffff">users</text>
+<rect x="41" y="286" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="50" y="317" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">PK</text>
+<text x="148" y="327" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">id</text>
+<text x="605" y="321" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid *</text>
+<rect x="40" y="480" width="740" height="362" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="40" y="480" width="740" height="86" fill="#078daf" stroke="#cbd5e1"/>
+<text x="55" y="510" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#ffffff">public</text>
+<text x="55" y="550" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#ffffff">profiles</text>
+<rect x="41" y="566" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="50" y="597" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">PK/FK</text>
+<text x="148" y="607" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">id</text>
+<text x="605" y="601" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid *</text>
+<text x="50" y="643" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">UQ</text>
+<text x="148" y="653" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">username</text>
+<text x="605" y="647" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">varchar(30)</text>
+<rect x="41" y="658" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="50" y="689" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">UQ</text>
+<text x="148" y="699" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">email</text>
+<text x="605" y="693" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">varchar(254)</text>
+<text x="50" y="735" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="148" y="745" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">full_name</text>
+<text x="605" y="738" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#52657b">varchar(150) *</text>
+<rect x="41" y="750" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="50" y="781" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="148" y="791" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">role</text>
+<text x="605" y="785" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">varchar(20) *</text>
+<text x="50" y="827" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="148" y="837" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">account_status</text>
+<text x="605" y="831" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">text *</text>
+<rect x="40" y="1100" width="740" height="224" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="40" y="1100" width="740" height="86" fill="#078daf" stroke="#cbd5e1"/>
+<text x="55" y="1130" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#ffffff">public</text>
+<text x="55" y="1170" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#ffffff">mobile_attendance_pairing_policy</text>
+<rect x="41" y="1186" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="50" y="1217" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">PK</text>
+<text x="148" y="1227" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">singleton</text>
+<text x="605" y="1221" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">boolean *</text>
+<text x="50" y="1263" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="148" y="1273" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">updated_by</text>
+<text x="605" y="1267" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid</text>
+<rect x="41" y="1278" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="50" y="1309" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="148" y="1319" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">max_pairs</text>
+<text x="605" y="1313" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">integer *</text>
+<rect x="40" y="1600" width="740" height="362" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="40" y="1600" width="740" height="86" fill="#078daf" stroke="#cbd5e1"/>
+<text x="55" y="1630" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#ffffff">public</text>
+<text x="55" y="1670" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#ffffff">activity_logs</text>
+<rect x="41" y="1686" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="50" y="1717" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">PK</text>
+<text x="148" y="1727" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">id</text>
+<text x="605" y="1721" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">bigint *</text>
+<text x="50" y="1763" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="148" y="1773" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">actor_id</text>
+<text x="605" y="1767" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid</text>
+<rect x="41" y="1778" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="50" y="1809" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="148" y="1819" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">actor_name</text>
+<text x="605" y="1813" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">text *</text>
+<text x="50" y="1855" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="148" y="1865" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">action</text>
+<text x="605" y="1859" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">text *</text>
+<rect x="41" y="1870" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="50" y="1901" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="148" y="1911" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">entity_type</text>
+<text x="605" y="1905" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">text *</text>
+<text x="50" y="1947" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="148" y="1957" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">occurred_at</text>
+<text x="605" y="1951" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">timestamptz *</text>
+<rect x="910" y="200" width="740" height="362" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="910" y="200" width="740" height="86" fill="#078daf" stroke="#cbd5e1"/>
+<text x="925" y="230" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#ffffff">public</text>
+<text x="925" y="270" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#ffffff">membership_applications</text>
+<rect x="911" y="286" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="920" y="317" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">PK</text>
+<text x="1018" y="327" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">id</text>
+<text x="1475" y="321" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid *</text>
+<text x="920" y="363" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="1018" y="373" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">auth_user_id</text>
+<text x="1475" y="367" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid</text>
+<rect x="911" y="378" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="920" y="409" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="1018" y="419" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">member_id</text>
+<text x="1475" y="413" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid</text>
+<text x="920" y="455" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="1018" y="465" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">reviewed_by</text>
+<text x="1475" y="459" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid</text>
+<rect x="911" y="470" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="920" y="501" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="1018" y="511" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">application_type</text>
+<text x="1475" y="505" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">varchar(20) *</text>
+<text x="920" y="547" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="1018" y="557" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">status</text>
+<text x="1475" y="551" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">varchar(20) *</text>
+<rect x="910" y="850" width="740" height="408" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="910" y="850" width="740" height="86" fill="#078daf" stroke="#cbd5e1"/>
+<text x="925" y="880" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#ffffff">public</text>
+<text x="925" y="920" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#ffffff">members</text>
+<rect x="911" y="936" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="920" y="967" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">PK</text>
+<text x="1018" y="977" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">id</text>
+<text x="1475" y="971" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid *</text>
+<text x="920" y="1013" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">FK/UQ</text>
+<text x="1018" y="1023" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">auth_user_id</text>
+<text x="1475" y="1017" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid</text>
+<rect x="911" y="1028" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="920" y="1059" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">FK/UQ</text>
+<text x="1018" y="1069" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">application_id</text>
+<text x="1475" y="1063" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid</text>
+<text x="920" y="1105" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="1018" y="1115" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">full_name</text>
+<text x="1475" y="1108" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#52657b">varchar(150) *</text>
+<rect x="911" y="1120" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="920" y="1151" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="1018" y="1161" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">plan</text>
+<text x="1475" y="1155" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">varchar(30) *</text>
+<text x="920" y="1197" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="1018" y="1207" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">status</text>
+<text x="1475" y="1201" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">varchar(20) *</text>
+<rect x="911" y="1212" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="920" y="1243" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="1018" y="1253" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">expiry_date</text>
+<text x="1475" y="1247" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">date</text>
+<rect x="910" y="1600" width="740" height="316" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="910" y="1600" width="740" height="86" fill="#078daf" stroke="#cbd5e1"/>
+<text x="925" y="1630" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#ffffff">public</text>
+<text x="925" y="1670" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#ffffff">membership_history</text>
+<rect x="911" y="1686" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="920" y="1717" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">PK</text>
+<text x="1018" y="1727" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">id</text>
+<text x="1475" y="1721" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid *</text>
+<text x="920" y="1763" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="1018" y="1773" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">member_id</text>
+<text x="1475" y="1767" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid *</text>
+<rect x="911" y="1778" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="920" y="1809" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="1018" y="1819" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">recorded_by</text>
+<text x="1475" y="1813" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid</text>
+<text x="920" y="1855" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="1018" y="1865" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">event_type</text>
+<text x="1475" y="1859" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">varchar(30) *</text>
+<rect x="911" y="1870" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="920" y="1901" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="1018" y="1911" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">new_expiry_date</text>
+<text x="1475" y="1905" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">date</text>
+<rect x="1780" y="200" width="740" height="362" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="1780" y="200" width="740" height="86" fill="#078daf" stroke="#cbd5e1"/>
+<text x="1795" y="230" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#ffffff">public</text>
+<text x="1795" y="270" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#ffffff">attendance</text>
+<rect x="1781" y="286" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="1790" y="317" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">PK</text>
+<text x="1888" y="327" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">id</text>
+<text x="2345" y="321" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid *</text>
+<text x="1790" y="363" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="1888" y="373" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">member_id</text>
+<text x="2345" y="367" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid *</text>
+<rect x="1781" y="378" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="1790" y="409" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="1888" y="419" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">recorded_by</text>
+<text x="2345" y="413" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid</text>
+<text x="1790" y="455" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="1888" y="465" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">checked_out_by</text>
+<text x="2345" y="459" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid</text>
+<rect x="1781" y="470" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="1790" y="501" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="1888" y="511" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">time_in</text>
+<text x="2345" y="505" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">timestamptz *</text>
+<text x="1790" y="547" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="1888" y="557" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">time_out</text>
+<text x="2345" y="551" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">timestamptz</text>
+<rect x="1780" y="1000" width="740" height="270" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="1780" y="1000" width="740" height="86" fill="#078daf" stroke="#cbd5e1"/>
+<text x="1795" y="1030" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#ffffff">public</text>
+<text x="1795" y="1070" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#ffffff">mobile_attendance_scan_sessions</text>
+<rect x="1781" y="1086" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="1790" y="1117" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">PK</text>
+<text x="1888" y="1127" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">id</text>
+<text x="2345" y="1121" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid *</text>
+<text x="1790" y="1163" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="1888" y="1173" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">created_by</text>
+<text x="2345" y="1167" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid *</text>
+<rect x="1781" y="1178" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="1790" y="1209" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="1888" y="1219" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">paired_device_id</text>
+<text x="2345" y="1213" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid</text>
+<text x="1790" y="1255" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="1888" y="1265" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">expires_at</text>
+<text x="2345" y="1259" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">timestamptz *</text>
+<rect x="1780" y="1600" width="740" height="270" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="1780" y="1600" width="740" height="86" fill="#078daf" stroke="#cbd5e1"/>
+<text x="1795" y="1630" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#ffffff">public</text>
+<text x="1795" y="1670" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#ffffff">mobile_attendance_scan_events</text>
+<rect x="1781" y="1686" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="1790" y="1717" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">PK</text>
+<text x="1888" y="1727" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">id</text>
+<text x="2345" y="1721" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid *</text>
+<text x="1790" y="1763" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="1888" y="1773" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">session_id</text>
+<text x="2345" y="1767" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid *</text>
+<rect x="1781" y="1778" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="1790" y="1809" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="1888" y="1819" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">qr_payload</text>
+<text x="2345" y="1813" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">text *</text>
+<text x="1790" y="1855" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="1888" y="1865" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">created_at</text>
+<text x="2345" y="1859" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">timestamptz *</text>
+<rect x="2650" y="200" width="740" height="362" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="2650" y="200" width="740" height="86" fill="#078daf" stroke="#cbd5e1"/>
+<text x="2665" y="230" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#ffffff">public</text>
+<text x="2665" y="270" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#ffffff">products</text>
+<rect x="2651" y="286" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="2660" y="317" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">PK</text>
+<text x="2758" y="327" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">id</text>
+<text x="3215" y="321" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid *</text>
+<text x="2660" y="363" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="2758" y="373" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">name</text>
+<text x="3215" y="366" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#52657b">varchar(120) *</text>
+<rect x="2651" y="378" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="2660" y="409" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="2758" y="419" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">category</text>
+<text x="3215" y="413" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">varchar(20) *</text>
+<text x="2660" y="455" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="2758" y="465" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">price</text>
+<text x="3215" y="456" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#52657b">numeric(10,2) *</text>
+<rect x="2651" y="470" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="2660" y="501" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="2758" y="511" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">stock</text>
+<text x="3215" y="502" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#52657b">numeric(14,6) *</text>
+<text x="2660" y="547" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="2758" y="557" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">is_active</text>
+<text x="3215" y="551" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">boolean *</text>
+<rect x="2650" y="850" width="740" height="362" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="2650" y="850" width="740" height="86" fill="#078daf" stroke="#cbd5e1"/>
+<text x="2665" y="880" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#ffffff">public</text>
+<text x="2665" y="920" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#ffffff">sales</text>
+<rect x="2651" y="936" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="2660" y="967" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">PK</text>
+<text x="2758" y="977" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">id</text>
+<text x="3215" y="971" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid *</text>
+<text x="2660" y="1013" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="2758" y="1023" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">member_id</text>
+<text x="3215" y="1017" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid</text>
+<rect x="2651" y="1028" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="2660" y="1059" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="2758" y="1069" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">processed_by</text>
+<text x="3215" y="1063" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid</text>
+<text x="2660" y="1105" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">UQ</text>
+<text x="2758" y="1115" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">receipt_number</text>
+<text x="3215" y="1109" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">varchar(64) *</text>
+<rect x="2651" y="1120" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="2660" y="1151" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="2758" y="1161" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">total</text>
+<text x="3215" y="1152" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#52657b">numeric(10,2) *</text>
+<text x="2660" y="1197" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="2758" y="1207" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">sold_at</text>
+<text x="3215" y="1201" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">timestamptz *</text>
+<rect x="2650" y="1600" width="740" height="362" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="2650" y="1600" width="740" height="86" fill="#078daf" stroke="#cbd5e1"/>
+<text x="2665" y="1630" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#ffffff">public</text>
+<text x="2665" y="1670" font-family="Arial, sans-serif" font-size="32" font-weight="700" fill="#ffffff">sale_items</text>
+<rect x="2651" y="1686" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="2660" y="1717" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">PK</text>
+<text x="2758" y="1727" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">id</text>
+<text x="3215" y="1721" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid *</text>
+<text x="2660" y="1763" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="2758" y="1773" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">sale_id</text>
+<text x="3215" y="1767" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid *</text>
+<rect x="2651" y="1778" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="2660" y="1809" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="2758" y="1819" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">product_id</text>
+<text x="3215" y="1813" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">uuid</text>
+<text x="2660" y="1855" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="2758" y="1865" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">item_name</text>
+<text x="3215" y="1858" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#52657b">varchar(150) *</text>
+<rect x="2651" y="1870" width="738" height="46" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="2660" y="1901" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="2758" y="1911" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">quantity</text>
+<text x="3215" y="1902" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#52657b">numeric(12,3) *</text>
+<text x="2660" y="1947" font-family="Arial, sans-serif" font-size="20" font-weight="700" fill="#1d4ed8"></text>
+<text x="2758" y="1957" font-family="Arial, sans-serif" font-size="35" font-weight="400" fill="#172b46">line_total</text>
+<text x="3215" y="1948" font-family="Arial, sans-serif" font-size="22" font-weight="400" fill="#52657b">numeric(12,2) *</text>
+<text x="40" y="2328" font-family="Arial, sans-serif" font-size="28" font-weight="400" fill="#172b46">PK = primary key   FK = foreign key   UQ = unique constraint/index   * = NOT NULL. Lines connect referenced keys to foreign-key columns.</text>
+<text x="40" y="2373" font-family="Arial, sans-serif" font-size="28" font-weight="400" fill="#52657b">12 public tables + auth.users reference; 18 public foreign keys. All PK/FK columns are shown; other attributes are selected for readability.</text>
+<text x="40" y="2418" font-family="Arial, sans-serif" font-size="28" font-weight="400" fill="#52657b">All 162 public fields and the 3 private tables remain in the data dictionary. Gaps at crossings indicate separate links, not junctions.</text>
+<text x="40" y="2458" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#52657b">Source: project pgAdmin schema export and checked migration baseline. Layout: A4 landscape, one page.</text>
+</svg>
