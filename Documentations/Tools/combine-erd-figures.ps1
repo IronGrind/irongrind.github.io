@@ -1,6 +1,6 @@
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.Drawing
-$out=Join-Path $PSScriptRoot 'Chapter 3 Diagrams'
+$out=Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3 Diagrams'
 $images=[Collections.Generic.List[Drawing.Image]]::new()
 try {
  foreach($number in 1..4){$images.Add([Drawing.Image]::FromFile((Join-Path $out ('05-erd-'+$number+'.png'))))}

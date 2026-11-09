@@ -1,4 +1,4 @@
-param([string]$DocumentPath=(Join-Path $PSScriptRoot 'Chapter 3.docx'))
+param([string]$DocumentPath=(Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3.docx'))
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.IO.Compression
 $work=Join-Path ([IO.Path]::GetTempPath()) ('chapter3-erd-page-'+[guid]::NewGuid().ToString('N')+'.docx')

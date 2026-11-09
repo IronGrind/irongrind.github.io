@@ -1,7 +1,7 @@
 param([string]$SchemaExport)
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.Drawing
-$out=Join-Path $PSScriptRoot 'Chapter 3 Diagrams'
+$out=Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3 Diagrams'
 $modelPath=Join-Path $out 'schema-visualizer.json'
 if($SchemaExport){
  $sql=Get-Content -Raw -LiteralPath $SchemaExport
@@ -26,7 +26,7 @@ if($SchemaExport){
  })
  # pgAdmin's ERD script omits or rewrites standalone unique indexes. Preserve
  # their independently verified uniqueness from the checked-in baseline.
- $baseline=Get-Content -Raw (Join-Path $PSScriptRoot '../supabase/migrations/20261105043517_remote_schema.sql')
+ $baseline=Get-Content -Raw (Join-Path (Split-Path $PSScriptRoot -Parent) '../supabase/migrations/20261105043517_remote_schema.sql')
  if($baseline -notmatch 'CREATE UNIQUE INDEX "members_auth_user_id_uidx"') {throw 'Cannot substantiate unique members.auth_user_id index.'}
  foreach($index in [regex]::Matches($baseline,'CREATE UNIQUE INDEX "[^"]+" ON "(public|private)"\."([^"]+)" USING "btree" \("([^"]+)"\)')){
   $table=$tables|Where-Object Name -EQ ($index.Groups[1].Value+'.'+$index.Groups[2].Value)

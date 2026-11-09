@@ -1,15 +1,15 @@
-param([string]$DocumentPath=(Join-Path $PSScriptRoot 'Chapter 3.docx'))
+param([string]$DocumentPath=(Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3.docx'))
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.IO.Compression
-$model=Get-Content -Raw -LiteralPath (Join-Path $PSScriptRoot 'Chapter 3 Diagrams/schema-visualizer.json')|ConvertFrom-Json
+$model=Get-Content -Raw -LiteralPath (Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3 Diagrams/schema-visualizer.json')|ConvertFrom-Json
 $order=@('public.profiles','public.members','public.membership_applications','public.attendance','public.products','public.sales','public.sale_items','public.membership_history','public.activity_logs','public.mobile_attendance_pairing_policy','public.mobile_attendance_scan_sessions','public.mobile_attendance_scan_events','private.attendance_scan_requests','private.admin_login_attempts','private.account_sessions')
 $purposeMap=@{};$purposeTable=$null
-foreach($line in Get-Content -LiteralPath (Join-Path $PSScriptRoot 'Chapter 3 Diagrams/data-dictionary-field-notes.md')){
+foreach($line in Get-Content -LiteralPath (Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3 Diagrams/data-dictionary-field-notes.md')){
  if($line -match '^## ([\w.]+)$'){$purposeTable=$Matches[1]}
  elseif($purposeTable -and $line -cmatch '^\| ([a-z_]+) \| (.+) \|$'){$purposeMap[$purposeTable+'.'+$Matches[1]]=$Matches[2].Replace('\|','|')}
 }
 if($purposeMap.Count -ne 174){throw 'Expected all 174 archived field descriptions.'}
-$baseline=Get-Content -Raw -LiteralPath (Join-Path $PSScriptRoot '../supabase/migrations/20261105043517_remote_schema.sql')
+$baseline=Get-Content -Raw -LiteralPath (Join-Path (Split-Path $PSScriptRoot -Parent) '../supabase/migrations/20261105043517_remote_schema.sql')
 if($baseline -notmatch 'ALTER TABLE "public"\."activity_logs" ALTER COLUMN "id" ADD GENERATED ALWAYS AS IDENTITY'){throw 'Cannot verify activity-log identity column.'}
 $work=Join-Path ([IO.Path]::GetTempPath()) ('chapter3-dictionary-'+[guid]::NewGuid().ToString('N')+'.docx')
 Copy-Item -LiteralPath $DocumentPath -Destination $work
@@ -89,7 +89,7 @@ try{
   $stream=$entry.Open();$stream.SetLength(0);$writer=[IO.StreamWriter]::new($stream,[Text.UTF8Encoding]::new($false));try{$d.Save($writer)}finally{$writer.Dispose()}
  }finally{$z.Dispose()}
  $check=[IO.Compression.ZipArchive]::new([IO.File]::OpenRead($work));try{$r=[IO.StreamReader]::new($check.GetEntry('word/document.xml').Open());$xml=[Xml.XmlDocument]::new();$xml.LoadXml($r.ReadToEnd());$r.Dispose()}finally{$check.Dispose()}
- $archive=Join-Path $PSScriptRoot 'Chapter 3 Diagrams/data-dictionary-field-notes.md';if($archived -and -not (Test-Path -LiteralPath $archive)){[IO.File]::WriteAllLines($archive,$notes,[Text.UTF8Encoding]::new($false))}
+ $archive=Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3 Diagrams/data-dictionary-field-notes.md';if($archived -and -not (Test-Path -LiteralPath $archive)){[IO.File]::WriteAllLines($archive,$notes,[Text.UTF8Encoding]::new($false))}
  Copy-Item -LiteralPath $work -Destination $DocumentPath -Force
  'Formatted all 15 dictionary tables as Name / Type / Constraints / Description; all 174 descriptions, declared types, keys and verified constraints are present.'
 }finally{if(Test-Path -LiteralPath $work){Remove-Item -LiteralPath $work -Force}}

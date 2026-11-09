@@ -1,10 +1,8 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1700 1100" width="1700" height="1100" font-family="Helvetica, Arial, DejaVu Sans, sans-serif" xmlns:c2pa="http://c2pa.org/manifest">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1700 950" width="1700" height="950" font-family="Helvetica, Arial, DejaVu Sans, sans-serif" xmlns:c2pa="http://c2pa.org/manifest">
   <metadata>
     <c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYToxZTlkMjFjYi0yNTNlLTRkOWMtYWM5Zi1jNzE1Nzk5MjVkNzkAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaEPt61erDe9+R0Nn9RZcc0MAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDplNTRiZTY3MS1hZjE1LTQ5MGYtYWM0Zi1hZTMyNGUzYmViMTNscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoZYDQbQ0reAnXXyzyLMncYAAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggqaqJMqNDXMbbTzcD031UxHP/oZ6dpiC4Gh2UXKuyHRCkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaDKmgw54yN6/wUwNLr6T1JMAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCDNipP7v5qLzI8IrYgj7FJoZKiIk/aUjUZbuI4RpZ2JBWRuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBjQZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjFlOWQyMWNiLTI1M2UtNGQ5Yy1hYzlmLWM3MTU3OTkyNWQ3OS9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjUyYTM4YmFmLTZjNTAtNGI1NC05ZDI3LTlhZGQ2MmMzNmFkNHJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCCpqokyo0NcxttPNwPTfVTEc/+hnp2mILgaHZRcq7IdEKJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggvjqJxgQUTvdz9KJmRwr/QrIF5YN2CIXy0+qqZJTy6gKiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggAjPTpDXVyX/Be9sWy1wFZ2lX2gpca21NeC0DQSZwRwR0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQI83kAKC2UU8wY7w45CHC7GUVqVWdkqxVI5XVuyLBQqNDgnl2olZn11juI+D14y9vgbb/bC4TFNgr6skYA9Wu9U=</c2pa:manifest>
   </metadata>
-  <rect width="1700" height="1100" fill="#fff" />
-  <text x="50" y="44" font-size="26" font-weight="700" fill="#000000">Entity Relationship Diagram</text>
-  <text x="50" y="66" font-size="13" fill="#000000">Gym membership, attendance and sales system: selected attributes; complete definitions appear in the data dictionary.</text>
+  <rect width="1700" height="950" fill="#fff" />
   <path d="M 290 131.0 L 340 131.0 L 340 153.0 L 390 153.0" fill="none" stroke="#000000" stroke-width="1.8" stroke-linejoin="round" />
   <line x1="298.0" y1="124.0" x2="298.0" y2="138.0" stroke="#000000" stroke-width="1.8" />
   <circle cx="307.0" cy="131.0" r="4.5" fill="#fff" stroke="#000000" stroke-width="1.8" />
@@ -374,19 +372,62 @@
   <text font-size="8" text-anchor="middle" fill="#000000" y="178.5" font-weight="700" x="771">UQ</text>
   <rect rx="2.5" width="20" fill="#d5e2f5" y="280" x="1078" height="11" />
   <text font-size="8" text-anchor="middle" fill="#000000" y="288.5" font-weight="700" x="1088">UQ</text>
-  <rect y="990" width="240" stroke-width="1.6" fill="#fff" height="70" x="730" rx="7" stroke="#000000" />
-  <path d="M 730 1020 V 997 Q 730 990 737 990 H 963 Q 970 990 970 997 V 1020 Z" fill="#d5e2f5" />
-  <text font-size="14" text-anchor="middle" fill="#000000" y="1010" font-weight="700" x="850">auth.users</text>
-  <text font-size="8" text-anchor="middle" fill="#000000" y="1041" font-weight="700" x="748">PK</text>
-  <text y="1041" font-size="12.5" fill="#000000" x="766">id</text>
-  <text y="1041" font-size="9.5" fill="#000000" text-anchor="end" x="962">uuid</text>
-  <path data-unique="True" stroke-width="1.2" fill="none" data-required="True" stroke="#aab2bd" stroke-dasharray="6 5" data-auth="true" d="M 750 990 L 750 780 L 320 780 L 320 131 L 290 131" />
-  <path data-unique="False" stroke-width="1.2" fill="none" data-required="False" stroke="#aab2bd" stroke-dasharray="6 5" data-auth="true" d="M 775 990 L 775 794 L 360 794 L 360 197 L 390 197" />
-  <path data-unique="True" stroke-width="1.2" fill="none" data-required="False" stroke="#aab2bd" stroke-dasharray="6 5" data-auth="true" d="M 800 990 L 800 808 L 1010 808 L 1010 175 L 970 175" />
-  <path data-unique="False" stroke-width="1.2" fill="none" data-required="False" stroke="#aab2bd" stroke-dasharray="6 5" data-auth="true" d="M 825 990 L 825 822 L 1340 822 L 1340 175 L 1310 175" />
-  <path data-unique="False" stroke-width="1.2" fill="none" data-required="False" stroke="#aab2bd" stroke-dasharray="6 5" data-auth="true" d="M 850 990 L 850 836 L 700 836 L 700 465 L 730 465" />
-  <path data-unique="False" stroke-width="1.2" fill="none" data-required="False" stroke="#aab2bd" stroke-dasharray="6 5" data-auth="true" d="M 875 990 L 875 850 L 680 850 L 680 487 L 730 487" />
-  <path data-unique="False" stroke-width="1.2" fill="none" data-required="False" stroke="#aab2bd" stroke-dasharray="6 5" data-auth="true" d="M 900 990 L 900 864 L 1380 864 L 1380 465 L 1310 465" />
-  <path data-unique="False" stroke-width="1.2" fill="none" data-required="True" stroke="#aab2bd" stroke-dasharray="6 5" data-auth="true" d="M 925 990 L 925 878 L 25 878 L 25 443 L 50 443" />
-  <path data-unique="False" stroke-width="1.2" fill="none" data-required="False" stroke="#aab2bd" stroke-dasharray="6 5" data-auth="true" d="M 950 990 L 950 892 L 660 892 L 660 663 L 630 663" />
+  <rect y="840" width="240" stroke-width="1.6" fill="#fff" height="70" x="730" rx="7" stroke="#000000" />
+  <path d="M 730 870 V 847 Q 730 840 737 840 H 963 Q 970 840 970 847 V 870 Z" fill="#d5e2f5" />
+  <text font-size="14" text-anchor="middle" fill="#000000" y="860" font-weight="700" x="850">auth.users</text>
+  <text font-size="8" text-anchor="middle" fill="#000000" y="891" font-weight="700" x="748">PK</text>
+  <text y="891" font-size="12.5" fill="#000000" x="766">id</text>
+  <text y="891" font-size="9.5" fill="#000000" text-anchor="end" x="962">uuid</text>
+  <path data-unique="True" stroke-width="1.2" fill="none" data-required="True" stroke="#aab2bd" stroke-dasharray="6 5" data-auth="true" d="M 750 840 L 750 744 L 320 744 L 320 131 L 290 131" />
+  <line y2="832" stroke="#aab2bd" x1="743" y1="832" stroke-width="1.2" x2="757" />
+  <line y2="826" stroke="#aab2bd" x1="743" y1="826" stroke-width="1.2" x2="757" />
+  <line y2="138" stroke="#aab2bd" x1="298" y1="124" stroke-width="1.2" x2="298" />
+  <circle cx="307" stroke="#aab2bd" r="4.5" fill="#fff" stroke-width="1.2" cy="131" />
+  <path data-unique="False" stroke-width="1.2" fill="none" data-required="False" stroke="#aab2bd" stroke-dasharray="6 5" data-auth="true" d="M 775 840 L 775 752 L 360 752 L 360 197 L 390 197" />
+  <line y2="832" stroke="#aab2bd" x1="768" y1="832" stroke-width="1.2" x2="782" />
+  <circle cx="775" stroke="#aab2bd" r="4.5" fill="#fff" stroke-width="1.2" cy="823" />
+  <line y2="190" stroke="#aab2bd" x1="376" y1="197" stroke-width="1.2" x2="390" />
+  <line y2="204" stroke="#aab2bd" x1="376" y1="197" stroke-width="1.2" x2="390" />
+  <circle cx="369" stroke="#aab2bd" r="4.5" fill="#fff" stroke-width="1.2" cy="197" />
+  <path data-unique="True" stroke-width="1.2" fill="none" data-required="False" stroke="#aab2bd" stroke-dasharray="6 5" data-auth="true" d="M 800 840 L 800 760 L 1010 760 L 1010 175 L 970 175" />
+  <line y2="832" stroke="#aab2bd" x1="793" y1="832" stroke-width="1.2" x2="807" />
+  <circle cx="800" stroke="#aab2bd" r="4.5" fill="#fff" stroke-width="1.2" cy="823" />
+  <line y2="182" stroke="#aab2bd" x1="978" y1="168" stroke-width="1.2" x2="978" />
+  <circle cx="987" stroke="#aab2bd" r="4.5" fill="#fff" stroke-width="1.2" cy="175" />
+  <path data-unique="False" stroke-width="1.2" fill="none" data-required="False" stroke="#aab2bd" stroke-dasharray="6 5" data-auth="true" d="M 825 840 L 825 768 L 1340 768 L 1340 175 L 1310 175" />
+  <line y2="832" stroke="#aab2bd" x1="818" y1="832" stroke-width="1.2" x2="832" />
+  <circle cx="825" stroke="#aab2bd" r="4.5" fill="#fff" stroke-width="1.2" cy="823" />
+  <line y2="168" stroke="#aab2bd" x1="1324" y1="175" stroke-width="1.2" x2="1310" />
+  <line y2="182" stroke="#aab2bd" x1="1324" y1="175" stroke-width="1.2" x2="1310" />
+  <circle cx="1331" stroke="#aab2bd" r="4.5" fill="#fff" stroke-width="1.2" cy="175" />
+  <path data-unique="False" stroke-width="1.2" fill="none" data-required="False" stroke="#aab2bd" stroke-dasharray="6 5" data-auth="true" d="M 850 840 L 850 776 L 700 776 L 700 465 L 730 465" />
+  <line y2="832" stroke="#aab2bd" x1="843" y1="832" stroke-width="1.2" x2="857" />
+  <circle cx="850" stroke="#aab2bd" r="4.5" fill="#fff" stroke-width="1.2" cy="823" />
+  <line y2="458" stroke="#aab2bd" x1="716" y1="465" stroke-width="1.2" x2="730" />
+  <line y2="472" stroke="#aab2bd" x1="716" y1="465" stroke-width="1.2" x2="730" />
+  <circle cx="709" stroke="#aab2bd" r="4.5" fill="#fff" stroke-width="1.2" cy="465" />
+  <path data-unique="False" stroke-width="1.2" fill="none" data-required="False" stroke="#aab2bd" stroke-dasharray="6 5" data-auth="true" d="M 875 840 L 875 784 L 680 784 L 680 487 L 730 487" />
+  <line y2="832" stroke="#aab2bd" x1="868" y1="832" stroke-width="1.2" x2="882" />
+  <circle cx="875" stroke="#aab2bd" r="4.5" fill="#fff" stroke-width="1.2" cy="823" />
+  <line y2="480" stroke="#aab2bd" x1="716" y1="487" stroke-width="1.2" x2="730" />
+  <line y2="494" stroke="#aab2bd" x1="716" y1="487" stroke-width="1.2" x2="730" />
+  <circle cx="709" stroke="#aab2bd" r="4.5" fill="#fff" stroke-width="1.2" cy="487" />
+  <path data-unique="False" stroke-width="1.2" fill="none" data-required="False" stroke="#aab2bd" stroke-dasharray="6 5" data-auth="true" d="M 900 840 L 900 792 L 1380 792 L 1380 465 L 1310 465" />
+  <line y2="832" stroke="#aab2bd" x1="893" y1="832" stroke-width="1.2" x2="907" />
+  <circle cx="900" stroke="#aab2bd" r="4.5" fill="#fff" stroke-width="1.2" cy="823" />
+  <line y2="458" stroke="#aab2bd" x1="1324" y1="465" stroke-width="1.2" x2="1310" />
+  <line y2="472" stroke="#aab2bd" x1="1324" y1="465" stroke-width="1.2" x2="1310" />
+  <circle cx="1331" stroke="#aab2bd" r="4.5" fill="#fff" stroke-width="1.2" cy="465" />
+  <path data-unique="False" stroke-width="1.2" fill="none" data-required="True" stroke="#aab2bd" stroke-dasharray="6 5" data-auth="true" d="M 925 840 L 925 800 L 25 800 L 25 443 L 50 443" />
+  <line y2="832" stroke="#aab2bd" x1="918" y1="832" stroke-width="1.2" x2="932" />
+  <line y2="826" stroke="#aab2bd" x1="918" y1="826" stroke-width="1.2" x2="932" />
+  <line y2="436" stroke="#aab2bd" x1="36" y1="443" stroke-width="1.2" x2="50" />
+  <line y2="450" stroke="#aab2bd" x1="36" y1="443" stroke-width="1.2" x2="50" />
+  <circle cx="29" stroke="#aab2bd" r="4.5" fill="#fff" stroke-width="1.2" cy="443" />
+  <path data-unique="False" stroke-width="1.2" fill="none" data-required="False" stroke="#aab2bd" stroke-dasharray="6 5" data-auth="true" d="M 950 840 L 950 808 L 660 808 L 660 663 L 630 663" />
+  <line y2="832" stroke="#aab2bd" x1="943" y1="832" stroke-width="1.2" x2="957" />
+  <circle cx="950" stroke="#aab2bd" r="4.5" fill="#fff" stroke-width="1.2" cy="823" />
+  <line y2="656" stroke="#aab2bd" x1="644" y1="663" stroke-width="1.2" x2="630" />
+  <line y2="670" stroke="#aab2bd" x1="644" y1="663" stroke-width="1.2" x2="630" />
+  <circle cx="651" stroke="#aab2bd" r="4.5" fill="#fff" stroke-width="1.2" cy="663" />
 </svg>

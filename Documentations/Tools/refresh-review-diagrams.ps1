@@ -8,12 +8,12 @@ Invoke-Expression ($definitions+$source.Substring($start,$end-$start))
 $erdStart=$source.IndexOf('# Extract the physical schema')
 Invoke-Expression ($definitions+$source.Substring($erdStart))
 # Render Gane-Sarson figures without invoking the obsolete relationship mapping.
-$source=Get-Content -Raw (Join-Path $PSScriptRoot 'Chapter 3 Diagrams/gane-sarson.ps1')
+$source=Get-Content -Raw (Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3 Diagrams/gane-sarson.ps1')
 $end=$source.IndexOf('& (Join-Path $PSScriptRoot')
 if($end -lt 0){$end=$source.IndexOf('$path=Join-Path')}
 Invoke-Expression $source.Substring(0,$end)
 Add-Type -AssemblyName System.IO.Compression
-$path=Join-Path $PSScriptRoot 'Chapter 3.docx'
+$path=Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3.docx'
 $zip=[IO.Compression.ZipArchive]::new([IO.File]::Open($path,'Open','ReadWrite'),[IO.Compression.ZipArchiveMode]::Update)
 try {
  $entry=$zip.GetEntry('word/document.xml');$r=[IO.StreamReader]::new($entry.Open());$doc=[Xml.XmlDocument]::new();$doc.PreserveWhitespace=$true;$doc.LoadXml($r.ReadToEnd());$r.Dispose()
@@ -25,7 +25,7 @@ try {
  foreach($rid in $images.Keys){
   $rel=$rels.Relationships.Relationship|Where-Object Id -EQ $rid
   $part='word/'+$rel.Target;$old=$zip.GetEntry($part);$old.Delete()
-  $entryImage=$zip.CreateEntry($part);$s=$entryImage.Open();$file=Join-Path $PSScriptRoot ('Chapter 3 Diagrams/'+$images[$rid]);$bytes=[IO.File]::ReadAllBytes($file);$s.Write($bytes,0,$bytes.Length);$s.Dispose()
+  $entryImage=$zip.CreateEntry($part);$s=$entryImage.Open();$file=Join-Path (Split-Path $PSScriptRoot -Parent) ('Chapter 3 Diagrams/'+$images[$rid]);$bytes=[IO.File]::ReadAllBytes($file);$s.Write($bytes,0,$bytes.Length);$s.Dispose()
   $b=$doc.SelectSingleNode("//a:blip[@r:embed='$rid']",$ns);$p=$b;while($p.LocalName -ne 'p'){$p=$p.ParentNode}
   $im=[Drawing.Image]::FromFile($file);$cx=[long]5486400;$cy=[long]($cx*$im.Height/$im.Width);$im.Dispose()
   foreach($extent in $p.SelectNodes('.//wp:extent | .//a:xfrm/a:ext',$ns)){$extent.SetAttribute('cx',"$cx");$extent.SetAttribute('cy',"$cy")}

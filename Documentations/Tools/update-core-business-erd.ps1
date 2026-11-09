@@ -1,11 +1,11 @@
-param([string]$DocumentPath=(Join-Path $PSScriptRoot 'Chapter 3.docx'))
+param([string]$DocumentPath=(Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3.docx'))
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.Drawing
-$out=Join-Path $PSScriptRoot 'Chapter 3 Diagrams'
+$out=Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3 Diagrams'
 $model=Get-Content -Raw -LiteralPath (Join-Path $out 'schema-visualizer.json')|ConvertFrom-Json
-$baseline=Get-Content -Raw -LiteralPath (Join-Path $PSScriptRoot '../supabase/migrations/20261105043517_remote_schema.sql')
-$scopeSql=Get-Content -Raw -LiteralPath (Join-Path $PSScriptRoot '../supabase/migrations/20261108000006_separate_attendance_sessions.sql')
+$baseline=Get-Content -Raw -LiteralPath (Join-Path (Split-Path $PSScriptRoot -Parent) '../supabase/migrations/20261105043517_remote_schema.sql')
+$scopeSql=Get-Content -Raw -LiteralPath (Join-Path (Split-Path $PSScriptRoot -Parent) '../supabase/migrations/20261108000006_separate_attendance_sessions.sql')
 $checks=@{}
 function Check($table,$field,$constraint,$text){
  if(-not ($baseline.Contains('"'+$constraint+'"') -or $scopeSql.Contains($constraint))){throw "Unverified check constraint: $constraint"}

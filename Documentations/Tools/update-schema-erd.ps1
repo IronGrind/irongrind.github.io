@@ -1,4 +1,4 @@
-param([string]$DocumentPath=(Join-Path $PSScriptRoot 'Chapter 3.docx'),[switch]$SeparatePanels)
+param([string]$DocumentPath=(Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3.docx'),[switch]$SeparatePanels)
 $ErrorActionPreference='Stop'
 if(-not $SeparatePanels){
  & (Join-Path $PSScriptRoot 'build-erd-one-page.ps1') -PublicOnly
@@ -38,7 +38,7 @@ try {
   foreach($rid in $images.Keys){
    $relationship=$rels.DocumentElement.ChildNodes|Where-Object Id -EQ $rid;$part='word/'+$relationship.GetAttribute('Target')
    $old=$zip.GetEntry($part);if($old){$old.Delete()};$entry=$zip.CreateEntry($part);$stream=$entry.Open()
-   $file=Join-Path $PSScriptRoot ('Chapter 3 Diagrams/'+$images[$rid]);$bytes=[IO.File]::ReadAllBytes($file);$stream.Write($bytes,0,$bytes.Length);$stream.Dispose()
+   $file=Join-Path (Split-Path $PSScriptRoot -Parent) ('Chapter 3 Diagrams/'+$images[$rid]);$bytes=[IO.File]::ReadAllBytes($file);$stream.Write($bytes,0,$bytes.Length);$stream.Dispose()
    $p=ParagraphFor $rid;$im=[Drawing.Image]::FromFile($file);$cx=[long]5486400;$cy=[long]($cx*$im.Height/$im.Width);$im.Dispose()
    foreach($extent in $p.SelectNodes('.//wp:extent | .//a:xfrm/a:ext',$ns)){$extent.SetAttribute('cx',"$cx");$extent.SetAttribute('cy',"$cy")}
    if($rid -ne 'rId16'){

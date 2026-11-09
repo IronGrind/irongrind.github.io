@@ -1,8 +1,8 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {dirname,join} from 'node:path';
 import {fileURLToPath} from 'node:url';
-const out=join(dirname(fileURLToPath(import.meta.url)),'Chapter 3 Diagrams');
-const es=JSON.parse(readFileSync(join(out,'05-gym-erd-elements.json'),'utf8').replace(/^\uFEFF/,''));
+const out=join(dirname(fileURLToPath(import.meta.url)),'..','Chapter 3 Diagrams');
+const es=JSON.parse(readFileSync(join(out,'_Sources','05-gym-erd-elements.json'),'utf8').replace(/^\uFEFF/,''));
 const esc=s=>String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;');
 let serial=0;const cells=[];
 const cell=(value,style,geometry,parent='1',extra='')=>{const id='e'+(++serial);cells.push(`<mxCell id="${id}" value="${esc(value)}" style="${esc(style)}" parent="${parent}" ${extra}>${geometry}</mxCell>`);return id;};
@@ -47,6 +47,6 @@ for(let i=0;i<paths.length;i++){
 }
 // Native legend symbols, independent of the relationship edge markers.
 for(const e of es){const a=e.A;if(e.Tag==='line'&&+a.x1>=1400&&+a.y1>=620){cell('','strokeColor=#000000;endArrow=none;',`<mxGeometry relative="1" as="geometry"><mxPoint x="${a.x1}" y="${a.y1}" as="sourcePoint"/><mxPoint x="${a.x2}" y="${a.y2}" as="targetPoint"/></mxGeometry>`,'1','edge="1"');}else if(e.Tag==='circle'&&+a.cx>=1400&&+a.cy>=620){cell('','ellipse;fillColor=#ffffff;strokeColor=#000000;',geo(+a.cx-+a.r,+a.cy-+a.r,+a.r*2,+a.r*2),'1','vertex="1"');}}
-const xml=`<?xml version="1.0" encoding="UTF-8"?><mxfile host="app.diagrams.net"><diagram id="irongrind" name="IronGrind ERD"><mxGraphModel dx="1700" dy="1100" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" page="1" pageScale="1" pageWidth="1700" pageHeight="1100"><root><mxCell id="0"/><mxCell id="1" parent="0"/>${cells.join('')}</root></mxGraphModel></diagram></mxfile>`;
+const xml=`<?xml version="1.0" encoding="UTF-8"?><mxfile host="app.diagrams.net"><diagram id="irongrind" name="IronGrind ERD"><mxGraphModel dx="1700" dy="950" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" page="1" pageScale="1" pageWidth="1700" pageHeight="950"><root><mxCell id="0"/><mxCell id="1" parent="0"/>${cells.join('')}</root></mxGraphModel></diagram></mxfile>`;
 writeFileSync(join(out,'05-gym-erd-editable.drawio'),xml);
 console.log(`Exported 12 public tables, Auth reference, and 18 attached connectors (${serial} native cells).`);

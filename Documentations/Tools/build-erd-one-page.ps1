@@ -2,7 +2,7 @@ param([switch]$PublicOnly,[switch]$SimpleStyle)
 if($SimpleStyle){$PublicOnly=$true}
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.Drawing
-$out=Join-Path $PSScriptRoot 'Chapter 3 Diagrams'
+$out=Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3 Diagrams'
 $model=Get-Content -Raw -LiteralPath (Join-Path $out 'schema-visualizer.json')|ConvertFrom-Json
 if($PublicOnly){$model.Tables=@($model.Tables|Where-Object Name -Like 'public.*');$model.Relations=@($model.Relations|Where-Object Child -Like 'public.*')}
 $expectedTables=if($PublicOnly){13}else{16};$expectedLinks=if($PublicOnly){18}else{21};$stem=if($PublicOnly){'05-public-schema-erd'}else{'05-erd-one-page'}

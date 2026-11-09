@@ -1,6 +1,6 @@
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.IO.Compression
-$path=Join-Path $PSScriptRoot 'Chapter 2.docx'
+$path=Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 2.docx'
 $work=Join-Path ([IO.Path]::GetTempPath()) ('chapter2-references-'+[guid]::NewGuid().ToString('N')+'.docx')
 Copy-Item -LiteralPath $path -Destination $work
 try {

@@ -2,7 +2,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-const directory = join(dirname(fileURLToPath(import.meta.url)), 'Chapter 3 Diagrams');
+const directory = join(dirname(fileURLToPath(import.meta.url)), '..', 'Chapter 3 Diagrams');
 const stem = process.argv[2] || '05-erd-one-page';
 const drawing = JSON.parse(readFileSync(join(directory, `${stem}-drawing.json`), 'utf8').replace(/^\uFEFF/, ''));
 const expectedLinks = drawing.ExpectedLinks ?? 21;

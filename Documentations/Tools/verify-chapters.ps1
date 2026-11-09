@@ -3,7 +3,7 @@ $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $results=[Collections.Generic.List[string]]::new()
 foreach($chapter in $Chapters){
- $zip=[IO.Compression.ZipFile]::OpenRead((Join-Path $PSScriptRoot "Chapter $chapter.docx"))
+ $zip=[IO.Compression.ZipFile]::OpenRead((Join-Path (Split-Path $PSScriptRoot -Parent) "Chapter $chapter.docx"))
  try{
   $reader=[IO.StreamReader]::new($zip.GetEntry('word/document.xml').Open());[xml]$doc=$reader.ReadToEnd();$reader.Dispose()
   $ns=[Xml.XmlNamespaceManager]::new($doc.NameTable);$ns.AddNamespace('w','http://schemas.openxmlformats.org/wordprocessingml/2006/main');$ns.AddNamespace('a','http://schemas.openxmlformats.org/drawingml/2006/main');$ns.AddNamespace('r','http://schemas.openxmlformats.org/officeDocument/2006/relationships')
@@ -71,7 +71,7 @@ foreach($chapter in $Chapters){
    while($erdNode -and ((($erdNode.SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim() -notmatch '^Figure 5\.')){if($erdNode.SelectSingleNode('.//a:blip',$ns)){$erdImages++};$erdNode=$erdNode.NextSibling}
    if($erdImages -ne 1 -or -not $erdNode){throw 'Expected one complete ERD image before its caption.'}
    if(-not $erdHeading[0].PreviousSibling.SelectSingleNode('w:bookmarkStart[@w:name="_PublicERDSection"]',$ns) -or $erdNode.SelectSingleNode('w:pPr/w:sectPr/w:pgSz',$ns).GetAttribute('orient',$ns.LookupNamespace('w')) -ne 'landscape' -or $erdNode.SelectSingleNode('w:pPr/w:keepNext',$ns)){throw 'Public ERD is not isolated in its landscape figure section.'}
-   $schema=Get-Content -Raw -LiteralPath (Join-Path $PSScriptRoot 'Chapter 3 Diagrams/schema-visualizer.json')|ConvertFrom-Json
+   $schema=Get-Content -Raw -LiteralPath (Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3 Diagrams/schema-visualizer.json')|ConvertFrom-Json
    $order=@('public.profiles','public.members','public.membership_applications','public.attendance','public.products','public.sales','public.sale_items','public.membership_history','public.activity_logs','public.mobile_attendance_pairing_policy','public.mobile_attendance_scan_sessions','public.mobile_attendance_scan_events','private.attendance_scan_requests','private.admin_login_attempts','private.account_sessions')
    $verifiedFKs=0;$verifiedUnique=0
    for($ti=0;$ti -lt $dictionary.Count;$ti++){
@@ -102,7 +102,7 @@ foreach($chapter in $Chapters){
   $results.Add("Chapter ${chapter}: XML opens; no unexpected body/data-row bold, stale approval wording, garbled punctuation, or missing figure links detected.")
  }finally{$zip.Dispose()}
 }
-[void][IO.Directory]::CreateDirectory((Join-Path $PSScriptRoot 'Review Evidence'))
+[void][IO.Directory]::CreateDirectory((Join-Path (Split-Path $PSScriptRoot -Parent) 'Review Evidence'))
 $report=if($Chapters.Count -eq 3){'Chapter Review Verification.txt'}else{'Chapter '+($Chapters -join '-')+' Review Verification.txt'}
-$results|Set-Content -Encoding UTF8 (Join-Path $PSScriptRoot ('Review Evidence/'+$report))
+$results|Set-Content -Encoding UTF8 (Join-Path (Split-Path $PSScriptRoot -Parent) ('Review Evidence/'+$report))
 $results

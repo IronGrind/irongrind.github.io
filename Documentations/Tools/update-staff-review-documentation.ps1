@@ -38,7 +38,7 @@ $replacements=[ordered]@{
  'online applications and renewals are reviewed only by the administrator'='online applications and renewals are reviewed by authorized staff or the administrator'
 }
 foreach($chapter in 1,2,3){
- $path=Join-Path $PSScriptRoot "Chapter $chapter.docx"
+ $path=Join-Path (Split-Path $PSScriptRoot -Parent) "Chapter $chapter.docx"
  $zip=[IO.Compression.ZipArchive]::new([IO.File]::Open($path,'Open','ReadWrite'),[IO.Compression.ZipArchiveMode]::Update)
  try{
   $entry=$zip.GetEntry('word/document.xml');$reader=[IO.StreamReader]::new($entry.Open());$doc=[Xml.XmlDocument]::new();$doc.PreserveWhitespace=$true;$doc.LoadXml($reader.ReadToEnd());$reader.Dispose()

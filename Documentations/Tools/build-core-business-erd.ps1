@@ -1,6 +1,6 @@
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.Drawing
-$out=Join-Path $PSScriptRoot 'Chapter 3 Diagrams'
+$out=Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3 Diagrams'
 $model=Get-Content -Raw -LiteralPath (Join-Path $out 'schema-visualizer.json')|ConvertFrom-Json
 $names=@('membership_applications','members','attendance','membership_history','sales','sale_items','products')
 $tables=@{};foreach($name in $names){$tables[$name]=$model.Tables|Where-Object Name -EQ ('public.'+$name)}

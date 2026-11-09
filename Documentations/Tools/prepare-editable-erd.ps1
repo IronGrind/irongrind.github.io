@@ -1,6 +1,6 @@
 param([string]$SchemaExport=(Join-Path $env:USERPROFILE '.codex/attachments/a2d7710c-bf82-47ed-a2c5-9f1b489faa01/Pasted text.txt'))
 $ErrorActionPreference='Stop'
-$out=Join-Path $PSScriptRoot 'Chapter 3 Diagrams'
+$out=Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3 Diagrams'
 $source=Join-Path $env:USERPROFILE 'Downloads/erd_gym_simple.svg'
 $doc=[xml](Get-Content -LiteralPath $source -Raw)
 $root=$doc.DocumentElement
@@ -90,21 +90,21 @@ foreach($n in @($root.ChildNodes)){
  if($null -ne $x -and $null -ne $y -and [double]$x -ge 730 -and [double]$y -ge 600){$null=$root.RemoveChild($n)}
 }
 # Show Auth references explicitly using subdued dashed connectors.
-$root.SetAttribute('viewBox','0 0 1700 1100');$root.SetAttribute('height','1100')
+$root.SetAttribute('viewBox','0 0 1700 950');$root.SetAttribute('height','950')
 $background=@($root.ChildNodes|Where-Object {$_.LocalName -eq 'rect' -and -not $_.HasAttribute('x')})[0]
-if($background){$background.SetAttribute('height','1100')}
+if($background){$background.SetAttribute('height','950')}
 foreach($n in @($root.ChildNodes|Where-Object {$_.LocalName -eq 'text' -and $_.InnerText -eq 'FK*'})){$n.InnerText='FK'}
 function Element($tag,$attrs,$text=''){
  $el=$doc.CreateElement($tag,$root.NamespaceURI)
  foreach($a in $attrs.GetEnumerator()){$el.SetAttribute($a.Key,[string]$a.Value)}
  if($text){$el.InnerText=$text};$null=$root.AppendChild($el)
 }
-Element 'rect' @{x=730;y=990;width=240;height=70;rx=7;fill='#fff';stroke='#000000';'stroke-width'=1.6}
-Element 'path' @{d='M 730 1020 V 997 Q 730 990 737 990 H 963 Q 970 990 970 997 V 1020 Z';fill='#d5e2f5'}
-Element 'text' @{x=850;y=1010;'font-size'=14;'font-weight'=700;fill='#000000';'text-anchor'='middle'} 'auth.users'
-Element 'text' @{x=748;y=1041;'font-size'=8;'font-weight'=700;fill='#000000';'text-anchor'='middle'} 'PK'
-Element 'text' @{x=766;y=1041;'font-size'=12.5;fill='#000000'} 'id'
-Element 'text' @{x=962;y=1041;'font-size'=9.5;fill='#000000';'text-anchor'='end'} 'uuid'
+Element 'rect' @{x=730;y=840;width=240;height=70;rx=7;fill='#fff';stroke='#000000';'stroke-width'=1.6}
+Element 'path' @{d='M 730 870 V 847 Q 730 840 737 840 H 963 Q 970 840 970 847 V 870 Z';fill='#d5e2f5'}
+Element 'text' @{x=850;y=860;'font-size'=14;'font-weight'=700;fill='#000000';'text-anchor'='middle'} 'auth.users'
+Element 'text' @{x=748;y=891;'font-size'=8;'font-weight'=700;fill='#000000';'text-anchor'='middle'} 'PK'
+Element 'text' @{x=766;y=891;'font-size'=12.5;fill='#000000'} 'id'
+Element 'text' @{x=962;y=891;'font-size'=9.5;fill='#000000';'text-anchor'='end'} 'uuid'
 $authRoutes=@(
  @{X=290;Y=131;Lane=320;Required=$true;Unique=$true},
  @{X=390;Y=197;Lane=360;Required=$false;Unique=$false},
@@ -118,17 +118,33 @@ $authRoutes=@(
 )
 $i=0
 foreach($r in $authRoutes){
- $px=750+$i*25;$bus=780+$i*14;$i++
- Element 'path' @{d="M $px 990 L $px $bus L $($r.Lane) $bus L $($r.Lane) $($r.Y) L $($r.X) $($r.Y)";fill='none';stroke='#aab2bd';'stroke-width'=1.2;'stroke-dasharray'='6 5';'data-auth'='true';'data-required'=[string]$r.Required;'data-unique'=[string]$r.Unique}
+ $px=750+$i*25;$bus=744+$i*8;$i++
+ Element 'path' @{d="M $px 840 L $px $bus L $($r.Lane) $bus L $($r.Lane) $($r.Y) L $($r.X) $($r.Y)";fill='none';stroke='#aab2bd';'stroke-width'=1.2;'stroke-dasharray'='6 5';'data-auth'='true';'data-required'=[string]$r.Required;'data-unique'=[string]$r.Unique}
+ # Match the editable file's cardinality symbols in the standalone SVG.
+ Element 'line' @{x1=($px-7);y1=832;x2=($px+7);y2=832;stroke='#aab2bd';'stroke-width'=1.2}
+ if($r.Required){Element 'line' @{x1=($px-7);y1=826;x2=($px+7);y2=826;stroke='#aab2bd';'stroke-width'=1.2}}
+ else{Element 'circle' @{cx=$px;cy=823;r=4.5;fill='#fff';stroke='#aab2bd';'stroke-width'=1.2}}
+ $dir=[Math]::Sign($r.Lane-$r.X)
+ if($r.Unique){
+  Element 'line' @{x1=($r.X+$dir*8);y1=($r.Y-7);x2=($r.X+$dir*8);y2=($r.Y+7);stroke='#aab2bd';'stroke-width'=1.2}
+ }else{
+  foreach($dy in @(-7,7)){Element 'line' @{x1=($r.X+$dir*14);y1=$r.Y;x2=$r.X;y2=($r.Y+$dy);stroke='#aab2bd';'stroke-width'=1.2}}
+ }
+ Element 'circle' @{cx=($r.X+$dir*$(if($r.Unique){17}else{21}));cy=$r.Y;r=4.5;fill='#fff';stroke='#aab2bd';'stroke-width'=1.2}
 }
 $target=Join-Path $out '05-gym-erd-editable.svg'
+foreach($n in @($root.ChildNodes|Where-Object {$_.LocalName -eq 'text' -and $_.GetAttribute('y') -in @('44','66')})){
+ $null=$root.RemoveChild($n)
+}
 $doc.Save($target)
 $elements=@(foreach($n in $root.ChildNodes){
  if($n.LocalName -notin @('rect','text','path','line','circle')){continue}
  $attrs=@{};foreach($a in $n.Attributes){$attrs[$a.Name]=$a.Value}
  @{Tag=$n.LocalName;A=$attrs;Text=$n.InnerText}
 })
-$elements|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $out '05-gym-erd-elements.json') -Encoding UTF8
+$sourceDir=Join-Path $out '_Sources'
+New-Item -ItemType Directory -Path $sourceDir -Force|Out-Null
+$elements|ConvertTo-Json -Depth 8|Set-Content -LiteralPath (Join-Path $sourceDir '05-gym-erd-elements.json') -Encoding UTF8
 & node (Join-Path $PSScriptRoot 'export-editable-erd.mjs')
 if($LASTEXITCODE -ne 0){throw 'Draw.io export failed.'}
 "Saved corrected SVG: $target"

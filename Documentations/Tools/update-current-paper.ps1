@@ -1,14 +1,14 @@
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$backup=Join-Path $PSScriptRoot ('Review Backups/paper-update-'+(Get-Date -Format 'yyyyMMdd-HHmmss'))
+$backup=Join-Path (Split-Path $PSScriptRoot -Parent) ('Review Backups/paper-update-'+(Get-Date -Format 'yyyyMMdd-HHmmss'))
 [void][IO.Directory]::CreateDirectory($backup)
 # Check all write locks before changing any chapter.
-foreach($chapter in 1,2,3){$s=[IO.File]::Open((Join-Path $PSScriptRoot "Chapter $chapter.docx"),'Open','ReadWrite','None');$s.Dispose()}
-$testReport=Get-Content -Raw -Encoding UTF8 (Join-Path $PSScriptRoot 'Review Evidence/System Regression Results.json')|ConvertFrom-Json
+foreach($chapter in 1,2,3){$s=[IO.File]::Open((Join-Path (Split-Path $PSScriptRoot -Parent) "Chapter $chapter.docx"),'Open','ReadWrite','None');$s.Dispose()}
+$testReport=Get-Content -Raw -Encoding UTF8 (Join-Path (Split-Path $PSScriptRoot -Parent) 'Review Evidence/System Regression Results.json')|ConvertFrom-Json
 if($testReport.failed -ne 0 -or $testReport.passed -ne 40){throw 'Review the recorded regression results before reporting them in the paper.'}
 foreach($chapter in 1,2,3){
- $path=Join-Path $PSScriptRoot "Chapter $chapter.docx";[IO.File]::Copy($path,(Join-Path $backup "Chapter $chapter.docx"))
+ $path=Join-Path (Split-Path $PSScriptRoot -Parent) "Chapter $chapter.docx";[IO.File]::Copy($path,(Join-Path $backup "Chapter $chapter.docx"))
  $zip=[IO.Compression.ZipArchive]::new([IO.File]::Open($path,'Open','ReadWrite'),[IO.Compression.ZipArchiveMode]::Update)
  try{
   $entry=$zip.GetEntry('word/document.xml');$r=[IO.StreamReader]::new($entry.Open());$doc=[Xml.XmlDocument]::new();$doc.PreserveWhitespace=$true;$doc.LoadXml($r.ReadToEnd());$r.Dispose()

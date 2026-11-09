@@ -1,4 +1,4 @@
-param([string]$DocumentPath=(Join-Path $PSScriptRoot 'Chapter 3.docx'))
+param([string]$DocumentPath=(Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3.docx'))
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.Drawing
@@ -27,7 +27,7 @@ try{
   if(-not $node -or -not $pictures.Count){throw 'Missing figure or caption ordering.'}
   $picture=$pictures[0];foreach($old in @($pictures|Select-Object -Skip 1)){[void]$body.RemoveChild($old)}
   $rid=$picture.SelectSingleNode('.//a:blip',$n).GetAttribute('embed',$n.LookupNamespace('r'));$rel=$rels.DocumentElement.ChildNodes|Where-Object Id -EQ $rid
-  $part='word/'+$rel.GetAttribute('Target');$z.GetEntry($part).Delete();$imageEntry=$z.CreateEntry($part);$s=$imageEntry.Open();$png=Join-Path $PSScriptRoot 'Chapter 3 Diagrams/05-public-schema-erd.png';$bytes=[IO.File]::ReadAllBytes($png);$s.Write($bytes,0,$bytes.Length);$s.Dispose()
+  $part='word/'+$rel.GetAttribute('Target');$z.GetEntry($part).Delete();$imageEntry=$z.CreateEntry($part);$s=$imageEntry.Open();$png=Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3 Diagrams/05-public-schema-erd.png';$bytes=[IO.File]::ReadAllBytes($png);$s.Write($bytes,0,$bytes.Length);$s.Dispose()
   # A landscape section applies only to the figure; the following section uses
   # the document's original portrait settings and margin values.
   $boundary=$heading[0].PreviousSibling

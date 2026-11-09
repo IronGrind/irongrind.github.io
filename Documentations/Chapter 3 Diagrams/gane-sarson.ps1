@@ -77,4 +77,4 @@ for($panel=0;$panel -lt 5;$panel++){
 # Keep the familiar standalone filename as the first continuation panel.
 [IO.File]::Copy((Join-Path $out '03-data-flow-1.png'),(Join-Path $out '03-data-flow.png'),$true)
 # Update Word images and insert the additional DFD continuation panels once.
-& (Join-Path $PSScriptRoot '../refresh-review-diagrams.ps1')
+& (Join-Path $PSScriptRoot '../Tools/refresh-review-diagrams.ps1')

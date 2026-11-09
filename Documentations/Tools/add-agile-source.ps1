@@ -1,6 +1,6 @@
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.IO.Compression
-$path=Join-Path $PSScriptRoot 'Chapter 3.docx'
+$path=Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3.docx'
 $work=Join-Path ([IO.Path]::GetTempPath()) ('chapter3-agile-source-'+[guid]::NewGuid().ToString('N')+'.docx')
 $surname='Pavlovi'+[char]0x0107
 $url='https://www.linkedin.com/pulse/from-now-we-agile-enterprise-any-other-projects-misa-pavlovic-'

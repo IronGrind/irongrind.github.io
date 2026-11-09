@@ -1,11 +1,11 @@
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$backup=Join-Path $PSScriptRoot ('Review Backups/'+(Get-Date -Format 'yyyyMMdd-HHmmss'))
+$backup=Join-Path (Split-Path $PSScriptRoot -Parent) ('Review Backups/'+(Get-Date -Format 'yyyyMMdd-HHmmss'))
 [void][IO.Directory]::CreateDirectory($backup)
 $report=[Collections.Generic.List[string]]::new()
 foreach($chapter in 1,2,3){
- $path=Join-Path $PSScriptRoot "Chapter $chapter.docx"
+ $path=Join-Path (Split-Path $PSScriptRoot -Parent) "Chapter $chapter.docx"
  [IO.File]::Copy($path,(Join-Path $backup "Chapter $chapter.docx"))
  $zip=[IO.Compression.ZipArchive]::new([IO.File]::Open($path,'Open','ReadWrite'),[IO.Compression.ZipArchiveMode]::Update)
  try{
@@ -132,6 +132,6 @@ foreach($chapter in 1,2,3){
  }finally{$zip.Dispose()}
 }
 $report.Add("Backups: $backup")
-[void][IO.Directory]::CreateDirectory((Join-Path $PSScriptRoot 'Review Evidence'))
-$report|Set-Content -Encoding UTF8 (Join-Path $PSScriptRoot 'Review Evidence/Chapter Formatting Verification.txt')
+[void][IO.Directory]::CreateDirectory((Join-Path (Split-Path $PSScriptRoot -Parent) 'Review Evidence'))
+$report|Set-Content -Encoding UTF8 (Join-Path (Split-Path $PSScriptRoot -Parent) 'Review Evidence/Chapter Formatting Verification.txt')
 $report

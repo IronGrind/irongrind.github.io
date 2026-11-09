@@ -3,7 +3,7 @@ Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 
 $stamp = Get-Date -Format 'yyyyMMdd-HHmmss'
-$backupDir = Join-Path $PSScriptRoot "Review Backups/name-login-$stamp"
+$backupDir = Join-Path (Split-Path $PSScriptRoot -Parent) "Review Backups/name-login-$stamp"
 [void][IO.Directory]::CreateDirectory($backupDir)
 $changed = [Collections.Generic.List[string]]::new()
 
@@ -24,7 +24,7 @@ function Replace-Paragraph($document, $namespace, $prefix, $replacement, $chapte
 }
 
 function Update-Chapter($chapter, $edits) {
-    $path = Join-Path $PSScriptRoot "Chapter $chapter.docx"
+    $path = Join-Path (Split-Path $PSScriptRoot -Parent) "Chapter $chapter.docx"
     [IO.File]::Copy($path, (Join-Path $backupDir "Chapter $chapter.docx"))
     $zip = [IO.Compression.ZipFile]::Open($path, [IO.Compression.ZipArchiveMode]::Update)
     try {
@@ -55,5 +55,5 @@ Update-Chapter 3 @(
     @{ Prefix = '3. Review Membership Applications'; Text = '3. Review Membership Applications. Authorized staff and the administrator review pending application summaries and approve or reject requests according to the gym''s criteria, confirming in-person payment before approval.' }
 )
 
-$changed | Set-Content -Encoding UTF8 (Join-Path $PSScriptRoot 'Review Evidence/Name and Login Paper Update.txt')
+$changed | Set-Content -Encoding UTF8 (Join-Path (Split-Path $PSScriptRoot -Parent) 'Review Evidence/Name and Login Paper Update.txt')
 $changed

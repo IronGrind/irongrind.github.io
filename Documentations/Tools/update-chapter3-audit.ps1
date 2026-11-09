@@ -1,7 +1,7 @@
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 Add-Type -AssemblyName System.IO.Compression
-$path=Join-Path $PSScriptRoot 'Chapter 3.docx'
+$path=Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3.docx'
 Copy-Item -LiteralPath $path -Destination (Join-Path $env:TEMP 'CAPSTONE-Chapter-3-before-content-audit.docx') -Force
 $zip=[IO.Compression.ZipFile]::Open($path,[IO.Compression.ZipArchiveMode]::Update)
 try {
