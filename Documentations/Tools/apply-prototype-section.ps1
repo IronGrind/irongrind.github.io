@@ -45,7 +45,7 @@ try{
   $t=$doc.CreateElement('w','t',$w);$t.InnerText=$text;$null=$run.AppendChild($t);$null=$p.AppendChild($run);return ,$p
  }
  function Insert($node){$null=$body.InsertBefore($node,$gantt[0])}
- Insert (Paragraph 'The following figures present the supplied browser-interface captures for IronGrind, organized by access, administrator, staff, member, and session workflows. Long captures appear in labeled parts with small overlaps for readability. The screenshots illustrate captured interface states; operational permissions follow the functional requirements, use cases, and workflow descriptions.')
+ Insert (Paragraph 'The following figures present complete browser-interface captures for IronGrind, organized by access, administrator, staff, member, and session workflows. Each main figure preserves the whole original screenshot and its layout. Supplementary enlarged details are provided only for three long registration forms. The screenshots illustrate captured interface states; operational permissions follow the functional requirements, use cases, and workflow descriptions.')
  $currentSection=-1;$imageCount=0
  foreach($f in $model.Figures){
   $firstInSection=$currentSection -ne $f.Section
@@ -64,6 +64,7 @@ try{
   foreach($bm in @($pic.SelectNodes('.//w:bookmarkStart|.//w:bookmarkEnd|.//w:lastRenderedPageBreak',$ns))){$null=$bm.ParentNode.RemoveChild($bm)}
   $blip=$pic.SelectSingleNode('.//a:blip',$ns);$null=$blip.SetAttribute('embed',$r,$rid)
   foreach($ext in @($blip.SelectNodes('a:extLst/a:ext[@uri="{96DAC541-7B7A-43D3-8B79-37D633B846F1}"]',$ns))){$null=$ext.ParentNode.RemoveChild($ext)}
+  foreach($crop in @($pic.SelectNodes('.//a:srcRect',$ns))){$null=$crop.ParentNode.RemoveChild($crop)}
   $maxWidth=if($f.Width -lt 300){3.0}elseif($f.SourceId -eq 15){4.8}else{6.2}
   $maxHeight=if($firstInSection){4.5}else{5.0}
   $width=[Math]::Min($maxWidth,$maxHeight*$f.Width/$f.Height);$height=$width*$f.Height/$f.Width
@@ -103,4 +104,4 @@ try{
 & (Join-Path $PSScriptRoot 'verify-prototype-section.ps1') -DocumentPath $work
 $lock=[IO.File]::Open($DocumentPath,'Open','ReadWrite','None');$lock.Dispose()
 Copy-Item -LiteralPath $work -Destination $DocumentPath -Force
-"Updated Chapter 3: 27 supplied screenshots, 38 readable parts, Figures 6-32; Gantt caption renumbered to Figure 33. Backup: $backup"
+"Updated Chapter 3: 27 whole-screenshot main figures and 8 selected enlarged details, Figures 6-32; Gantt remains Figure 33. Backup: $backup"

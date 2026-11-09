@@ -1,3 +1,11 @@
+## Prototype whole-screenshot presentation - November 10, 2026
+
+Updated Chapter 3 at the user's request: all 27 supplied original screenshots now appear whole as the main Figures 6-32. Eight supplementary enlarged views are retained only for the online registration form, administrator walk-in form, and staff add-member form (Figures 7a-c, 12a-c, and 26a-b). Other formerly split screens now use their complete captures. Captions and explanations distinguish the complete layout from supplementary details. The Gantt remains Figure 33.
+
+Verification confirms 27 complete original main-image files with no Word crop settings, 8 selected detail images, unique captions, matching embedded images, and all 15 dictionary tables/174 descriptions preserved. The current individual-store DFD, ERD and use-case images are unchanged. Earlier split-image presentation notes below are historical. Superseded crop files were archived under Prototype Screenshots/_Sources/Previous cropped presentation.
+
+---
+
 ## DFD individual-store correction - November 10, 2026
 
 Per the adviser's requirement, Figure 3 now shows fourteen individual data-store symbols: D0-D11, D13, and D14. Each has its own name and identifier; no comma-separated or range-based store groups remain. Report generation reads seven separately drawn stores, D2 through D8. All nine processes remain. Chapter 3 embeds the revised SVG and PNG and explains the individual-store model. Earlier grouped-store diagram files are archived under Chapter 3 Diagrams/_Archive/Previous DFD Versions. Prototype screenshots and their formatting were not changed by this correction.

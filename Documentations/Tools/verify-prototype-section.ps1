@@ -27,6 +27,7 @@ try{
   $imageParagraph=$caption.PreviousSibling
   while($imageParagraph -and -not $imageParagraph.SelectSingleNode('.//a:blip',$ns)){$imageParagraph=$imageParagraph.PreviousSibling}
   if(-not $imageParagraph){throw ('Missing image before caption '+$f.Label)}
+  if($f.Kind -eq 'whole' -and $imageParagraph.SelectSingleNode('.//a:srcRect',$ns)){throw ('A whole screenshot has Word crop settings: '+$f.Label)}
   $rid=$imageParagraph.SelectSingleNode('.//a:blip',$ns).GetAttribute('embed',$ns.LookupNamespace('r'))
   $rel=@($rels.DocumentElement.ChildNodes|Where-Object Id -eq $rid);if($rel.Count -ne 1){throw 'Missing screenshot relationship'}
   $entry=$zip.GetEntry('word/'+$rel[0].Target);if(-not $entry){throw 'Screenshot part missing'}
@@ -34,11 +35,14 @@ try{
   $blip=@($doc.SelectNodes('//a:blip',$ns)|Where-Object {$_.GetAttribute('embed',$ns.LookupNamespace('r')) -eq $rid});if($blip.Count -ne 1){throw 'Missing/duplicate screenshot placement'}
   $count++
  }
- if(($model.Figures.SourceId|Sort-Object -Unique).Count -ne 27 -or $count -ne 38){throw 'Incomplete original capture coverage'}
+ $whole=@($model.Figures|Where-Object Kind -eq 'whole');$details=@($model.Figures|Where-Object Kind -eq 'detail')
+ if(($model.Figures.SourceId|Sort-Object -Unique).Count -ne 27 -or $count -ne 35 -or $whole.Count -ne 27 -or $details.Count -ne 8){throw 'Incomplete original capture coverage'}
+ if(($whole.SourceId|Sort-Object -Unique).Count -ne 27 -or @($whole|Where-Object {$_.Crop -or $_.ImagePath -ne $_.SourcePath -or $_.Suffix}).Count){throw 'A main figure does not use its complete original screenshot'}
+ if(@($details|Where-Object {$_.SourceId -notin @(2,7,18)}).Count){throw 'Unexpected enlarged detail'}
  if(@($all|Where-Object {$_ -eq 'Figure 33. Gantt Chart'}).Count -ne 1){throw 'Gantt figure not renumbered'}
  if(@($all|Where-Object {$_ -match '^Figure (15\. Report Preview|16\. Final Report Print|20\. Staff workflow|21\. Gantt Chart)'}).Count){throw 'Superseded prototype caption remains'}
  $ids=@($doc.SelectNodes('//wp:docPr',$ns)|ForEach-Object {$_.GetAttribute('id')});if(($ids|Sort-Object -Unique).Count -ne $ids.Count){throw 'Duplicate drawing identifiers'}
- $report=@('Prototype verification passed.','27 supplied original screenshots represented in 38 readable figure parts.',"Figures 6-32: each caption and explanation appears once; screenshots match source bytes or verified same-aspect normalized appearance after Word compression ($recompressed recompressed images).",'Gantt caption renumbered to Figure 33; schedule content retained.','All picture placements resolve to embedded media; drawing identifiers are unique.')
+ $report=@('Prototype verification passed.','27 complete original screenshots used as main figures; 8 supplementary enlarged details are limited to three long registration forms.',"Figures 6-32: each caption and explanation appears once; screenshots match source bytes or verified same-aspect normalized appearance after Word compression ($recompressed recompressed images).",'All 27 main figures use full originals with no Word crop settings. Gantt remains Figure 33; schedule content retained.','All 35 picture placements resolve to embedded media; drawing identifiers are unique.')
  $report|Set-Content -Encoding UTF8 -LiteralPath (Join-Path $root 'Review Evidence/Prototype Section Verification.txt')
  $report
 }finally{$zip.Dispose()}
