@@ -1,4 +1,4 @@
-param([string]$DocumentPath=(Join-Path $PSScriptRoot 'Chapter 3.docx'))
+param([string]$DocumentPath=(Join-Path $PSScriptRoot 'Chapter 3.docx'),[switch]$SeparatePanels)
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.Drawing
@@ -15,14 +15,21 @@ try {
   function ParagraphFor($rid){$node=$doc.SelectSingleNode("//a:blip[@r:embed='$rid']",$ns);if(-not $node){throw "Missing image $rid"};while($node.LocalName -ne 'p'){$node=$node.ParentNode};return ,$node}
   function SetText($p,$text){$runs=$p.SelectNodes('.//w:t',$ns);if(-not $runs.Count){throw 'Paragraph has no text run.'};$runs[0].InnerText=$text;for($i=1;$i -lt $runs.Count;$i++){$runs[$i].InnerText=''}}
   $rid4='rIdSchemaErd4';$rel=$rels.DocumentElement.ChildNodes|Where-Object Id -EQ $rid4
-  if(-not $rel){
+  if($SeparatePanels -and -not $rel){
    $rel=$rels.CreateElement('Relationship',$rels.DocumentElement.NamespaceURI);$rel.SetAttribute('Id',$rid4);$rel.SetAttribute('Type','http://schemas.openxmlformats.org/officeDocument/2006/relationships/image');$rel.SetAttribute('Target','media/schema-erd-4.png');[void]$rels.DocumentElement.AppendChild($rel)
    $last=ParagraphFor 'rId18';$new=$last.CloneNode($true);$new.SelectSingleNode('.//a:blip',$ns).SetAttribute('embed',$ns.LookupNamespace('r'),$rid4)|Out-Null
    $newId=1+[int](($doc.SelectNodes('//wp:docPr',$ns)|ForEach-Object {[int]$_.GetAttribute('id')}|Measure-Object -Maximum).Maximum)
    $pr=$new.SelectSingleNode('.//wp:docPr',$ns);$pr.SetAttribute('id',"$newId");$pr.SetAttribute('name','Physical Schema ERD Panel 4')
    [void]$last.ParentNode.InsertAfter($new,$last)
   }
-  $images=@{rId16='05-erd-1.png';rId17='05-erd-2.png';rId18='05-erd-3.png';rIdSchemaErd4='05-erd-4.png'}
+  if($SeparatePanels){$images=@{rId16='05-erd-1.png';rId17='05-erd-2.png';rId18='05-erd-3.png';rIdSchemaErd4='05-erd-4.png'}}
+  else{
+   $images=@{rId16='05-erd-combined.png'}
+   foreach($rid in @('rId17','rId18','rIdSchemaErd4')){
+    $node=$doc.SelectSingleNode("//a:blip[@r:embed='$rid']",$ns)
+    if($node){$p=ParagraphFor $rid;[void]$p.ParentNode.RemoveChild($p)}
+   }
+  }
   foreach($rid in $images.Keys){
    $relationship=$rels.DocumentElement.ChildNodes|Where-Object Id -EQ $rid;$part='word/'+$relationship.GetAttribute('Target')
    $old=$zip.GetEntry($part);if($old){$old.Delete()};$entry=$zip.CreateEntry($part);$stream=$entry.Open()
@@ -44,8 +51,19 @@ try {
    elseif($text.StartsWith('Cardinality describes the number')){SetText $p 'The connecting lines join referenced keys to the corresponding foreign-key columns rather than representing an operational sequence. A foreign key marked with an asterisk requires one referenced parent; a nullable foreign key permits zero or one parent. A parent may have multiple child records unless a primary key or unique constraint restricts the referencing column. For example, members.application_id is nullable and unique, so a member may reference at most one application and an application may be referenced by at most one member through that column. The separate membership_applications.member_id connection permits multiple requests for a member. The unique members.auth_user_id index permits at most one member record per non-null authentication identifier, while profiles.id is both its primary key and an authentication foreign key. The composite primary key of private.account_sessions consists of user_id and session_scope; user_id alone is not a unique key. Required attendance member references and optional sale member or sale-item product references retain their different nullability.'}
    elseif($text.StartsWith('The physical model also includes supporting') -or $text.StartsWith('The physical model includes twelve')){SetText $p 'The physical model includes supporting account, phone-pairing, logging, and attendance-request storage. The fifteen application-owned tables comprise twelve public and three private tables; the private tables are admin_login_attempts, attendance_scan_requests, and account_sessions. Activity logs preserve actor and record details, attendance scan requests support duplicate-request protection, and account sessions store session ownership by user and scope. The retained mobile_attendance_scan_events table is represented because it exists in the physical database; its inclusion does not establish that a corresponding review interface is available. UUID columns do not automatically establish relationships: activity_logs.actor_id and mobile_attendance_scan_sessions.paired_device_id have no declared foreign keys, so no relationship lines are drawn for them. The independently keyed admin_login_attempts table likewise has no declared foreign-key connection. The export confirms the documented deletion actions: CASCADE deletes dependent rows, SET NULL clears nullable references, and RESTRICT or NO ACTION can prevent deletion of a referenced parent. Database keys describe storage integrity, while role checks and authorization policies determine which records each actor may access. The data dictionary following the figures provides field-purpose descriptions and declared lengths or precision.'}
   }
+  if(-not $SeparatePanels){
+   foreach($p in $doc.SelectNodes('//w:body/w:p',$ns)){
+    $text=($p.SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join ''
+    if($text -match '^Figure 5(?:a-d)?\.'){SetText $p 'Figure 5. Physical database schema in schema-visualizer form'}
+    elseif($text.StartsWith('The physical ERD in Figure 5')){
+     $text=$text.Replace('Figure 5a-d presents the database in schema-visualizer form.','Figure 5 presents the database in schema-visualizer form as one combined image with four labeled panels.')
+     $text=$text.Replace('Figure 5a shows','The upper-left panel (a) shows').Replace('Figure 5b shows','the upper-right panel (b) shows').Replace('Figure 5c shows','the lower-left panel (c) shows').Replace('Figure 5d shows','the lower-right panel (d) shows')
+     SetText $p $text
+    }
+   }
+  }
   SaveXmlPart 'word/document.xml' $doc;SaveXmlPart 'word/_rels/document.xml.rels' $rels
  }finally{$zip.Dispose()}
  Copy-Item -LiteralPath $work -Destination $DocumentPath -Force
- 'Inserted four schema-style ERD panels and updated Figure 5 caption and explanation.'
+ if($SeparatePanels){'Inserted four separate schema-style ERD panels.'}else{'Inserted one combined schema-style ERD image and updated Figure 5 caption and explanation.'}
 }finally{if(Test-Path -LiteralPath $work){Remove-Item -LiteralPath $work -Force}}
