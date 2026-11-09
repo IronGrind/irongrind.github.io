@@ -1,7 +1,10 @@
+param([switch]$PublicOnly)
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.Drawing
 $out=Join-Path $PSScriptRoot 'Chapter 3 Diagrams'
 $model=Get-Content -Raw -LiteralPath (Join-Path $out 'schema-visualizer.json')|ConvertFrom-Json
+if($PublicOnly){$model.Tables=@($model.Tables|Where-Object Name -Like 'public.*');$model.Relations=@($model.Relations|Where-Object Child -Like 'public.*')}
+$expectedTables=if($PublicOnly){13}else{16};$expectedLinks=if($PublicOnly){18}else{21};$stem=if($PublicOnly){'05-public-schema-erd'}else{'05-erd-one-page'}
 $tables=@{};foreach($table in $model.Tables){$tables[$table.Name]=$table}
 $tables['auth.users']=[pscustomobject]@{Name='auth.users';Columns=@([pscustomobject]@{Name='id';Type='uuid';Required=$true;Keys=@('PK')})}
 $width=3508;$height=2480;$cw=740;$hh=86;$rh=46
@@ -42,26 +45,37 @@ function LinePath($points,$segments,$color,$tooltip){
 }
 try {
  $svg.Add('<svg xmlns="http://www.w3.org/2000/svg" width="297mm" height="210mm" viewBox="0 0 3508 2480"><rect width="3508" height="2480" fill="white"/>')
- Text 'Figure 5. Physical database schema' 40 20 43 '#172b46' $true
- Text 'One-page ERD overview: all application tables and declared foreign keys; selected attributes shown.' 40 80 29 '#52657b'
+ Text $(if($PublicOnly){'Figure 5. Public-Schema Entity Relationship Diagram'}else{'Figure 5. Physical database schema'}) 40 20 43 '#172b46' $true
+ Text $(if($PublicOnly){'All 12 public tables and their declared foreign keys; selected attributes; auth.users shown as a reference.'}else{'One-page ERD overview: all application tables and declared foreign keys; selected attributes shown.'}) 40 80 29 '#52657b'
  # Each table appears once. Complete field declarations remain in the dictionary.
  Card 'auth.users' 40 200 @('id')
  Card 'public.profiles' 40 480 @('id','username','email','full_name','role','account_status')
- Card 'private.account_sessions' 40 1000 @('user_id','session_scope','session_id','session_created_at')
- Card 'private.admin_login_attempts' 40 1400 @('bucket','window_start','attempts')
- Card 'public.activity_logs' 40 1740 @('id','actor_id','actor_name','action','entity_type','occurred_at')
+ if(-not $PublicOnly){
+  Card 'private.account_sessions' 40 1000 @('user_id','session_scope','session_id','session_created_at')
+  Card 'private.admin_login_attempts' 40 1400 @('bucket','window_start','attempts')
+  Card 'public.activity_logs' 40 1740 @('id','actor_id','actor_name','action','entity_type','occurred_at')
+ }else{
+  Card 'public.mobile_attendance_pairing_policy' 40 1100 @('singleton','updated_by','max_pairs')
+  Card 'public.activity_logs' 40 1600 @('id','actor_id','actor_name','action','entity_type','occurred_at')
+ }
  Card 'public.membership_applications' 910 200 @('id','auth_user_id','member_id','reviewed_by','application_type','status')
  Card 'public.members' 910 850 @('id','auth_user_id','application_id','full_name','plan','status','expiry_date')
  Card 'public.membership_history' 910 1600 @('id','member_id','recorded_by','event_type','new_expiry_date')
  Card 'public.attendance' 1780 200 @('id','member_id','recorded_by','checked_out_by','time_in','time_out')
- Card 'private.attendance_scan_requests' 1780 700 @('request_id','operator_id','member_id','created_at')
- Card 'public.mobile_attendance_pairing_policy' 1780 1100 @('singleton','updated_by','max_pairs')
- Card 'public.mobile_attendance_scan_sessions' 1780 1450 @('id','created_by','paired_device_id','expires_at')
- Card 'public.mobile_attendance_scan_events' 1780 1880 @('id','session_id','qr_payload','created_at')
+ if(-not $PublicOnly){
+  Card 'private.attendance_scan_requests' 1780 700 @('request_id','operator_id','member_id','created_at')
+  Card 'public.mobile_attendance_pairing_policy' 1780 1100 @('singleton','updated_by','max_pairs')
+  Card 'public.mobile_attendance_scan_sessions' 1780 1450 @('id','created_by','paired_device_id','expires_at')
+  Card 'public.mobile_attendance_scan_events' 1780 1880 @('id','session_id','qr_payload','created_at')
+ }else{
+  Card 'public.mobile_attendance_scan_sessions' 1780 1000 @('id','created_by','paired_device_id','expires_at')
+  Card 'public.mobile_attendance_scan_events' 1780 1600 @('id','session_id','qr_payload','created_at')
+ }
  Card 'public.products' 2650 200 @('id','name','category','price','stock','is_active')
  Card 'public.sales' 2650 850 @('id','member_id','processed_by','receipt_number','total','sold_at')
  Card 'public.sale_items' 2650 1600 @('id','sale_id','product_id','item_name','quantity','line_total')
- if($cards.Count -ne 16 -or $model.Relations.Count -ne 21){throw 'Unexpected table/relationship coverage.'}
+ if($cards.Count -ne $expectedTables -or $model.Relations.Count -ne $expectedLinks){throw 'Unexpected table/relationship coverage.'}
+ foreach($table in $model.Tables){if(-not $cards.ContainsKey($table.Name)){throw 'An application table is missing from the figure.'}}
  # Check the page geometry before drawing.
  $allCards=@($cards.Values)
  for($i=0;$i -lt $allCards.Count;$i++){
@@ -168,14 +182,14 @@ try {
   }
  }
  Text 'PK = primary key   FK = foreign key   UQ = unique constraint/index   * = NOT NULL. Lines connect referenced keys to foreign-key columns.' 40 2300 28
- Text '15 application tables + auth.users reference; 21 declared foreign keys. All key columns are shown; other attributes are selected for readability.' 40 2345 28 '#52657b'
- Text 'Full 174-column definitions: see the data dictionary. Gaps at line crossings indicate separate relationships, not junctions.' 40 2390 28 '#52657b'
+ Text $(if($PublicOnly){'12 public tables + auth.users reference; 18 public foreign keys. All PK/FK columns are shown; other attributes are selected for readability.'}else{'15 application tables + auth.users reference; 21 declared foreign keys. All key columns are shown; other attributes are selected for readability.'}) 40 2345 28 '#52657b'
+ Text $(if($PublicOnly){'All 162 public fields and the 3 private tables remain in the data dictionary. Gaps at crossings indicate separate links, not junctions.'}else{'Full 174-column definitions: see the data dictionary. Gaps at line crossings indicate separate relationships, not junctions.'}) 40 2390 28 '#52657b'
  Text 'Source: project pgAdmin schema export and checked migration baseline. Layout: A4 landscape, one page.' 40 2433 25 '#52657b'
  $svg.Add('</svg>')
- $bmp.Save((Join-Path $out '05-erd-one-page.png'),[Drawing.Imaging.ImageFormat]::Png)
- [IO.File]::WriteAllLines((Join-Path $out '05-erd-one-page.svg'),$svg,[Text.UTF8Encoding]::new($false))
- [pscustomobject]@{Width=$width;Height=$height;Primitives=@($primitives)}|ConvertTo-Json -Depth 15 -Compress|Set-Content -LiteralPath (Join-Path $out '05-erd-one-page-drawing.json') -Encoding UTF8
- & node (Join-Path $PSScriptRoot 'export-erd-one-page-pdf.mjs')
+ $bmp.Save((Join-Path $out ($stem+'.png')),[Drawing.Imaging.ImageFormat]::Png)
+ [IO.File]::WriteAllLines((Join-Path $out ($stem+'.svg')),$svg,[Text.UTF8Encoding]::new($false))
+ [pscustomobject]@{Width=$width;Height=$height;ExpectedTables=$expectedTables;ExpectedLinks=$expectedLinks;Primitives=@($primitives)}|ConvertTo-Json -Depth 15 -Compress|Set-Content -LiteralPath (Join-Path $out ($stem+'-drawing.json')) -Encoding UTF8
+ & node (Join-Path $PSScriptRoot 'export-erd-one-page-pdf.mjs') $stem
  if($LASTEXITCODE -ne 0){throw 'One-page PDF export failed.'}
- "Rendered 21 relationships with unique routing tracks, no shared segments, and $crossings crossing gaps on one A4 landscape page."
+ "Rendered $expectedLinks relationships with unique routing tracks, no shared segments, and $crossings crossing gaps on one A4 landscape page."
 }finally{$g.Dispose();$bmp.Dispose()}
