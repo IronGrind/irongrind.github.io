@@ -7,6 +7,32 @@ const drawing = JSON.parse(readFileSync(join(directory, '05-erd-one-page-drawing
 if (drawing.Primitives.filter(item => item.Kind === 'path').length !== 21) {
   throw new Error('The one-page drawing must contain all 21 declared foreign-key paths.');
 }
+const links = drawing.Primitives.filter(item => item.Kind === 'path');
+const visible = links.flatMap((link, index) => (link.Segments || []).map(([a, b]) => ({ index, a, b, horizontal: a[1] === b[1] })));
+for (let i = 0; i < visible.length; i++) {
+  const a = visible[i];
+  for (let j = i + 1; j < visible.length; j++) {
+    const b = visible[j];
+    if (a.index === b.index) continue;
+    if (a.horizontal === b.horizontal) {
+      const axis = a.horizontal ? 0 : 1, fixed = 1 - axis;
+      const overlap = Math.min(Math.max(a.a[axis], a.b[axis]), Math.max(b.a[axis], b.b[axis])) - Math.max(Math.min(a.a[axis], a.b[axis]), Math.min(b.a[axis], b.b[axis]));
+      if (Math.abs(a.a[fixed] - b.a[fixed]) < 0.001 && overlap > 0.001) throw new Error('Visible relationship segments overlap.');
+    } else {
+      const h = a.horizontal ? a : b, v = a.horizontal ? b : a;
+      if (v.a[0] > Math.min(h.a[0], h.b[0]) && v.a[0] < Math.max(h.a[0], h.b[0]) && h.a[1] > Math.min(v.a[1], v.b[1]) && h.a[1] < Math.max(v.a[1], v.b[1])) throw new Error('A crossing has no separation gap.');
+    }
+  }
+}
+const cards = drawing.Primitives.filter(item => item.Kind === 'rect' && item.W === 740 && item.H >= 132);
+if (cards.length !== 16) throw new Error('Expected fifteen application cards and one managed Auth reference.');
+for (const line of visible) for (const card of cards) {
+  const inside = line.horizontal
+    ? line.a[1] > card.Y && line.a[1] < card.Y + card.H && Math.min(line.a[0], line.b[0]) < card.X + card.W && Math.max(line.a[0], line.b[0]) > card.X
+    : line.a[0] > card.X && line.a[0] < card.X + card.W && Math.min(line.a[1], line.b[1]) < card.Y + card.H && Math.max(line.a[1], line.b[1]) > card.Y;
+  if (inside) throw new Error('A relationship line passes through a table card.');
+}
+console.log('Verified: 21 links, no shared visible segments or unmarked crossings, and no lines through table cards.');
 const pageWidth = 297 * 72 / 25.4;
 const pageHeight = 210 * 72 / 25.4;
 const scale = Math.min(pageWidth / drawing.Width, pageHeight / drawing.Height);
@@ -23,7 +49,7 @@ for (const item of drawing.Primitives) {
     operations.push(`${color(item.Color)} rg BT /${item.Bold ? 'F2' : 'F1'} ${n(item.Size)} Tf 1 0 0 -1 ${n(item.X)} ${n(item.Y + item.Size)} Tm (${literal(item.Text)}) Tj ET`);
   } else if (item.Kind === 'path') {
     const segments = item.Segments || item.Points.slice(1).map((point, i) => [item.Points[i], point]);
-    operations.push(`${color(item.Color)} RG 4 w ` + segments.map(([a, b]) => `${a.map(n).join(' ')} m ${b.map(n).join(' ')} l`).join(' ') + ' S');
+    operations.push(`${color(item.Color)} RG 3.2 w ` + segments.map(([a, b]) => `${a.map(n).join(' ')} m ${b.map(n).join(' ')} l`).join(' ') + ' S');
   } else if (item.Kind === 'dot') {
     const x = item.X, y = item.Y, r = item.Radius || 4, k = r * 0.55228475;
     operations.push(`${color(item.Color)} rg ${n(x + r)} ${n(y)} m ` +

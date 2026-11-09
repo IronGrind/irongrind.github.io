@@ -28,14 +28,14 @@ function Card($name,$x,$y,$fieldNames){
 }
 function RowY($card,$field){for($i=0;$i -lt $card.Columns.Count;$i++){if($card.Columns[$i].Name -eq $field){return $card.Y+$hh+$rh*$i+$rh/2}};throw "Missing endpoint $($card.Name).$field"}
 function LinePath($points,$segments,$color,$tooltip){
- $pen=[Drawing.Pen]::new([Drawing.ColorTranslator]::FromHtml($color),4)
+ $pen=[Drawing.Pen]::new([Drawing.ColorTranslator]::FromHtml($color),3.2)
  try{foreach($s in $segments){$g.DrawLine($pen,[single]$s[0][0],[single]$s[0][1],[single]$s[1][0],[single]$s[1][1])}}finally{$pen.Dispose()}
  $d=(@($segments|ForEach-Object {'M '+($_[0]-join ' ')+' L '+($_[1]-join ' ')})-join ' ')
- $svg.Add('<path d="'+$d+'" fill="none" stroke="'+$color+'" stroke-width="4"><title>'+(E $tooltip)+'</title></path>')
+ $svg.Add('<path d="'+$d+'" fill="none" stroke="'+$color+'" stroke-width="3.2"><title>'+(E $tooltip)+'</title></path>')
  $primitives.Add(@{Kind='path';Points=$points;Segments=$segments;Color=$color})
  $portIndex=0
  foreach($point in @($points[0],$points[$points.Count-1])){
-  $radius=if($portIndex -eq 0){1.7}else{3.5};$portIndex++
+  $radius=if($portIndex -eq 0){1.3}else{3.5};$portIndex++
   $brush=[Drawing.SolidBrush]::new([Drawing.ColorTranslator]::FromHtml($color));try{$g.FillEllipse($brush,($point[0]-$radius),($point[1]-$radius),(2*$radius),(2*$radius))}finally{$brush.Dispose()}
   $svg.Add('<circle cx="'+$point[0]+'" cy="'+$point[1]+'" r="'+$radius+'" fill="'+$color+'"/>');$primitives.Add(@{Kind='dot';X=$point[0];Y=$point[1];Radius=$radius;Color=$color})
  }
@@ -103,8 +103,8 @@ try {
   $base=RowY $cards[$group.Group[0].Relation.Parent] $group.Group[0].Relation.ParentField
   $up=@($group.Group|Where-Object {$(if($_.Gutters.Count -gt 1){$_.Bus}else{$_.CY}) -lt $base}|Sort-Object { [Math]::Abs($_.Lanes[$_.Gutters[0]]-$_.PX) })
   $down=@($group.Group|Where-Object {$(if($_.Gutters.Count -gt 1){$_.Bus}else{$_.CY}) -ge $base}|Sort-Object { -[Math]::Abs($_.Lanes[$_.Gutters[0]]-$_.PX) })
-  for($j=0;$j -lt $up.Count;$j++){$up[$j].PY=$base-19+($j+1)*18/($up.Count+1)+($up[$j].Index+1)*0.013}
-  for($j=0;$j -lt $down.Count;$j++){$down[$j].PY=$base+($j+1)*18/($down.Count+1)+($down[$j].Index+1)*0.013}
+  $ordered=@($up)+@($down)
+  for($j=0;$j -lt $ordered.Count;$j++){$ordered[$j].PY=$base-22+($j+1)*44/($ordered.Count+1)+($ordered[$j].Index+1)*0.013}
  }
  $routingInput=[IO.Path]::GetTempFileName();$routingOutput=[IO.Path]::GetTempFileName()
  try{

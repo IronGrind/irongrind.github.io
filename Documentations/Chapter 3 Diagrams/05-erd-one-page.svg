@@ -1,68 +1,68 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="297mm" height="210mm" viewBox="0 0 3508 2480"><rect width="3508" height="2480" fill="white"/>
 <text x="40" y="63" font-family="Arial, sans-serif" font-size="43" font-weight="700" fill="#172b46">Figure 5. Physical database schema</text>
 <text x="40" y="109" font-family="Arial, sans-serif" font-size="29" font-weight="400" fill="#52657b">One-page ERD overview: all application tables and declared foreign keys; selected attributes shown.</text>
-<path d="M 780 321.013 L 832.3076923076923 321.013 M 832.3076923076923 321.013 L 832.3076923076923 441.253 M 832.3076923076923 453.253 L 832.3076923076923 1109.023 M 832.3076923076923 1109.023 L 780 1109.023" fill="none" stroke="#1d4ed8" stroke-width="4"><title>auth.users.id -&gt; private.account_sessions.user_id; ON DELETE CASCADE</title></path>
-<circle cx="780" cy="321.013" r="1.7" fill="#1d4ed8"/>
+<path d="M 780 323.67966666666666 L 832.3076923076923 323.67966666666666 M 832.3076923076923 323.67966666666666 L 832.3076923076923 441.253 M 832.3076923076923 453.253 L 832.3076923076923 1109.023 M 832.3076923076923 1109.023 L 780 1109.023" fill="none" stroke="#1d4ed8" stroke-width="3.2"><title>auth.users.id -&gt; private.account_sessions.user_id; ON DELETE CASCADE</title></path>
+<circle cx="780" cy="323.67966666666666" r="1.3" fill="#1d4ed8"/>
 <circle cx="780" cy="1109.023" r="3.5" fill="#1d4ed8"/>
-<path d="M 1650 953.526 L 1742.5 953.526 M 1742.5 901.046 L 1742.5 953.526 M 1742.5 901.046 L 1780 901.046" fill="none" stroke="#0f766e" stroke-width="4"><title>public.members.id -&gt; private.attendance_scan_requests.member_id; ON DELETE CASCADE</title></path>
-<circle cx="1650" cy="953.526" r="1.7" fill="#0f766e"/>
+<path d="M 1650 959.026 L 1742.5 959.026 M 1742.5 901.046 L 1742.5 959.026 M 1742.5 901.046 L 1780 901.046" fill="none" stroke="#0f766e" stroke-width="3.2"><title>public.members.id -&gt; private.attendance_scan_requests.member_id; ON DELETE CASCADE</title></path>
+<circle cx="1650" cy="959.026" r="1.3" fill="#0f766e"/>
 <circle cx="1780" cy="901.046" r="3.5" fill="#0f766e"/>
-<path d="M 780 300.32471428571426 L 857.6923076923077 300.32471428571426 M 857.6923076923077 155 L 857.6923076923077 300.32471428571426 M 857.6923076923077 155 L 1733.3333333333333 155 M 1733.3333333333333 155 L 1733.3333333333333 349 M 1733.3333333333333 361 L 1733.3333333333333 855 M 1733.3333333333333 855.069 L 1780 855.069" fill="none" stroke="#7c3aed" stroke-width="4"><title>auth.users.id -&gt; private.attendance_scan_requests.operator_id; ON DELETE CASCADE</title></path>
-<circle cx="780" cy="300.32471428571426" r="1.7" fill="#7c3aed"/>
+<path d="M 780 301.7056666666667 L 857.6923076923077 301.7056666666667 M 857.6923076923077 155 L 857.6923076923077 301.7056666666667 M 857.6923076923077 155 L 1733.3333333333333 155 M 1733.3333333333333 155 L 1733.3333333333333 349 M 1733.3333333333333 361 L 1733.3333333333333 855 M 1733.3333333333333 855.069 L 1780 855.069" fill="none" stroke="#7c3aed" stroke-width="3.2"><title>auth.users.id -&gt; private.attendance_scan_requests.operator_id; ON DELETE CASCADE</title></path>
+<circle cx="780" cy="301.7056666666667" r="1.3" fill="#7c3aed"/>
 <circle cx="1780" cy="855.069" r="3.5" fill="#7c3aed"/>
-<path d="M 780 297.76628571428574 L 849.2307692307693 297.76628571428574 M 849.2307692307693 145 L 849.2307692307693 297.76628571428574 M 849.2307692307693 145 L 1751.6666666666667 145 M 1751.6666666666667 145 L 1751.6666666666667 349 M 1751.6666666666667 361 L 1751.6666666666667 447 M 1751.6666666666667 447.092 L 1780 447.092" fill="none" stroke="#a16207" stroke-width="4"><title>auth.users.id -&gt; public.attendance.checked_out_by; ON DELETE SET NULL</title></path>
-<circle cx="780" cy="297.76628571428574" r="1.7" fill="#a16207"/>
+<path d="M 780 298.052 L 849.2307692307693 298.052 M 849.2307692307693 145 L 849.2307692307693 298.052 M 849.2307692307693 145 L 1751.6666666666667 145 M 1751.6666666666667 145 L 1751.6666666666667 349 M 1751.6666666666667 361 L 1751.6666666666667 447 M 1751.6666666666667 447.092 L 1780 447.092" fill="none" stroke="#a16207" stroke-width="3.2"><title>auth.users.id -&gt; public.attendance.checked_out_by; ON DELETE SET NULL</title></path>
+<circle cx="780" cy="298.052" r="1.3" fill="#a16207"/>
 <circle cx="1780" cy="447.092" r="3.5" fill="#a16207"/>
-<path d="M 1650 949.065 L 1724.1666666666667 949.065 M 1724.1666666666667 355.115 L 1724.1666666666667 949.065 M 1724.1666666666667 355.115 L 1780 355.115" fill="none" stroke="#be185d" stroke-width="4"><title>public.members.id -&gt; public.attendance.member_id; ON DELETE CASCADE</title></path>
-<circle cx="1650" cy="949.065" r="1.7" fill="#be185d"/>
+<path d="M 1650 951.7316666666667 L 1724.1666666666667 951.7316666666667 M 1724.1666666666667 355.115 L 1724.1666666666667 951.7316666666667 M 1724.1666666666667 355.115 L 1780 355.115" fill="none" stroke="#be185d" stroke-width="3.2"><title>public.members.id -&gt; public.attendance.member_id; ON DELETE CASCADE</title></path>
+<circle cx="1650" cy="951.7316666666667" r="1.3" fill="#be185d"/>
 <circle cx="1780" cy="355.115" r="3.5" fill="#be185d"/>
-<path d="M 780 295.22085714285714 L 823.8461538461538 295.22085714285714 M 823.8461538461538 135 L 823.8461538461538 295.22085714285714 M 823.8461538461538 135 L 1760.8333333333333 135 M 1760.8333333333333 135 L 1760.8333333333333 349 M 1760.8333333333333 361 L 1760.8333333333333 401 M 1760.8333333333333 401.138 L 1780 401.138" fill="none" stroke="#475569" stroke-width="4"><title>auth.users.id -&gt; public.attendance.recorded_by; ON DELETE SET NULL</title></path>
-<circle cx="780" cy="295.22085714285714" r="1.7" fill="#475569"/>
+<path d="M 780 294.4113333333333 L 823.8461538461538 294.4113333333333 M 823.8461538461538 135 L 823.8461538461538 294.4113333333333 M 823.8461538461538 135 L 1760.8333333333333 135 M 1760.8333333333333 135 L 1760.8333333333333 349 M 1760.8333333333333 361 L 1760.8333333333333 401 M 1760.8333333333333 401.138 L 1780 401.138" fill="none" stroke="#475569" stroke-width="3.2"><title>auth.users.id -&gt; public.attendance.recorded_by; ON DELETE SET NULL</title></path>
+<circle cx="780" cy="294.4113333333333" r="1.3" fill="#475569"/>
 <circle cx="1780" cy="401.138" r="3.5" fill="#475569"/>
-<path d="M 1650 318.091 L 1687.5 318.091 M 1687.5 318.091 L 1687.5 943.065 M 1687.5 971.26 L 1687.5 1051.161 M 1687.5 1051.161 L 1650 1051.161" fill="none" stroke="#0369a1" stroke-width="4"><title>public.membership_applications.id -&gt; public.members.application_id; ON DELETE SET NULL</title></path>
-<circle cx="1650" cy="318.091" r="1.7" fill="#0369a1"/>
+<path d="M 1650 309.091 L 1687.5 309.091 M 1687.5 309.091 L 1687.5 945.731666666667 M 1687.5 972.593333333334 L 1687.5 1051.161 M 1687.5 1051.161 L 1650 1051.161" fill="none" stroke="#0369a1" stroke-width="3.2"><title>public.membership_applications.id -&gt; public.members.application_id; ON DELETE SET NULL</title></path>
+<circle cx="1650" cy="309.091" r="1.3" fill="#0369a1"/>
 <circle cx="1650" cy="1051.161" r="3.5" fill="#0369a1"/>
-<path d="M 780 315.104 L 883.0769230769231 315.104 M 883.0769230769231 315.104 L 883.0769230769231 441.253 M 883.0769230769231 453.253 L 883.0769230769231 1005.184 M 883.0769230769231 1005.184 L 910 1005.184" fill="none" stroke="#1d4ed8" stroke-width="4"><title>auth.users.id -&gt; public.members.auth_user_id; ON DELETE SET NULL</title></path>
-<circle cx="780" cy="315.104" r="1.7" fill="#1d4ed8"/>
+<path d="M 780 316.4373333333333 L 883.0769230769231 316.4373333333333 M 883.0769230769231 316.4373333333333 L 883.0769230769231 441.253 M 883.0769230769231 453.253 L 883.0769230769231 1005.184 M 883.0769230769231 1005.184 L 910 1005.184" fill="none" stroke="#1d4ed8" stroke-width="3.2"><title>auth.users.id -&gt; public.members.auth_user_id; ON DELETE SET NULL</title></path>
+<circle cx="780" cy="316.4373333333333" r="1.3" fill="#1d4ed8"/>
 <circle cx="910" cy="1005.184" r="3.5" fill="#1d4ed8"/>
-<path d="M 780 312.117 L 891.5384615384615 312.117 M 891.5384615384615 312.117 L 891.5384615384615 355.207 M 891.5384615384615 355.207 L 910 355.207" fill="none" stroke="#0f766e" stroke-width="4"><title>auth.users.id -&gt; public.membership_applications.auth_user_id; ON DELETE CASCADE</title></path>
-<circle cx="780" cy="312.117" r="1.7" fill="#0f766e"/>
+<path d="M 780 312.7836666666667 L 891.5384615384615 312.7836666666667 M 891.5384615384615 312.7836666666667 L 891.5384615384615 355.207 M 891.5384615384615 355.207 L 910 355.207" fill="none" stroke="#0f766e" stroke-width="3.2"><title>auth.users.id -&gt; public.membership_applications.auth_user_id; ON DELETE CASCADE</title></path>
+<circle cx="780" cy="312.7836666666667" r="1.3" fill="#0f766e"/>
 <circle cx="910" cy="355.207" r="3.5" fill="#0f766e"/>
-<path d="M 1650 944.63 L 1669.1666666666667 944.63 M 1669.1666666666667 401.23 L 1669.1666666666667 944.63 M 1669.1666666666667 401.23 L 1650 401.23" fill="none" stroke="#7c3aed" stroke-width="4"><title>public.members.id -&gt; public.membership_applications.member_id; ON DELETE SET NULL</title></path>
-<circle cx="1650" cy="944.63" r="1.7" fill="#7c3aed"/>
+<path d="M 1650 944.4633333333334 L 1669.1666666666667 944.4633333333334 M 1669.1666666666667 401.23 L 1669.1666666666667 944.4633333333334 M 1669.1666666666667 401.23 L 1650 401.23" fill="none" stroke="#7c3aed" stroke-width="3.2"><title>public.members.id -&gt; public.membership_applications.member_id; ON DELETE SET NULL</title></path>
+<circle cx="1650" cy="944.4633333333334" r="1.3" fill="#7c3aed"/>
 <circle cx="1650" cy="401.23" r="3.5" fill="#7c3aed"/>
-<path d="M 780 579.143 L 798.4615384615385 579.143 M 798.4615384615385 447.253 L 798.4615384615385 579.143 M 798.4615384615385 447.253 L 910 447.253" fill="none" stroke="#a16207" stroke-width="4"><title>public.profiles.id -&gt; public.membership_applications.reviewed_by; ON DELETE NO ACTION</title></path>
-<circle cx="780" cy="579.143" r="1.7" fill="#a16207"/>
+<path d="M 780 589.143 L 798.4615384615385 589.143 M 798.4615384615385 447.253 L 798.4615384615385 589.143 M 798.4615384615385 447.253 L 910 447.253" fill="none" stroke="#a16207" stroke-width="3.2"><title>public.profiles.id -&gt; public.membership_applications.reviewed_by; ON DELETE NO ACTION</title></path>
+<circle cx="780" cy="589.143" r="1.3" fill="#a16207"/>
 <circle cx="910" cy="447.253" r="3.5" fill="#a16207"/>
-<path d="M 1650 971.156 L 1678.3333333333333 971.156 M 1678.3333333333333 971.156 L 1678.3333333333333 1045.161 M 1678.3333333333333 1057.161 L 1678.3333333333333 1755.276 M 1678.3333333333333 1755.276 L 1650 1755.276" fill="none" stroke="#be185d" stroke-width="4"><title>public.members.id -&gt; public.membership_history.member_id; ON DELETE RESTRICT</title></path>
-<circle cx="1650" cy="971.156" r="1.7" fill="#be185d"/>
+<path d="M 1650 973.8226666666666 L 1678.3333333333333 973.8226666666666 M 1678.3333333333333 973.8226666666666 L 1678.3333333333333 1045.161 M 1678.3333333333333 1057.161 L 1678.3333333333333 1755.276 M 1678.3333333333333 1755.276 L 1650 1755.276" fill="none" stroke="#be185d" stroke-width="3.2"><title>public.members.id -&gt; public.membership_history.member_id; ON DELETE RESTRICT</title></path>
+<circle cx="1650" cy="973.8226666666666" r="1.3" fill="#be185d"/>
 <circle cx="1650" cy="1755.276" r="3.5" fill="#be185d"/>
-<path d="M 780 318.169 L 840.7692307692307 318.169 M 840.7692307692307 318.169 L 840.7692307692307 441.253 M 840.7692307692307 453.253 L 840.7692307692307 1801.299 M 840.7692307692307 1801.299 L 910 1801.299" fill="none" stroke="#475569" stroke-width="4"><title>auth.users.id -&gt; public.membership_history.recorded_by; ON DELETE SET NULL</title></path>
-<circle cx="780" cy="318.169" r="1.7" fill="#475569"/>
+<path d="M 780 320.169 L 840.7692307692307 320.169 M 840.7692307692307 320.169 L 840.7692307692307 441.253 M 840.7692307692307 453.253 L 840.7692307692307 1801.299 M 840.7692307692307 1801.299 L 910 1801.299" fill="none" stroke="#475569" stroke-width="3.2"><title>auth.users.id -&gt; public.membership_history.recorded_by; ON DELETE SET NULL</title></path>
+<circle cx="780" cy="320.169" r="1.3" fill="#475569"/>
 <circle cx="910" cy="1801.299" r="3.5" fill="#475569"/>
-<path d="M 780 303.03914285714285 L 866.1538461538462 303.03914285714285 M 866.1538461538462 165 L 866.1538461538462 303.03914285714285 M 866.1538461538462 165 L 1715 165 M 1715 165 L 1715 943 M 1715 960 L 1715 1255 M 1715 1255.322 L 1780 1255.322" fill="none" stroke="#0369a1" stroke-width="4"><title>auth.users.id -&gt; public.mobile_attendance_pairing_policy.updated_by; ON DELETE NO ACTION</title></path>
-<circle cx="780" cy="303.03914285714285" r="1.7" fill="#0369a1"/>
+<path d="M 780 305.51533333333333 L 866.1538461538462 305.51533333333333 M 866.1538461538462 165 L 866.1538461538462 305.51533333333333 M 866.1538461538462 165 L 1715 165 M 1715 165 L 1715 946 M 1715 965 L 1715 1255 M 1715 1255.322 L 1780 1255.322" fill="none" stroke="#0369a1" stroke-width="3.2"><title>auth.users.id -&gt; public.mobile_attendance_pairing_policy.updated_by; ON DELETE NO ACTION</title></path>
+<circle cx="780" cy="305.51533333333333" r="1.3" fill="#0369a1"/>
 <circle cx="1780" cy="1255.322" r="3.5" fill="#0369a1"/>
-<path d="M 2520 1568.195 L 2557.5 1568.195 M 2557.5 1568.195 L 2557.5 2035.345 M 2557.5 2035.345 L 2520 2035.345" fill="none" stroke="#1d4ed8" stroke-width="4"><title>public.mobile_attendance_scan_sessions.id -&gt; public.mobile_attendance_scan_events.session_id; ON DELETE CASCADE</title></path>
-<circle cx="2520" cy="1568.195" r="1.7" fill="#1d4ed8"/>
+<path d="M 2520 1559.195 L 2557.5 1559.195 M 2557.5 1559.195 L 2557.5 2035.345 M 2557.5 2035.345 L 2520 2035.345" fill="none" stroke="#1d4ed8" stroke-width="3.2"><title>public.mobile_attendance_scan_sessions.id -&gt; public.mobile_attendance_scan_events.session_id; ON DELETE CASCADE</title></path>
+<circle cx="2520" cy="1559.195" r="1.3" fill="#1d4ed8"/>
 <circle cx="2520" cy="2035.345" r="3.5" fill="#1d4ed8"/>
-<path d="M 780 305.6365714285715 L 874.6153846153846 305.6365714285715 M 874.6153846153846 175 L 874.6153846153846 305.6365714285715 M 874.6153846153846 175 L 1705.8333333333333 175 M 1705.8333333333333 175 L 1705.8333333333333 943 M 1705.8333333333333 960 L 1705.8333333333333 1605 M 1705.8333333333333 1605.368 L 1780 1605.368" fill="none" stroke="#0f766e" stroke-width="4"><title>auth.users.id -&gt; public.mobile_attendance_scan_sessions.created_by; ON DELETE CASCADE</title></path>
-<circle cx="780" cy="305.6365714285715" r="1.7" fill="#0f766e"/>
+<path d="M 780 309.208 L 874.6153846153846 309.208 M 874.6153846153846 175 L 874.6153846153846 309.208 M 874.6153846153846 175 L 1705.8333333333333 175 M 1705.8333333333333 175 L 1705.8333333333333 946 M 1705.8333333333333 965 L 1705.8333333333333 1605 M 1705.8333333333333 1605.368 L 1780 1605.368" fill="none" stroke="#0f766e" stroke-width="3.2"><title>auth.users.id -&gt; public.mobile_attendance_scan_sessions.created_by; ON DELETE CASCADE</title></path>
+<circle cx="780" cy="309.208" r="1.3" fill="#0f766e"/>
 <circle cx="1780" cy="1605.368" r="3.5" fill="#0f766e"/>
-<path d="M 780 324.221 L 815.3846153846154 324.221 M 815.3846153846154 324.221 L 815.3846153846154 441.253 M 815.3846153846154 453.253 L 815.3846153846154 589.391 M 815.3846153846154 589.391 L 780 589.391" fill="none" stroke="#7c3aed" stroke-width="4"><title>auth.users.id -&gt; public.profiles.id; ON DELETE CASCADE</title></path>
-<circle cx="780" cy="324.221" r="1.7" fill="#7c3aed"/>
+<path d="M 780 327.5543333333333 L 815.3846153846154 327.5543333333333 M 815.3846153846154 327.5543333333333 L 815.3846153846154 441.253 M 815.3846153846154 453.253 L 815.3846153846154 589.391 M 815.3846153846154 589.391 L 780 589.391" fill="none" stroke="#7c3aed" stroke-width="3.2"><title>auth.users.id -&gt; public.profiles.id; ON DELETE CASCADE</title></path>
+<circle cx="780" cy="327.5543333333333" r="1.3" fill="#7c3aed"/>
 <circle cx="780" cy="589.391" r="3.5" fill="#7c3aed"/>
-<path d="M 3390 318.234 L 3452 318.234 M 3452 318.234 L 3452 1801.414 M 3452 1801.414 L 3390 1801.414" fill="none" stroke="#a16207" stroke-width="4"><title>public.products.id -&gt; public.sale_items.product_id; ON DELETE SET NULL</title></path>
-<circle cx="3390" cy="318.234" r="1.7" fill="#a16207"/>
+<path d="M 3390 309.234 L 3452 309.234 M 3452 309.234 L 3452 1801.414 M 3452 1801.414 L 3390 1801.414" fill="none" stroke="#a16207" stroke-width="3.2"><title>public.products.id -&gt; public.sale_items.product_id; ON DELETE SET NULL</title></path>
+<circle cx="3390" cy="309.234" r="1.3" fill="#a16207"/>
 <circle cx="3390" cy="1801.414" r="3.5" fill="#a16207"/>
-<path d="M 3390 968.247 L 3426 968.247 M 3426 968.247 L 3426 1755.437 M 3426 1755.437 L 3390 1755.437" fill="none" stroke="#be185d" stroke-width="4"><title>public.sales.id -&gt; public.sale_items.sale_id; ON DELETE CASCADE</title></path>
-<circle cx="3390" cy="968.247" r="1.7" fill="#be185d"/>
+<path d="M 3390 959.247 L 3426 959.247 M 3426 959.247 L 3426 1755.437 M 3426 1755.437 L 3390 1755.437" fill="none" stroke="#be185d" stroke-width="3.2"><title>public.sales.id -&gt; public.sale_items.sale_id; ON DELETE CASCADE</title></path>
+<circle cx="3390" cy="959.247" r="1.3" fill="#be185d"/>
 <circle cx="3390" cy="1755.437" r="3.5" fill="#be185d"/>
-<path d="M 1650 965.26 L 1696.6666666666667 965.26 M 1696.6666666666667 965.26 L 1696.6666666666667 2230 M 1696.6666666666667 2230 L 2585 2230 M 2585 1005 L 2585 2230 M 2585 1005.46 L 2650 1005.46" fill="none" stroke="#475569" stroke-width="4"><title>public.members.id -&gt; public.sales.member_id; ON DELETE SET NULL</title></path>
-<circle cx="1650" cy="965.26" r="1.7" fill="#475569"/>
+<path d="M 1650 966.5933333333334 L 1696.6666666666667 966.5933333333334 M 1696.6666666666667 966.5933333333334 L 1696.6666666666667 2230 M 1696.6666666666667 2230 L 2585 2230 M 2585 1005 L 2585 2230 M 2585 1005.46 L 2650 1005.46" fill="none" stroke="#475569" stroke-width="3.2"><title>public.members.id -&gt; public.sales.member_id; ON DELETE SET NULL</title></path>
+<circle cx="1650" cy="966.5933333333334" r="1.3" fill="#475569"/>
 <circle cx="2650" cy="1005.46" r="3.5" fill="#475569"/>
-<path d="M 780 292.8444285714286 L 806.9230769230769 292.8444285714286 M 806.9230769230769 125 L 806.9230769230769 292.8444285714286 M 806.9230769230769 125 L 2612.5 125 M 2612.5 125 L 2612.5 999 M 2612.5 1011 L 2612.5 1051 M 2612.5 1051.483 L 2650 1051.483" fill="none" stroke="#0369a1" stroke-width="4"><title>auth.users.id -&gt; public.sales.processed_by; ON DELETE SET NULL</title></path>
-<circle cx="780" cy="292.8444285714286" r="1.7" fill="#0369a1"/>
+<path d="M 780 290.9396666666667 L 806.9230769230769 290.9396666666667 M 806.9230769230769 125 L 806.9230769230769 290.9396666666667 M 806.9230769230769 125 L 2612.5 125 M 2612.5 125 L 2612.5 999 M 2612.5 1011 L 2612.5 1051 M 2612.5 1051.483 L 2650 1051.483" fill="none" stroke="#0369a1" stroke-width="3.2"><title>auth.users.id -&gt; public.sales.processed_by; ON DELETE SET NULL</title></path>
+<circle cx="780" cy="290.9396666666667" r="1.3" fill="#0369a1"/>
 <circle cx="2650" cy="1051.483" r="3.5" fill="#0369a1"/>
 <rect x="40" y="200" width="740" height="132" fill="#ffffff" stroke="#cbd5e1"/>
 <rect x="40" y="200" width="740" height="86" fill="#e2e8f0" stroke="#cbd5e1"/>

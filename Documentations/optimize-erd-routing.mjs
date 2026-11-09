@@ -17,8 +17,8 @@ function geometry() {
     const distance = r => Math.abs(lanes[r.Index][r.Gutters[0]] - r.PX);
     up.sort((a, b) => distance(a) - distance(b));
     down.sort((a, b) => distance(b) - distance(a));
-    up.forEach((r, i) => { ys[r.Index] = base - 19 + (i + 1) * 18 / (up.length + 1) + (r.Index + 1) * 0.013; });
-    down.forEach((r, i) => { ys[r.Index] = base + (i + 1) * 18 / (down.length + 1) + (r.Index + 1) * 0.013; });
+    const ordered = [...up, ...down];
+    ordered.forEach((r, i) => { ys[r.Index] = base - 22 + (i + 1) * 44 / (ordered.length + 1) + (r.Index + 1) * 0.013; });
   }
   return routes.map(r => {
     const py = ys[r.Index], first = lanes[r.Index][r.Gutters[0]];
