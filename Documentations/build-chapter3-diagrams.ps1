@@ -112,17 +112,5 @@ for($mi=0;$mi -lt $mmd.Count;$mi++){
  if($insideSessions){$mmd[$mi]=$mmd[$mi].Replace('uuid user_id FK','uuid user_id PK,FK').Replace('text session_scope','text session_scope PK')}
 }
 $mmd|Set-Content (Join-Path $out '05-erd.mmd') -Encoding UTF8
-for($page=0;$page -lt 3;$page++){
- $subset=@($fks|Select-Object -Skip ($page*7) -First 7)
- Canvas "Figure 5$([char](97+$page)). Physical ERD relationships" 'Each row is an ER relationship. Repeated entity boxes denote the same table. Child FK NULLability and deletion actions follow the baseline and session migrations.' 2180
- for($i=0;$i -lt $subset.Count;$i++){$fk=$subset[$i];$y=220+$i*250
- $tableName=($fk.Child -split '\.')[1];$match=[regex]::Match($sql,('CREATE TABLE IF NOT EXISTS "[^" ]+"\."'+[regex]::Escape($tableName)+'" \(([\s\S]*?)\n\);'));$required=$match.Groups[1].Value -match ('"'+[regex]::Escape($fk.Field)+'" "uuid" NOT NULL')
- $parentCount=if($required){'1'}else{'0..1'};$childCount=if($fk.Child -eq 'private.account_sessions'){'0..2'}elseif($fk.Child -eq 'public.profiles' -or ($fk.Child -eq 'public.members' -and $fk.Field -in @('auth_user_id','application_id'))){'0..1'}else{'0..*'}
- Box 55 $y 575 185 $fk.Parent "PK: $($fk.ParentField)";Box 1120 $y 625 185 $fk.Child "FK: $($fk.Field)"
- Arrow 630 ($y+95) 1120 ($y+95) "$parentCount                  $childCount"
- $g.DrawString($fk.Rule,$small,$ink,[Drawing.RectangleF]::new(655,$y+120,440,80))
- }
- $g.DrawString('Cardinality labels: parent records per child (left); child records per parent (right). FK relationships only; activity_logs.actor_id is a recorded identifier without a declared FK. Auth internals are outside this application ERD.',$small,$ink,[Drawing.RectangleF]::new(60,2020,1680,140))
- Finish "05-erd-$($page+1).png"
-}
-'Generated context, DFD, role use cases, and three physical ERD panels.'
+& (Join-Path $PSScriptRoot 'build-schema-visualizer.ps1')
+'Generated context, DFD, role use cases, and four schema-style physical ERD panels.'

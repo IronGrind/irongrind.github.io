@@ -1,0 +1,1625 @@
+﻿{
+    "Source":  "Author-supplied pgAdmin ERD export; auth-user uniqueness checked against migration baseline",
+    "Tables":  [
+                   {
+                       "Name":  "private.account_sessions",
+                       "Columns":  [
+                                       {
+                                           "Name":  "user_id",
+                                           "Type":  "uuid",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "PK",
+                                                        "FK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "session_id",
+                                           "Type":  "uuid",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "session_created_at",
+                                           "Type":  "timestamptz",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "session_scope",
+                                           "Type":  "text",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "PK"
+                                                    ]
+                                       }
+                                   ]
+                   },
+                   {
+                       "Name":  "private.admin_login_attempts",
+                       "Columns":  [
+                                       {
+                                           "Name":  "bucket",
+                                           "Type":  "text",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "PK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "window_start",
+                                           "Type":  "timestamptz",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "attempts",
+                                           "Type":  "integer",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       }
+                                   ]
+                   },
+                   {
+                       "Name":  "private.attendance_scan_requests",
+                       "Columns":  [
+                                       {
+                                           "Name":  "request_id",
+                                           "Type":  "uuid",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "PK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "operator_id",
+                                           "Type":  "uuid",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "FK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "member_id",
+                                           "Type":  "uuid",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "FK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "result",
+                                           "Type":  "jsonb",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "created_at",
+                                           "Type":  "timestamptz",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       }
+                                   ]
+                   },
+                   {
+                       "Name":  "public.activity_logs",
+                       "Columns":  [
+                                       {
+                                           "Name":  "id",
+                                           "Type":  "bigint",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "PK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "occurred_at",
+                                           "Type":  "timestamptz",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "actor_id",
+                                           "Type":  "uuid",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "actor_name",
+                                           "Type":  "text",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "actor_role",
+                                           "Type":  "text",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "action",
+                                           "Type":  "text",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "entity_type",
+                                           "Type":  "text",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "entity_id",
+                                           "Type":  "text",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "record_label",
+                                           "Type":  "text",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "changed_fields",
+                                           "Type":  "text[]",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "details",
+                                           "Type":  "text",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       }
+                                   ]
+                   },
+                   {
+                       "Name":  "public.attendance",
+                       "Columns":  [
+                                       {
+                                           "Name":  "id",
+                                           "Type":  "uuid",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "PK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "member_id",
+                                           "Type":  "uuid",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "FK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "date",
+                                           "Type":  "date",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "time_in",
+                                           "Type":  "timestamptz",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "time_out",
+                                           "Type":  "timestamptz",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "created_at",
+                                           "Type":  "timestamptz",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "recorded_by",
+                                           "Type":  "uuid",
+                                           "Required":  false,
+                                           "Keys":  [
+                                                        "FK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "checked_out_by",
+                                           "Type":  "uuid",
+                                           "Required":  false,
+                                           "Keys":  [
+                                                        "FK"
+                                                    ]
+                                       }
+                                   ]
+                   },
+                   {
+                       "Name":  "public.members",
+                       "Columns":  [
+                                       {
+                                           "Name":  "id",
+                                           "Type":  "uuid",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "PK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "application_id",
+                                           "Type":  "uuid",
+                                           "Required":  false,
+                                           "Keys":  [
+                                                        "UQ",
+                                                        "FK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "full_name",
+                                           "Type":  "varchar(150)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "mobile",
+                                           "Type":  "varchar(11)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "plan",
+                                           "Type":  "varchar(30)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "start_date",
+                                           "Type":  "date",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "end_date",
+                                           "Type":  "date",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "status",
+                                           "Type":  "varchar(20)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "paid",
+                                           "Type":  "numeric(10,2)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "fitness_goals",
+                                           "Type":  "text[]",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "height",
+                                           "Type":  "numeric(6,2)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "height_unit",
+                                           "Type":  "varchar(3)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "weight",
+                                           "Type":  "numeric(6,2)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "health_conditions",
+                                           "Type":  "text[]",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "other_medical_conditions",
+                                           "Type":  "text",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "signature_data",
+                                           "Type":  "text",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "created_at",
+                                           "Type":  "timestamptz",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "auth_user_id",
+                                           "Type":  "uuid",
+                                           "Required":  false,
+                                           "Keys":  [
+                                                        "FK",
+                                                        "UQ"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "email",
+                                           "Type":  "varchar(254)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "username",
+                                           "Type":  "varchar(30)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "date_of_birth",
+                                           "Type":  "date",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "age",
+                                           "Type":  "smallint",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "sex",
+                                           "Type":  "varchar(30)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "weight_kg",
+                                           "Type":  "numeric(7,2)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "emergency_contact",
+                                           "Type":  "jsonb",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "plan_price",
+                                           "Type":  "numeric(12,2)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "expiry_date",
+                                           "Type":  "date",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "registration_source",
+                                           "Type":  "varchar(40)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "signature_path",
+                                           "Type":  "text",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "updated_at",
+                                           "Type":  "timestamptz",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       }
+                                   ]
+                   },
+                   {
+                       "Name":  "public.membership_applications",
+                       "Columns":  [
+                                       {
+                                           "Name":  "id",
+                                           "Type":  "uuid",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "PK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "full_name",
+                                           "Type":  "varchar(150)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "date_of_birth",
+                                           "Type":  "date",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "age",
+                                           "Type":  "integer",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "sex",
+                                           "Type":  "varchar(30)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "mobile",
+                                           "Type":  "varchar(11)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "height",
+                                           "Type":  "numeric(6,2)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "height_unit",
+                                           "Type":  "varchar(3)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "weight",
+                                           "Type":  "numeric(6,2)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "emergency_name",
+                                           "Type":  "text",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "emergency_relationship",
+                                           "Type":  "text",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "emergency_contact",
+                                           "Type":  "text",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "plan",
+                                           "Type":  "varchar(30)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "plan_price",
+                                           "Type":  "numeric(10,2)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "start_date",
+                                           "Type":  "date",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "end_date",
+                                           "Type":  "date",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "health_conditions",
+                                           "Type":  "text[]",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "other_medical_conditions",
+                                           "Type":  "text",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "fitness_goals",
+                                           "Type":  "text[]",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "signature_data",
+                                           "Type":  "text",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "status",
+                                           "Type":  "varchar(20)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "reviewed_by",
+                                           "Type":  "uuid",
+                                           "Required":  false,
+                                           "Keys":  [
+                                                        "FK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "reviewed_at",
+                                           "Type":  "timestamptz",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "created_at",
+                                           "Type":  "timestamptz",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "auth_user_id",
+                                           "Type":  "uuid",
+                                           "Required":  false,
+                                           "Keys":  [
+                                                        "FK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "member_id",
+                                           "Type":  "uuid",
+                                           "Required":  false,
+                                           "Keys":  [
+                                                        "FK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "application_type",
+                                           "Type":  "varchar(20)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "submitted_at",
+                                           "Type":  "timestamptz",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "email",
+                                           "Type":  "varchar(254)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "username",
+                                           "Type":  "varchar(30)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "emergency_contact_data",
+                                           "Type":  "jsonb",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "weight_kg",
+                                           "Type":  "numeric(7,2)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "signature_path",
+                                           "Type":  "text",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       }
+                                   ]
+                   },
+                   {
+                       "Name":  "public.membership_history",
+                       "Columns":  [
+                                       {
+                                           "Name":  "id",
+                                           "Type":  "uuid",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "PK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "member_id",
+                                           "Type":  "uuid",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "FK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "event_type",
+                                           "Type":  "varchar(30)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "previous_plan",
+                                           "Type":  "varchar(30)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "new_plan",
+                                           "Type":  "varchar(30)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "previous_price",
+                                           "Type":  "numeric(12,2)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "new_price",
+                                           "Type":  "numeric(12,2)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "previous_start_date",
+                                           "Type":  "date",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "previous_expiry_date",
+                                           "Type":  "date",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "new_start_date",
+                                           "Type":  "date",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "new_expiry_date",
+                                           "Type":  "date",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "notes",
+                                           "Type":  "text",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "recorded_at",
+                                           "Type":  "timestamptz",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "recorded_by",
+                                           "Type":  "uuid",
+                                           "Required":  false,
+                                           "Keys":  [
+                                                        "FK"
+                                                    ]
+                                       }
+                                   ]
+                   },
+                   {
+                       "Name":  "public.mobile_attendance_pairing_policy",
+                       "Columns":  [
+                                       {
+                                           "Name":  "singleton",
+                                           "Type":  "boolean",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "PK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "max_pairs",
+                                           "Type":  "integer",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "updated_at",
+                                           "Type":  "timestamptz",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "updated_by",
+                                           "Type":  "uuid",
+                                           "Required":  false,
+                                           "Keys":  [
+                                                        "FK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "pairing_password_hash",
+                                           "Type":  "text",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "pairing_removal_pin_hash",
+                                           "Type":  "text",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       }
+                                   ]
+                   },
+                   {
+                       "Name":  "public.mobile_attendance_scan_events",
+                       "Columns":  [
+                                       {
+                                           "Name":  "id",
+                                           "Type":  "uuid",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "PK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "session_id",
+                                           "Type":  "uuid",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "FK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "qr_payload",
+                                           "Type":  "text",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "created_at",
+                                           "Type":  "timestamptz",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       }
+                                   ]
+                   },
+                   {
+                       "Name":  "public.mobile_attendance_scan_sessions",
+                       "Columns":  [
+                                       {
+                                           "Name":  "id",
+                                           "Type":  "uuid",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "PK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "token_hash",
+                                           "Type":  "text",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "created_by",
+                                           "Type":  "uuid",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "FK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "created_at",
+                                           "Type":  "timestamptz",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "expires_at",
+                                           "Type":  "timestamptz",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "paired_device",
+                                           "Type":  "text",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "paired_at",
+                                           "Type":  "timestamptz",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "remember_phone",
+                                           "Type":  "boolean",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "paired_device_id",
+                                           "Type":  "uuid",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       }
+                                   ]
+                   },
+                   {
+                       "Name":  "public.products",
+                       "Columns":  [
+                                       {
+                                           "Name":  "id",
+                                           "Type":  "uuid",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "PK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "name",
+                                           "Type":  "varchar(120)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "category",
+                                           "Type":  "varchar(20)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "price",
+                                           "Type":  "numeric(10,2)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "stock",
+                                           "Type":  "numeric(14,6)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "size",
+                                           "Type":  "varchar(30)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "created_at",
+                                           "Type":  "timestamptz",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "updated_at",
+                                           "Type":  "timestamptz",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "is_active",
+                                           "Type":  "boolean",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "archived_at",
+                                           "Type":  "timestamptz",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "image_path",
+                                           "Type":  "text",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "price_per_unit",
+                                           "Type":  "numeric(12,2)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "unit",
+                                           "Type":  "varchar(12)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "stock_unit",
+                                           "Type":  "text",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "merch_type",
+                                           "Type":  "text",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "supplement_form",
+                                           "Type":  "text",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "supplement_type",
+                                           "Type":  "text",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       }
+                                   ]
+                   },
+                   {
+                       "Name":  "public.profiles",
+                       "Columns":  [
+                                       {
+                                           "Name":  "id",
+                                           "Type":  "uuid",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "PK",
+                                                        "FK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "username",
+                                           "Type":  "varchar(30)",
+                                           "Required":  false,
+                                           "Keys":  [
+                                                        "UQ"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "full_name",
+                                           "Type":  "varchar(150)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "role",
+                                           "Type":  "varchar(20)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "account_status",
+                                           "Type":  "text",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "created_at",
+                                           "Type":  "timestamptz",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "updated_at",
+                                           "Type":  "timestamptz",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "email",
+                                           "Type":  "varchar(254)",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "is_active",
+                                           "Type":  "boolean",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "phone_number",
+                                           "Type":  "text",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "gender",
+                                           "Type":  "text",
+                                           "Required":  false,
+                                           "Keys":  [
+
+                                                    ]
+                                       }
+                                   ]
+                   },
+                   {
+                       "Name":  "public.sale_items",
+                       "Columns":  [
+                                       {
+                                           "Name":  "id",
+                                           "Type":  "uuid",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "PK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "sale_id",
+                                           "Type":  "uuid",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "FK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "product_id",
+                                           "Type":  "uuid",
+                                           "Required":  false,
+                                           "Keys":  [
+                                                        "FK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "item_name",
+                                           "Type":  "varchar(150)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "category",
+                                           "Type":  "varchar(20)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "quantity",
+                                           "Type":  "numeric(12,3)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "unit",
+                                           "Type":  "varchar(12)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "unit_price",
+                                           "Type":  "numeric(12,2)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "line_total",
+                                           "Type":  "numeric(12,2)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       }
+                                   ]
+                   },
+                   {
+                       "Name":  "public.sales",
+                       "Columns":  [
+                                       {
+                                           "Name":  "id",
+                                           "Type":  "uuid",
+                                           "Required":  true,
+                                           "Keys":  [
+                                                        "PK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "member_id",
+                                           "Type":  "uuid",
+                                           "Required":  false,
+                                           "Keys":  [
+                                                        "FK"
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "customer_name",
+                                           "Type":  "varchar(150)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "items",
+                                           "Type":  "jsonb",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "total",
+                                           "Type":  "numeric(10,2)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "status",
+                                           "Type":  "varchar(12)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "sold_at",
+                                           "Type":  "timestamptz",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "receipt_number",
+                                           "Type":  "varchar(64)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "customer_type",
+                                           "Type":  "varchar(15)",
+                                           "Required":  true,
+                                           "Keys":  [
+
+                                                    ]
+                                       },
+                                       {
+                                           "Name":  "processed_by",
+                                           "Type":  "uuid",
+                                           "Required":  false,
+                                           "Keys":  [
+                                                        "FK"
+                                                    ]
+                                       }
+                                   ]
+                   }
+               ],
+    "Relations":  [
+                      {
+                          "Child":  "private.account_sessions",
+                          "Field":  "user_id",
+                          "Parent":  "auth.users",
+                          "ParentField":  "id",
+                          "Delete":  "CASCADE"
+                      },
+                      {
+                          "Child":  "private.attendance_scan_requests",
+                          "Field":  "member_id",
+                          "Parent":  "public.members",
+                          "ParentField":  "id",
+                          "Delete":  "CASCADE"
+                      },
+                      {
+                          "Child":  "private.attendance_scan_requests",
+                          "Field":  "operator_id",
+                          "Parent":  "auth.users",
+                          "ParentField":  "id",
+                          "Delete":  "CASCADE"
+                      },
+                      {
+                          "Child":  "public.attendance",
+                          "Field":  "checked_out_by",
+                          "Parent":  "auth.users",
+                          "ParentField":  "id",
+                          "Delete":  "SET NULL"
+                      },
+                      {
+                          "Child":  "public.attendance",
+                          "Field":  "member_id",
+                          "Parent":  "public.members",
+                          "ParentField":  "id",
+                          "Delete":  "CASCADE"
+                      },
+                      {
+                          "Child":  "public.attendance",
+                          "Field":  "recorded_by",
+                          "Parent":  "auth.users",
+                          "ParentField":  "id",
+                          "Delete":  "SET NULL"
+                      },
+                      {
+                          "Child":  "public.members",
+                          "Field":  "application_id",
+                          "Parent":  "public.membership_applications",
+                          "ParentField":  "id",
+                          "Delete":  "SET NULL"
+                      },
+                      {
+                          "Child":  "public.members",
+                          "Field":  "auth_user_id",
+                          "Parent":  "auth.users",
+                          "ParentField":  "id",
+                          "Delete":  "SET NULL"
+                      },
+                      {
+                          "Child":  "public.membership_applications",
+                          "Field":  "auth_user_id",
+                          "Parent":  "auth.users",
+                          "ParentField":  "id",
+                          "Delete":  "CASCADE"
+                      },
+                      {
+                          "Child":  "public.membership_applications",
+                          "Field":  "member_id",
+                          "Parent":  "public.members",
+                          "ParentField":  "id",
+                          "Delete":  "SET NULL"
+                      },
+                      {
+                          "Child":  "public.membership_applications",
+                          "Field":  "reviewed_by",
+                          "Parent":  "public.profiles",
+                          "ParentField":  "id",
+                          "Delete":  "NO ACTION"
+                      },
+                      {
+                          "Child":  "public.membership_history",
+                          "Field":  "member_id",
+                          "Parent":  "public.members",
+                          "ParentField":  "id",
+                          "Delete":  "RESTRICT"
+                      },
+                      {
+                          "Child":  "public.membership_history",
+                          "Field":  "recorded_by",
+                          "Parent":  "auth.users",
+                          "ParentField":  "id",
+                          "Delete":  "SET NULL"
+                      },
+                      {
+                          "Child":  "public.mobile_attendance_pairing_policy",
+                          "Field":  "updated_by",
+                          "Parent":  "auth.users",
+                          "ParentField":  "id",
+                          "Delete":  "NO ACTION"
+                      },
+                      {
+                          "Child":  "public.mobile_attendance_scan_events",
+                          "Field":  "session_id",
+                          "Parent":  "public.mobile_attendance_scan_sessions",
+                          "ParentField":  "id",
+                          "Delete":  "CASCADE"
+                      },
+                      {
+                          "Child":  "public.mobile_attendance_scan_sessions",
+                          "Field":  "created_by",
+                          "Parent":  "auth.users",
+                          "ParentField":  "id",
+                          "Delete":  "CASCADE"
+                      },
+                      {
+                          "Child":  "public.profiles",
+                          "Field":  "id",
+                          "Parent":  "auth.users",
+                          "ParentField":  "id",
+                          "Delete":  "CASCADE"
+                      },
+                      {
+                          "Child":  "public.sale_items",
+                          "Field":  "product_id",
+                          "Parent":  "public.products",
+                          "ParentField":  "id",
+                          "Delete":  "SET NULL"
+                      },
+                      {
+                          "Child":  "public.sale_items",
+                          "Field":  "sale_id",
+                          "Parent":  "public.sales",
+                          "ParentField":  "id",
+                          "Delete":  "CASCADE"
+                      },
+                      {
+                          "Child":  "public.sales",
+                          "Field":  "member_id",
+                          "Parent":  "public.members",
+                          "ParentField":  "id",
+                          "Delete":  "SET NULL"
+                      },
+                      {
+                          "Child":  "public.sales",
+                          "Field":  "processed_by",
+                          "Parent":  "auth.users",
+                          "ParentField":  "id",
+                          "Delete":  "SET NULL"
+                      }
+                  ]
+}

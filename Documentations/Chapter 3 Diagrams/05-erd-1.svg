@@ -1,0 +1,250 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1740" viewBox="0 0 1800 1740"><rect width="100%" height="100%" fill="white"/>
+<text x="50" y="63" font-family="Arial, sans-serif" font-size="35" font-weight="700" fill="#172b46">Figure 5a. Membership applications and member records</text>
+<text x="50" y="106" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#53647a">Physical database schema | table columns and declared foreign-key connections</text>
+<g><title>public.membership_applications.id -&gt; public.members.application_id; ON DELETE SET NULL</title><path d="M 830 456.5 H 880 V 489.5 H 970" fill="none" stroke="#2563eb" stroke-width="2.5"/><circle cx="830" cy="456.5" r="4" fill="#2563eb"/><circle cx="970" cy="489.5" r="4" fill="#2563eb"/></g>
+<g><title>auth.users.id -&gt; public.members.auth_user_id; ON DELETE SET NULL</title><path d="M 830 246.5 H 890 V 1017.5 H 970" fill="none" stroke="#0f766e" stroke-width="2.5"/><circle cx="830" cy="246.5" r="4" fill="#0f766e"/><circle cx="970" cy="1017.5" r="4" fill="#0f766e"/></g>
+<g><title>auth.users.id -&gt; public.membership_applications.auth_user_id; ON DELETE CASCADE</title><path d="M 830 246.5 H 865 V 1248.5 H 830" fill="none" stroke="#7c3aed" stroke-width="2.5"/><circle cx="830" cy="246.5" r="4" fill="#7c3aed"/><circle cx="830" cy="1248.5" r="4" fill="#7c3aed"/></g>
+<g><title>public.members.id -&gt; public.membership_applications.member_id; ON DELETE SET NULL</title><path d="M 970 456.5 H 910 V 1281.5 H 830" fill="none" stroke="#b45309" stroke-width="2.5"/><circle cx="970" cy="456.5" r="4" fill="#b45309"/><circle cx="830" cy="1281.5" r="4" fill="#b45309"/></g>
+<g><title>public.profiles.id -&gt; public.membership_applications.reviewed_by; ON DELETE NO ACTION</title><path d="M 970 246.5 H 920 V 1149.5 H 830" fill="none" stroke="#be185d" stroke-width="2.5"/><circle cx="970" cy="246.5" r="4" fill="#be185d"/><circle cx="830" cy="1149.5" r="4" fill="#be185d"/></g>
+<rect x="50" y="150" width="780" height="80" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="50" y="150" width="780" height="80" fill="#e2e8f0" stroke="#cbd5e1"/>
+<text x="68" y="179" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#52657b">auth | reference</text>
+<text x="68" y="210" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#172b46">users</text>
+<rect x="970" y="150" width="780" height="80" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="970" y="150" width="780" height="80" fill="#dbeafe" stroke="#cbd5e1"/>
+<text x="988" y="179" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#52657b">public | reference</text>
+<text x="988" y="210" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#172b46">profiles</text>
+<rect x="50" y="360" width="780" height="1169" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="50" y="360" width="780" height="80" fill="#dbeafe" stroke="#cbd5e1"/>
+<text x="68" y="389" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#52657b">public</text>
+<text x="68" y="420" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#172b46">membership_applications</text>
+<rect x="51" y="440" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="463" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8">PK</text>
+<text x="165" y="468" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">id</text>
+<text x="562" y="467" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">uuid *</text>
+<text x="62" y="496" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="501" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">full_name</text>
+<text x="562" y="500" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(150) *</text>
+<rect x="51" y="506" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="529" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="534" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">date_of_birth</text>
+<text x="562" y="533" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">date</text>
+<text x="62" y="562" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="567" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">age</text>
+<text x="562" y="566" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">integer</text>
+<rect x="51" y="572" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="595" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="600" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">sex</text>
+<text x="562" y="599" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(30)</text>
+<text x="62" y="628" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="633" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">mobile</text>
+<text x="562" y="632" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(11)</text>
+<rect x="51" y="638" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="661" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="666" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">height</text>
+<text x="562" y="665" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">numeric(6,2)</text>
+<text x="62" y="694" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="699" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">height_unit</text>
+<text x="562" y="698" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(3)</text>
+<rect x="51" y="704" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="727" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="732" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">weight</text>
+<text x="562" y="731" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">numeric(6,2)</text>
+<text x="62" y="760" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="765" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">emergency_name</text>
+<text x="562" y="764" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">text</text>
+<rect x="51" y="770" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="793" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="798" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">emergency_relationship</text>
+<text x="562" y="797" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">text</text>
+<text x="62" y="826" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="831" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">emergency_contact</text>
+<text x="562" y="830" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">text</text>
+<rect x="51" y="836" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="859" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="864" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">plan</text>
+<text x="562" y="863" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(30) *</text>
+<text x="62" y="892" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="897" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">plan_price</text>
+<text x="562" y="896" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">numeric(10,2) *</text>
+<rect x="51" y="902" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="925" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="930" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">start_date</text>
+<text x="562" y="929" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">date</text>
+<text x="62" y="958" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="963" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">end_date</text>
+<text x="562" y="962" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">date</text>
+<rect x="51" y="968" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="991" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="996" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">health_conditions</text>
+<text x="562" y="995" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">text[] *</text>
+<text x="62" y="1024" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="1029" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">other_medical_conditions</text>
+<text x="562" y="1028" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">text</text>
+<rect x="51" y="1034" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="1057" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="1062" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">fitness_goals</text>
+<text x="562" y="1061" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">text[] *</text>
+<text x="62" y="1090" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="1095" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">signature_data</text>
+<text x="562" y="1094" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">text</text>
+<rect x="51" y="1100" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="1123" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="1128" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">status</text>
+<text x="562" y="1127" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(20) *</text>
+<text x="62" y="1156" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="165" y="1161" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">reviewed_by</text>
+<text x="562" y="1160" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">uuid</text>
+<rect x="51" y="1166" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="1189" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="1194" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">reviewed_at</text>
+<text x="562" y="1193" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">timestamptz</text>
+<text x="62" y="1222" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="1227" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">created_at</text>
+<text x="562" y="1226" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">timestamptz *</text>
+<rect x="51" y="1232" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="1255" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="165" y="1260" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">auth_user_id</text>
+<text x="562" y="1259" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">uuid</text>
+<text x="62" y="1288" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="165" y="1293" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">member_id</text>
+<text x="562" y="1292" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">uuid</text>
+<rect x="51" y="1298" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="1321" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="1326" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">application_type</text>
+<text x="562" y="1325" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(20) *</text>
+<text x="62" y="1354" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="1359" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">submitted_at</text>
+<text x="562" y="1358" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">timestamptz *</text>
+<rect x="51" y="1364" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="1387" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="1392" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">email</text>
+<text x="562" y="1391" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(254)</text>
+<text x="62" y="1420" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="1425" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">username</text>
+<text x="562" y="1424" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(30)</text>
+<rect x="51" y="1430" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="1453" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="1458" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">emergency_contact_data</text>
+<text x="562" y="1457" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">jsonb *</text>
+<text x="62" y="1486" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="1491" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">weight_kg</text>
+<text x="562" y="1490" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">numeric(7,2)</text>
+<rect x="51" y="1496" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="1519" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="1524" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">signature_path</text>
+<text x="562" y="1523" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">text</text>
+<rect x="970" y="360" width="780" height="1070" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="970" y="360" width="780" height="80" fill="#dbeafe" stroke="#cbd5e1"/>
+<text x="988" y="389" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#52657b">public</text>
+<text x="988" y="420" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#172b46">members</text>
+<rect x="971" y="440" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="463" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8">PK</text>
+<text x="1085" y="468" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">id</text>
+<text x="1482" y="467" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">uuid *</text>
+<text x="982" y="496" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8">FK/UQ</text>
+<text x="1085" y="501" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">application_id</text>
+<text x="1482" y="500" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">uuid</text>
+<rect x="971" y="506" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="529" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="534" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">full_name</text>
+<text x="1482" y="533" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(150) *</text>
+<text x="982" y="562" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="567" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">mobile</text>
+<text x="1482" y="566" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(11)</text>
+<rect x="971" y="572" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="595" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="600" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">plan</text>
+<text x="1482" y="599" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(30) *</text>
+<text x="982" y="628" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="633" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">start_date</text>
+<text x="1482" y="632" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">date</text>
+<rect x="971" y="638" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="661" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="666" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">end_date</text>
+<text x="1482" y="665" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">date</text>
+<text x="982" y="694" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="699" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">status</text>
+<text x="1482" y="698" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(20) *</text>
+<rect x="971" y="704" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="727" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="732" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">paid</text>
+<text x="1482" y="731" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">numeric(10,2) *</text>
+<text x="982" y="760" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="765" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">fitness_goals</text>
+<text x="1482" y="764" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">text[] *</text>
+<rect x="971" y="770" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="793" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="798" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">height</text>
+<text x="1482" y="797" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">numeric(6,2)</text>
+<text x="982" y="826" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="831" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">height_unit</text>
+<text x="1482" y="830" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(3)</text>
+<rect x="971" y="836" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="859" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="864" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">weight</text>
+<text x="1482" y="863" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">numeric(6,2)</text>
+<text x="982" y="892" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="897" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">health_conditions</text>
+<text x="1482" y="896" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">text[] *</text>
+<rect x="971" y="902" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="925" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="930" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">other_medical_conditions</text>
+<text x="1482" y="929" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">text</text>
+<text x="982" y="958" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="963" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">signature_data</text>
+<text x="1482" y="962" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">text</text>
+<rect x="971" y="968" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="991" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="996" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">created_at</text>
+<text x="1482" y="995" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">timestamptz *</text>
+<text x="982" y="1024" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8">FK/UQ</text>
+<text x="1085" y="1029" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">auth_user_id</text>
+<text x="1482" y="1028" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">uuid</text>
+<rect x="971" y="1034" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="1057" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="1062" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">email</text>
+<text x="1482" y="1061" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(254)</text>
+<text x="982" y="1090" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="1095" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">username</text>
+<text x="1482" y="1094" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(30)</text>
+<rect x="971" y="1100" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="1123" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="1128" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">date_of_birth</text>
+<text x="1482" y="1127" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">date</text>
+<text x="982" y="1156" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="1161" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">age</text>
+<text x="1482" y="1160" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">smallint</text>
+<rect x="971" y="1166" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="1189" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="1194" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">sex</text>
+<text x="1482" y="1193" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(30)</text>
+<text x="982" y="1222" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="1227" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">weight_kg</text>
+<text x="1482" y="1226" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">numeric(7,2)</text>
+<rect x="971" y="1232" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="1255" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="1260" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">emergency_contact</text>
+<text x="1482" y="1259" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">jsonb *</text>
+<text x="982" y="1288" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="1293" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">plan_price</text>
+<text x="1482" y="1292" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">numeric(12,2) *</text>
+<rect x="971" y="1298" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="1321" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="1326" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">expiry_date</text>
+<text x="1482" y="1325" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">date</text>
+<text x="982" y="1354" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="1359" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">registration_source</text>
+<text x="1482" y="1358" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(40) *</text>
+<rect x="971" y="1364" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="1387" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="1392" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">signature_path</text>
+<text x="1482" y="1391" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">text</text>
+<text x="982" y="1420" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="1425" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">updated_at</text>
+<text x="1482" y="1424" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">timestamptz *</text>
+<text x="50" y="1594" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#172b46">PK = primary key     FK = foreign key     UQ = unique key/index     * = NOT NULL</text>
+<text x="50" y="1631" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#53647a">Lines join a referenced key to its foreign-key column. Reference cards repeat existing tables.</text>
+<text x="50" y="1666" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#53647a">Types abbreviated: varchar = character varying; timestamptz = timestamp with time zone.</text>
+<text x="50" y="1699" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">Source: project pgAdmin schema export; application tables only, with auth.users as a managed reference.</text>
+</svg>

@@ -1,0 +1,159 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="1670" viewBox="0 0 1800 1670"><rect width="100%" height="100%" fill="white"/>
+<text x="50" y="63" font-family="Arial, sans-serif" font-size="35" font-weight="700" fill="#172b46">Figure 5d. Products, sales and sale items</text>
+<text x="50" y="106" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#53647a">Physical database schema | table columns and declared foreign-key connections</text>
+<g><title>public.products.id -&gt; public.sale_items.product_id; ON DELETE SET NULL</title><path d="M 830 456.5 H 880 V 1202.5 H 970" fill="none" stroke="#2563eb" stroke-width="2.5"/><circle cx="830" cy="456.5" r="4" fill="#2563eb"/><circle cx="970" cy="1202.5" r="4" fill="#2563eb"/></g>
+<g><title>public.sales.id -&gt; public.sale_items.sale_id; ON DELETE CASCADE</title><path d="M 970 456.5 H 945 V 1169.5 H 970" fill="none" stroke="#0f766e" stroke-width="2.5"/><circle cx="970" cy="456.5" r="4" fill="#0f766e"/><circle cx="970" cy="1169.5" r="4" fill="#0f766e"/></g>
+<g><title>public.members.id -&gt; public.sales.member_id; ON DELETE SET NULL</title><path d="M 970 246.5 H 935 V 489.5 H 970" fill="none" stroke="#7c3aed" stroke-width="2.5"/><circle cx="970" cy="246.5" r="4" fill="#7c3aed"/><circle cx="970" cy="489.5" r="4" fill="#7c3aed"/></g>
+<g><title>auth.users.id -&gt; public.sales.processed_by; ON DELETE SET NULL</title><path d="M 830 246.5 H 910 V 753.5 H 970" fill="none" stroke="#b45309" stroke-width="2.5"/><circle cx="830" cy="246.5" r="4" fill="#b45309"/><circle cx="970" cy="753.5" r="4" fill="#b45309"/></g>
+<rect x="50" y="150" width="780" height="80" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="50" y="150" width="780" height="80" fill="#e2e8f0" stroke="#cbd5e1"/>
+<text x="68" y="179" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#52657b">auth | reference</text>
+<text x="68" y="210" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#172b46">users</text>
+<rect x="970" y="150" width="780" height="80" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="970" y="150" width="780" height="80" fill="#dbeafe" stroke="#cbd5e1"/>
+<text x="988" y="179" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#52657b">public | reference</text>
+<text x="988" y="210" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#172b46">members</text>
+<rect x="50" y="360" width="780" height="641" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="50" y="360" width="780" height="80" fill="#dbeafe" stroke="#cbd5e1"/>
+<text x="68" y="389" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#52657b">public</text>
+<text x="68" y="420" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#172b46">products</text>
+<rect x="51" y="440" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="463" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8">PK</text>
+<text x="165" y="468" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">id</text>
+<text x="562" y="467" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">uuid *</text>
+<text x="62" y="496" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="501" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">name</text>
+<text x="562" y="500" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(120) *</text>
+<rect x="51" y="506" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="529" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="534" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">category</text>
+<text x="562" y="533" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(20) *</text>
+<text x="62" y="562" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="567" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">price</text>
+<text x="562" y="566" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">numeric(10,2) *</text>
+<rect x="51" y="572" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="595" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="600" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">stock</text>
+<text x="562" y="599" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">numeric(14,6) *</text>
+<text x="62" y="628" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="633" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">size</text>
+<text x="562" y="632" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(30)</text>
+<rect x="51" y="638" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="661" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="666" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">created_at</text>
+<text x="562" y="665" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">timestamptz *</text>
+<text x="62" y="694" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="699" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">updated_at</text>
+<text x="562" y="698" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">timestamptz *</text>
+<rect x="51" y="704" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="727" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="732" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">is_active</text>
+<text x="562" y="731" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">boolean *</text>
+<text x="62" y="760" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="765" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">archived_at</text>
+<text x="562" y="764" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">timestamptz</text>
+<rect x="51" y="770" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="793" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="798" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">image_path</text>
+<text x="562" y="797" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">text</text>
+<text x="62" y="826" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="831" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">price_per_unit</text>
+<text x="562" y="830" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">numeric(12,2) *</text>
+<rect x="51" y="836" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="859" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="864" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">unit</text>
+<text x="562" y="863" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(12) *</text>
+<text x="62" y="892" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="897" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">stock_unit</text>
+<text x="562" y="896" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">text *</text>
+<rect x="51" y="902" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="925" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="930" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">merch_type</text>
+<text x="562" y="929" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">text</text>
+<text x="62" y="958" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="963" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">supplement_form</text>
+<text x="562" y="962" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">text</text>
+<rect x="51" y="968" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="991" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="165" y="996" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">supplement_type</text>
+<text x="562" y="995" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">text</text>
+<rect x="970" y="360" width="780" height="410" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="970" y="360" width="780" height="80" fill="#dbeafe" stroke="#cbd5e1"/>
+<text x="988" y="389" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#52657b">public</text>
+<text x="988" y="420" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#172b46">sales</text>
+<rect x="971" y="440" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="463" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8">PK</text>
+<text x="1085" y="468" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">id</text>
+<text x="1482" y="467" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">uuid *</text>
+<text x="982" y="496" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="1085" y="501" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">member_id</text>
+<text x="1482" y="500" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">uuid</text>
+<rect x="971" y="506" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="529" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="534" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">customer_name</text>
+<text x="1482" y="533" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(150) *</text>
+<text x="982" y="562" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="567" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">items</text>
+<text x="1482" y="566" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">jsonb *</text>
+<rect x="971" y="572" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="595" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="600" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">total</text>
+<text x="1482" y="599" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">numeric(10,2) *</text>
+<text x="982" y="628" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="633" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">status</text>
+<text x="1482" y="632" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(12) *</text>
+<rect x="971" y="638" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="661" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="666" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">sold_at</text>
+<text x="1482" y="665" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">timestamptz *</text>
+<text x="982" y="694" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="699" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">receipt_number</text>
+<text x="1482" y="698" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(64) *</text>
+<rect x="971" y="704" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="727" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="732" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">customer_type</text>
+<text x="1482" y="731" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(15) *</text>
+<text x="982" y="760" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="1085" y="765" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">processed_by</text>
+<text x="1482" y="764" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">uuid</text>
+<rect x="970" y="1040" width="780" height="377" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="970" y="1040" width="780" height="80" fill="#dbeafe" stroke="#cbd5e1"/>
+<text x="988" y="1069" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#52657b">public</text>
+<text x="988" y="1100" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#172b46">sale_items</text>
+<rect x="971" y="1120" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="1143" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8">PK</text>
+<text x="1085" y="1148" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">id</text>
+<text x="1482" y="1147" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">uuid *</text>
+<text x="982" y="1176" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="1085" y="1181" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">sale_id</text>
+<text x="1482" y="1180" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">uuid *</text>
+<rect x="971" y="1186" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="1209" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8">FK</text>
+<text x="1085" y="1214" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">product_id</text>
+<text x="1482" y="1213" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">uuid</text>
+<text x="982" y="1242" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="1247" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">item_name</text>
+<text x="1482" y="1246" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(150) *</text>
+<rect x="971" y="1252" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="1275" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="1280" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">category</text>
+<text x="1482" y="1279" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(20) *</text>
+<text x="982" y="1308" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="1313" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">quantity</text>
+<text x="1482" y="1312" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">numeric(12,3) *</text>
+<rect x="971" y="1318" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="1341" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="1346" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">unit</text>
+<text x="1482" y="1345" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">varchar(12) *</text>
+<text x="982" y="1374" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="1379" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">unit_price</text>
+<text x="1482" y="1378" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">numeric(12,2) *</text>
+<rect x="971" y="1384" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="1407" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8"></text>
+<text x="1085" y="1412" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">line_total</text>
+<text x="1482" y="1411" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">numeric(12,2) *</text>
+<text x="50" y="1524" font-family="Arial, sans-serif" font-size="24" font-weight="400" fill="#172b46">PK = primary key     FK = foreign key     UQ = unique key/index     * = NOT NULL</text>
+<text x="50" y="1561" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#53647a">Lines join a referenced key to its foreign-key column. Reference cards repeat existing tables.</text>
+<text x="50" y="1596" font-family="Arial, sans-serif" font-size="23" font-weight="400" fill="#53647a">Types abbreviated: varchar = character varying; timestamptz = timestamp with time zone.</text>
+<text x="50" y="1629" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">Source: project pgAdmin schema export; application tables only, with auth.users as a managed reference.</text>
+</svg>
