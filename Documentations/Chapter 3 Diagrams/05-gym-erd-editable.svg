@@ -1,0 +1,409 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1700 770" width="1700" height="770" font-family="Helvetica, Arial, DejaVu Sans, sans-serif" xmlns:c2pa="http://c2pa.org/manifest">
+  <metadata>
+    <c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYToxZTlkMjFjYi0yNTNlLTRkOWMtYWM5Zi1jNzE1Nzk5MjVkNzkAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaEPt61erDe9+R0Nn9RZcc0MAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDplNTRiZTY3MS1hZjE1LTQ5MGYtYWM0Zi1hZTMyNGUzYmViMTNscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoZYDQbQ0reAnXXyzyLMncYAAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggqaqJMqNDXMbbTzcD031UxHP/oZ6dpiC4Gh2UXKuyHRCkZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaDKmgw54yN6/wUwNLr6T1JMAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCDNipP7v5qLzI8IrYgj7FJoZKiIk/aUjUZbuI4RpZ2JBWRuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBjQZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjFlOWQyMWNiLTI1M2UtNGQ5Yy1hYzlmLWM3MTU3OTkyNWQ3OS9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjUyYTM4YmFmLTZjNTAtNGI1NC05ZDI3LTlhZGQ2MmMzNmFkNHJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCCpqokyo0NcxttPNwPTfVTEc/+hnp2mILgaHZRcq7IdEKJjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggvjqJxgQUTvdz9KJmRwr/QrIF5YN2CIXy0+qqZJTy6gKiY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggAjPTpDXVyX/Be9sWy1wFZ2lX2gpca21NeC0DQSZwRwR0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQI83kAKC2UU8wY7w45CHC7GUVqVWdkqxVI5XVuyLBQqNDgnl2olZn11juI+D14y9vgbb/bC4TFNgr6skYA9Wu9U=</c2pa:manifest>
+  </metadata>
+  <rect width="1700" height="770" fill="#fff" />
+  <text x="50" y="44" font-size="26" font-weight="700" fill="#0f172a">Entity Relationship Diagram</text>
+  <text x="50" y="66" font-size="13" fill="#64748b">Gym membership, attendance and sales system: selected attributes; complete definitions appear in the data dictionary.</text>
+  <path d="M 290 131.0 L 340 131.0 L 340 153.0 L 390 153.0" fill="none" stroke="#334155" stroke-width="1.8" stroke-linejoin="round" />
+  <line x1="298.0" y1="124.0" x2="298.0" y2="138.0" stroke="#334155" stroke-width="1.8" />
+  <circle cx="307.0" cy="131.0" r="4.5" fill="#fff" stroke="#334155" stroke-width="1.8" />
+  <line x1="376.0" y1="153.0" x2="390.0" y2="160.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="376.0" y1="153.0" x2="390.0" y2="146.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="376.0" y1="153.0" x2="390.0" y2="153.0" stroke="#334155" stroke-width="1.8" />
+  <circle cx="369.0" cy="153.0" r="4.5" fill="#fff" stroke="#334155" stroke-width="1.8" />
+  <path d="M 630 131.0 L 670 131.0 L 670 153.0 L 730 153.0" fill="none" stroke="#334155" stroke-width="1.8" stroke-linejoin="round" />
+  <line x1="638.0" y1="124.0" x2="638.0" y2="138.0" stroke="#334155" stroke-width="1.8" />
+  <circle cx="647.0" cy="131.0" r="4.5" fill="#fff" stroke="#334155" stroke-width="1.8" />
+  <line x1="722.0" y1="160.0" x2="722.0" y2="146.0" stroke="#334155" stroke-width="1.8" />
+  <circle cx="713.0" cy="153.0" r="4.5" fill="#fff" stroke="#334155" stroke-width="1.8" />
+  <path d="M 730 131.0 L 690 131.0 L 690 175.0 L 630 175.0" fill="none" stroke="#334155" stroke-width="1.8" stroke-linejoin="round" />
+  <line x1="722.0" y1="138.0" x2="722.0" y2="124.0" stroke="#334155" stroke-width="1.8" />
+  <circle cx="713.0" cy="131.0" r="4.5" fill="#fff" stroke="#334155" stroke-width="1.8" />
+  <line x1="644.0" y1="175.0" x2="630.0" y2="168.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="644.0" y1="175.0" x2="630.0" y2="182.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="644.0" y1="175.0" x2="630.0" y2="175.0" stroke="#334155" stroke-width="1.8" />
+  <circle cx="651.0" cy="175.0" r="4.5" fill="#fff" stroke="#334155" stroke-width="1.8" />
+  <path d="M 970 131.0 L 1020 131.0 L 1020 153.0 L 1070 153.0" fill="none" stroke="#334155" stroke-width="1.8" stroke-linejoin="round" />
+  <line x1="978.0" y1="124.0" x2="978.0" y2="138.0" stroke="#334155" stroke-width="1.8" />
+  <circle cx="987.0" cy="131.0" r="4.5" fill="#fff" stroke="#334155" stroke-width="1.8" />
+  <line x1="1056.0" y1="153.0" x2="1070.0" y2="160.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="1056.0" y1="153.0" x2="1070.0" y2="146.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="1056.0" y1="153.0" x2="1070.0" y2="153.0" stroke="#334155" stroke-width="1.8" />
+  <circle cx="1049.0" cy="153.0" r="4.5" fill="#fff" stroke="#334155" stroke-width="1.8" />
+  <path d="M 970 145 L 995 145 L 995 443 L 1070 443" fill="none" stroke="#334155" stroke-width="1.8" stroke-linejoin="round" />
+  <line x1="978.0" y1="138" x2="978.0" y2="152" stroke="#334155" stroke-width="1.8" />
+  <line x1="984.0" y1="138" x2="984.0" y2="152" stroke="#334155" stroke-width="1.8" />
+  <line x1="1056.0" y1="443.0" x2="1070.0" y2="450.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="1056.0" y1="443.0" x2="1070.0" y2="436.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="1056.0" y1="443.0" x2="1070.0" y2="443.0" stroke="#334155" stroke-width="1.8" />
+  <circle cx="1049.0" cy="443.0" r="4.5" fill="#fff" stroke="#334155" stroke-width="1.8" />
+  <path d="M 850 304 L 850 380" fill="none" stroke="#334155" stroke-width="1.8" stroke-linejoin="round" />
+  <line x1="857.0" y1="312.0" x2="843.0" y2="312.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="857.0" y1="318.0" x2="843.0" y2="318.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="850.0" y1="366.0" x2="843.0" y2="380.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="850.0" y1="366.0" x2="857.0" y2="380.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="850.0" y1="366.0" x2="850.0" y2="380.0" stroke="#334155" stroke-width="1.8" />
+  <circle cx="850.0" cy="359.0" r="4.5" fill="#fff" stroke="#334155" stroke-width="1.8" />
+  <path d="M 1310 131.0 L 1360 131.0 L 1360 153.0 L 1410 153.0" fill="none" stroke="#334155" stroke-width="1.8" stroke-linejoin="round" />
+  <line x1="1318.0" y1="124.0" x2="1318.0" y2="138.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="1324.0" y1="124.0" x2="1324.0" y2="138.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="1396.0" y1="153.0" x2="1410.0" y2="160.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="1396.0" y1="153.0" x2="1410.0" y2="146.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="1396.0" y1="153.0" x2="1410.0" y2="153.0" stroke="#334155" stroke-width="1.8" />
+  <circle cx="1389.0" cy="153.0" r="4.5" fill="#fff" stroke="#334155" stroke-width="1.8" />
+  <path d="M 1530 380 L 1530 282" fill="none" stroke="#334155" stroke-width="1.8" stroke-linejoin="round" />
+  <line x1="1523.0" y1="372.0" x2="1537.0" y2="372.0" stroke="#334155" stroke-width="1.8" />
+  <circle cx="1530.0" cy="363.0" r="4.5" fill="#fff" stroke="#334155" stroke-width="1.8" />
+  <line x1="1530.0" y1="296.0" x2="1537.0" y2="282.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="1530.0" y1="296.0" x2="1523.0" y2="282.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="1530.0" y1="296.0" x2="1530.0" y2="282.0" stroke="#334155" stroke-width="1.8" />
+  <circle cx="1530.0" cy="303.0" r="4.5" fill="#fff" stroke="#334155" stroke-width="1.8" />
+  <path d="M 170 528 L 170 600" fill="none" stroke="#334155" stroke-width="1.8" stroke-linejoin="round" />
+  <line x1="177.0" y1="536.0" x2="163.0" y2="536.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="177.0" y1="542.0" x2="163.0" y2="542.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="170.0" y1="586.0" x2="163.0" y2="600.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="170.0" y1="586.0" x2="177.0" y2="600.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="170.0" y1="586.0" x2="170.0" y2="600.0" stroke="#334155" stroke-width="1.8" />
+  <circle cx="170.0" cy="579.0" r="4.5" fill="#fff" stroke="#334155" stroke-width="1.8" />
+  <rect x="53" y="93" width="240" height="170" rx="7" fill="#0f172a" opacity="0.08" />
+  <rect x="50" y="90" width="240" height="170" rx="7" fill="#fff" stroke="#7c3aed" stroke-width="1.6" />
+  <path d="M 50 120 V 97 Q 50 90 57 90 H 283 Q 290 90 290 97 V 120 Z" fill="#7c3aed" />
+  <text x="170.0" y="110" font-size="14.0" font-weight="700" fill="#fff" text-anchor="middle">profiles</text>
+  <rect x="58" y="126" width="20" height="11" rx="2.5" fill="#ca8a04" />
+  <text x="68" y="134.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">PK</text>
+  <rect x="81" y="126" width="20" height="11" rx="2.5" fill="#7c3aed" />
+  <text x="91" y="134.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">FK</text>
+  <text x="109" y="135" font-size="12.5" font-weight="700" fill="#0f172a">id</text>
+  <text x="282" y="135" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="51" y="142" width="238" height="22" fill="#f8fafc" />
+  <rect x="58" y="148" width="20" height="11" rx="2.5" fill="#475569" />
+  <text x="68" y="156.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">UQ</text>
+  <text x="109" y="157" font-size="12.5" font-weight="400" fill="#0f172a">username</text>
+  <text x="282" y="157" font-size="10.5" fill="#64748b" text-anchor="end">varchar</text>
+  <text x="109" y="179" font-size="12.5" font-weight="400" fill="#0f172a">full_name</text>
+  <text x="282" y="179" font-size="10.5" fill="#64748b" text-anchor="end">varchar</text>
+  <rect x="51" y="186" width="238" height="22" fill="#f8fafc" />
+  <text x="109" y="201" font-size="12.5" font-weight="400" fill="#0f172a">role</text>
+  <text x="282" y="201" font-size="10.5" fill="#64748b" text-anchor="end">varchar</text>
+  <text x="109" y="223" font-size="12.5" font-weight="400" fill="#0f172a">account_status</text>
+  <text x="282" y="223" font-size="10.5" fill="#64748b" text-anchor="end">text</text>
+  <rect x="51" y="230" width="238" height="22" fill="#f8fafc" />
+  <text x="109" y="245" font-size="12.5" font-weight="400" fill="#0f172a">email</text>
+  <text x="282" y="245" font-size="10.5" fill="#64748b" text-anchor="end">varchar</text>
+  <rect x="393" y="93" width="240" height="214" rx="7" fill="#0f172a" opacity="0.08" />
+  <rect x="390" y="90" width="240" height="214" rx="7" fill="#fff" stroke="#2563eb" stroke-width="1.6" />
+  <path d="M 390 120 V 97 Q 390 90 397 90 H 623 Q 630 90 630 97 V 120 Z" fill="#2563eb" />
+  <text x="510.0" y="110" font-size="14.0" font-weight="700" fill="#fff" text-anchor="middle">membership_applications</text>
+  <rect x="398" y="126" width="20" height="11" rx="2.5" fill="#ca8a04" />
+  <text x="408" y="134.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">PK</text>
+  <text x="426" y="135" font-size="12.5" font-weight="700" fill="#0f172a">id</text>
+  <text x="622" y="135" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="391" y="142" width="238" height="22" fill="#f8fafc" />
+  <rect x="398" y="148" width="20" height="11" rx="2.5" fill="#2563eb" />
+  <text x="408" y="156.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">FK</text>
+  <text x="426" y="157" font-size="12.5" font-weight="400" fill="#0f172a">reviewed_by</text>
+  <text x="622" y="157" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="398" y="170" width="20" height="11" rx="2.5" fill="#2563eb" />
+  <text x="408" y="178.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">FK</text>
+  <text x="426" y="179" font-size="12.5" font-weight="400" fill="#0f172a">member_id</text>
+  <text x="622" y="179" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="391" y="186" width="238" height="22" fill="#f8fafc" />
+  <rect x="398" y="192" width="20" height="11" rx="2.5" fill="#7c3aed" />
+  <text x="408" y="200.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">FK</text>
+  <text x="426" y="201" font-size="12.5" font-weight="400" fill="#0f172a">auth_user_id</text>
+  <text x="622" y="201" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <text x="426" y="223" font-size="12.5" font-weight="400" fill="#0f172a">full_name</text>
+  <text x="622" y="223" font-size="10.5" fill="#64748b" text-anchor="end">varchar</text>
+  <rect x="391" y="230" width="238" height="22" fill="#f8fafc" />
+  <text x="426" y="245" font-size="12.5" font-weight="400" fill="#0f172a">plan</text>
+  <text x="622" y="245" font-size="10.5" fill="#64748b" text-anchor="end">varchar</text>
+  <text x="426" y="267" font-size="12.5" font-weight="400" fill="#0f172a">application_type</text>
+  <text x="622" y="267" font-size="10.5" fill="#64748b" text-anchor="end">varchar</text>
+  <rect x="391" y="274" width="238" height="22" fill="#f8fafc" />
+  <text x="426" y="289" font-size="12.5" font-weight="400" fill="#0f172a">status</text>
+  <text x="622" y="289" font-size="10.5" fill="#64748b" text-anchor="end">varchar</text>
+  <rect x="733" y="93" width="240" height="214" rx="7" fill="#0f172a" opacity="0.08" />
+  <rect x="730" y="90" width="240" height="214" rx="7" fill="#fff" stroke="#2563eb" stroke-width="1.6" />
+  <path d="M 730 120 V 97 Q 730 90 737 90 H 963 Q 970 90 970 97 V 120 Z" fill="#2563eb" />
+  <text x="850.0" y="110" font-size="14.0" font-weight="700" fill="#fff" text-anchor="middle">members</text>
+  <rect x="738" y="126" width="20" height="11" rx="2.5" fill="#ca8a04" />
+  <text x="748" y="134.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">PK</text>
+  <text x="789" y="135" font-size="12.5" font-weight="700" fill="#0f172a">id</text>
+  <text x="962" y="135" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="731" y="142" width="238" height="22" fill="#f8fafc" />
+  <rect x="738" y="148" width="20" height="11" rx="2.5" fill="#2563eb" />
+  <text x="748" y="156.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">FK</text>
+  <rect x="761" y="148" width="20" height="11" rx="2.5" fill="#475569" />
+  <text x="771" y="156.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">UQ</text>
+  <text x="789" y="157" font-size="12.5" font-weight="400" fill="#0f172a">application_id</text>
+  <text x="962" y="157" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="738" y="170" width="20" height="11" rx="2.5" fill="#7c3aed" />
+  <text x="748" y="178.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">FK</text>
+  <text x="789" y="179" font-size="12.5" font-weight="400" fill="#0f172a">auth_user_id</text>
+  <text x="962" y="179" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="731" y="186" width="238" height="22" fill="#f8fafc" />
+  <text x="789" y="201" font-size="12.5" font-weight="400" fill="#0f172a">full_name</text>
+  <text x="962" y="201" font-size="10.5" fill="#64748b" text-anchor="end">varchar</text>
+  <text x="789" y="223" font-size="12.5" font-weight="400" fill="#0f172a">plan</text>
+  <text x="962" y="223" font-size="10.5" fill="#64748b" text-anchor="end">varchar</text>
+  <rect x="731" y="230" width="238" height="22" fill="#f8fafc" />
+  <text x="789" y="245" font-size="12.5" font-weight="400" fill="#0f172a">start_date</text>
+  <text x="962" y="245" font-size="10.5" fill="#64748b" text-anchor="end">date</text>
+  <text x="789" y="267" font-size="12.5" font-weight="400" fill="#0f172a">end_date</text>
+  <text x="962" y="267" font-size="10.5" fill="#64748b" text-anchor="end">date</text>
+  <rect x="731" y="274" width="238" height="22" fill="#f8fafc" />
+  <text x="789" y="289" font-size="12.5" font-weight="400" fill="#0f172a">status</text>
+  <text x="962" y="289" font-size="10.5" fill="#64748b" text-anchor="end">varchar</text>
+  <rect x="1073" y="93" width="240" height="214" rx="7" fill="#0f172a" opacity="0.08" />
+  <rect x="1070" y="90" width="240" height="214" rx="7" fill="#fff" stroke="#059669" stroke-width="1.6" />
+  <path d="M 1070 120 V 97 Q 1070 90 1077 90 H 1303 Q 1310 90 1310 97 V 120 Z" fill="#059669" />
+  <text x="1190.0" y="110" font-size="14.0" font-weight="700" fill="#fff" text-anchor="middle">sales</text>
+  <rect x="1078" y="126" width="20" height="11" rx="2.5" fill="#ca8a04" />
+  <text x="1088" y="134.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">PK</text>
+  <text x="1106" y="135" font-size="12.5" font-weight="700" fill="#0f172a">id</text>
+  <text x="1302" y="135" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="1071" y="142" width="238" height="22" fill="#f8fafc" />
+  <rect x="1078" y="148" width="20" height="11" rx="2.5" fill="#2563eb" />
+  <text x="1088" y="156.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">FK</text>
+  <text x="1106" y="157" font-size="12.5" font-weight="400" fill="#0f172a">member_id</text>
+  <text x="1302" y="157" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="1078" y="170" width="20" height="11" rx="2.5" fill="#7c3aed" />
+  <text x="1088" y="178.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">FK</text>
+  <text x="1106" y="179" font-size="12.5" font-weight="400" fill="#0f172a">processed_by</text>
+  <text x="1302" y="179" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="1071" y="186" width="238" height="22" fill="#f8fafc" />
+  <text x="1106" y="201" font-size="12.5" font-weight="400" fill="#0f172a">customer_name</text>
+  <text x="1302" y="201" font-size="10.5" fill="#64748b" text-anchor="end">varchar</text>
+  <text x="1106" y="223" font-size="12.5" font-weight="400" fill="#0f172a">total</text>
+  <text x="1302" y="223" font-size="10.5" fill="#64748b" text-anchor="end">numeric</text>
+  <rect x="1071" y="230" width="238" height="22" fill="#f8fafc" />
+  <text x="1106" y="245" font-size="12.5" font-weight="400" fill="#0f172a">status</text>
+  <text x="1302" y="245" font-size="10.5" fill="#64748b" text-anchor="end">varchar</text>
+  <text x="1106" y="267" font-size="12.5" font-weight="400" fill="#0f172a">sold_at</text>
+  <text x="1302" y="267" font-size="10.5" fill="#64748b" text-anchor="end">timestamptz</text>
+  <rect x="1071" y="274" width="238" height="22" fill="#f8fafc" />
+  <text x="1106" y="289" font-size="12.5" font-weight="400" fill="#0f172a">receipt_number</text>
+  <text x="1302" y="289" font-size="10.5" fill="#64748b" text-anchor="end">varchar</text>
+  <rect x="1413" y="93" width="240" height="192" rx="7" fill="#0f172a" opacity="0.08" />
+  <rect x="1410" y="90" width="240" height="192" rx="7" fill="#fff" stroke="#059669" stroke-width="1.6" />
+  <path d="M 1410 120 V 97 Q 1410 90 1417 90 H 1643 Q 1650 90 1650 97 V 120 Z" fill="#059669" />
+  <text x="1530.0" y="110" font-size="14.0" font-weight="700" fill="#fff" text-anchor="middle">sale_items</text>
+  <rect x="1418" y="126" width="20" height="11" rx="2.5" fill="#ca8a04" />
+  <text x="1428" y="134.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">PK</text>
+  <text x="1446" y="135" font-size="12.5" font-weight="700" fill="#0f172a">id</text>
+  <text x="1642" y="135" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="1411" y="142" width="238" height="22" fill="#f8fafc" />
+  <rect x="1418" y="148" width="20" height="11" rx="2.5" fill="#2563eb" />
+  <text x="1428" y="156.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">FK</text>
+  <text x="1446" y="157" font-size="12.5" font-weight="400" fill="#0f172a">sale_id</text>
+  <text x="1642" y="157" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="1418" y="170" width="20" height="11" rx="2.5" fill="#2563eb" />
+  <text x="1428" y="178.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">FK</text>
+  <text x="1446" y="179" font-size="12.5" font-weight="400" fill="#0f172a">product_id</text>
+  <text x="1642" y="179" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="1411" y="186" width="238" height="22" fill="#f8fafc" />
+  <text x="1446" y="201" font-size="12.5" font-weight="400" fill="#0f172a">item_name</text>
+  <text x="1642" y="201" font-size="10.5" fill="#64748b" text-anchor="end">varchar</text>
+  <text x="1446" y="223" font-size="12.5" font-weight="400" fill="#0f172a">quantity</text>
+  <text x="1642" y="223" font-size="10.5" fill="#64748b" text-anchor="end">numeric</text>
+  <rect x="1411" y="230" width="238" height="22" fill="#f8fafc" />
+  <text x="1446" y="245" font-size="12.5" font-weight="400" fill="#0f172a">unit_price</text>
+  <text x="1642" y="245" font-size="10.5" fill="#64748b" text-anchor="end">numeric</text>
+  <text x="1446" y="267" font-size="12.5" font-weight="400" fill="#0f172a">line_total</text>
+  <text x="1642" y="267" font-size="10.5" fill="#64748b" text-anchor="end">numeric</text>
+  <rect x="393" y="383" width="240" height="192" rx="7" fill="#0f172a" opacity="0.08" />
+  <rect x="390" y="380" width="240" height="192" rx="7" fill="#fff" stroke="#475569" stroke-width="1.6" />
+  <path d="M 390 410 V 387 Q 390 380 397 380 H 623 Q 630 380 630 387 V 410 Z" fill="#475569" />
+  <text x="510.0" y="400" font-size="14.0" font-weight="700" fill="#fff" text-anchor="middle">activity_logs</text>
+  <rect x="398" y="416" width="20" height="11" rx="2.5" fill="#ca8a04" />
+  <text x="408" y="424.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">PK</text>
+  <text x="426" y="425" font-size="12.5" font-weight="700" fill="#0f172a">id</text>
+  <text x="622" y="425" font-size="10.5" fill="#64748b" text-anchor="end">bigint</text>
+  <rect x="391" y="432" width="238" height="22" fill="#f8fafc" />
+  <text x="426" y="447" font-size="12.5" font-weight="400" fill="#0f172a">occurred_at</text>
+  <text x="622" y="447" font-size="10.5" fill="#64748b" text-anchor="end">timestamptz</text>
+  <text x="426" y="469" font-size="12.5" font-weight="400" fill="#0f172a">actor_id</text>
+  <text x="622" y="469" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="391" y="476" width="238" height="22" fill="#f8fafc" />
+  <text x="426" y="491" font-size="12.5" font-weight="400" fill="#0f172a">actor_name</text>
+  <text x="622" y="491" font-size="10.5" fill="#64748b" text-anchor="end">text</text>
+  <text x="426" y="513" font-size="12.5" font-weight="400" fill="#0f172a">actor_role</text>
+  <text x="622" y="513" font-size="10.5" fill="#64748b" text-anchor="end">text</text>
+  <rect x="391" y="520" width="238" height="22" fill="#f8fafc" />
+  <text x="426" y="535" font-size="12.5" font-weight="400" fill="#0f172a">action</text>
+  <text x="622" y="535" font-size="10.5" fill="#64748b" text-anchor="end">text</text>
+  <text x="426" y="557" font-size="12.5" font-weight="400" fill="#0f172a">entity_type</text>
+  <text x="622" y="557" font-size="10.5" fill="#64748b" text-anchor="end">text</text>
+  <rect x="733" y="383" width="240" height="192" rx="7" fill="#0f172a" opacity="0.08" />
+  <rect x="730" y="380" width="240" height="192" rx="7" fill="#fff" stroke="#ea580c" stroke-width="1.6" />
+  <path d="M 730 410 V 387 Q 730 380 737 380 H 963 Q 970 380 970 387 V 410 Z" fill="#ea580c" />
+  <text x="850.0" y="400" font-size="14.0" font-weight="700" fill="#fff" text-anchor="middle">attendance</text>
+  <rect x="738" y="416" width="20" height="11" rx="2.5" fill="#ca8a04" />
+  <text x="748" y="424.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">PK</text>
+  <text x="766" y="425" font-size="12.5" font-weight="700" fill="#0f172a">id</text>
+  <text x="962" y="425" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="731" y="432" width="238" height="22" fill="#f8fafc" />
+  <rect x="738" y="438" width="20" height="11" rx="2.5" fill="#2563eb" />
+  <text x="748" y="446.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">FK</text>
+  <text x="766" y="447" font-size="12.5" font-weight="400" fill="#0f172a">member_id</text>
+  <text x="962" y="447" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="738" y="460" width="20" height="11" rx="2.5" fill="#7c3aed" />
+  <text x="748" y="468.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">FK</text>
+  <text x="766" y="469" font-size="12.5" font-weight="400" fill="#0f172a">recorded_by</text>
+  <text x="962" y="469" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="731" y="476" width="238" height="22" fill="#f8fafc" />
+  <rect x="738" y="482" width="20" height="11" rx="2.5" fill="#7c3aed" />
+  <text x="748" y="490.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">FK</text>
+  <text x="766" y="491" font-size="12.5" font-weight="400" fill="#0f172a">checked_out_by</text>
+  <text x="962" y="491" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <text x="766" y="513" font-size="12.5" font-weight="400" fill="#0f172a">date</text>
+  <text x="962" y="513" font-size="10.5" fill="#64748b" text-anchor="end">date</text>
+  <rect x="731" y="520" width="238" height="22" fill="#f8fafc" />
+  <text x="766" y="535" font-size="12.5" font-weight="400" fill="#0f172a">time_in</text>
+  <text x="962" y="535" font-size="10.5" fill="#64748b" text-anchor="end">timestamptz</text>
+  <text x="766" y="557" font-size="12.5" font-weight="400" fill="#0f172a">time_out</text>
+  <text x="962" y="557" font-size="10.5" fill="#64748b" text-anchor="end">timestamptz</text>
+  <rect x="1073" y="383" width="240" height="192" rx="7" fill="#0f172a" opacity="0.08" />
+  <rect x="1070" y="380" width="240" height="192" rx="7" fill="#fff" stroke="#2563eb" stroke-width="1.6" />
+  <path d="M 1070 410 V 387 Q 1070 380 1077 380 H 1303 Q 1310 380 1310 387 V 410 Z" fill="#2563eb" />
+  <text x="1190.0" y="400" font-size="14.0" font-weight="700" fill="#fff" text-anchor="middle">membership_history</text>
+  <rect x="1078" y="416" width="20" height="11" rx="2.5" fill="#ca8a04" />
+  <text x="1088" y="424.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">PK</text>
+  <text x="1106" y="425" font-size="12.5" font-weight="700" fill="#0f172a">id</text>
+  <text x="1302" y="425" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="1071" y="432" width="238" height="22" fill="#f8fafc" />
+  <rect x="1078" y="438" width="20" height="11" rx="2.5" fill="#2563eb" />
+  <text x="1088" y="446.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">FK</text>
+  <text x="1106" y="447" font-size="12.5" font-weight="400" fill="#0f172a">member_id</text>
+  <text x="1302" y="447" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="1078" y="460" width="20" height="11" rx="2.5" fill="#7c3aed" />
+  <text x="1088" y="468.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">FK</text>
+  <text x="1106" y="469" font-size="12.5" font-weight="400" fill="#0f172a">recorded_by</text>
+  <text x="1302" y="469" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="1071" y="476" width="238" height="22" fill="#f8fafc" />
+  <text x="1106" y="491" font-size="12.5" font-weight="400" fill="#0f172a">event_type</text>
+  <text x="1302" y="491" font-size="10.5" fill="#64748b" text-anchor="end">varchar</text>
+  <text x="1106" y="513" font-size="12.5" font-weight="400" fill="#0f172a">previous_plan</text>
+  <text x="1302" y="513" font-size="10.5" fill="#64748b" text-anchor="end">varchar</text>
+  <rect x="1071" y="520" width="238" height="22" fill="#f8fafc" />
+  <text x="1106" y="535" font-size="12.5" font-weight="400" fill="#0f172a">new_plan</text>
+  <text x="1302" y="535" font-size="10.5" fill="#64748b" text-anchor="end">varchar</text>
+  <text x="1106" y="557" font-size="12.5" font-weight="400" fill="#0f172a">recorded_at</text>
+  <text x="1302" y="557" font-size="10.5" fill="#64748b" text-anchor="end">timestamptz</text>
+  <rect x="1413" y="383" width="240" height="170" rx="7" fill="#0f172a" opacity="0.08" />
+  <rect x="1410" y="380" width="240" height="170" rx="7" fill="#fff" stroke="#059669" stroke-width="1.6" />
+  <path d="M 1410 410 V 387 Q 1410 380 1417 380 H 1643 Q 1650 380 1650 387 V 410 Z" fill="#059669" />
+  <text x="1530.0" y="400" font-size="14.0" font-weight="700" fill="#fff" text-anchor="middle">products</text>
+  <rect x="1418" y="416" width="20" height="11" rx="2.5" fill="#ca8a04" />
+  <text x="1428" y="424.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">PK</text>
+  <text x="1446" y="425" font-size="12.5" font-weight="700" fill="#0f172a">id</text>
+  <text x="1642" y="425" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="1411" y="432" width="238" height="22" fill="#f8fafc" />
+  <text x="1446" y="447" font-size="12.5" font-weight="400" fill="#0f172a">name</text>
+  <text x="1642" y="447" font-size="10.5" fill="#64748b" text-anchor="end">varchar</text>
+  <text x="1446" y="469" font-size="12.5" font-weight="400" fill="#0f172a">category</text>
+  <text x="1642" y="469" font-size="10.5" fill="#64748b" text-anchor="end">varchar</text>
+  <rect x="1411" y="476" width="238" height="22" fill="#f8fafc" />
+  <text x="1446" y="491" font-size="12.5" font-weight="400" fill="#0f172a">price</text>
+  <text x="1642" y="491" font-size="10.5" fill="#64748b" text-anchor="end">numeric</text>
+  <text x="1446" y="513" font-size="12.5" font-weight="400" fill="#0f172a">stock</text>
+  <text x="1642" y="513" font-size="10.5" fill="#64748b" text-anchor="end">numeric</text>
+  <rect x="1411" y="520" width="238" height="22" fill="#f8fafc" />
+  <text x="1446" y="535" font-size="12.5" font-weight="400" fill="#0f172a">is_active</text>
+  <text x="1642" y="535" font-size="10.5" fill="#64748b" text-anchor="end">bool</text>
+  <rect x="53" y="383" width="240" height="148" rx="7" fill="#0f172a" opacity="0.08" />
+  <rect x="50" y="380" width="240" height="148" rx="7" fill="#fff" stroke="#db2777" stroke-width="1.6" />
+  <path d="M 50 410 V 387 Q 50 380 57 380 H 283 Q 290 380 290 387 V 410 Z" fill="#db2777" />
+  <text x="170.0" y="400" font-size="11.8" font-weight="700" fill="#fff" text-anchor="middle">mobile_attendance_scan_sessions</text>
+  <rect x="58" y="416" width="20" height="11" rx="2.5" fill="#ca8a04" />
+  <text x="68" y="424.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">PK</text>
+  <text x="86" y="425" font-size="12.5" font-weight="700" fill="#0f172a">id</text>
+  <text x="282" y="425" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="51" y="432" width="238" height="22" fill="#f8fafc" />
+  <rect x="58" y="438" width="20" height="11" rx="2.5" fill="#7c3aed" />
+  <text x="68" y="446.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">FK</text>
+  <text x="86" y="447" font-size="12.5" font-weight="400" fill="#0f172a">created_by</text>
+  <text x="282" y="447" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <text x="86" y="469" font-size="12.5" font-weight="400" fill="#0f172a">created_at</text>
+  <text x="282" y="469" font-size="10.5" fill="#64748b" text-anchor="end">timestamptz</text>
+  <rect x="51" y="476" width="238" height="22" fill="#f8fafc" />
+  <text x="86" y="491" font-size="12.5" font-weight="400" fill="#0f172a">expires_at</text>
+  <text x="282" y="491" font-size="10.5" fill="#64748b" text-anchor="end">timestamptz</text>
+  <text x="86" y="513" font-size="12.5" font-weight="400" fill="#0f172a">paired_device</text>
+  <text x="282" y="513" font-size="10.5" fill="#64748b" text-anchor="end">text</text>
+  <rect x="53" y="603" width="240" height="126" rx="7" fill="#0f172a" opacity="0.08" />
+  <rect x="50" y="600" width="240" height="126" rx="7" fill="#fff" stroke="#db2777" stroke-width="1.6" />
+  <path d="M 50 630 V 607 Q 50 600 57 600 H 283 Q 290 600 290 607 V 630 Z" fill="#db2777" />
+  <text x="170.0" y="620" font-size="12.6" font-weight="700" fill="#fff" text-anchor="middle">mobile_attendance_scan_events</text>
+  <rect x="58" y="636" width="20" height="11" rx="2.5" fill="#ca8a04" />
+  <text x="68" y="644.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">PK</text>
+  <text x="86" y="645" font-size="12.5" font-weight="700" fill="#0f172a">id</text>
+  <text x="282" y="645" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <rect x="51" y="652" width="238" height="22" fill="#f8fafc" />
+  <rect x="58" y="658" width="20" height="11" rx="2.5" fill="#2563eb" />
+  <text x="68" y="666.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">FK</text>
+  <text x="86" y="667" font-size="12.5" font-weight="400" fill="#0f172a">session_id</text>
+  <text x="282" y="667" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <text x="86" y="689" font-size="12.5" font-weight="400" fill="#0f172a">qr_payload</text>
+  <text x="282" y="689" font-size="10.5" fill="#64748b" text-anchor="end">text</text>
+  <rect x="51" y="696" width="238" height="22" fill="#f8fafc" />
+  <text x="86" y="711" font-size="12.5" font-weight="400" fill="#0f172a">created_at</text>
+  <text x="282" y="711" font-size="10.5" fill="#64748b" text-anchor="end">timestamptz</text>
+  <rect x="393" y="603" width="240" height="126" rx="7" fill="#0f172a" opacity="0.08" />
+  <rect x="390" y="600" width="240" height="126" rx="7" fill="#fff" stroke="#db2777" stroke-width="1.6" />
+  <path d="M 390 630 V 607 Q 390 600 397 600 H 623 Q 630 600 630 607 V 630 Z" fill="#db2777" />
+  <text x="510.0" y="620" font-size="11.5" font-weight="700" fill="#fff" text-anchor="middle">mobile_attendance_pairing_policy</text>
+  <rect x="398" y="636" width="20" height="11" rx="2.5" fill="#ca8a04" />
+  <text x="408" y="644.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">PK</text>
+  <text x="426" y="645" font-size="12.5" font-weight="700" fill="#0f172a">singleton</text>
+  <text x="622" y="645" font-size="10.5" fill="#64748b" text-anchor="end">bool</text>
+  <rect x="391" y="652" width="238" height="22" fill="#f8fafc" />
+  <rect x="398" y="658" width="20" height="11" rx="2.5" fill="#7c3aed" />
+  <text x="408" y="666.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">FK</text>
+  <text x="426" y="667" font-size="12.5" font-weight="400" fill="#0f172a">updated_by</text>
+  <text x="622" y="667" font-size="10.5" fill="#64748b" text-anchor="end">uuid</text>
+  <text x="426" y="689" font-size="12.5" font-weight="400" fill="#0f172a">max_pairs</text>
+  <text x="622" y="689" font-size="10.5" fill="#64748b" text-anchor="end">int</text>
+  <rect x="391" y="696" width="238" height="22" fill="#f8fafc" />
+  <text x="426" y="711" font-size="12.5" font-weight="400" fill="#0f172a">updated_at</text>
+  <text x="622" y="711" font-size="10.5" fill="#64748b" text-anchor="end">timestamptz</text>
+  <rect x="730" y="600" width="240" height="70" rx="7" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.6" stroke-dasharray="6 4" />
+  <text x="850.0" y="628" font-size="13" font-weight="700" fill="#7c3aed" text-anchor="middle">auth.users (Supabase)</text>
+  <text x="850.0" y="648" font-size="10.5" fill="#6b21a8" text-anchor="middle">Target of every purple FK badge</text>
+  <text x="850.0" y="662" font-size="10.5" fill="#6b21a8" text-anchor="middle">(not drawn as lines)</text>
+  <rect x="1070" y="600" width="580" height="130" rx="7" fill="#f8fafc" stroke="#cbd5e1" />
+  <text x="1084" y="622" font-size="13" font-weight="700" fill="#0f172a">Legend</text>
+  <rect x="1084" y="632" width="20" height="11" rx="2.5" fill="#ca8a04" />
+  <text x="1094" y="640.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">PK</text>
+  <text x="1112" y="642" font-size="12" fill="#334155">Primary key</text>
+  <rect x="1084" y="654" width="20" height="11" rx="2.5" fill="#2563eb" />
+  <text x="1094" y="662.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">FK</text>
+  <text x="1112" y="664" font-size="12" fill="#334155">Foreign key to a public table (line)</text>
+  <rect x="1084" y="676" width="20" height="11" rx="2.5" fill="#7c3aed" />
+  <text x="1094" y="684.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">FK</text>
+  <text x="1112" y="686" font-size="12" fill="#334155">Foreign key to auth.users (no line)</text>
+  <rect x="1084" y="698" width="20" height="11" rx="2.5" fill="#475569" />
+  <text x="1094" y="706.5" font-size="8" font-weight="700" fill="#fff" text-anchor="middle">UQ</text>
+  <text x="1112" y="708" font-size="12" fill="#334155">Unique</text>
+  <line x1="1400" y1="648" x2="1470" y2="648" stroke="#334155" stroke-width="1.8" />
+  <line x1="1408.0" y1="641.0" x2="1408.0" y2="655.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="1414.0" y1="641.0" x2="1414.0" y2="655.0" stroke="#334155" stroke-width="1.8" />
+  <text x="1484" y="652" font-size="12" fill="#334155">exactly one</text>
+  <line x1="1400" y1="676" x2="1470" y2="676" stroke="#334155" stroke-width="1.8" />
+  <line x1="1408.0" y1="669.0" x2="1408.0" y2="683.0" stroke="#334155" stroke-width="1.8" />
+  <circle cx="1417.0" cy="676.0" r="4.5" fill="#fff" stroke="#334155" stroke-width="1.8" />
+  <text x="1484" y="680" font-size="12" fill="#334155">zero or one (optional)</text>
+  <line x1="1400" y1="704" x2="1470" y2="704" stroke="#334155" stroke-width="1.8" />
+  <line x1="1414.0" y1="704.0" x2="1400.0" y2="697.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="1414.0" y1="704.0" x2="1400.0" y2="711.0" stroke="#334155" stroke-width="1.8" />
+  <line x1="1414.0" y1="704.0" x2="1400.0" y2="704.0" stroke="#334155" stroke-width="1.8" />
+  <circle cx="1421.0" cy="704.0" r="4.5" fill="#fff" stroke="#334155" stroke-width="1.8" />
+  <text x="1484" y="708" font-size="12" fill="#334155">zero or many</text>
+  <rect rx="2.5" width="20" fill="#475569" y="236" x="58" height="11" />
+  <text font-size="8" text-anchor="middle" fill="#fff" y="244.5" font-weight="700" x="68">UQ</text>
+  <rect rx="2.5" width="20" fill="#475569" y="170" x="761" height="11" />
+  <text font-size="8" text-anchor="middle" fill="#fff" y="178.5" font-weight="700" x="771">UQ</text>
+  <rect rx="2.5" width="20" fill="#475569" y="280" x="1078" height="11" />
+  <text font-size="8" text-anchor="middle" fill="#fff" y="288.5" font-weight="700" x="1088">UQ</text>
+</svg>
