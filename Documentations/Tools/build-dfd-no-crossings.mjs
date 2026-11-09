@@ -19,6 +19,7 @@ for(let i=0;i<9;i++){
   // Left-side writes travel from the process's left edge to the store's right edge.
   let x1=sx,x2=tx;
   if(s===proc&&t.x<proc.x){x1=proc.x;x2=t.x+t.w;}
+  if(t===proc&&s.x>proc.x){x1=s.x;x2=proc.x+proc.w;}
   const id='e'+(++serial);cells.push(`<mxCell id="${id}" style="edgeStyle=none;endArrow=block;strokeColor=#000000;strokeWidth=1.7;exitX=${(x1-s.x)/s.w};exitY=${(sy-s.y)/s.h};entryX=${(x2-t.x)/t.w};entryY=${(ty-t.y)/t.h};exitPerimeter=0;entryPerimeter=0;" edge="1" parent="1" source="${s.id}" target="${t.id}"><mxGeometry relative="1" as="geometry"/></mxCell>`);
   svg.push(`<path d="M ${x1} ${sy} H ${x2}" fill="none" stroke="black" stroke-width="1.7" marker-end="url(#arrow)"/>`);txt(label,lx,sy-38,lw,24);segments.push({lo:Math.min(x1,x2),hi:Math.max(x1,x2),y:sy});total++;
  }
