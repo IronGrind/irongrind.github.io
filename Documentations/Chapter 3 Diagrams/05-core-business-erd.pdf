@@ -1,0 +1,205 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Count 1 /Kids [3 0 R] >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.2756 841.8898] /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> /Contents 4 0 R >>
+endobj
+4 0 obj
+<< /Length 11041 >>
+stream
+q 0.3307 0 0 -0.3307 0 768.189 cm
+0 0 0 rg BT /F2 36 Tf 1 0 0 -1 50 61 Tm (Figure 5. Core Business Entity Relationship Diagram) Tj ET
+0 0 0 rg BT /F1 24 Tf 1 0 0 -1 50 104 Tm (Selected attributes; all seven entities belong to the public schema.) Tj ET
+0 0 0 RG 2.2 w 550 275 m 650 275 l S
+0 0 0 RG 2.2 w 561 284 m 561 266 l S
+1 1 1 rg 0 0 0 RG 2.2 w 590 275 m 590 277.7614 587.7614 280 585 280 c 582.2386 280 580 277.7614 580 275 c 580 272.2386 582.2386 270 585 270 c 587.7614 270 590 272.2386 590 275 c B
+0 0 0 RG 2.2 w 639 266 m 639 284 l S
+1 1 1 rg 0 0 0 RG 2.2 w 620 275 m 620 277.7614 617.7614 280 615 280 c 612.2386 280 610 277.7614 610 275 c 610 272.2386 612.2386 270 615 270 c 617.7614 270 620 272.2386 620 275 c B
+0 0 0 RG 2.2 w 650 405 m 550 405 l S
+0 0 0 RG 2.2 w 639 396 m 639 414 l S
+1 1 1 rg 0 0 0 RG 2.2 w 620 405 m 620 407.7614 617.7614 410 615 410 c 612.2386 410 610 407.7614 610 405 c 610 402.2386 612.2386 400 615 400 c 617.7614 400 620 402.2386 620 405 c B
+0 0 0 RG 2.2 w 575 405 m 557 396 l S
+0 0 0 RG 2.2 w 575 405 m 557 405 l S
+0 0 0 RG 2.2 w 575 405 m 557 414 l S
+1 1 1 rg 0 0 0 RG 2.2 w 590 405 m 590 407.7614 587.7614 410 585 410 c 582.2386 410 580 407.7614 580 405 c 580 402.2386 582.2386 400 585 400 c 587.7614 400 590 402.2386 590 405 c B
+0 0 0 RG 2.2 w 1150 300 m 1250 300 l S
+0 0 0 RG 2.2 w 1161 309 m 1161 291 l S
+0 0 0 RG 2.2 w 1183 309 m 1183 291 l S
+0 0 0 RG 2.2 w 1225 300 m 1243 309 l S
+0 0 0 RG 2.2 w 1225 300 m 1243 300 l S
+0 0 0 RG 2.2 w 1225 300 m 1243 291 l S
+1 1 1 rg 0 0 0 RG 2.2 w 1220 300 m 1220 302.7614 1217.7614 305 1215 305 c 1212.2386 305 1210 302.7614 1210 300 c 1210 297.2386 1212.2386 295 1215 295 c 1217.7614 295 1220 297.2386 1220 300 c B
+0 0 0 RG 2.2 w 1150 470 m 1200 470 l 1200 470 m 1200 800 l 1200 800 m 1250 800 l S
+0 0 0 RG 2.2 w 1161 479 m 1161 461 l S
+0 0 0 RG 2.2 w 1183 479 m 1183 461 l S
+0 0 0 RG 2.2 w 1225 800 m 1243 809 l S
+0 0 0 RG 2.2 w 1225 800 m 1243 800 l S
+0 0 0 RG 2.2 w 1225 800 m 1243 791 l S
+1 1 1 rg 0 0 0 RG 2.2 w 1220 800 m 1220 802.7614 1217.7614 805 1215 805 c 1212.2386 805 1210 802.7614 1210 800 c 1210 797.2386 1212.2386 795 1215 795 c 1217.7614 795 1220 797.2386 1220 800 c B
+0 0 0 RG 2.2 w 900 524 m 900 1100 l S
+0 0 0 RG 2.2 w 891 535 m 909 535 l S
+1 1 1 rg 0 0 0 RG 2.2 w 905 559 m 905 561.7614 902.7614 564 900 564 c 897.2386 564 895 561.7614 895 559 c 895 556.2386 897.2386 554 900 554 c 902.7614 554 905 556.2386 905 559 c B
+0 0 0 RG 2.2 w 900 1075 m 891 1093 l S
+0 0 0 RG 2.2 w 900 1075 m 900 1093 l S
+0 0 0 RG 2.2 w 900 1075 m 909 1093 l S
+1 1 1 rg 0 0 0 RG 2.2 w 905 1065 m 905 1067.7614 902.7614 1070 900 1070 c 897.2386 1070 895 1067.7614 895 1065 c 895 1062.2386 897.2386 1060 900 1060 c 902.7614 1060 905 1062.2386 905 1065 c B
+0 0 0 RG 2.2 w 900 1402 m 900 1580 l 900 1580 m 1250 1580 l S
+0 0 0 RG 2.2 w 891 1413 m 909 1413 l S
+0 0 0 RG 2.2 w 891 1435 m 909 1435 l S
+0 0 0 RG 2.2 w 1225 1580 m 1243 1589 l S
+0 0 0 RG 2.2 w 1225 1580 m 1243 1580 l S
+0 0 0 RG 2.2 w 1225 1580 m 1243 1571 l S
+1 1 1 rg 0 0 0 RG 2.2 w 1220 1580 m 1220 1582.7614 1217.7614 1585 1215 1585 c 1212.2386 1585 1210 1582.7614 1210 1580 c 1210 1577.2386 1212.2386 1575 1215 1575 c 1217.7614 1575 1220 1577.2386 1220 1580 c B
+0 0 0 RG 2.2 w 550 1760 m 1250 1760 l S
+0 0 0 RG 2.2 w 561 1769 m 561 1751 l S
+1 1 1 rg 0 0 0 RG 2.2 w 590 1760 m 590 1762.7614 587.7614 1765 585 1765 c 582.2386 1765 580 1762.7614 580 1760 c 580 1757.2386 582.2386 1755 585 1755 c 587.7614 1755 590 1757.2386 590 1760 c B
+0 0 0 RG 2.2 w 1225 1760 m 1243 1769 l S
+0 0 0 RG 2.2 w 1225 1760 m 1243 1760 l S
+0 0 0 RG 2.2 w 1225 1760 m 1243 1751 l S
+1 1 1 rg 0 0 0 RG 2.2 w 1220 1760 m 1220 1762.7614 1217.7614 1765 1215 1765 c 1212.2386 1765 1210 1762.7614 1210 1760 c 1210 1757.2386 1212.2386 1755 1215 1755 c 1217.7614 1755 1220 1757.2386 1220 1760 c B
+1 1 1 rg 0 0 0 RG 2 w 1250 700 500 260 re B
+0 0 0 RG 2.2 w 1250 750 m 1750 750 l S
+0 0 0 RG 2.2 w 1590 750 m 1590 960 l S
+0 0 0 rg BT /F2 26 Tf 1 0 0 -1 1363.9465 735 Tm (membership_history) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 1260 784 Tm (id \(PK\)) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1600 781 Tm (uuid) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 1260 826 Tm (member_id \(FK\)) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1600 823 Tm (uuid) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 1260 868 Tm (event_type) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1600 865 Tm (varchar) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 1260 910 Tm (new_plan) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1600 907 Tm (varchar) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 1260 952 Tm (new_expiry_date) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1600 949 Tm (date) Tj ET
+1 1 1 rg 0 0 0 RG 2 w 650 180 500 344 re B
+0 0 0 RG 2.2 w 650 230 m 1150 230 l S
+0 0 0 RG 2.2 w 990 230 m 990 524 l S
+0 0 0 rg BT /F2 26 Tf 1 0 0 -1 836.1193 215 Tm (members) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 660 264 Tm (id \(PK\)) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1000 261 Tm (uuid) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 660 306 Tm (application_id \(UQ,FK\)) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1000 303 Tm (uuid) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 660 348 Tm (full_name) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1000 345 Tm (varchar) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 660 390 Tm (plan) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1000 387 Tm (varchar) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 660 432 Tm (status) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1000 429 Tm (varchar) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 660 474 Tm (start_date) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1000 471 Tm (date) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 660 516 Tm (expiry_date) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1000 513 Tm (date) Tj ET
+1 1 1 rg 0 0 0 RG 2 w 50 1510 500 302 re B
+0 0 0 RG 2.2 w 50 1560 m 550 1560 l S
+0 0 0 RG 2.2 w 390 1560 m 390 1812 l S
+0 0 0 rg BT /F2 26 Tf 1 0 0 -1 238.3791 1545 Tm (products) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 60 1594 Tm (id \(PK\)) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 400 1591 Tm (uuid) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 60 1636 Tm (name) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 400 1633 Tm (varchar) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 60 1678 Tm (category) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 400 1675 Tm (varchar) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 60 1720 Tm (price) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 400 1717 Tm (numeric) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 60 1762 Tm (stock) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 400 1759 Tm (numeric) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 60 1804 Tm (is_active) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 400 1801 Tm (boolean) Tj ET
+1 1 1 rg 0 0 0 RG 2 w 1250 180 500 260 re B
+0 0 0 RG 2.2 w 1250 230 m 1750 230 l S
+0 0 0 RG 2.2 w 1590 230 m 1590 440 l S
+0 0 0 rg BT /F2 26 Tf 1 0 0 -1 1424.9792 215 Tm (attendance) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 1260 264 Tm (id \(PK\)) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1600 261 Tm (uuid) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 1260 306 Tm (member_id \(FK\)) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1600 303 Tm (uuid) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 1260 348 Tm (date) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1600 345 Tm (date) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 1260 390 Tm (time_in) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1600 387 Tm (timestamptz) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 1260 432 Tm (time_out) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1600 429 Tm (timestamptz) Tj ET
+1 1 1 rg 0 0 0 RG 2 w 1250 1510 500 344 re B
+0 0 0 RG 2.2 w 1250 1560 m 1750 1560 l S
+0 0 0 RG 2.2 w 1590 1560 m 1590 1854 l S
+0 0 0 rg BT /F2 26 Tf 1 0 0 -1 1427.1882 1545 Tm (sale_items) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 1260 1594 Tm (id \(PK\)) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1600 1591 Tm (uuid) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 1260 1636 Tm (sale_id \(FK\)) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1600 1633 Tm (uuid) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 1260 1678 Tm (product_id \(FK\)) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1600 1675 Tm (uuid) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 1260 1720 Tm (item_name) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1600 1717 Tm (varchar) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 1260 1762 Tm (quantity) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1600 1759 Tm (numeric) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 1260 1804 Tm (unit_price) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1600 1801 Tm (numeric) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 1260 1846 Tm (line_total) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1600 1843 Tm (numeric) Tj ET
+1 1 1 rg 0 0 0 RG 2 w 50 180 500 302 re B
+0 0 0 RG 2.2 w 50 230 m 550 230 l S
+0 0 0 RG 2.2 w 390 230 m 390 482 l S
+0 0 0 rg BT /F2 26 Tf 1 0 0 -1 130.4626 215 Tm (membership_applications) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 60 264 Tm (id \(PK\)) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 400 261 Tm (uuid) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 60 306 Tm (member_id \(FK\)) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 400 303 Tm (uuid) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 60 348 Tm (application_type) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 400 345 Tm (varchar) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 60 390 Tm (plan) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 400 387 Tm (varchar) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 60 432 Tm (status) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 400 429 Tm (varchar) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 60 474 Tm (submitted_at) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 400 471 Tm (timestamptz) Tj ET
+1 1 1 rg 0 0 0 RG 2 w 650 1100 500 302 re B
+0 0 0 RG 2.2 w 650 1150 m 1150 1150 l S
+0 0 0 RG 2.2 w 990 1150 m 990 1402 l S
+0 0 0 rg BT /F2 26 Tf 1 0 0 -1 862.1637 1135 Tm (sales) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 660 1184 Tm (id \(PK\)) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1000 1181 Tm (uuid) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 660 1226 Tm (member_id \(FK\)) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1000 1223 Tm (uuid) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 660 1268 Tm (receipt_number \(UQ\)) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1000 1265 Tm (varchar) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 660 1310 Tm (total) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1000 1307 Tm (numeric) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 660 1352 Tm (status) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1000 1349 Tm (varchar) Tj ET
+0 0 0 rg BT /F1 26 Tf 1 0 0 -1 660 1394 Tm (sold_at) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 1000 1391 Tm (timestamptz) Tj ET
+0 0 0 rg BT /F2 21 Tf 1 0 0 -1 590 261 Tm (A) Tj ET
+0 0 0 rg BT /F2 21 Tf 1 0 0 -1 590 391 Tm (B) Tj ET
+0 0 0 rg BT /F1 23 Tf 1 0 0 -1 50 1923 Tm (A: members.application_id references membership_applications.id \(optional unique link\).) Tj ET
+0 0 0 rg BT /F1 23 Tf 1 0 0 -1 50 1963 Tm (B: membership_applications.member_id references members.id \(optional member; multiple requests\).) Tj ET
+0 0 0 rg BT /F1 23 Tf 1 0 0 -1 50 2003 Tm (Circles = optional; bars = one; crow's feet = many. PK = primary key; FK = foreign key; UQ = unique.) Tj ET
+0 0 0 rg BT /F1 22 Tf 1 0 0 -1 50 2042 Tm (Core business relationships only. The data dictionary documents all 15 tables, 174 fields and 21 foreign keys.) Tj ET
+0 0 0 rg BT /F1 21 Tf 1 0 0 -1 50 2081 Tm (Source: verified project database schema. Field types are abbreviated; full limits and constraints appear in the dictionary.) Tj ET
+Q
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000261 00000 n 
+0000011354 00000 n 
+0000011451 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+11553
+%%EOF

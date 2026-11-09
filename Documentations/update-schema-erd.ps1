@@ -1,5 +1,10 @@
 param([string]$DocumentPath=(Join-Path $PSScriptRoot 'Chapter 3.docx'),[switch]$SeparatePanels)
 $ErrorActionPreference='Stop'
+if(-not $SeparatePanels){
+ & (Join-Path $PSScriptRoot 'build-core-business-erd.ps1')
+ & (Join-Path $PSScriptRoot 'update-core-business-erd.ps1') -DocumentPath $DocumentPath
+ return
+}
 Add-Type -AssemblyName System.IO.Compression
 Add-Type -AssemblyName System.Drawing
 $work=Join-Path ([IO.Path]::GetTempPath()) ('chapter3-schema-'+[guid]::NewGuid().ToString('N')+'.docx')

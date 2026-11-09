@@ -1,0 +1,170 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="2100" viewBox="0 0 1800 2100"><rect width="100%" height="100%" fill="white"/>
+<text x="50" y="61" font-family="Arial, sans-serif" font-size="36" font-weight="700">Figure 5. Core Business Entity Relationship Diagram</text>
+<text x="50" y="104" font-family="Arial, sans-serif" font-size="24" font-weight="400">Selected attributes; all seven entities belong to the public schema.</text>
+<path d="M 550 275 L 650 275" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 561 284 L 561 266" fill="none" stroke="black" stroke-width="2.2"/>
+<circle cx="585" cy="275" r="5" fill="white" stroke="black" stroke-width="2.2"/>
+<path d="M 639 266 L 639 284" fill="none" stroke="black" stroke-width="2.2"/>
+<circle cx="615" cy="275" r="5" fill="white" stroke="black" stroke-width="2.2"/>
+<path d="M 650 405 L 550 405" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 639 396 L 639 414" fill="none" stroke="black" stroke-width="2.2"/>
+<circle cx="615" cy="405" r="5" fill="white" stroke="black" stroke-width="2.2"/>
+<path d="M 575 405 L 557 396" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 575 405 L 557 405" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 575 405 L 557 414" fill="none" stroke="black" stroke-width="2.2"/>
+<circle cx="585" cy="405" r="5" fill="white" stroke="black" stroke-width="2.2"/>
+<path d="M 1150 300 L 1250 300" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 1161 309 L 1161 291" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 1183 309 L 1183 291" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 1225 300 L 1243 309" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 1225 300 L 1243 300" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 1225 300 L 1243 291" fill="none" stroke="black" stroke-width="2.2"/>
+<circle cx="1215" cy="300" r="5" fill="white" stroke="black" stroke-width="2.2"/>
+<path d="M 1150 470 L 1200 470 L 1200 800 L 1250 800" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 1161 479 L 1161 461" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 1183 479 L 1183 461" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 1225 800 L 1243 809" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 1225 800 L 1243 800" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 1225 800 L 1243 791" fill="none" stroke="black" stroke-width="2.2"/>
+<circle cx="1215" cy="800" r="5" fill="white" stroke="black" stroke-width="2.2"/>
+<path d="M 900 524 L 900 1100" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 891 535 L 909 535" fill="none" stroke="black" stroke-width="2.2"/>
+<circle cx="900" cy="559" r="5" fill="white" stroke="black" stroke-width="2.2"/>
+<path d="M 900 1075 L 891 1093" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 900 1075 L 900 1093" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 900 1075 L 909 1093" fill="none" stroke="black" stroke-width="2.2"/>
+<circle cx="900" cy="1065" r="5" fill="white" stroke="black" stroke-width="2.2"/>
+<path d="M 900 1402 L 900 1580 L 1250 1580" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 891 1413 L 909 1413" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 891 1435 L 909 1435" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 1225 1580 L 1243 1589" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 1225 1580 L 1243 1580" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 1225 1580 L 1243 1571" fill="none" stroke="black" stroke-width="2.2"/>
+<circle cx="1215" cy="1580" r="5" fill="white" stroke="black" stroke-width="2.2"/>
+<path d="M 550 1760 L 1250 1760" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 561 1769 L 561 1751" fill="none" stroke="black" stroke-width="2.2"/>
+<circle cx="585" cy="1760" r="5" fill="white" stroke="black" stroke-width="2.2"/>
+<path d="M 1225 1760 L 1243 1769" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 1225 1760 L 1243 1760" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 1225 1760 L 1243 1751" fill="none" stroke="black" stroke-width="2.2"/>
+<circle cx="1215" cy="1760" r="5" fill="white" stroke="black" stroke-width="2.2"/>
+<rect x="1250" y="700" width="500" height="260" fill="white" stroke="black" stroke-width="2"/>
+<path d="M 1250 750 L 1750 750" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 1590 750 L 1590 960" fill="none" stroke="black" stroke-width="2.2"/>
+<text x="1363.94647216797" y="735" font-family="Arial, sans-serif" font-size="26" font-weight="700">membership_history</text>
+<text x="1260" y="784" font-family="Arial, sans-serif" font-size="26" font-weight="400">id (PK)</text>
+<text x="1600" y="781" font-family="Arial, sans-serif" font-size="21" font-weight="400">uuid</text>
+<text x="1260" y="826" font-family="Arial, sans-serif" font-size="26" font-weight="400">member_id (FK)</text>
+<text x="1600" y="823" font-family="Arial, sans-serif" font-size="21" font-weight="400">uuid</text>
+<text x="1260" y="868" font-family="Arial, sans-serif" font-size="26" font-weight="400">event_type</text>
+<text x="1600" y="865" font-family="Arial, sans-serif" font-size="21" font-weight="400">varchar</text>
+<text x="1260" y="910" font-family="Arial, sans-serif" font-size="26" font-weight="400">new_plan</text>
+<text x="1600" y="907" font-family="Arial, sans-serif" font-size="21" font-weight="400">varchar</text>
+<text x="1260" y="952" font-family="Arial, sans-serif" font-size="26" font-weight="400">new_expiry_date</text>
+<text x="1600" y="949" font-family="Arial, sans-serif" font-size="21" font-weight="400">date</text>
+<rect x="650" y="180" width="500" height="344" fill="white" stroke="black" stroke-width="2"/>
+<path d="M 650 230 L 1150 230" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 990 230 L 990 524" fill="none" stroke="black" stroke-width="2.2"/>
+<text x="836.11930847168" y="215" font-family="Arial, sans-serif" font-size="26" font-weight="700">members</text>
+<text x="660" y="264" font-family="Arial, sans-serif" font-size="26" font-weight="400">id (PK)</text>
+<text x="1000" y="261" font-family="Arial, sans-serif" font-size="21" font-weight="400">uuid</text>
+<text x="660" y="306" font-family="Arial, sans-serif" font-size="26" font-weight="400">application_id (UQ,FK)</text>
+<text x="1000" y="303" font-family="Arial, sans-serif" font-size="21" font-weight="400">uuid</text>
+<text x="660" y="348" font-family="Arial, sans-serif" font-size="26" font-weight="400">full_name</text>
+<text x="1000" y="345" font-family="Arial, sans-serif" font-size="21" font-weight="400">varchar</text>
+<text x="660" y="390" font-family="Arial, sans-serif" font-size="26" font-weight="400">plan</text>
+<text x="1000" y="387" font-family="Arial, sans-serif" font-size="21" font-weight="400">varchar</text>
+<text x="660" y="432" font-family="Arial, sans-serif" font-size="26" font-weight="400">status</text>
+<text x="1000" y="429" font-family="Arial, sans-serif" font-size="21" font-weight="400">varchar</text>
+<text x="660" y="474" font-family="Arial, sans-serif" font-size="26" font-weight="400">start_date</text>
+<text x="1000" y="471" font-family="Arial, sans-serif" font-size="21" font-weight="400">date</text>
+<text x="660" y="516" font-family="Arial, sans-serif" font-size="26" font-weight="400">expiry_date</text>
+<text x="1000" y="513" font-family="Arial, sans-serif" font-size="21" font-weight="400">date</text>
+<rect x="50" y="1510" width="500" height="302" fill="white" stroke="black" stroke-width="2"/>
+<path d="M 50 1560 L 550 1560" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 390 1560 L 390 1812" fill="none" stroke="black" stroke-width="2.2"/>
+<text x="238.37907409668" y="1545" font-family="Arial, sans-serif" font-size="26" font-weight="700">products</text>
+<text x="60" y="1594" font-family="Arial, sans-serif" font-size="26" font-weight="400">id (PK)</text>
+<text x="400" y="1591" font-family="Arial, sans-serif" font-size="21" font-weight="400">uuid</text>
+<text x="60" y="1636" font-family="Arial, sans-serif" font-size="26" font-weight="400">name</text>
+<text x="400" y="1633" font-family="Arial, sans-serif" font-size="21" font-weight="400">varchar</text>
+<text x="60" y="1678" font-family="Arial, sans-serif" font-size="26" font-weight="400">category</text>
+<text x="400" y="1675" font-family="Arial, sans-serif" font-size="21" font-weight="400">varchar</text>
+<text x="60" y="1720" font-family="Arial, sans-serif" font-size="26" font-weight="400">price</text>
+<text x="400" y="1717" font-family="Arial, sans-serif" font-size="21" font-weight="400">numeric</text>
+<text x="60" y="1762" font-family="Arial, sans-serif" font-size="26" font-weight="400">stock</text>
+<text x="400" y="1759" font-family="Arial, sans-serif" font-size="21" font-weight="400">numeric</text>
+<text x="60" y="1804" font-family="Arial, sans-serif" font-size="26" font-weight="400">is_active</text>
+<text x="400" y="1801" font-family="Arial, sans-serif" font-size="21" font-weight="400">boolean</text>
+<rect x="1250" y="180" width="500" height="260" fill="white" stroke="black" stroke-width="2"/>
+<path d="M 1250 230 L 1750 230" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 1590 230 L 1590 440" fill="none" stroke="black" stroke-width="2.2"/>
+<text x="1424.97917175293" y="215" font-family="Arial, sans-serif" font-size="26" font-weight="700">attendance</text>
+<text x="1260" y="264" font-family="Arial, sans-serif" font-size="26" font-weight="400">id (PK)</text>
+<text x="1600" y="261" font-family="Arial, sans-serif" font-size="21" font-weight="400">uuid</text>
+<text x="1260" y="306" font-family="Arial, sans-serif" font-size="26" font-weight="400">member_id (FK)</text>
+<text x="1600" y="303" font-family="Arial, sans-serif" font-size="21" font-weight="400">uuid</text>
+<text x="1260" y="348" font-family="Arial, sans-serif" font-size="26" font-weight="400">date</text>
+<text x="1600" y="345" font-family="Arial, sans-serif" font-size="21" font-weight="400">date</text>
+<text x="1260" y="390" font-family="Arial, sans-serif" font-size="26" font-weight="400">time_in</text>
+<text x="1600" y="387" font-family="Arial, sans-serif" font-size="21" font-weight="400">timestamptz</text>
+<text x="1260" y="432" font-family="Arial, sans-serif" font-size="26" font-weight="400">time_out</text>
+<text x="1600" y="429" font-family="Arial, sans-serif" font-size="21" font-weight="400">timestamptz</text>
+<rect x="1250" y="1510" width="500" height="344" fill="white" stroke="black" stroke-width="2"/>
+<path d="M 1250 1560 L 1750 1560" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 1590 1560 L 1590 1854" fill="none" stroke="black" stroke-width="2.2"/>
+<text x="1427.18815612793" y="1545" font-family="Arial, sans-serif" font-size="26" font-weight="700">sale_items</text>
+<text x="1260" y="1594" font-family="Arial, sans-serif" font-size="26" font-weight="400">id (PK)</text>
+<text x="1600" y="1591" font-family="Arial, sans-serif" font-size="21" font-weight="400">uuid</text>
+<text x="1260" y="1636" font-family="Arial, sans-serif" font-size="26" font-weight="400">sale_id (FK)</text>
+<text x="1600" y="1633" font-family="Arial, sans-serif" font-size="21" font-weight="400">uuid</text>
+<text x="1260" y="1678" font-family="Arial, sans-serif" font-size="26" font-weight="400">product_id (FK)</text>
+<text x="1600" y="1675" font-family="Arial, sans-serif" font-size="21" font-weight="400">uuid</text>
+<text x="1260" y="1720" font-family="Arial, sans-serif" font-size="26" font-weight="400">item_name</text>
+<text x="1600" y="1717" font-family="Arial, sans-serif" font-size="21" font-weight="400">varchar</text>
+<text x="1260" y="1762" font-family="Arial, sans-serif" font-size="26" font-weight="400">quantity</text>
+<text x="1600" y="1759" font-family="Arial, sans-serif" font-size="21" font-weight="400">numeric</text>
+<text x="1260" y="1804" font-family="Arial, sans-serif" font-size="26" font-weight="400">unit_price</text>
+<text x="1600" y="1801" font-family="Arial, sans-serif" font-size="21" font-weight="400">numeric</text>
+<text x="1260" y="1846" font-family="Arial, sans-serif" font-size="26" font-weight="400">line_total</text>
+<text x="1600" y="1843" font-family="Arial, sans-serif" font-size="21" font-weight="400">numeric</text>
+<rect x="50" y="180" width="500" height="302" fill="white" stroke="black" stroke-width="2"/>
+<path d="M 50 230 L 550 230" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 390 230 L 390 482" fill="none" stroke="black" stroke-width="2.2"/>
+<text x="130.462585449219" y="215" font-family="Arial, sans-serif" font-size="26" font-weight="700">membership_applications</text>
+<text x="60" y="264" font-family="Arial, sans-serif" font-size="26" font-weight="400">id (PK)</text>
+<text x="400" y="261" font-family="Arial, sans-serif" font-size="21" font-weight="400">uuid</text>
+<text x="60" y="306" font-family="Arial, sans-serif" font-size="26" font-weight="400">member_id (FK)</text>
+<text x="400" y="303" font-family="Arial, sans-serif" font-size="21" font-weight="400">uuid</text>
+<text x="60" y="348" font-family="Arial, sans-serif" font-size="26" font-weight="400">application_type</text>
+<text x="400" y="345" font-family="Arial, sans-serif" font-size="21" font-weight="400">varchar</text>
+<text x="60" y="390" font-family="Arial, sans-serif" font-size="26" font-weight="400">plan</text>
+<text x="400" y="387" font-family="Arial, sans-serif" font-size="21" font-weight="400">varchar</text>
+<text x="60" y="432" font-family="Arial, sans-serif" font-size="26" font-weight="400">status</text>
+<text x="400" y="429" font-family="Arial, sans-serif" font-size="21" font-weight="400">varchar</text>
+<text x="60" y="474" font-family="Arial, sans-serif" font-size="26" font-weight="400">submitted_at</text>
+<text x="400" y="471" font-family="Arial, sans-serif" font-size="21" font-weight="400">timestamptz</text>
+<rect x="650" y="1100" width="500" height="302" fill="white" stroke="black" stroke-width="2"/>
+<path d="M 650 1150 L 1150 1150" fill="none" stroke="black" stroke-width="2.2"/>
+<path d="M 990 1150 L 990 1402" fill="none" stroke="black" stroke-width="2.2"/>
+<text x="862.16374206543" y="1135" font-family="Arial, sans-serif" font-size="26" font-weight="700">sales</text>
+<text x="660" y="1184" font-family="Arial, sans-serif" font-size="26" font-weight="400">id (PK)</text>
+<text x="1000" y="1181" font-family="Arial, sans-serif" font-size="21" font-weight="400">uuid</text>
+<text x="660" y="1226" font-family="Arial, sans-serif" font-size="26" font-weight="400">member_id (FK)</text>
+<text x="1000" y="1223" font-family="Arial, sans-serif" font-size="21" font-weight="400">uuid</text>
+<text x="660" y="1268" font-family="Arial, sans-serif" font-size="26" font-weight="400">receipt_number (UQ)</text>
+<text x="1000" y="1265" font-family="Arial, sans-serif" font-size="21" font-weight="400">varchar</text>
+<text x="660" y="1310" font-family="Arial, sans-serif" font-size="26" font-weight="400">total</text>
+<text x="1000" y="1307" font-family="Arial, sans-serif" font-size="21" font-weight="400">numeric</text>
+<text x="660" y="1352" font-family="Arial, sans-serif" font-size="26" font-weight="400">status</text>
+<text x="1000" y="1349" font-family="Arial, sans-serif" font-size="21" font-weight="400">varchar</text>
+<text x="660" y="1394" font-family="Arial, sans-serif" font-size="26" font-weight="400">sold_at</text>
+<text x="1000" y="1391" font-family="Arial, sans-serif" font-size="21" font-weight="400">timestamptz</text>
+<text x="590" y="261" font-family="Arial, sans-serif" font-size="21" font-weight="700">A</text>
+<text x="590" y="391" font-family="Arial, sans-serif" font-size="21" font-weight="700">B</text>
+<text x="50" y="1923" font-family="Arial, sans-serif" font-size="23" font-weight="400">A: members.application_id references membership_applications.id (optional unique link).</text>
+<text x="50" y="1963" font-family="Arial, sans-serif" font-size="23" font-weight="400">B: membership_applications.member_id references members.id (optional member; multiple requests).</text>
+<text x="50" y="2003" font-family="Arial, sans-serif" font-size="23" font-weight="400">Circles = optional; bars = one; crow&apos;s feet = many. PK = primary key; FK = foreign key; UQ = unique.</text>
+<text x="50" y="2042" font-family="Arial, sans-serif" font-size="22" font-weight="400">Core business relationships only. The data dictionary documents all 15 tables, 174 fields and 21 foreign keys.</text>
+<text x="50" y="2081" font-family="Arial, sans-serif" font-size="21" font-weight="400">Source: verified project database schema. Field types are abbreviated; full limits and constraints appear in the dictionary.</text>
+</svg>
