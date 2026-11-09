@@ -1,9 +1,11 @@
-param([ValidateSet(1,2,3)][int[]]$Chapters=@(1,2,3))
+param([ValidateSet(1,2,3)][int[]]$Chapters=@(1,2,3),[string]$DocumentPath)
 $ErrorActionPreference='Stop'
+if($DocumentPath -and $Chapters.Count -ne 1){throw 'Specify one chapter when verifying an alternate document path.'}
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $results=[Collections.Generic.List[string]]::new()
 foreach($chapter in $Chapters){
- $zip=[IO.Compression.ZipFile]::OpenRead((Join-Path (Split-Path $PSScriptRoot -Parent) "Chapter $chapter.docx"))
+ $chapterPath=if($DocumentPath){(Resolve-Path -LiteralPath $DocumentPath).Path}else{Join-Path (Split-Path $PSScriptRoot -Parent) "Chapter $chapter.docx"}
+ $zip=[IO.Compression.ZipFile]::OpenRead($chapterPath)
  try{
   $reader=[IO.StreamReader]::new($zip.GetEntry('word/document.xml').Open());[xml]$doc=$reader.ReadToEnd();$reader.Dispose()
   $ns=[Xml.XmlNamespaceManager]::new($doc.NameTable);$ns.AddNamespace('w','http://schemas.openxmlformats.org/wordprocessingml/2006/main');$ns.AddNamespace('a','http://schemas.openxmlformats.org/drawingml/2006/main');$ns.AddNamespace('r','http://schemas.openxmlformats.org/officeDocument/2006/relationships')

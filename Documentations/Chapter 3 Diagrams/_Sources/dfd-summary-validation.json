@@ -1,0 +1,60 @@
+{
+  "processes": 9,
+  "actors": 3,
+  "storeGroups": [
+    {
+      "ids": [
+        "D0",
+        "D1",
+        "D14"
+      ],
+      "name": "Account and session records"
+    },
+    {
+      "ids": [
+        "D2",
+        "D3",
+        "D8"
+      ],
+      "name": "Application and membership records"
+    },
+    {
+      "ids": [
+        "D4",
+        "D10",
+        "D11",
+        "D13"
+      ],
+      "name": "Attendance and scanner records"
+    },
+    {
+      "ids": [
+        "D5"
+      ],
+      "name": "Product and inventory records"
+    },
+    {
+      "ids": [
+        "D6",
+        "D7"
+      ],
+      "name": "Sales and sale-item records"
+    },
+    {
+      "ids": [
+        "D2-D8"
+      ],
+      "name": "Operational report sources"
+    },
+    {
+      "ids": [
+        "D9"
+      ],
+      "name": "Recorded activity logs"
+    }
+  ],
+  "connectors": 45,
+  "representedDirectionalFlows": 96,
+  "crossingsBefore": 222,
+  "crossingsAfter": 146
+}

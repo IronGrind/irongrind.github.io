@@ -1,6 +1,7 @@
+param([string]$DocumentPath=(Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3.docx'))
 $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.IO.Compression.FileSystem
-$root=Split-Path $PSScriptRoot -Parent;$path=Join-Path $root 'Chapter 3.docx'
+$root=Split-Path $PSScriptRoot -Parent;$path=$DocumentPath
 $backup=Join-Path $root ('Review Backups/summary-dfd-'+(Get-Date -Format yyyyMMdd-HHmmss));New-Item -ItemType Directory -Path $backup -Force|Out-Null
 Copy-Item -LiteralPath $path -Destination (Join-Path $backup 'Chapter 3.docx')
 $work=Join-Path $backup 'Chapter 3 working.docx';Copy-Item -LiteralPath $path -Destination $work
@@ -25,9 +26,25 @@ try{
  Binary 'word/media/summary-dfd.svg' (Join-Path $root 'Chapter 3 Diagrams/03-dfd-simple.svg')
  $svgRid='rIdSummaryDFDSVG';$sr=@($rels.DocumentElement.ChildNodes|Where-Object Id -eq $svgRid)
  if(-not $sr){$sr=$rels.CreateElement('Relationship',$rels.DocumentElement.NamespaceURI);$sr.SetAttribute('Id',$svgRid);$sr.SetAttribute('Type',$r+'/image');$sr.SetAttribute('Target','media/summary-dfd.svg');$null=$rels.DocumentElement.AppendChild($sr)}
+ foreach($old in @($blip.SelectNodes('a:extLst/a:ext[@uri="{96DAC541-7B7A-43D3-8B79-37D633B846F1}"]',$n))){$null=$old.ParentNode.RemoveChild($old)}
  $list=$blip.SelectSingleNode('a:extLst',$n);if(-not $list){$list=$d.CreateElement('a','extLst',$a);$null=$blip.AppendChild($list)}
  $ext=$d.CreateElement('a','ext',$a);$ext.SetAttribute('uri','{96DAC541-7B7A-43D3-8B79-37D633B846F1}');$sb=$d.CreateElement('asvg','svgBlip','http://schemas.microsoft.com/office/drawing/2016/SVG/main');$null=$sb.SetAttribute('embed',$r,$svgRid);$null=$ext.AppendChild($sb);$null=$list.AppendChild($ext)
- $cx=[long](5.8*914400);$cy=[long]($cx*3300/2400);foreach($e in $picture.SelectNodes('.//wp:extent|.//a:xfrm/a:ext',$n)){$e.SetAttribute('cx',"$cx");$e.SetAttribute('cy',"$cy")}
+ $svg=[xml](Get-Content -Raw -LiteralPath (Join-Path $root 'Chapter 3 Diagrams/03-dfd-simple.svg'))
+ $view=@($svg.DocumentElement.GetAttribute('viewBox') -split '\s+'|ForEach-Object {[double]$_})
+ $cx=[long](8.8*914400);$cy=[long]($cx*$view[3]/$view[2]);foreach($e in $picture.SelectNodes('.//wp:extent|.//a:xfrm/a:ext',$n)){$e.SetAttribute('cx',"$cx");$e.SetAttribute('cy',"$cy")}
+ function Section($landscape){
+  $s=$d.SelectSingleNode('//w:body/w:sectPr',$n).CloneNode($true)
+  $type=$s.SelectSingleNode('w:type',$n);if(-not $type){$type=$d.CreateElement('w','type',$w);$null=$s.PrependChild($type)};$null=$type.SetAttribute('val',$w,'nextPage')
+  if($landscape){$size=$s.SelectSingleNode('w:pgSz',$n);$null=$size.SetAttribute('w',$w,'15840');$null=$size.SetAttribute('h',$w,'12240');$null=$size.SetAttribute('orient',$w,'landscape');$m=$s.SelectSingleNode('w:pgMar',$n);foreach($a in @('top','bottom','left','right')){$null=$m.SetAttribute($a,$w,'720')}}
+  return ,$s
+ }
+ $boundary=$heading.PreviousSibling
+ if(-not $boundary -or -not $boundary.SelectSingleNode('w:bookmarkStart[@w:name="_SummaryDFDSection"]',$n)){
+  $boundary=$d.CreateElement('w','p',$w);$pr=$d.CreateElement('w','pPr',$w);$sp=$d.CreateElement('w','spacing',$w);$null=$sp.SetAttribute('line',$w,'1');$null=$sp.SetAttribute('lineRule',$w,'exact');$null=$sp.SetAttribute('before',$w,'0');$null=$sp.SetAttribute('after',$w,'0');$null=$pr.AppendChild($sp);$null=$pr.AppendChild((Section $false));$null=$boundary.AppendChild($pr)
+  $max=@($d.SelectNodes('//w:bookmarkStart',$n)|ForEach-Object {[int]$_.GetAttribute('id',$w)}|Measure-Object -Maximum)[0].Maximum;$id=[int]$max+1
+  foreach($kind in @('bookmarkStart','bookmarkEnd')){$bm=$d.CreateElement('w',$kind,$w);$null=$bm.SetAttribute('id',$w,[string]$id);if($kind -eq 'bookmarkStart'){$null=$bm.SetAttribute('name',$w,'_SummaryDFDSection')};$null=$boundary.AppendChild($bm)}
+  $null=$body.InsertBefore($boundary,$heading)
+ }
  foreach($item in @($heading,$picture,$caption)){
   $pr=$item.SelectSingleNode('w:pPr',$n);if(-not $pr){$pr=$d.CreateElement('w','pPr',$w);$null=$item.PrependChild($pr)}
   foreach($old in @($pr.SelectNodes('w:pageBreakBefore|w:keepNext',$n))){$null=$pr.RemoveChild($old)}
