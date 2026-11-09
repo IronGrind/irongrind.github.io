@@ -2,6 +2,7 @@
 
 - **Chapter 1.docx**, **Chapter 2.docx**, **Chapter 3.docx** — the manuscript chapters.
 - **Chapter 3 Diagrams/** — figures; use `05-gym-erd-editable.drawio` to edit the current ERD and `05-gym-erd-editable.svg` for its vector figure.
+- **Prototype Screenshots/** — the 27 supplied interface captures, readable parts of long screenshots, and the figure index for Chapter 3's prototype section.
 - **Review Notes/** — paper reviews and system investigation notes, including `System Error Review.md` and `Chapter 3 Review Notes.md`.
 - **Tools/** — document formatting, diagram generation, and verification scripts. Historical update scripts are retained for reference; running them may restore older figure styles.
 - **Review Evidence/** — verification reports and supporting results.

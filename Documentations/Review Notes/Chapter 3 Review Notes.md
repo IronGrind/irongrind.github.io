@@ -1,3 +1,25 @@
+## Prototype update - November 10, 2026
+
+Chapter 3 now uses all 27 screenshots supplied in UI AND FEATURRES.zip, arranged as Figures 6-32 by access, administrator, staff, member, and session workflows. Long captures are presented in 38 total readable parts. Complete originals are retained in Prototype Screenshots/Originals; the figure index identifies every source. The existing Gantt image and date narrative are unchanged; its caption is now Figure 33.
+
+Each figure has a caption and an operational explanation. Explanations distinguish member self-service from staff counter services and administrator controls; remembered identifiers from passwords; pairing setup QRs from member attendance QRs; pending reservations from completed pairings; internal transactions from customer receipts; and captured screen values from evaluated results. Older report-preview, print-preview, profile-edit, QR-display, and staff-workflow illustrations were replaced by the actual supplied captures rather than presented as screenshots that were not provided.
+
+The following capture wording remains in the supplied screenshots and in the current UI source; application code was not changed during this paper update:
+
+- admin.html describes staff access as attendance-only, while the implemented staff workspace also supports counter membership, sales, and request-review operations. The prototype explanation states the broader actual scope.
+- register.html's short introductory sentence mentions gym-admin review, while authorized staff can also review requests. The detailed explanation retains both reviewer roles.
+- The administrator registration approval button says Approve & Create Account. The documented workflow retains the distinction between the applicant Auth account and the approved member record; it does not infer account creation timing from the label.
+
+The supplied administrator Add New Member screenshot uses one full-name input; staff registration uses separate name fields. The generic end-to-end counter sentence was adjusted to avoid claiming both interfaces have the same separated-name inputs.
+
+Optional captures for a later completeness pass: opened member profile-edit form, opened member QR, report preview/print output, staff direct-renewal and plan-change states, and a working camera/scanning result. The current section does not claim those states were pictured.
+
+Verification: 27 originals covered; 38 captions and descriptions each present once; every embedded PNG matches its source full capture or lossless part; drawing IDs unique; original DFD, ERD, use case, Gantt and other existing media unchanged; all 20 requirements/dictionary tables preserved. Chapter 3 verification passed for the 15-table, 174-field dictionary and its 21 foreign keys. No Gantt schedule changes or new evaluation claims were made.
+
+---
+
+Historical review entries below describe earlier versions; the latest manuscript and current verification report take precedence.
+
 # Chapter 3 review
 
 Dictionary correction: restored the Description column inside every dictionary table. The current layout is Name / Type / Constraints / Description. All 174 field-purpose descriptions were recovered from the retained field notes, with declared types, PK/FK/UQ roles, nullability, referenced columns, update/delete actions and CHECK information retained. The three-column presentation described below is superseded.
