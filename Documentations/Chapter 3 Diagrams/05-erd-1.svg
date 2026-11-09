@@ -6,14 +6,22 @@
 <g><title>auth.users.id -&gt; public.membership_applications.auth_user_id; ON DELETE CASCADE</title><path d="M 830 246.5 H 865 V 1248.5 H 830" fill="none" stroke="#7c3aed" stroke-width="2.5"/><circle cx="830" cy="246.5" r="4" fill="#7c3aed"/><circle cx="830" cy="1248.5" r="4" fill="#7c3aed"/></g>
 <g><title>public.members.id -&gt; public.membership_applications.member_id; ON DELETE SET NULL</title><path d="M 970 456.5 H 910 V 1281.5 H 830" fill="none" stroke="#b45309" stroke-width="2.5"/><circle cx="970" cy="456.5" r="4" fill="#b45309"/><circle cx="830" cy="1281.5" r="4" fill="#b45309"/></g>
 <g><title>public.profiles.id -&gt; public.membership_applications.reviewed_by; ON DELETE NO ACTION</title><path d="M 970 246.5 H 920 V 1149.5 H 830" fill="none" stroke="#be185d" stroke-width="2.5"/><circle cx="970" cy="246.5" r="4" fill="#be185d"/><circle cx="830" cy="1149.5" r="4" fill="#be185d"/></g>
-<rect x="50" y="150" width="780" height="80" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="50" y="150" width="780" height="113" fill="#ffffff" stroke="#cbd5e1"/>
 <rect x="50" y="150" width="780" height="80" fill="#e2e8f0" stroke="#cbd5e1"/>
 <text x="68" y="179" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#52657b">auth | reference</text>
 <text x="68" y="210" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#172b46">users</text>
-<rect x="970" y="150" width="780" height="80" fill="#ffffff" stroke="#cbd5e1"/>
+<rect x="51" y="230" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="62" y="253" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8">PK</text>
+<text x="165" y="258" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">id</text>
+<text x="562" y="257" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">uuid *</text>
+<rect x="970" y="150" width="780" height="113" fill="#ffffff" stroke="#cbd5e1"/>
 <rect x="970" y="150" width="780" height="80" fill="#dbeafe" stroke="#cbd5e1"/>
 <text x="988" y="179" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#52657b">public | reference</text>
 <text x="988" y="210" font-family="Arial, sans-serif" font-size="26" font-weight="700" fill="#172b46">profiles</text>
+<rect x="971" y="230" width="778" height="33" fill="#f7f9fc" stroke="#f7f9fc"/>
+<text x="982" y="253" font-family="Arial, sans-serif" font-size="18" font-weight="700" fill="#1d4ed8">FK/PK</text>
+<text x="1085" y="258" font-family="Arial, sans-serif" font-size="25" font-weight="400" fill="#172b46">id</text>
+<text x="1482" y="257" font-family="Arial, sans-serif" font-size="21" font-weight="400" fill="#53647a">uuid *</text>
 <rect x="50" y="360" width="780" height="1169" fill="#ffffff" stroke="#cbd5e1"/>
 <rect x="50" y="360" width="780" height="80" fill="#dbeafe" stroke="#cbd5e1"/>
 <text x="68" y="389" font-family="Arial, sans-serif" font-size="20" font-weight="400" fill="#52657b">public</text>

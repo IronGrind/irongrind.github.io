@@ -1,5 +1,5 @@
 ﻿{
-    "Source":  "Author-supplied pgAdmin ERD export; auth-user uniqueness checked against migration baseline",
+    "Source":  "Author-supplied pgAdmin ERD export; standalone unique indexes checked against migration baseline",
     "Tables":  [
                    {
                        "Name":  "private.account_sessions",
@@ -1281,7 +1281,7 @@
                                            "Type":  "varchar(254)",
                                            "Required":  false,
                                            "Keys":  [
-
+                                                        "UQ"
                                                     ]
                                        },
                                        {
@@ -1451,7 +1451,7 @@
                                            "Type":  "varchar(64)",
                                            "Required":  true,
                                            "Keys":  [
-
+                                                        "UQ"
                                                     ]
                                        },
                                        {

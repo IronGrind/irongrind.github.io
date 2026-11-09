@@ -24,13 +24,18 @@ if($SchemaExport){
   $col=$table.Columns|Where-Object Name -EQ $match.Groups[3].Value;$col.Keys=@($col.Keys)+'FK'
   [pscustomobject]@{Child=$table.Name;Field=$col.Name;Parent=$match.Groups[4].Value;ParentField=$match.Groups[5].Value;Delete=$match.Groups[6].Value.Trim()}
  })
- # pgAdmin's ERD script emits this index as CREATE INDEX; its uniqueness is
- # independently declared in the checked-in database baseline.
+ # pgAdmin's ERD script omits or rewrites standalone unique indexes. Preserve
+ # their independently verified uniqueness from the checked-in baseline.
  $baseline=Get-Content -Raw (Join-Path $PSScriptRoot '../supabase/migrations/20261105043517_remote_schema.sql')
  if($baseline -notmatch 'CREATE UNIQUE INDEX "members_auth_user_id_uidx"') {throw 'Cannot substantiate unique members.auth_user_id index.'}
- $col=($tables|Where-Object Name -EQ 'public.members').Columns|Where-Object Name -EQ 'auth_user_id';$col.Keys=@($col.Keys)+'UQ'
+ foreach($index in [regex]::Matches($baseline,'CREATE UNIQUE INDEX "[^"]+" ON "(public|private)"\."([^"]+)" USING "btree" \("([^"]+)"\)')){
+  $table=$tables|Where-Object Name -EQ ($index.Groups[1].Value+'.'+$index.Groups[2].Value)
+  $col=$table.Columns|Where-Object Name -EQ $index.Groups[3].Value
+  if(-not $col){throw 'Unique-index column missing from schema export.'}
+  if('UQ' -notin $col.Keys){$col.Keys=@($col.Keys)+'UQ'}
+ }
  if($tables.Count -ne 15 -or $relations.Count -ne 21 -or ($tables.Columns|Measure-Object).Count -ne 174){throw 'Unexpected application schema coverage.'}
- [pscustomobject]@{Source='Author-supplied pgAdmin ERD export; auth-user uniqueness checked against migration baseline';Tables=$tables;Relations=$relations}|ConvertTo-Json -Depth 12|Set-Content -LiteralPath $modelPath -Encoding UTF8
+ [pscustomobject]@{Source='Author-supplied pgAdmin ERD export; standalone unique indexes checked against migration baseline';Tables=$tables;Relations=$relations}|ConvertTo-Json -Depth 12|Set-Content -LiteralPath $modelPath -Encoding UTF8
 }
 $model=Get-Content -Raw -LiteralPath $modelPath|ConvertFrom-Json
 $tables=@{};foreach($table in $model.Tables){$tables[$table.Name]=$table}
