@@ -43,17 +43,16 @@
 <body class="phone-scanner-page">
     <main class="phone-scanner-card">
         <h1><i class="fas fa-qrcode"></i> Attendance Scanner</h1>
-        <p id="phoneScannerInstructions">Sign in to use this paired phone for attendance.</p>
+        <p id="phoneScannerInstructions">Sign in to scan member QR codes for attendance.</p>
         <form id="phoneOperatorSetup" class="phone-model-setup" onsubmit="signInPhoneOperator(event)">
-<label for="phoneOperatorId">Staff / admin username</label><input id="phoneOperatorId" autocomplete="username" required maxlength="30" autocapitalize="none" spellcheck="false" placeholder="Your assigned account username">
-<label for="phoneOperatorPassword" style="margin-top:12px">Account password</label><input id="phoneOperatorPassword" type="password" autocomplete="current-password" required>
-<small>Use your staff/admin login. This phone stays paired separately.</small>
+<label for="phoneOperatorId">Username</label><input id="phoneOperatorId" autocomplete="username" required maxlength="30" autocapitalize="none" spellcheck="false" placeholder="Enter your username">
+<label for="phoneOperatorPassword" style="margin-top:12px">Password</label><input id="phoneOperatorPassword" type="password" autocomplete="current-password" required>
 <button id="phoneOperatorSignIn" class="phone-model-save-button" type="submit">Sign in to scan</button></form>
 <div id="phoneOperatorIdentity" class="phone-model-setup" hidden><p id="phoneOperatorName"></p><button type="button" class="phone-next-scan-button" onclick="changePhoneOperator()">Change operator</button></div>
 <div id="phoneQrReader" hidden></div>
         <p id="phoneQrStatus" role="status" aria-live="polite">Preparing your attendance scanner…</p>
         <button id="phoneInstallButton" class="phone-install-button" type="button" onclick="installPhoneAttendanceApp()">Install attendance app</button>
-        <p id="phoneInstallHelp" class="phone-install-help">To add this app: open your browser menu, then choose <strong>Add to Home Screen</strong> or <strong>Install app</strong>.</p>
+        <p id="phoneInstallHelp" class="phone-install-help">To add this app: open your browser menu, then choose <strong>Add to Home Screen</strong> or <strong>Install app</strong>. Use this page directly to reinstall; you do not need a new pairing QR if your saved pairing is still active in this browser.</p>
         <section id="phoneModelSetup" class="phone-model-setup" hidden>
             <label for="phoneModelInput">Phone model</label>
             <input id="phoneModelInput" type="text" maxlength="100" autocomplete="off" placeholder="Example: Samsung Galaxy A15" onkeydown="if(event.key==='Enter'){event.preventDefault();savePhoneModelAndContinue()}">

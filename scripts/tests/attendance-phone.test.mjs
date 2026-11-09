@@ -28,6 +28,29 @@ test('remembered phone pairing survives a new app instance', () => {
     assert.equal(second.run('readPhonePairing().sessionId'), 'session');
 });
 
+test('opening another QR to reinstall preserves the existing pairing and token', () => {
+    const fixture = app();
+    fixture.run("savePhonePairing('existing', 'original-secret', true, '2099-01-01T00:00:00Z')");
+    assert.equal(fixture.run("acceptPhonePairingLink('new-qr', 'new-secret')"), false);
+    assert.equal(fixture.run('readPhonePairing().sessionId'), 'existing');
+    assert.equal(fixture.run('readPhonePairing().token'), 'original-secret');
+});
+
+test('first pairing and expired saved pairing accept a fresh QR', () => {
+    const fixture = app();
+    assert.equal(fixture.run("acceptPhonePairingLink('first', 'secret', '2000-01-01T00:00:00Z')"), true);
+    assert.equal(fixture.run("acceptPhonePairingLink('replacement', 'new-secret')"), true);
+    assert.equal(fixture.run('readPhonePairing().sessionId'), 'replacement');
+});
+
+test('lost connection recovery explains administrator removal and separate installation', () => {
+    const fixture = app();
+    const message = fixture.run("phonePairingRecoveryMessage({message:'This phone already has an active pairing. End that pairing before using another QR.'})");
+    assert.match(message, /removal PIN/);
+    assert.match(message, /fresh pairing QR/);
+    assert.match(message, /Install attendance app/);
+});
+
 test('every camera entry requires operator identity', async () => {
     const fixture = app();
     for (const call of ["startPhonePairingScanner()", "startPhoneMemberScanner('session','token')", 'togglePhoneAttendanceCamera()', 'resumePhoneAttendanceScanner()']) {

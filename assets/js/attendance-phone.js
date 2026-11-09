@@ -11,7 +11,7 @@ function requirePhoneOperator() {
     document.getElementById('phoneCameraButton').hidden = true;
     document.getElementById('phoneQrReader').hidden = true;
     document.getElementById('phoneNextScanButton').hidden = true;
-    setPhoneAttendanceStatus('Sign in with your assigned staff or admin username before opening the camera.');
+    setPhoneAttendanceStatus('Sign in to open the attendance camera.');
     return false;
 }
 async function signInPhoneOperator(event) {
@@ -278,6 +278,21 @@ function clearPhonePairing() {
     sessionStorage.removeItem(TEMP_PHONE_PAIRING_STORAGE_KEY);
 }
 
+function acceptPhonePairingLink(sessionId, token, expiresAt = '') {
+    const saved = readPhonePairing();
+    // A QR opened to reinstall the app must not replace an existing connection.
+    if (saved && (!saved.expiresAt || Date.parse(saved.expiresAt) > Date.now())) return false;
+    savePhonePairing(sessionId, token, true, expiresAt);
+    return true;
+}
+
+function phonePairingRecoveryMessage(error) {
+    if (/this phone already has an active pairing/i.test(error?.message || '')) {
+        return 'This phone is still paired, but its saved connection does not match this QR. Ask the administrator to end this phone’s old pairing under Attendance → Phone Camera using the removal PIN, then scan a fresh pairing QR. To reinstall later, open the attendance page directly and choose Install attendance app; a new pairing QR is not needed.';
+    }
+    return error?.message || 'Check your connection and try again.';
+}
+
 async function startPhonePairingScanner(statusMessage = '') {
     if (!requirePhoneOperator()) return;
     phoneScannerMode = 'pair';
@@ -309,7 +324,13 @@ async function startPhonePairingScanner(statusMessage = '') {
                 phoneScanBusy = true;
                 try { scanner.pause(true); } catch {}
                 setPhoneAttendanceStatus('Admin pairing QR detected. Connecting…');
-                savePhonePairing(sessionId, token, pairingUrl.searchParams.get('remember') === '1', pairingUrl.searchParams.get('expires') || '');
+                const saved = readPhonePairing();
+                if (saved && saved.sessionId !== sessionId && (!saved.expiresAt || Date.parse(saved.expiresAt) > Date.now())) {
+                    phoneScanBusy = false;
+                    await stopPhoneAttendanceScanner();
+                    await startPhoneMemberScanner(saved.sessionId, saved.token, false);
+                    return;
+                }
                 try {
                     const { data: sessionValid, error } = await phonePairingClient.rpc('validate_mobile_attendance_scan_session', {
                         p_session_id: sessionId,
@@ -325,8 +346,9 @@ async function startPhonePairingScanner(statusMessage = '') {
                         if (deviceError) {
                             clearPhonePairing(); activePhoneSession = null; phoneScannerMode = 'pair';
                             setPhoneNextScanButton(false);
-                            throw new Error(`Phone not paired: ${deviceError.message}`);
+                            throw new Error(phonePairingRecoveryMessage(deviceError));
                         }
+                        savePhonePairing(sessionId, token, true, pairingUrl.searchParams.get('expires') || '');
                         phoneScannerMode = 'member';
                         activePhoneSession = { sessionId, token };
                         phoneCameraPausedForNextMember = true;
@@ -405,7 +427,7 @@ async function startPhoneMemberScanner(sessionId, token, openCamera = true) {
             clearPhonePairing(); activePhoneSession = null; phoneScannerMode = 'pair';
             setPhoneAttendanceMode('pair'); setPhoneCameraButton(false);
         }
-        setPhoneAttendanceStatus(`Could not confirm this phone pairing: ${deviceError.message}`, true);
+        setPhoneAttendanceStatus(phonePairingRecoveryMessage(deviceError), true);
         return;
     }
     if (!deviceLabel) {
@@ -608,14 +630,18 @@ async function startPhoneAttendanceApp() {
     const sessionId = params.get('session');
     const token = params.get('token');
     if (sessionId && token) {
-        savePhonePairing(sessionId, token, params.get('remember') === '1', params.get('expires') || '');
+        const accepted = acceptPhonePairingLink(sessionId, token, params.get('expires') || '');
         window.history.replaceState(null, '', window.location.pathname);
         requirePhoneOperator();
-        setPhoneAttendanceStatus('Sign in to start scanning with this paired phone.');
+        setPhoneAttendanceStatus(accepted
+            ? 'Sign in to confirm this phone pairing.'
+            : 'Your saved pairing was kept. Sign in to resume scanning. To reinstall, choose Install attendance app below; no new pairing QR is needed.');
     } else {
         requirePhoneOperator();
         setPhoneCameraButton(false);
-        setPhoneAttendanceStatus(readPhonePairing() ? 'Saved pairing found. Sign in to open the attendance camera.' : 'Phone not paired. Sign in, then tap Open camera to scan the administrator’s pairing QR. Pairing lasts 30 days.');
+        setPhoneAttendanceStatus(readPhonePairing()
+            ? 'Saved pairing found. Sign in to continue.'
+            : 'Welcome. Sign in to get started, or install the attendance app below.');
     }
 }
 

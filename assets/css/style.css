@@ -2012,6 +2012,12 @@ html[data-dashboard-theme="light"] .product-photo-dialog.photo-bubble .photo-lig
 @keyframes photo-bubble-enter { from { opacity: 0; transform: scale(.95) translateY(8px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .product-photo-dialog.photo-bubble { animation: none; } }
 .password-strength-meter { display:block; width:100%; height:12px; margin:8px 0 4px; }
+.scanner-install-card { margin:16px 0 24px; padding:16px; border:1px solid var(--border-color, #303038); border-radius:14px; }
+.scanner-install-card p { margin:10px 0 0; font-size:.85rem; line-height:1.5; color:inherit; opacity:.75; }
+.scanner-install-link { display:inline-flex; align-items:center; justify-content:center; gap:10px; max-width:100%; box-sizing:border-box; padding:12px 18px; border:1px solid #a60000; border-radius:24px; background:#a60000; color:#fff; text-decoration:none; font-size:.9rem; font-weight:600; line-height:1.4; transition:background .15s ease; }
+.scanner-install-link:hover { background:#800000; color:#fff; text-decoration:none; }
+.scanner-install-link:focus-visible { outline:3px solid #e55b5b; outline-offset:4px; }
+.scanner-install-link .fa-arrow-up-right-from-square { font-size:.75em; opacity:.8; }
 .badge-status.incomplete { background:rgba(230,162,60,.15); color:#d89627; }
 .staff-name-fields { display:grid; grid-template-columns:minmax(0,1fr) minmax(100px,.65fr) minmax(0,1fr); gap:14px; }
 @media (max-width:560px) { .staff-name-fields { grid-template-columns:minmax(0,1fr); } }

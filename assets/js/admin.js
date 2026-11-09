@@ -1757,6 +1757,10 @@ function showMobileAttendancePairingModal(sessionId, pairingUrl, persistent, cap
         <h3><i class="fas fa-mobile-screen-button"></i> Connect Phone Camera</h3>
         <p class="modal-sub">${capacityReached ? 'Pairing limit reached.' : pairingUrl ? `Scan to pair · ${persistent ? '30 days' : '10 minutes'}` : 'Create a QR to pair a phone.'}</p>
         ${localOnly ? '<p class="qr-camera-status">This is localhost, which phones cannot reach. Open the hosted HTTPS admin site to pair.</p>' : ''}
+        <section class="paired-phones-section">
+            <a class="scanner-install-link" href="attendance-phone.html" target="_blank" rel="noopener"><i class="fas fa-mobile-screen-button" aria-hidden="true"></i> Open / install scanner <i class="fas fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+            <p class="qr-camera-status">Already paired? Open this link on your phone to reinstall.</p>
+        </section>
         ${pairingUrl ? `<div class="phone-pair-qr-shell"><div id="phonePairQr" data-session-id="${sessionId}" data-pairing-state="pending" class="phone-pair-qr" aria-label="Phone scanner pairing QR code"></div><button id="phonePairQrVisibility" class="btn-sm phone-pair-qr-visibility" type="button" onclick="togglePhonePairingQrVisibility()" aria-pressed="false"><i class="fas fa-eye-slash" aria-hidden="true"></i> Hide QR</button></div>` : ''}
         <p id="phonePairStatus" class="qr-camera-status" role="status">${capacityReached ? 'Pairing limit reached.' : pairingUrl ? 'Waiting for phone…' : 'Ready to pair.'}</p>
         <p id="phonePairCapacityMessage" class="qr-camera-status ${capacityReached ? '' : 'hidden'}" role="status">End a phone or pending QR to free a slot.</p>
