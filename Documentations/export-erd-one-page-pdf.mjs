@@ -22,10 +22,10 @@ for (const item of drawing.Primitives) {
   } else if (item.Kind === 'text') {
     operations.push(`${color(item.Color)} rg BT /${item.Bold ? 'F2' : 'F1'} ${n(item.Size)} Tf 1 0 0 -1 ${n(item.X)} ${n(item.Y + item.Size)} Tm (${literal(item.Text)}) Tj ET`);
   } else if (item.Kind === 'path') {
-    const [first, ...rest] = item.Points;
-    operations.push(`${color(item.Color)} RG 3 w ${first.map(n).join(' ')} m ${rest.map(p => `${p.map(n).join(' ')} l`).join(' ')} S`);
+    const segments = item.Segments || item.Points.slice(1).map((point, i) => [item.Points[i], point]);
+    operations.push(`${color(item.Color)} RG 4 w ` + segments.map(([a, b]) => `${a.map(n).join(' ')} m ${b.map(n).join(' ')} l`).join(' ') + ' S');
   } else if (item.Kind === 'dot') {
-    const x = item.X, y = item.Y, r = 4, k = r * 0.55228475;
+    const x = item.X, y = item.Y, r = item.Radius || 4, k = r * 0.55228475;
     operations.push(`${color(item.Color)} rg ${n(x + r)} ${n(y)} m ` +
       `${n(x + r)} ${n(y + k)} ${n(x + k)} ${n(y + r)} ${n(x)} ${n(y + r)} c ` +
       `${n(x - k)} ${n(y + r)} ${n(x - r)} ${n(y + k)} ${n(x - r)} ${n(y)} c ` +

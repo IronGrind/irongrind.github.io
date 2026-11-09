@@ -4,7 +4,7 @@ $out=Join-Path $PSScriptRoot 'Chapter 3 Diagrams'
 $model=Get-Content -Raw -LiteralPath (Join-Path $out 'schema-visualizer.json')|ConvertFrom-Json
 $tables=@{};foreach($table in $model.Tables){$tables[$table.Name]=$table}
 $tables['auth.users']=[pscustomobject]@{Name='auth.users';Columns=@([pscustomobject]@{Name='id';Type='uuid';Required=$true;Keys=@('PK')})}
-$width=3508;$height=2480;$cw=780;$hh=86;$rh=46
+$width=3508;$height=2480;$cw=740;$hh=86;$rh=46
 $cards=@{};$svg=[Collections.Generic.List[string]]::new();$primitives=[Collections.Generic.List[object]]::new()
 $bmp=[Drawing.Bitmap]::new($width,$height);$bmp.SetResolution(300,300);$g=[Drawing.Graphics]::FromImage($bmp)
 $g.Clear([Drawing.Color]::White);$g.SmoothingMode='AntiAlias';$g.TextRenderingHint='AntiAliasGridFit'
@@ -27,15 +27,17 @@ function Card($name,$x,$y,$fieldNames){
  $cards[$name]=[pscustomobject]@{Name=$name;X=$x;Y=$y;Columns=$columns;H=($hh+$rh*$columns.Count)}
 }
 function RowY($card,$field){for($i=0;$i -lt $card.Columns.Count;$i++){if($card.Columns[$i].Name -eq $field){return $card.Y+$hh+$rh*$i+$rh/2}};throw "Missing endpoint $($card.Name).$field"}
-function LinePath($points,$color,$tooltip){
- $ps=[Drawing.PointF[]]@($points|ForEach-Object {[Drawing.PointF]::new($_[0],$_[1])});$pen=[Drawing.Pen]::new([Drawing.ColorTranslator]::FromHtml($color),3)
- try{$g.DrawLines($pen,$ps)}finally{$pen.Dispose()}
- $d='M '+($points[0] -join ' ');for($k=1;$k -lt $points.Count;$k++){$d+=' L '+($points[$k] -join ' ')}
- $svg.Add('<path d="'+$d+'" fill="none" stroke="'+$color+'" stroke-width="3"><title>'+(E $tooltip)+'</title></path>')
- $primitives.Add(@{Kind='path';Points=$points;Color=$color})
+function LinePath($points,$segments,$color,$tooltip){
+ $pen=[Drawing.Pen]::new([Drawing.ColorTranslator]::FromHtml($color),4)
+ try{foreach($s in $segments){$g.DrawLine($pen,[single]$s[0][0],[single]$s[0][1],[single]$s[1][0],[single]$s[1][1])}}finally{$pen.Dispose()}
+ $d=(@($segments|ForEach-Object {'M '+($_[0]-join ' ')+' L '+($_[1]-join ' ')})-join ' ')
+ $svg.Add('<path d="'+$d+'" fill="none" stroke="'+$color+'" stroke-width="4"><title>'+(E $tooltip)+'</title></path>')
+ $primitives.Add(@{Kind='path';Points=$points;Segments=$segments;Color=$color})
+ $portIndex=0
  foreach($point in @($points[0],$points[$points.Count-1])){
-  $brush=[Drawing.SolidBrush]::new([Drawing.ColorTranslator]::FromHtml($color));try{$g.FillEllipse($brush,($point[0]-4),($point[1]-4),8,8)}finally{$brush.Dispose()}
-  $svg.Add('<circle cx="'+$point[0]+'" cy="'+$point[1]+'" r="4" fill="'+$color+'"/>');$primitives.Add(@{Kind='dot';X=$point[0];Y=$point[1];Color=$color})
+  $radius=if($portIndex -eq 0){1.7}else{3.5};$portIndex++
+  $brush=[Drawing.SolidBrush]::new([Drawing.ColorTranslator]::FromHtml($color));try{$g.FillEllipse($brush,($point[0]-$radius),($point[1]-$radius),(2*$radius),(2*$radius))}finally{$brush.Dispose()}
+  $svg.Add('<circle cx="'+$point[0]+'" cy="'+$point[1]+'" r="'+$radius+'" fill="'+$color+'"/>');$primitives.Add(@{Kind='dot';X=$point[0];Y=$point[1];Radius=$radius;Color=$color})
  }
 }
 try {
@@ -66,22 +68,91 @@ try {
   $a=$allCards[$i];if($a.X+$cw -gt $width-40 -or $a.Y+$a.H -gt 2220){throw "Table exceeds page area: $($a.Name)"}
   for($j=$i+1;$j -lt $allCards.Count;$j++){$b=$allCards[$j];if($a.X -lt $b.X+$cw -and $a.X+$cw -gt $b.X -and $a.Y -lt $b.Y+$b.H -and $a.Y+$a.H -gt $b.Y){throw 'Table cards overlap.'}}
  }
- $palette=@('#2563eb','#0f766e','#7c3aed','#b45309','#be185d','#475569','#0891b2')
- for($i=0;$i -lt $model.Relations.Count;$i++){
-  $r=$model.Relations[$i];$p=$cards[$r.Parent];$c=$cards[$r.Child];$py=RowY $p $r.ParentField;$cy=RowY $c $r.Field;$lane=($i%6)*7
-  if($p.X -eq $c.X){
-   if($p.X -eq 40){$px=$p.X+$cw;$cx=$c.X+$cw;$mid=$px+15+$lane}else{$px=$p.X;$cx=$c.X;$mid=$px-15-$lane}
-   $points=@(@($px,$py),@($mid,$py),@($mid,$cy),@($cx,$cy))
-  }elseif([Math]::Abs($p.X-$c.X) -eq 870){
-   if($p.X -lt $c.X){$px=$p.X+$cw;$cx=$c.X;$mid=$px+15+$lane}else{$px=$p.X;$cx=$c.X+$cw;$mid=$cx+15+$lane}
-   $points=@(@($px,$py),@($mid,$py),@($mid,$cy),@($cx,$cy))
+ $palette=@('#1d4ed8','#0f766e','#7c3aed','#a16207','#be185d','#475569','#0369a1')
+ $routes=[Collections.Generic.List[object]]::new();$parentUse=@{};$longTop=0;$longBottom=0
+ foreach($r in $model.Relations){
+  $i=$routes.Count;$p=$cards[$r.Parent];$c=$cards[$r.Child];$parentKey=$r.Parent+'.'+$r.ParentField
+  $degree=@($model.Relations|Where-Object {$_.Parent -eq $r.Parent -and $_.ParentField -eq $r.ParentField}).Count
+  if(-not $parentUse.ContainsKey($parentKey)){$parentUse[$parentKey]=0};$ordinal=$parentUse[$parentKey];$parentUse[$parentKey]++
+  # Separate attachment points within the same key row avoid a shared source segment.
+  $py=(RowY $p $r.ParentField)+(($ordinal+1)/($degree+1)-0.5)*36+($i+1)*0.013
+  $cy=(RowY $c $r.Field)+($i+1)*0.023;$pc=[int](($p.X-40)/870);$cc=[int](($c.X-40)/870)
+  $route=[pscustomobject]@{Relation=$r;Index=$i;PY=$py;CY=$cy;PX=0;CX=0;Gutters=@();Lanes=@{};Bus=0;Points=@();Segments=@()}
+  if($pc -eq $cc){
+   $route.PX=$p.X+$cw;$route.CX=$c.X+$cw;$route.Gutters=@($pc)
+  }elseif([Math]::Abs($pc-$cc) -eq 1){
+   if($pc -lt $cc){$route.PX=$p.X+$cw;$route.CX=$c.X}else{$route.PX=$p.X;$route.CX=$c.X+$cw}
+   $route.Gutters=@([Math]::Min($pc,$cc))
   }else{
-   # Long links use the clear top/bottom perimeter instead of crossing table cards.
-   $px=$p.X+$cw;$cx=$c.X;$start=$px+15+$lane;$end=$cx-15-$lane
-   $bus=if($r.Parent -eq 'auth.users'){125+($i%7)*6}else{2230+($i%4)*8}
-   $points=@(@($px,$py),@($start,$py),@($start,$bus),@($end,$bus),@($end,$cy),@($cx,$cy))
+   $route.PX=$p.X+$cw;$route.CX=$c.X;$route.Gutters=@($pc,($cc-1))
+   if($r.Parent -eq 'auth.users'){$route.Bus=125+($longTop*10);$longTop++}else{$route.Bus=2230+($longBottom*12);$longBottom++}
   }
-  LinePath $points $palette[$i%$palette.Count] ($r.Parent+'.'+$r.ParentField+' -> '+$r.Child+'.'+$r.Field+'; ON DELETE '+$r.Delete)
+  $routes.Add($route)
+ }
+ # Every edge gets its own vertical track in each routing gutter it uses.
+ $laneSpacing=[Collections.Generic.List[double]]::new()
+ foreach($gutter in 0..3){
+  $using=@($routes|Where-Object {$gutter -in $_.Gutters}|Sort-Object CY,PY)
+  $left=40+$gutter*870+$cw;$right=if($gutter -eq 3){$width-20}else{40+($gutter+1)*870};$spacing=($right-$left-20)/($using.Count+1)
+  if($spacing -lt 6){throw 'Routing gutter is too narrow for distinct relationship tracks.'};$laneSpacing.Add($spacing)
+  for($j=0;$j -lt $using.Count;$j++){$using[$j].Lanes[$gutter]=$left+10+($j+1)*$spacing}
+ }
+ # Fan out each key's ports in track order. Links travelling upward use the
+ # upper half of the key row; downward links use the lower half.
+ foreach($group in @($routes|Group-Object {$_.Relation.Parent+'.'+$_.Relation.ParentField+'|'+$_.PX})){
+  $base=RowY $cards[$group.Group[0].Relation.Parent] $group.Group[0].Relation.ParentField
+  $up=@($group.Group|Where-Object {$(if($_.Gutters.Count -gt 1){$_.Bus}else{$_.CY}) -lt $base}|Sort-Object { [Math]::Abs($_.Lanes[$_.Gutters[0]]-$_.PX) })
+  $down=@($group.Group|Where-Object {$(if($_.Gutters.Count -gt 1){$_.Bus}else{$_.CY}) -ge $base}|Sort-Object { -[Math]::Abs($_.Lanes[$_.Gutters[0]]-$_.PX) })
+  for($j=0;$j -lt $up.Count;$j++){$up[$j].PY=$base-19+($j+1)*18/($up.Count+1)+($up[$j].Index+1)*0.013}
+  for($j=0;$j -lt $down.Count;$j++){$down[$j].PY=$base+($j+1)*18/($down.Count+1)+($down[$j].Index+1)*0.013}
+ }
+ $routingInput=[IO.Path]::GetTempFileName();$routingOutput=[IO.Path]::GetTempFileName()
+ try{
+  $records=@(foreach($route in $routes){
+   [pscustomobject]@{Index=$route.Index;Group=($route.Relation.Parent+'.'+$route.Relation.ParentField+'|'+$route.PX);BaseY=(RowY $cards[$route.Relation.Parent] $route.Relation.ParentField);PX=$route.PX;CX=$route.CX;CY=$route.CY;Bus=$route.Bus;Gutters=@($route.Gutters);Lanes=@(foreach($gutter in $route.Gutters){[pscustomobject]@{Gutter=$gutter;X=$route.Lanes[$gutter]}})}
+  })
+  $records|ConvertTo-Json -Depth 12 -Compress|Set-Content -LiteralPath $routingInput -Encoding UTF8
+  & node (Join-Path $PSScriptRoot 'optimize-erd-routing.mjs') $routingInput $routingOutput
+  if($LASTEXITCODE -ne 0){throw 'Relationship routing optimization failed.'}
+  $optimized=Get-Content -Raw -LiteralPath $routingOutput|ConvertFrom-Json
+  foreach($route in $routes){$route.Points=@($optimized[$route.Index].Points)}
+ }finally{Remove-Item -LiteralPath $routingInput,$routingOutput -Force}
+ $allSegments=[Collections.Generic.List[object]]::new()
+ foreach($route in $routes){
+  for($j=0;$j -lt $route.Points.Count-1;$j++){
+   $a=$route.Points[$j];$b=$route.Points[$j+1];$allSegments.Add([pscustomobject]@{Route=$route.Index;A=$a;B=$b;Horizontal=($a[1] -eq $b[1]);Cuts=[Collections.Generic.List[double]]::new()})
+  }
+ }
+ # A visible gap at each crossing distinguishes the two relationships without
+ # drawing them on top of one another. Horizontal links pass over vertical links.
+ $crossings=0
+ for($i=0;$i -lt $allSegments.Count;$i++){
+  $a=$allSegments[$i]
+  for($j=$i+1;$j -lt $allSegments.Count;$j++){
+   $b=$allSegments[$j];if($a.Route -eq $b.Route){continue}
+   if($a.Horizontal -eq $b.Horizontal){
+    if($a.Horizontal){$same=[Math]::Abs($a.A[1]-$b.A[1]) -lt 0.001;$lo=[Math]::Max([Math]::Min($a.A[0],$a.B[0]),[Math]::Min($b.A[0],$b.B[0]));$hi=[Math]::Min([Math]::Max($a.A[0],$a.B[0]),[Math]::Max($b.A[0],$b.B[0]))}
+    else{$same=[Math]::Abs($a.A[0]-$b.A[0]) -lt 0.001;$lo=[Math]::Max([Math]::Min($a.A[1],$a.B[1]),[Math]::Min($b.A[1],$b.B[1]));$hi=[Math]::Min([Math]::Max($a.A[1],$a.B[1]),[Math]::Max($b.A[1],$b.B[1]))}
+    if($same -and $hi-$lo -gt 0.001){throw "Two relationship lines share a segment: routes $($a.Route)/$($b.Route), $($a.A -join ',') to $($a.B -join ','), $($b.A -join ',') to $($b.B -join ',')."}
+   }else{
+    if($a.Horizontal){$h=$a;$v=$b}else{$h=$b;$v=$a};$x=$v.A[0];$y=$h.A[1]
+    if($x -gt [Math]::Min($h.A[0],$h.B[0]) -and $x -lt [Math]::Max($h.A[0],$h.B[0]) -and $y -gt [Math]::Min($v.A[1],$v.B[1]) -and $y -lt [Math]::Max($v.A[1],$v.B[1])){$v.Cuts.Add($y);$crossings++}
+   }
+  }
+ }
+ foreach($route in $routes){
+  $visible=[Collections.Generic.List[object]]::new()
+  foreach($s in @($allSegments|Where-Object Route -EQ $route.Index)){
+   if($s.Horizontal){$visible.Add(@($s.A,$s.B));continue}
+   $x=$s.A[0];$lo=[Math]::Min($s.A[1],$s.B[1]);$hi=[Math]::Max($s.A[1],$s.B[1]);$cursor=$lo
+   foreach($cut in @($s.Cuts|Sort-Object -Unique)){
+    $before=[Math]::Max($lo,$cut-6);$after=[Math]::Min($hi,$cut+6)
+    if($before -gt $cursor){$visible.Add(@(@($x,$cursor),@($x,$before)))};$cursor=[Math]::Max($cursor,$after)
+   }
+   if($cursor -lt $hi){$visible.Add(@(@($x,$cursor),@($x,$hi)))}
+  }
+  $route.Segments=@($visible);$r=$route.Relation
+  LinePath $route.Points $route.Segments $palette[$route.Index%$palette.Count] ($r.Parent+'.'+$r.ParentField+' -> '+$r.Child+'.'+$r.Field+'; ON DELETE '+$r.Delete)
  }
  foreach($card in ($cards.Values|Sort-Object X,Y)){
   $x=$card.X;$y=$card.Y;$schema,$name=$card.Name -split '\.',2;$fill=if($schema -eq 'private'){'#ece8f7'}elseif($schema -eq 'auth'){'#e2e8f0'}else{'#dbeafe'}
@@ -98,7 +169,7 @@ try {
  }
  Text 'PK = primary key   FK = foreign key   UQ = unique constraint/index   * = NOT NULL. Lines connect referenced keys to foreign-key columns.' 40 2300 28
  Text '15 application tables + auth.users reference; 21 declared foreign keys. All key columns are shown; other attributes are selected for readability.' 40 2345 28 '#52657b'
- Text 'Full 174-column definitions: see the data dictionary. UUID fields without declared foreign keys have no relationship line.' 40 2390 28 '#52657b'
+ Text 'Full 174-column definitions: see the data dictionary. Gaps at line crossings indicate separate relationships, not junctions.' 40 2390 28 '#52657b'
  Text 'Source: project pgAdmin schema export and checked migration baseline. Layout: A4 landscape, one page.' 40 2433 25 '#52657b'
  $svg.Add('</svg>')
  $bmp.Save((Join-Path $out '05-erd-one-page.png'),[Drawing.Imaging.ImageFormat]::Png)
@@ -106,5 +177,5 @@ try {
  [pscustomobject]@{Width=$width;Height=$height;Primitives=@($primitives)}|ConvertTo-Json -Depth 15 -Compress|Set-Content -LiteralPath (Join-Path $out '05-erd-one-page-drawing.json') -Encoding UTF8
  & node (Join-Path $PSScriptRoot 'export-erd-one-page-pdf.mjs')
  if($LASTEXITCODE -ne 0){throw 'One-page PDF export failed.'}
- 'Rendered one connected A4 landscape schema overview: 15 application tables, auth.users reference, 21 foreign-key connections, all PK/FK columns.'
+ "Rendered 21 relationships with unique routing tracks, no shared segments, and $crossings crossing gaps on one A4 landscape page."
 }finally{$g.Dispose();$bmp.Dispose()}
