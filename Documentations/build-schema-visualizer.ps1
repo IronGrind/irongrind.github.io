@@ -116,3 +116,4 @@ for($page=0;$page -lt $panels.Count;$page++){
 }
 if($coverage.Count -ne 15 -or @($coverage|Select-Object -Unique).Count -ne 15 -or $linksShown.Count -ne 21 -or @($linksShown|Select-Object -Unique).Count -ne 21){throw 'Rendered schema coverage is incomplete or duplicated.'}
 'Rendered four schema figures: 15 complete table cards, 174 columns, 21 foreign-key connections, plus reference cards.'
+& (Join-Path $PSScriptRoot 'combine-erd-figures.ps1')
