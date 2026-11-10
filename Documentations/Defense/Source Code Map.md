@@ -423,9 +423,10 @@ Generated from current source definitions. Use alongside the module explanations
 | updateOtherMedicalDetails | 85 |
 | updateDatesFromPlan | 95 |
 | submitRegistration | 106 |
-| insertSupabaseApplication | 244 |
-| completeConfirmedRegistration | 291 |
-| showSuccessModal | 314 |
+| resumeExistingAccountRegistration | 220 |
+| insertSupabaseApplication | 285 |
+| completeConfirmedRegistration | 332 |
+| showSuccessModal | 383 |
 
 ### assets/js/reset-password.js
 
@@ -569,6 +570,7 @@ Generated from current source definitions. Use alongside the module explanations
 | admin-username-login | [handler.ts](../../supabase/functions/admin-username-login/handler.ts), [handler_test.ts](../../supabase/functions/admin-username-login/handler_test.ts), [index.ts](../../supabase/functions/admin-username-login/index.ts) |
 | member-device-trust | [index.ts](../../supabase/functions/member-device-trust/index.ts) |
 | member-password-login | [index.ts](../../supabase/functions/member-password-login/index.ts) |
+| member-registration | [index.ts](../../supabase/functions/member-registration/index.ts) — validate signup, create Auth account and pending application with Auth rollback if the application insert fails |
 | verify-store-password | [index.ts](../../supabase/functions/verify-store-password/index.ts) |
 
 ## SQL routine definitions

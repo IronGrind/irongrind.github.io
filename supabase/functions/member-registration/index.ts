@@ -102,40 +102,35 @@ Deno.serve(async request => {
     if (availabilityError) return respond({ error: 'Could not verify this email. Please try again.' }, 503);
     if (!available) return respond({ code: 'EMAIL_IN_USE', error: 'This email is already associated with an account. Sign in or use Forgot Password to continue.' }, 409);
 
-    const { data: created, error: createError } = await admin.auth.admin.createUser({
-      email, password, email_confirm: false, user_metadata: { full_name: app.fullName },
+    const mailClient = createClient(url, anon, { auth: { persistSession: false, autoRefreshToken: false } });
+    const { data: signup, error: signupError } = await mailClient.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { full_name: app.fullName },
+        emailRedirectTo: 'https://irongrind-github-io.vercel.app/register.html?completeApplication=1',
+      },
     });
-    if (createError || !created.user) return respond({ error: 'The account could not be created. No application was saved.' }, 400);
-    const userId = created.user.id;
-    const submittedAt = new Date().toISOString();
+    if (signupError || !signup.user || (Array.isArray(signup.user.identities) && signup.user.identities.length === 0)) {
+      if (!signupError && signup.user?.identities?.length === 0) return respond({ code: 'EMAIL_IN_USE', error: 'This email is already associated with an account. Sign in or use Forgot Password to continue.' }, 409);
+      return respond({ error: signupError?.message || 'The account could not be created. No application was saved.' }, 400);
+    }
+    const userId = signup.user.id;
     const row = {
       auth_user_id: userId, member_id: null, application_type: 'registration',
       full_name: app.fullName, email, mobile: app.mobile, date_of_birth: app.dob, age: app.age, sex: app.sex,
       height, height_unit: heightUnit, weight_kg: weight, emergency_contact_data: emergency,
       plan: app.plan, plan_price: app.planPrice, start_date: app.startDate, end_date: app.endDate,
       fitness_goals: goals, health_conditions: conditions, other_medical_conditions: other,
-      signature_path: signature, status: 'pending', submitted_at: submittedAt, reviewed_at: null, reviewed_by: null,
+      signature_path: signature, status: 'pending', submitted_at: new Date().toISOString(), reviewed_at: null, reviewed_by: null,
     };
     const { data: saved, error: saveError } = await admin.from('membership_applications').insert(row).select('id').single();
     if (saveError || !saved?.id) {
       const { error: cleanupError } = await admin.auth.admin.deleteUser(userId);
-      console.error('Member application insert failed:', saveError?.code || 'unknown', 'rollback:', cleanupError?.code || 'ok');
+      console.error('Member application insert failed:', saveError?.code || 'unknown', 'Auth rollback:', cleanupError?.code || 'ok');
       return respond({ error: cleanupError
-        ? 'The application could not be saved and automatic account cleanup failed. Contact gym staff to remove the incomplete account.'
-        : 'The application could not be saved. The temporary account was removed; please try again.' }, 500);
-    }
-
-    const mailClient = createClient(url, anon, { auth: { persistSession: false, autoRefreshToken: false } });
-    const { error: mailError } = await mailClient.auth.resend({
-      type: 'signup', email,
-      options: { emailRedirectTo: 'https://irongrind-github-io.vercel.app/register.html?completeApplication=1' },
-    });
-    if (mailError) {
-      const { error: cleanupError } = await admin.auth.admin.deleteUser(userId);
-      console.error('Registration confirmation send failed:', mailError.code || 'unknown', 'rollback:', cleanupError?.code || 'ok');
-      return respond({ error: cleanupError
-        ? 'The confirmation email could not be sent and automatic account cleanup failed. Contact gym staff to remove the incomplete account.'
-        : 'The confirmation email could not be sent. The temporary account and application were removed; please try again.' }, 503);
+        ? 'The application could not be saved, and automatic account cleanup failed. Contact gym staff to remove the incomplete account.'
+        : 'The application could not be saved. The new account was removed; please try again.' }, 500);
     }
     return respond({ applicationId: saved.id, email, fullName: app.fullName, plan: app.plan, planPrice: Number(app.planPrice), status: 'pending' }, 201);
   } catch (error) {
