@@ -15,7 +15,7 @@ The latest source adds one trusted browser per administrator; use **Trusted Admi
 
 1. In the intended Supabase project's Authentication settings, enable authenticator/TOTP enrollment and verification.
 2. `supabase/config.toml` now declares `[auth.mfa.totp]` with enrollment and verification enabled for local configuration. Editing this file does not automatically enable hosted settings.
-3. Check email redirect settings and working account recovery separately. Password recovery does not remove an existing verified MFA factor.
+3. Keep the hosted Site URL at `https://irongrind.github.io` and its reset redirect allowlist at `https://irongrind.github.io/reset-password.html`. The login client sends reset emails to that exact route, including when a request starts from localhost or a preview origin. A read-only linked Supabase config diff on November 10 confirmed these hosted values. The recovery email link should use Supabase's `{{ .ConfirmationURL }}` so the token is verified before returning to the application. If the hosted template links directly to `{{ .SiteURL }}`, update it to use the confirmation URL. Password recovery does not remove an existing verified MFA factor.
 4. If password-reset-request events should appear in custom activity logs, enable the corresponding database Auth audit storage. No raw Auth payload or secret is copied by the custom trigger.
 
 ## 3. Check locally before rollout

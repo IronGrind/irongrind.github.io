@@ -91,7 +91,10 @@ async function sendPasswordReset(event) {
     button.disabled = true;
     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending…';
     try {
-        const redirectTo = new URL('reset-password.html', window.location.href).toString();
+        // Supabase allows the production recovery route, but local/preview
+        // origins fall back to the Site URL (the login page). Always use the
+        // allowlisted recovery page so the email works from every app origin.
+        const redirectTo = 'https://irongrind.github.io/reset-password.html';
         const { error } = await client.auth.resetPasswordForEmail(email, { redirectTo });
         if (error) throw error;
         status.classList.remove('hidden');
