@@ -306,3 +306,5 @@ Speaker notes: The context diagram uses the supplied horizontal layout and pale-
 - Figure 33 retains the original date ranges and activities; larger labels identify an original plan rather than completed work.
 
 Speaker notes: Supersedes earlier manuscript-layout descriptions in these historical maintenance entries. The current Word manuscript includes one public-schema ERD overview and the full 21-table dictionary; earlier claims that it contains separate Figures 5a-e no longer describe the current layout. No Agile or DFD change was made. Diagram source/PNG inspection and preservation checks are recorded in the review evidence; no deployment occurred.
+
+Diagram validation status: all 26 requirements/dictionary tables and unrelated Word image parts are preserved; the embedded replacement PNGs match their sources. Desktop Word automation did not complete, including the local-copy retry, so pagination remains pending. No generated PDF is presented as a completed preview.

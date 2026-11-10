@@ -22,3 +22,9 @@ Scope: current `Documentations/Chapter 3.docx`, including its locally modified i
 - `schema-foreign-keys.json` contains only 21 relations and omits newer private device relationships. Use `schema-visualizer.json` Relations for current full-schema checking; reconcile the older reference before relying on it for regeneration.
 - The existing chapter verifier still requires older physical ERD panels and omitted-overview wording. Its expectations do not match the current manually revised ERD presentation. Update those expectations after choosing the final ERD scope; no full chapter-verification pass is claimed here.
 - Images were inspected directly after extraction from the current DOCX. No Word rendering, live database verification, production acceptance, or DFD review was performed.
+
+## Corrections applied — November 11, 2026
+
+Updated Chapter 3 in place with clean context artwork and the omitted administrator inputs, a Figure 4 use-case caption and revised introduction, a Figure 5 public-schema ERD caption plus five explanatory paragraphs, darker managed-Auth connectors, and an enlarged Figure 33 original-plan Gantt. The context, ERD and Gantt use dedicated landscape sections. The original Gantt activity/date sequence is retained; Agile and the DFD are unchanged.
+
+Validation passed for all 26 unchanged requirements/dictionary tables, unique figure captions, matching embedded PNGs, resolved image relationships, all unrelated DOCX package parts, and the 21-table/224-field/33-FK schema totals. The public editable ERD retains its 18 edges. The presentation source, slide 13 and its speaker notes, study notes, and current ERD index were synchronized. Defense verification passed for all 18 slides and 18 note sections. See Review Evidence/diagram-recheck/Revision verification.txt. Desktop Word automation initially stalled while resolving the OneDrive source; print pagination is not certified by the package checks.

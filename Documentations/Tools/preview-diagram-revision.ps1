@@ -1,11 +1,14 @@
 $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot -Parent
 $evidence=Join-Path $root 'Review Evidence/diagram-recheck'
+$previewCopy=Join-Path ([IO.Path]::GetTempPath()) ('chapter3-diagram-preview-'+[guid]::NewGuid().ToString('N')+'.docx')
+Copy-Item -LiteralPath (Join-Path $root 'Chapter 3.docx') -Destination $previewCopy
 $word=$null;$document=$null
 try {
  $word=New-Object -ComObject Word.Application
  $word.Visible=$false;$word.DisplayAlerts=0
- $document=$word.Documents.Open((Join-Path $root 'Chapter 3.docx'),$false,$true)
+ # A local temporary copy avoids OneDrive reopening the source through its cloud URL.
+ $document=$word.Documents.Open($previewCopy,$false,$true,$false)
  $document.Repaginate()
  $report=[Collections.Generic.List[string]]::new()
  $report.Add('Desktop Word read-only pagination and PDF export — November 11, 2026')
@@ -21,4 +24,5 @@ try {
 } finally {
  if($document){$document.Close(0);[void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($document)}
  if($word){$word.Quit();[void][Runtime.InteropServices.Marshal]::FinalReleaseComObject($word)}
+ if(Test-Path -LiteralPath $previewCopy){Remove-Item -LiteralPath $previewCopy}
 }
