@@ -62,11 +62,11 @@ foreach($chapter in $Chapters){
    foreach($phrase in @('Recorded verification as of November 8, 2026 comprised forty automated check groups','A separate performance evaluation remains necessary.','The Create Staff Account form collects first name','Phone pairing capacity counts both paired devices')){if(-not $all.Contains($phrase)){throw "Chapter 3 is missing a verified implementation statement: $phrase"}}
    foreach($phrase in @('Members sign in using their email address.','New member records do not receive a username; members sign in using email.','Current member registration uses email and does not collect a username.')){if(-not $all.Contains($phrase)){throw "Chapter 3 contains missing or outdated member-identifier documentation: $phrase"}}
    if($all.Contains('used to identify an account within supported sign-in and member-lookup workflows')){throw 'Chapter 3 still describes legacy username fields as current member sign-in identifiers.'}
-   if($doc.SelectNodes('//w:body/w:tbl',$ns).Count -ne 20){throw 'Expected five requirements tables and fifteen dictionary tables.'}
+   if($doc.SelectNodes('//w:body/w:tbl',$ns).Count -ne 23){throw 'Expected five requirements tables and eighteen dictionary tables.'}
    $dictionary=@($doc.SelectNodes('//w:body/w:tbl',$ns)|Select-Object -Skip 5)
    $columns=0;foreach($table in $dictionary){$columns+=$table.SelectNodes('w:tr',$ns).Count-1}
-   if($columns -ne 174){throw "Expected 174 documented fields, found $columns"}
-   if(([regex]::Matches($all,'The fifteen application-owned tables comprise')).Count -ne 1){throw 'Duplicate or missing schema-count explanation.'}
+   if($columns -ne 201){throw "Expected 201 documented fields, found $columns"}
+   if(([regex]::Matches($all,'The eighteen application-owned tables comprise')).Count -ne 1){throw 'Duplicate or missing schema-count explanation.'}
    if(-not $all.Contains('Figure 5. Public-Schema Entity Relationship Diagram') -or -not $all.Contains('all twelve public tables and their eighteen foreign-key relationships')){throw 'Chapter 3 is missing the twelve-table public-schema ERD scope.'}
    $erdHeading=@($doc.SelectNodes('//w:body/w:p',$ns)|Where-Object {(($_.SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim() -eq 'Entity Relationship Diagram'})
    if($erdHeading.Count -ne 1){throw 'Expected one ERD section heading.'};$erdImages=0;$erdNode=$erdHeading[0].NextSibling
@@ -74,7 +74,7 @@ foreach($chapter in $Chapters){
    if($erdImages -ne 1 -or -not $erdNode){throw 'Expected one complete ERD image before its caption.'}
    if(-not $erdHeading[0].PreviousSibling.SelectSingleNode('w:bookmarkStart[@w:name="_PublicERDSection"]',$ns) -or $erdNode.SelectSingleNode('w:pPr/w:sectPr/w:pgSz',$ns).GetAttribute('orient',$ns.LookupNamespace('w')) -ne 'landscape' -or $erdNode.SelectSingleNode('w:pPr/w:keepNext',$ns)){throw 'Public ERD is not isolated in its landscape figure section.'}
    $schema=Get-Content -Raw -LiteralPath (Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3 Diagrams/schema-visualizer.json')|ConvertFrom-Json
-   $order=@('public.profiles','public.members','public.membership_applications','public.attendance','public.products','public.sales','public.sale_items','public.membership_history','public.activity_logs','public.mobile_attendance_pairing_policy','public.mobile_attendance_scan_sessions','public.mobile_attendance_scan_events','private.attendance_scan_requests','private.admin_login_attempts','private.account_sessions')
+   $order=@('public.profiles','public.members','public.membership_applications','public.attendance','public.products','public.sales','public.sale_items','public.membership_history','public.activity_logs','public.mobile_attendance_pairing_policy','public.mobile_attendance_scan_sessions','public.mobile_attendance_scan_events','private.attendance_scan_requests','private.admin_login_attempts','private.account_sessions','private.admin_login_approvals','private.admin_trusted_devices','private.admin_device_sessions')
    $verifiedFKs=0;$verifiedUnique=0
    for($ti=0;$ti -lt $dictionary.Count;$ti++){
     $tableName=$order[$ti];$modelTable=$schema.Tables|Where-Object Name -EQ $tableName
@@ -97,9 +97,15 @@ foreach($chapter in $Chapters){
      if($tableName -eq 'public.activity_logs' -and $field -eq 'id' -and -not $details.Contains('Identity (GENERATED ALWAYS).')){throw 'Activity-log identity generation is missing.'}
     }
    }
-   if($verifiedFKs -ne 21 -or $verifiedUnique -ne 5){throw 'Incomplete FK or unique-key dictionary coverage.'}
-   $results.Add('Chapter 3: four-column dictionary layout with 174 descriptions, declared types/sizes and key/nullability definitions; 21 FK targets/actions, five unique fields, identity generation and composite PK verified; public ERD landscape section retained.')
-   $results.Add('Chapter 3: 12 public and 3 private dictionary tables, 174 fields, 20 total tables, and linked figures verified.')
+   if($verifiedFKs -ne 27 -or $verifiedUnique -ne 5){throw 'Incomplete FK or unique-key dictionary coverage.'}
+   foreach($field in @('requesting_session_id','session_scope')){
+    $row=@($dictionary[15].SelectNodes('w:tr',$ns)|Where-Object {(($_.SelectSingleNode('w:tc',$ns).SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim() -eq $field})
+    if($row.Count -ne 1 -or -not (($row[0].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Contains('Part of composite UQ (requesting_session_id, session_scope)')){throw 'Approval composite uniqueness is missing.'}
+   }
+   foreach($phrase in @('Figure 3a. User Login - Additional Individual Security Stores','Figure 5a. Administrator Security Schema Supplement','Approval alone does not authorize access.','Normal logout retains browser trust','not a fresh live-schema introspection')){if(-not $all.Contains($phrase)){throw "Current security documentation missing: $phrase"}}
+   foreach($phrase in @('No new application table or column is introduced','Current-device approval and push notifications are not included in this increment','complete fifteen-table, 174-field','All fifteen application tables and twenty-one foreign keys')){if($all.Contains($phrase)){throw "Superseded security documentation: $phrase"}}
+   $results.Add('Chapter 3: four-column dictionary with 201 descriptions and declared types; 27 FK targets/actions, five individually unique fields, approval composite UQ, identity generation and composite PK verified; public ERD landscape section retained.')
+   $results.Add('Chapter 3: 12 public and 6 private dictionary tables, 201 fields, 23 total tables, and linked figures verified. Security DFD/schema supplements retain nine main functions and distinguish live acceptance tests from deployment output.')
   }
   $results.Add("Chapter ${chapter}: XML opens; no unexpected body/data-row bold, stale approval wording, garbled punctuation, or missing figure links detected.")
  }finally{$zip.Dispose()}

@@ -1,0 +1,298 @@
+{
+  "tables": [
+    {
+      "Name": "private.admin_login_approvals",
+      "Purpose": "Records session-bound administrator login requests and approval decisions. Approval alone does not authorize the requesting browser; current device proof and fresh TOTP are also required for replacement.",
+      "Columns": [
+        {
+          "Name": "id",
+          "Type": "uuid",
+          "Required": true,
+          "Keys": [
+            "PK"
+          ],
+          "Description": "Identifies the approval request.",
+          "Extra": "Default gen_random_uuid()."
+        },
+        {
+          "Name": "user_id",
+          "Type": "uuid",
+          "Required": true,
+          "Keys": [
+            "FK"
+          ],
+          "Description": "Identifies the administrator requesting access.",
+          "Extra": ""
+        },
+        {
+          "Name": "requesting_session_id",
+          "Type": "uuid",
+          "Required": true,
+          "Keys": [
+            "FK"
+          ],
+          "Description": "Identifies the Auth session awaiting authorization.",
+          "Extra": "Part of composite UQ (requesting_session_id, session_scope); the pair must be unique, not either column individually."
+        },
+        {
+          "Name": "approver_session_id",
+          "Type": "uuid",
+          "Required": false,
+          "Keys": [
+            "FK"
+          ],
+          "Description": "Records the Auth session that decided the request. Deleting that session clears this attribution without deleting the request.",
+          "Extra": ""
+        },
+        {
+          "Name": "session_scope",
+          "Type": "text",
+          "Required": true,
+          "Keys": [],
+          "Description": "Separates dashboard login from attendance-scanner login.",
+          "Extra": "CHECK dashboard or attendance. Part of composite UQ (requesting_session_id, session_scope); the pair must be unique, not either column individually."
+        },
+        {
+          "Name": "device_label",
+          "Type": "text",
+          "Required": true,
+          "Keys": [],
+          "Description": "Describes the requesting browser for the approval notification. The request function limits the label to 180 characters; text has no declared character length.",
+          "Extra": ""
+        },
+        {
+          "Name": "status",
+          "Type": "text",
+          "Required": true,
+          "Keys": [],
+          "Description": "Records the decision state. Expiration is calculated from timestamps and is not an additional stored status.",
+          "Extra": "Default pending. CHECK pending, approved, denied, or cancelled."
+        },
+        {
+          "Name": "requested_at",
+          "Type": "timestamptz",
+          "Required": true,
+          "Keys": [],
+          "Description": "Records creation of the request.",
+          "Extra": "Default now()."
+        },
+        {
+          "Name": "expires_at",
+          "Type": "timestamptz",
+          "Required": true,
+          "Keys": [],
+          "Description": "Limits how long the pending request may be decided.",
+          "Extra": "Default now() + interval 2 minutes."
+        },
+        {
+          "Name": "decided_at",
+          "Type": "timestamptz",
+          "Required": false,
+          "Keys": [],
+          "Description": "Records when approval or denial was recorded.",
+          "Extra": ""
+        },
+        {
+          "Name": "approval_expires_at",
+          "Type": "timestamptz",
+          "Required": false,
+          "Keys": [],
+          "Description": "Retains the approval-validity boundary. A valid approval does not replace the current trusted-device and authorized-session checks.",
+          "Extra": ""
+        },
+        {
+          "Name": "trusted_device_id",
+          "Type": "uuid",
+          "Required": false,
+          "Keys": [],
+          "Description": "Snapshots the trusted device being replaced. Deliberately not a foreign key: historical requests must survive replacement of the trusted row.",
+          "Extra": ""
+        }
+      ]
+    },
+    {
+      "Name": "private.admin_trusted_devices",
+      "Purpose": "Stores one current trusted browser public key per administrator account. Browser trust is fixed at thirty days and is separate from normal account logout and phone-camera pairing.",
+      "Columns": [
+        {
+          "Name": "user_id",
+          "Type": "uuid",
+          "Required": true,
+          "Keys": [
+            "PK",
+            "FK"
+          ],
+          "Description": "Identifies the administrator. The primary key permits at most one trusted-browser row per administrator.",
+          "Extra": ""
+        },
+        {
+          "Name": "device_id",
+          "Type": "uuid",
+          "Required": true,
+          "Keys": [],
+          "Description": "Identifies the browser key in the application. It is not globally unique and is not a hardware identifier.",
+          "Extra": ""
+        },
+        {
+          "Name": "public_key",
+          "Type": "jsonb",
+          "Required": true,
+          "Keys": [],
+          "Description": "Stores the ECDSA P-256 public JWK used to verify device signatures. The private key remains non-extractable in browser IndexedDB.",
+          "Extra": ""
+        },
+        {
+          "Name": "device_label",
+          "Type": "text",
+          "Required": true,
+          "Keys": [],
+          "Description": "Stores the descriptive label of the trusted browser.",
+          "Extra": ""
+        },
+        {
+          "Name": "registered_at",
+          "Type": "timestamptz",
+          "Required": true,
+          "Keys": [],
+          "Description": "Records registration of the current trusted browser.",
+          "Extra": "Default now()."
+        },
+        {
+          "Name": "expires_at",
+          "Type": "timestamptz",
+          "Required": true,
+          "Keys": [],
+          "Description": "Records the trust expiration set thirty days after registration. Routine reuse does not extend this boundary.",
+          "Extra": ""
+        },
+        {
+          "Name": "last_seen_at",
+          "Type": "timestamptz",
+          "Required": true,
+          "Keys": [],
+          "Description": "Records recent browser activity maintained by the security workflow. It does not prove that a physical device is online.",
+          "Extra": "Default now()."
+        }
+      ]
+    },
+    {
+      "Name": "private.admin_device_sessions",
+      "Purpose": "Binds a candidate or authorized administrator Auth session to a browser key, signing challenge and application scope. Unverified candidates cannot access protected application data.",
+      "Columns": [
+        {
+          "Name": "session_id",
+          "Type": "uuid",
+          "Required": true,
+          "Keys": [
+            "PK",
+            "FK"
+          ],
+          "Description": "Identifies the Auth session being challenged or authorized.",
+          "Extra": ""
+        },
+        {
+          "Name": "user_id",
+          "Type": "uuid",
+          "Required": true,
+          "Keys": [
+            "FK"
+          ],
+          "Description": "Identifies the administrator associated with the session.",
+          "Extra": ""
+        },
+        {
+          "Name": "device_id",
+          "Type": "uuid",
+          "Required": true,
+          "Keys": [],
+          "Description": "Identifies the candidate browser. No foreign key is declared because a candidate may not yet be trusted.",
+          "Extra": ""
+        },
+        {
+          "Name": "session_scope",
+          "Type": "text",
+          "Required": true,
+          "Keys": [],
+          "Description": "Identifies the application scope being authorized.",
+          "Extra": "CHECK dashboard or attendance."
+        },
+        {
+          "Name": "public_key",
+          "Type": "jsonb",
+          "Required": true,
+          "Keys": [],
+          "Description": "Binds the challenge and authorized session to the submitted public key.",
+          "Extra": ""
+        },
+        {
+          "Name": "challenge",
+          "Type": "text",
+          "Required": true,
+          "Keys": [],
+          "Description": "Stores the random session-bound signing message. Successful completion consumes the challenge.",
+          "Extra": ""
+        },
+        {
+          "Name": "challenge_expires_at",
+          "Type": "timestamptz",
+          "Required": true,
+          "Keys": [],
+          "Description": "Limits the challenge to a ten-minute verification window established by the creation function.",
+          "Extra": ""
+        },
+        {
+          "Name": "authorized_until",
+          "Type": "timestamptz",
+          "Required": false,
+          "Keys": [],
+          "Description": "Remains empty before authorization and cannot exceed the current trusted-device expiration after completion.",
+          "Extra": ""
+        }
+      ]
+    }
+  ],
+  "relations": [
+    {
+      "Child": "private.admin_login_approvals",
+      "Field": "user_id",
+      "Parent": "auth.users",
+      "ParentField": "id",
+      "Delete": "CASCADE"
+    },
+    {
+      "Child": "private.admin_login_approvals",
+      "Field": "requesting_session_id",
+      "Parent": "auth.sessions",
+      "ParentField": "id",
+      "Delete": "CASCADE"
+    },
+    {
+      "Child": "private.admin_login_approvals",
+      "Field": "approver_session_id",
+      "Parent": "auth.sessions",
+      "ParentField": "id",
+      "Delete": "SET NULL"
+    },
+    {
+      "Child": "private.admin_trusted_devices",
+      "Field": "user_id",
+      "Parent": "auth.users",
+      "ParentField": "id",
+      "Delete": "CASCADE"
+    },
+    {
+      "Child": "private.admin_device_sessions",
+      "Field": "session_id",
+      "Parent": "auth.sessions",
+      "ParentField": "id",
+      "Delete": "CASCADE"
+    },
+    {
+      "Child": "private.admin_device_sessions",
+      "Field": "user_id",
+      "Parent": "auth.users",
+      "ParentField": "id",
+      "Delete": "CASCADE"
+    }
+  ]
+}

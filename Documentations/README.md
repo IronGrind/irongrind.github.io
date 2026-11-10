@@ -15,7 +15,7 @@ For the latest one-trusted-browser administrator sign-in, use **Defense/Trusted 
 
 Previous ERD versions are in `Chapter 3 Diagrams/_Archive/Previous ERD Versions/`. Generator data is in `Chapter 3 Diagrams/_Sources/`.
 
-Chapter 3 now embeds the current SVG ERD, with a PNG compatibility preview, revised relationship explanations, and the complete fifteen-table data dictionary.
+Chapter 3 embeds the current public SVG ERD and the administrator-security supplement, with PNG compatibility previews. The complete dictionary covers eighteen application-owned tables and 201 fields. `03a-login-security-stores` and `05a-administrator-security-schema` have matching editable `.drawio` and `.svg` files. They supplement the existing nine-function DFD and public ERD; they are not duplicate versions.
 
 From the project root, verify the chapters with:
 

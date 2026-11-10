@@ -95,12 +95,12 @@ Speaker notes: Explain a powder received in pounds but sold in grams. Capsules/t
 Speaker notes: The 250 g group covers creatine, pre-workout, amino-acid and vitamin powders. Form and selling unit take priority over type. Triggers are inclusive and are starting code-defined policies, not optimized forecasts. Actual reorder planning depends on sales demand, replenishment lead time and safety stock.
 
 ## Slide 13 — Data model
-- Twelve public application tables and three private supporting tables
+- Twelve public application tables and six private supporting tables
 - Managed Auth users remain separate from public application tables
 - Keys, constraints and relationships support consistency
 - Data dictionary supplies full definitions behind the readable ERD
 
-Speaker notes: Use the reviewed ERD and dictionary. The reviewed export has 174 fields, 21 FK definitions and five unique fields. The earlier MFA baseline adds functions/guards only. The subsequent local approval increment adds one private supporting table with eleven fields and three managed-Auth references; the twelve public application tables are unchanged. The latest trust increment extends the local target supporting schema to 201 fields across twelve public and six private tables. Use the supplements and refresh full supporting dictionary/DFD evidence after deployment. Do not claim unrelated tables are linked by a declared FK without checking the schema.
+Speaker notes: Chapter 3 now documents 18 application-owned tables, 201 fields and 27 declared foreign keys, reconciled from the supplied pgAdmin baseline and migrations through 20261110000004. This is not fresh live-schema introspection. Figure 5 retains the readable twelve-public-table ERD; Figure 5a shows the three new private security tables and six new Auth references. Repeated Auth reference cards denote the same managed tables, not additional application tables. The dictionary preserves five individually unique fields and additionally explains the approval composite unique pair. Figure 3a supplements the nine-function DFD with three individually named security stores. Context and use-case explanations place approval and trust within existing administrator login, preserving three actors and nine functions. User-supplied CLI output confirms the trust migration and Edge Function deployment; live browser acceptance and Word/PowerPoint pagination still require review.
 
 ## Slide 14 — One trusted administrator browser
 - First registration verifies the authenticator and browser signing key

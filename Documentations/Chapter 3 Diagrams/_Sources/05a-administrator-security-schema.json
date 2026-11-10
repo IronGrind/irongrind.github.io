@@ -1,0 +1,503 @@
+{
+  "W": 1530,
+  "H": 1510,
+  "items": [
+    {
+      "kind": "box",
+      "x": 25,
+      "y": 25,
+      "w": 640,
+      "h": 427
+    },
+    {
+      "kind": "box",
+      "x": 25,
+      "y": 25,
+      "w": 640,
+      "h": 46,
+      "fill": "#d5e2f5"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 34,
+      "text": "private.admin_login_approvals"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 76,
+      "text": "PK  id : uuid"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 107,
+      "text": "FK  user_id : uuid"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 138,
+      "text": "FK  requesting_session_id : uuid"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 169,
+      "text": "FK  approver_session_id : uuid"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 200,
+      "text": "  session_scope : text"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 231,
+      "text": "  device_label : text"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 262,
+      "text": "  status : text"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 293,
+      "text": "  requested_at : timestamptz"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 324,
+      "text": "  expires_at : timestamptz"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 355,
+      "text": "  decided_at : timestamptz"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 386,
+      "text": "  approval_expires_at : timestamptz"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 417,
+      "text": "  trusted_device_id : uuid"
+    },
+    {
+      "kind": "box",
+      "x": 25,
+      "y": 515,
+      "w": 640,
+      "h": 272
+    },
+    {
+      "kind": "box",
+      "x": 25,
+      "y": 515,
+      "w": 640,
+      "h": 46,
+      "fill": "#d5e2f5"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 524,
+      "text": "private.admin_trusted_devices"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 566,
+      "text": "PK/FK  user_id : uuid"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 597,
+      "text": "  device_id : uuid"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 628,
+      "text": "  public_key : jsonb"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 659,
+      "text": "  device_label : text"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 690,
+      "text": "  registered_at : timestamptz"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 721,
+      "text": "  expires_at : timestamptz"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 752,
+      "text": "  last_seen_at : timestamptz"
+    },
+    {
+      "kind": "box",
+      "x": 25,
+      "y": 1005,
+      "w": 640,
+      "h": 303
+    },
+    {
+      "kind": "box",
+      "x": 25,
+      "y": 1005,
+      "w": 640,
+      "h": 46,
+      "fill": "#d5e2f5"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 1014,
+      "text": "private.admin_device_sessions"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 1056,
+      "text": "PK/FK  session_id : uuid"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 1087,
+      "text": "FK  user_id : uuid"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 1118,
+      "text": "  device_id : uuid"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 1149,
+      "text": "  session_scope : text"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 1180,
+      "text": "  public_key : jsonb"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 1211,
+      "text": "  challenge : text"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 1242,
+      "text": "  challenge_expires_at : timestamptz"
+    },
+    {
+      "kind": "text",
+      "x": 40,
+      "y": 1273,
+      "text": "  authorized_until : timestamptz"
+    },
+    {
+      "kind": "box",
+      "x": 1130,
+      "y": 45,
+      "w": 360,
+      "h": 105
+    },
+    {
+      "kind": "box",
+      "x": 1130,
+      "y": 45,
+      "w": 360,
+      "h": 45,
+      "fill": "#d5e2f5"
+    },
+    {
+      "kind": "text",
+      "x": 1150,
+      "y": 53,
+      "text": "auth.users (reference)"
+    },
+    {
+      "kind": "text",
+      "x": 1150,
+      "y": 103,
+      "text": "PK  id : uuid"
+    },
+    {
+      "kind": "box",
+      "x": 1130,
+      "y": 175,
+      "w": 360,
+      "h": 105
+    },
+    {
+      "kind": "box",
+      "x": 1130,
+      "y": 175,
+      "w": 360,
+      "h": 45,
+      "fill": "#d5e2f5"
+    },
+    {
+      "kind": "text",
+      "x": 1150,
+      "y": 183,
+      "text": "auth.sessions (reference)"
+    },
+    {
+      "kind": "text",
+      "x": 1150,
+      "y": 233,
+      "text": "PK  id : uuid"
+    },
+    {
+      "kind": "box",
+      "x": 1130,
+      "y": 515,
+      "w": 360,
+      "h": 105
+    },
+    {
+      "kind": "box",
+      "x": 1130,
+      "y": 515,
+      "w": 360,
+      "h": 45,
+      "fill": "#d5e2f5"
+    },
+    {
+      "kind": "text",
+      "x": 1150,
+      "y": 523,
+      "text": "auth.users (reference)"
+    },
+    {
+      "kind": "text",
+      "x": 1150,
+      "y": 573,
+      "text": "PK  id : uuid"
+    },
+    {
+      "kind": "box",
+      "x": 1130,
+      "y": 970,
+      "w": 360,
+      "h": 105
+    },
+    {
+      "kind": "box",
+      "x": 1130,
+      "y": 970,
+      "w": 360,
+      "h": 45,
+      "fill": "#d5e2f5"
+    },
+    {
+      "kind": "text",
+      "x": 1150,
+      "y": 978,
+      "text": "auth.sessions (reference)"
+    },
+    {
+      "kind": "text",
+      "x": 1150,
+      "y": 1028,
+      "text": "PK  id : uuid"
+    },
+    {
+      "kind": "box",
+      "x": 1130,
+      "y": 1100,
+      "w": 360,
+      "h": 105
+    },
+    {
+      "kind": "box",
+      "x": 1130,
+      "y": 1100,
+      "w": 360,
+      "h": 45,
+      "fill": "#d5e2f5"
+    },
+    {
+      "kind": "text",
+      "x": 1150,
+      "y": 1108,
+      "text": "auth.users (reference)"
+    },
+    {
+      "kind": "text",
+      "x": 1150,
+      "y": 1158,
+      "text": "PK  id : uuid"
+    },
+    {
+      "kind": "line",
+      "points": [
+        [
+          665,
+          132
+        ],
+        [
+          740,
+          132
+        ],
+        [
+          740,
+          115
+        ],
+        [
+          1130,
+          115
+        ]
+      ],
+      "arrow": false,
+      "both": false
+    },
+    {
+      "kind": "line",
+      "points": [
+        [
+          665,
+          163
+        ],
+        [
+          820,
+          163
+        ],
+        [
+          820,
+          235
+        ],
+        [
+          1130,
+          235
+        ]
+      ],
+      "arrow": false,
+      "both": false
+    },
+    {
+      "kind": "line",
+      "points": [
+        [
+          665,
+          194
+        ],
+        [
+          760,
+          194
+        ],
+        [
+          760,
+          260
+        ],
+        [
+          1130,
+          260
+        ]
+      ],
+      "arrow": false,
+      "both": false
+    },
+    {
+      "kind": "line",
+      "points": [
+        [
+          665,
+          590
+        ],
+        [
+          1130,
+          590
+        ]
+      ],
+      "arrow": false,
+      "both": false
+    },
+    {
+      "kind": "line",
+      "points": [
+        [
+          665,
+          1056
+        ],
+        [
+          800,
+          1056
+        ],
+        [
+          800,
+          1040
+        ],
+        [
+          1130,
+          1040
+        ]
+      ],
+      "arrow": false,
+      "both": false
+    },
+    {
+      "kind": "line",
+      "points": [
+        [
+          665,
+          1087
+        ],
+        [
+          800,
+          1087
+        ],
+        [
+          800,
+          1175
+        ],
+        [
+          1130,
+          1175
+        ]
+      ],
+      "arrow": false,
+      "both": false
+    },
+    {
+      "kind": "text",
+      "x": 30,
+      "y": 1450,
+      "text": "Repeated Auth cards reference the same managed tables. Lines show declared FKs; no extra FK is implied.",
+      "w": 1470
+    }
+  ]
+}

@@ -1,0 +1,206 @@
+{
+  "W": 1700,
+  "H": 700,
+  "items": [
+    {
+      "kind": "store",
+      "x": 25,
+      "y": 65,
+      "w": 470,
+      "h": 85
+    },
+    {
+      "kind": "text",
+      "x": 33,
+      "y": 91,
+      "text": "D15"
+    },
+    {
+      "kind": "text",
+      "x": 100,
+      "y": 91,
+      "text": "private.admin_login_approvals"
+    },
+    {
+      "kind": "line",
+      "points": [
+        [
+          495,
+          107
+        ],
+        [
+          755,
+          107
+        ]
+      ],
+      "arrow": true,
+      "both": true
+    },
+    {
+      "kind": "text",
+      "x": 505,
+      "y": 62,
+      "text": "Request / decision",
+      "w": 245
+    },
+    {
+      "kind": "store",
+      "x": 25,
+      "y": 275,
+      "w": 470,
+      "h": 85
+    },
+    {
+      "kind": "text",
+      "x": 33,
+      "y": 301,
+      "text": "D16"
+    },
+    {
+      "kind": "text",
+      "x": 100,
+      "y": 301,
+      "text": "private.admin_trusted_devices"
+    },
+    {
+      "kind": "line",
+      "points": [
+        [
+          495,
+          317
+        ],
+        [
+          755,
+          317
+        ]
+      ],
+      "arrow": true,
+      "both": true
+    },
+    {
+      "kind": "text",
+      "x": 505,
+      "y": 272,
+      "text": "Trusted public key",
+      "w": 245
+    },
+    {
+      "kind": "store",
+      "x": 25,
+      "y": 485,
+      "w": 470,
+      "h": 85
+    },
+    {
+      "kind": "text",
+      "x": 33,
+      "y": 511,
+      "text": "D17"
+    },
+    {
+      "kind": "text",
+      "x": 100,
+      "y": 511,
+      "text": "private.admin_device_sessions"
+    },
+    {
+      "kind": "line",
+      "points": [
+        [
+          495,
+          527
+        ],
+        [
+          755,
+          527
+        ]
+      ],
+      "arrow": true,
+      "both": true
+    },
+    {
+      "kind": "text",
+      "x": 505,
+      "y": 482,
+      "text": "Challenge / authorization",
+      "w": 245
+    },
+    {
+      "kind": "box",
+      "x": 755,
+      "y": 65,
+      "w": 320,
+      "h": 505
+    },
+    {
+      "kind": "box",
+      "x": 755,
+      "y": 65,
+      "w": 320,
+      "h": 65,
+      "fill": "#d5e2f5"
+    },
+    {
+      "kind": "text",
+      "x": 875,
+      "y": 82,
+      "text": "1.0"
+    },
+    {
+      "kind": "text",
+      "x": 810,
+      "y": 270,
+      "text": "User Login"
+    },
+    {
+      "kind": "box",
+      "x": 1370,
+      "y": 255,
+      "w": 300,
+      "h": 115,
+      "fill": "#d5e2f5"
+    },
+    {
+      "kind": "text",
+      "x": 1430,
+      "y": 294,
+      "text": "Administrator"
+    },
+    {
+      "kind": "line",
+      "points": [
+        [
+          1075,
+          310
+        ],
+        [
+          1370,
+          310
+        ]
+      ],
+      "arrow": true,
+      "both": true
+    },
+    {
+      "kind": "text",
+      "x": 1085,
+      "y": 224,
+      "text": "Sign-in / approval",
+      "w": 280
+    },
+    {
+      "kind": "text",
+      "x": 1085,
+      "y": 330,
+      "text": "requests and results",
+      "w": 280
+    },
+    {
+      "kind": "text",
+      "x": 35,
+      "y": 630,
+      "text": "Expansion of the security stores used by Process 1.0; D0, D1 and D14 remain in Figure 3.",
+      "w": 1600
+    }
+  ]
+}
