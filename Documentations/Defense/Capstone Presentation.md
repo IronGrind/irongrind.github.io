@@ -78,7 +78,7 @@ Speaker notes: Use a prepared test member. Explain that unique identifiers preve
 
 Speaker notes: Show the scanner install button and distinguish member QR from pairing QR. The scanner page has a local visual refresh aligned with the app's dark navy and red styling; it does not change its workflow. If browser storage is cleared or a pairing expires, recovery/new pairing may be necessary. Cached shell does not provide offline attendance writes. Administrator scanner operators also complete MFA after deployment. The updated page has not been device/browser reviewed or deployed, so capture replacement slides only after that review.
 
-The administrator account menu also has a local update showing the registered browser label and explaining the difference between ordinary logout (trust retained) and forgetting the browser (trust revoked). This requires pending migration 20261110000005 and has not been visually or live validated or deployed.
+The administrator account menu also has a local update showing the registered browser label and explaining the difference between ordinary logout (trust retained) and forgetting the browser (trust revoked). User-supplied terminal output confirms migration 20261110000005 was applied to the linked database after a dry run listed only that migration. The matching website revision remains local and has not been visually validated or deployed.
 
 ## Slide 11 — Inventory and sales
 - Stock quantity, stock unit and selling price are displayed separately
