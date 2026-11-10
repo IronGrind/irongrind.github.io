@@ -1,0 +1,6 @@
+﻿PASS: chapters 1-3 combined in order; all 2011 original text runs and 26 tables retained.
+PASS: 46 imported image/binary media parts byte-match the source; original Chapter 1 media retained.
+PASS: styles and numbering namespaced; all XML parts reopen and package relationship targets resolve; drawing IDs unique.
+PASS: linked TOC has 39 chapter/section entries and a real three-level TOC field; automatic field update requested on open.
+LIMIT: page numbers require Word to update the TOC; cached entries are clickable but deliberately contain no invented page numbers.
+Input snapshots: C:\Users\mycah\OneDrive\Desktop\CAPSTONE\v1\Documentations\Review Backups\combined-chapters-20261111-032526

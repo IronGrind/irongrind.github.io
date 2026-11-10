@@ -316,3 +316,11 @@ Diagram validation status: all 26 requirements/dictionary tables and unrelated W
 - Existing wording, diagram image bytes and page orientations are preserved.
 
 Speaker notes: The November 11 formatting pass follows the user's supplied manuscript specification. Twenty-three Chapter 3 table grids were fitted to the available text width. Staged documents passed font, spacing, margin and content-preservation checks before replacement; the report and backups are retained in Review Evidence and Review Backups. Existing paragraph before/after spacing and emphasis are retained. Font requirements apply to editable Word text, not lettering already contained in supplied image assets. Final visual pagination review remains separate. This is a manuscript-only change, with no application, schema or deployment action and no change to the eighteen-slide PowerPoint.
+
+## Combined manuscript and contents
+
+- Chapters 1–3 are available together in a separate Word manuscript.
+- A linked table of contents includes 39 chapter and section headings.
+- Chapter text, 26 tables and 46 imported media files are preserved.
+
+Speaker notes: The separate chapter sources remain unchanged. The merge isolates imported styles, numbering and relationship targets while retaining the saved chapter formatting and section layouts. Package/content checks passed; this does not establish final printed pagination. The table of contents is a real Word field and requests updating on open. Update the entire table in Word to populate its page numbers; no calculated page numbers are claimed from the stalled Word automation. The combined manuscript is a documentation-only deliverable and changes no application or deployment behavior.
