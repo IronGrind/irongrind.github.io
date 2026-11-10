@@ -149,6 +149,8 @@ Speaker notes: Follow Admin MFA Setup and Deployment Guide.md for administrator 
 
 Password recovery note: The user clarified that production is now hosted at `https://irongrind-github-io.vercel.app`; the prior linked Supabase config diff showed the old GitHub Pages destination and is stale for current hosting. The local login client now targets `https://irongrind-github-io.vercel.app/reset-password.html`. Update Supabase Authentication URL Configuration to that Vercel Site URL and exact redirect allowlist entry. The recovery email template must link to `{{ .ConfirmationURL }}` so token verification and the requested redirect are preserved. Local source/documentation updates are not deployed; dashboard configuration and a fresh-email browser check remain pending.
 
+Authentication review update: the local source review found and corrected a wrong-schema permission revoke in the pending member-device migration. The member-device SQL test now reapplies the migration under its owner role. Two login/SDK test fixtures were updated for the member-device gate and sessionStorage-backed Auth client. The complete local regression suite passed 49 checks, including administrator TOTP, device approval/trust, and member-device SQL scenarios. These checks do not prove hosted Supabase configuration, a Vercel deployment, real email delivery, or physical authenticator acceptance; the member-device migration remains undeployed.
+
 ## Slide 18 — Demonstration and closing
 - Follow one complete, role-appropriate gym scenario
 - Show safeguards, not just successful screens
