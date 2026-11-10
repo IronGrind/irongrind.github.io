@@ -686,6 +686,7 @@ body.member-dashboard .dashboard-footer { margin-top: 0; }
 .settings-form-status { min-height: 1.25em; margin: 10px 0 0; font-size: 13px; }
 .settings-credential-form .form-group { margin-bottom: 14px; }
 .member-settings-dialog { display: flex; flex-direction: column; width: min(940px, calc(100vw - 32px)); height: min(540px, calc(100dvh - 32px)); max-height: calc(100dvh - 32px); box-sizing: border-box; margin: auto; padding: 24px; overflow: hidden; overscroll-behavior: contain; color: #e8edf5; background: #161616; border: 1px solid #343c4c; border-radius: 16px; box-shadow: 0 24px 80px rgba(0,0,0,0.55); }
+.member-settings-dialog:not([open]) { display: none; }
 .member-settings-dialog::backdrop { background: rgba(0,0,0,0.76); backdrop-filter: blur(5px); }
 .member-settings-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding-bottom: 14px; border-bottom: 1px solid rgba(190,201,220,0.14); }
 .member-settings-heading h2 { display: flex; align-items: center; gap: 10px; font-size: 1.15rem; }

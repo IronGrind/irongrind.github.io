@@ -1,0 +1,4 @@
+﻿PASS: Chapter 3.docx - only the Gantt image and its explanatory paragraph changed; all other body nodes, tables, styles, TOC fields, relationships and media preserved.
+PASS: Chapters 1-3 with Table of Contents.docx - only the Gantt image and its explanatory paragraph changed; all other body nodes, tables, styles, TOC fields, relationships and media preserved.
+Planning rows: identifying a potential client; first client interview and identification of problems/needs; project conceptualization; drafting the proposal. Existing dates and design/development activities retained. Rendered PNG visually inspected. No deployment or actual-completion-date verification claimed.
+Backup: C:\Users\mycah\OneDrive\Desktop\CAPSTONE\v1\Documentations\Review Backups\gantt-planning-20261111-035557

@@ -324,3 +324,20 @@ Speaker notes: The November 11 formatting pass follows the user's supplied manus
 - Chapter text, 26 tables and 46 imported media files are preserved.
 
 Speaker notes: The separate chapter sources remain unchanged. The merge isolates imported styles, numbering and relationship targets while retaining the saved chapter formatting and section layouts. Package/content checks passed; this does not establish final printed pagination. The table of contents is a real Word field and requests updating on open. Update the entire table in Word to populate its page numbers; no calculated page numbers are claimed from the stalled Word automation. The combined manuscript is a documentation-only deliverable and changes no application or deployment behavior.
+
+## Gantt planning activities — corrected
+
+- Identify a potential client.
+- Conduct the first client interview and identify problems and needs.
+- Conceptualize the project.
+- Draft the proposal.
+
+Speaker notes: These four activities follow the proponents' November 11 clarification and replace the previous planning labels in the Gantt chart. Chapter 3 and the combined manuscript now use the corrected image and matching explanation. Existing week/date assignments are retained as schedule information; no new actual-completion dates are asserted. Design and development activities are unchanged. Package checks confirm that all unrelated manuscript content, tables, formatting and TOC parts are preserved. This is a documentation-only correction with no application or deployment change.
+
+## Member menu visibility correction
+
+- Closed member settings remain hidden on the dashboard.
+- The existing menu action opens the settings as a modal.
+- Local CSS fix; browser visual verification and deployment pending.
+
+Speaker notes: The November 11 source correction adds an explicit closed-dialog display rule because the custom flex layout overrode the browser's default hiding. This explains the settings panel appearing near the bottom without a modal backdrop. The customer stylesheet cache version was updated. Affected modules are customer.html and assets/css/style.css. The diff whitespace check and existing UI improvement checks passed; showModal()/close() handlers were inspected. No database or setup change was required, and no hosted deployment or browser visual acceptance is claimed.
