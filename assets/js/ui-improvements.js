@@ -121,7 +121,7 @@
                     const { data, error } = await window.ironGrindSupabase.rpc(isEmail ? 'is_registration_email_available' : 'is_registration_username_available', isEmail ? { p_email: username } : { p_username: username });
                     if (current !== revision) return;
                     if (error) throw error;
-                    const message = data ? `${fieldName} is available.` : isEmail ? 'This email address is already registered. Use your existing account or another email.' : 'That username is already in use. Choose another username.';
+                    const message = data ? `${fieldName} is available.` : isEmail ? 'This email is linked to an account or an earlier registration. Sign in or use Forgot Password. If you just created this Gmail, contact gym staff to check for a pending registration.' : 'That username is already in use. Choose another username.';
                     hint.textContent = message; hint.dataset.state = data ? 'valid' : 'invalid';
                     input.setCustomValidity(data ? '' : message);
                 } catch {

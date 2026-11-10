@@ -188,7 +188,7 @@ async function submitRegistration(event) {
         const { data: emailAvailable, error: emailCheckError } = await window.ironGrindSupabase.rpc('is_registration_email_available', { p_email: email });
         if (emailCheckError) { showError('Could not check this email address. Please try again.'); return; }
         if (!emailAvailable) {
-            showError('This email address is already registered. Sign in or recover your existing account.');
+            showError('This email is linked to an account or an earlier registration. Sign in or use Forgot Password. If you just created this Gmail, contact gym staff to check for a pending registration.');
             document.getElementById('regEmail').focus(); return;
         }
         const { data, error } = await window.ironGrindSupabase.auth.signUp({
@@ -207,7 +207,7 @@ async function submitRegistration(event) {
             return;
         }
         if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
-            showError('This email address is already registered. Sign in or recover your existing account.');
+            showError('This email is linked to an account or an earlier registration. Sign in or use Forgot Password. If you just created this Gmail, contact gym staff to check for a pending registration.');
             return;
         }
         if (!data.user) {

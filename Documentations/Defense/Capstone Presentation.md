@@ -61,7 +61,7 @@ Speaker notes: Explain Agile using the documented project process, not an invent
 - Member signs in to access only permitted own information
 - Member profile sections stay in a fixed, responsive settings window
 
-Speaker notes: Distinguish Auth account, application, profile and approved member record. A pending application does not mean active membership. Demonstrate the real counter payment step without implying online payment verification. The member settings dialog keeps a steady size as Personal Info, Emergency Contact, Health & Fitness, Login Email and Password sections change; its content scrolls inside the dialog, and the dashboard behind it remains modal/inert. The responsive source change is local and has not been browser-accepted or deployed.
+Speaker notes: Distinguish Auth account, application, profile and approved member record. A pending application does not mean active membership. Demonstrate the real counter payment step without implying online payment verification. A duplicate-email response may come from an earlier or unfinished account/registration; direct a person to sign in, use password recovery, or ask staff to check a pending record. The member settings dialog keeps a steady size as Personal Info, Emergency Contact, Health & Fitness, Login Email and Password sections change; its content scrolls inside the dialog, and the dashboard behind it remains modal/inert. The responsive source change is local and has not been browser-accepted or deployed.
 
 ## Slide 9 — Attendance in practice
 - Scan a member QR or search by name/Gmail in the staff portal
