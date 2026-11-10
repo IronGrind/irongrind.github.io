@@ -126,6 +126,8 @@ Speaker notes: Failed attempts are unverified events, not proof that the named a
 
 The local Activity Logs UI now adds an actor-role filter for members, staff and administrators; “All users” remains the default and includes other recorded/system actors. Dropdown and date changes apply immediately, while account-name typing is debounced. The Apply filters button was removed and Reset filters remains. This is a client-only filter over the existing actor_role field, with no schema migration. Browser validation and website deployment remain pending.
 
+Chapter 3 Figure 3 now opens with a simplified DFD overview: three roles, nine functions grouped into four areas, and logical record categories. Detailed individual-store panels remain directly after it. The figure was inserted and the embedded image matches its generated source; final Word pagination review remains pending.
+
 ## Slide 16 — Testing and limitations
 - Unit and simulated UI tests cover selected workflows
 - Isolated SQL tests check permissions, transactions and MFA denial paths

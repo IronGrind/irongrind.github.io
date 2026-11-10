@@ -269,6 +269,10 @@ A screenshot showed the Store password field overlapping its submit button. The 
 
 The Activity Logs panel now includes an Account type selector for all users, members, staff and administrators. It filters the existing `activity_logs.actor_role` column alongside the account-name, category, action and date filters, preserving server-side pagination and the existing RLS-protected query. Dropdown/date changes apply immediately; account-name typing is debounced. The redundant Apply filters button was removed; Reset filters remains. No schema change is needed. Source inspection and `git diff --check` passed; browser validation and website deployment remain pending.
 
+### Simplified DFD overview
+
+Chapter 3 Figure 3 now presents a visual overview for easier reading: the three roles, nine functions grouped into four areas, and five logical record categories. It explicitly says the lower categories are conceptual groupings, not combined tables. The detailed Gane-Sarson panels remain after it with individually named physical data stores and role-specific flows. The overview was generated from `Documentations/Tools/build-dfd-overview.ps1`, visually reviewed, inserted into Chapter 3, and its embedded PNG was byte-compared with the source. Word pagination and final thesis review remain pending. No database or application behavior changed.
+
 ### Scanner pairing across operator sign-in
 
 User-supplied phone screenshots showed “Saved pairing found” before operator sign-in and “Phone not paired” afterward. The pairing token is held in browser storage scoped to the browser profile and site origin; it is not bound to the physical phone alone. The cause of the reported transition is not confirmed. The scanner now snapshots any locally saved pairing before password/MFA requests, uses that snapshot after sign-in, validates it with Supabase, and persists it again only after validation succeeds. Invalid/expired pairings still clear and require a new pairing. The scanner script URL and service-worker shell cache version were bumped. Source inspection and `git diff --check` are local checks; actual phone/PWA validation and website deployment remain pending.

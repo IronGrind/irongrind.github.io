@@ -10,6 +10,10 @@ Verification confirms 27 complete original main-image files with no Word crop se
 
 Per the adviser's requirement, Figure 3 now shows fourteen individual data-store symbols: D0-D11, D13, and D14. Each has its own name and identifier; no comma-separated or range-based store groups remain. Report generation reads seven separately drawn stores, D2 through D8. All nine processes remain. Chapter 3 embeds the revised SVG and PNG and explains the individual-store model. Earlier grouped-store diagram files are archived under Chapter 3 Diagrams/_Archive/Previous DFD Versions. Prototype screenshots and their formatting were not changed by this correction.
 
+## Simplified DFD overview
+
+At the user's request, Chapter 3 Figure 3 now starts with an at-a-glance overview: the three actor groups, all nine system functions grouped into four areas, and five logical record categories. A visible note explains that these categories are for readability and do not combine physical tables. The detailed DFD remains as a companion and retains individually identified data stores and specific actor/process/store flows. The overview PNG was visually inspected and its copy inside Chapter 3.docx byte-matches the generated source. Full Word pagination and final thesis review are pending.
+
 ---
 
 ## Prototype update - November 10, 2026

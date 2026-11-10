@@ -16,6 +16,7 @@ $line = [Drawing.Color]::FromArgb(177, 185, 197)
 $normal = [Drawing.Font]::new('Arial', 18)
 $small = [Drawing.Font]::new('Arial', 15)
 $cardTitle = [Drawing.Font]::new('Arial', 21, [Drawing.FontStyle]::Bold)
+$storeTitleFont = [Drawing.Font]::new('Arial', 15, [Drawing.FontStyle]::Bold)
 $sectionTitle = [Drawing.Font]::new('Arial', 24, [Drawing.FontStyle]::Bold)
 $title = [Drawing.Font]::new('Arial', 31, [Drawing.FontStyle]::Bold)
 $center = [Drawing.StringFormat]::new(); $center.Alignment = [Drawing.StringAlignment]::Center; $center.LineAlignment = [Drawing.StringAlignment]::Center
@@ -38,10 +39,9 @@ function Arrow($x1, $y1, $x2, $y2, $both = $false) {
 }
 function StoreBox($x, $y, $w, $heading, $detail) {
     $heightBox = 118
-    $pen = [Drawing.Pen]::new($line, 2); $brush = [Drawing.SolidBrush]::new($pale)
-    try { $graphics.FillRectangle($brush, $x, $y, $w, $heightBox); $graphics.DrawLine($pen, $x, $y, $x + $w, $y); $graphics.DrawLine($pen, $x, $y + $heightBox, $x + $w, $y + $heightBox); $graphics.DrawLine($pen, $x, $y, $x, $y + $heightBox); $graphics.DrawLine($pen, $x + 72, $y, $x + 72, $y + $heightBox) } finally { $pen.Dispose(); $brush.Dispose() }
-    Text $heading $small $ink ($x + 5) ($y + 12) 62 ($heightBox - 24) $center
-    Text $detail $cardTitle $ink ($x + 88) ($y + 9) ($w - 100) 38
+    Rounded $x $y $w $heightBox $pale $line 12
+    Text $heading $storeTitleFont $ink ($x + 10) ($y + 10) ($w - 20) 36 $center
+    Text $detail $small $muted ($x + 15) ($y + 52) ($w - 30) 56 $center
 }
 Text 'Figure 3. Simplified Data Flow Overview' $title $ink 55 24 1690 48
 Text 'Read left to right: people send requests, the system performs its work, and information is read or saved.' $normal $muted 58 82 1680 34
@@ -64,10 +64,10 @@ Rounded 42 415 1716 435 ([Drawing.Color]::FromArgb(252, 252, 253)) $accent 22
 Text 'IRON GRIND SYSTEM' $sectionTitle $ink 75 435 1650 42 $center
 Text 'Nine functions, organized into four easy-to-follow areas' $small $muted 75 478 1650 28 $center
 $groups = @(
-    @{ x = 70; title = '1 · Access & accounts'; detail = 'Sign-in, roles, sessions and trusted-device checks'; },
-    @{ x = 485; title = '2 · Membership'; detail = 'Applications, member records and renewals'; },
-    @{ x = 900; title = '3 · Gym operations'; detail = 'Attendance, phone pairing, inventory and sales'; },
-    @{ x = 1315; title = '4 · Oversight'; detail = 'Reports and recorded activity'; }
+    @{ x = 70; title = '1.0 Access and accounts'; detail = 'Sign-in, roles, sessions and trusted-device checks'; },
+    @{ x = 485; title = '2.0-4.0 Membership'; detail = '2.0 Applications | 3.0 Member accounts | 4.0 Renewals'; },
+    @{ x = 900; title = '5.0-7.0 Gym operations'; detail = '5.0 Attendance | 6.0 Inventory | 7.0 Product sales'; },
+    @{ x = 1315; title = '8.0-9.0 Oversight'; detail = '8.0 Reports | 9.0 Activity logs'; }
 )
 foreach ($group in $groups) {
     Rounded $group.x 535 390 245 ([Drawing.Color]::White) $line 14
@@ -77,18 +77,17 @@ foreach ($group in $groups) {
 }
 Text 'The system reads and records the information needed by these functions.' $small $muted 75 790 1650 26 $center
 Arrow 900 855 900 925 $true
-Text 'READ / SAVE' $small $accent 815 875 170 26 $center
+Text 'READ / SAVE' $small $accent 700 875 150 26 $center
 Text 'INFORMATION STORED (GROUPED FOR THIS OVERVIEW)' $sectionTitle $ink 55 940 1690 39 $center
 $stores = @(
-    @{ x = 58; id = 'D0, D1, D14–17'; title = 'Accounts & sessions'; detail = 'Identity · profiles · session security'; },
-    @{ x = 402; id = 'D2, D3, D8'; title = 'Membership'; detail = 'Applications · members · history'; },
-    @{ x = 746; id = 'D4, D10–13'; title = 'Attendance & pairing'; detail = 'Visits · phone pairing · scan requests'; },
-    @{ x = 1090; id = 'D5–7'; title = 'Products & sales'; detail = 'Catalog · transactions · sale items'; },
-    @{ x = 1434; id = 'D9'; title = 'Activity logs'; detail = 'Recorded system actions'; }
+    @{ x = 58; title = 'Accounts and sessions'; detail = 'Identity, profiles and trusted sessions'; },
+    @{ x = 402; title = 'Membership'; detail = 'Applications, member records and renewals'; },
+    @{ x = 746; title = 'Attendance and pairing'; detail = 'Visits, pairing settings and phone sessions'; },
+    @{ x = 1090; title = 'Products and sales'; detail = 'Catalog, transactions and sale items'; },
+    @{ x = 1434; title = 'Activity logs'; detail = 'Recorded system and security events'; }
 )
 foreach ($store in $stores) {
-    StoreBox $store.x 995 308 $store.id $store.title
-    Text $store.detail $small $muted ($store.x + 88) 1037 210 62
+    StoreBox $store.x 995 308 $store.title $store.detail
 }
 Text 'Store groups are shown only to simplify the overview; the detailed DFD identifies each data store and its individual flows.' $small $muted 55 1140 1690 36 $center
 $png = Join-Path $out '03-dfd-overview.png'
