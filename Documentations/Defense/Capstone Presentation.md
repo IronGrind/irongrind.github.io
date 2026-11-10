@@ -282,13 +282,13 @@ Speaker notes: This is the user-authorized repeated-reference layout trial. The 
 
 Speaker notes: The checklist was exported to `Documentations/Testing/Iron Grind End-to-End Manual Testing Checklist - Final.docx` on 2026-11-10 from the checklist supplied in the conversation handoff. It provides a start-to-end test plan, not test results. No application or database behavior changed, and execution and outcomes remain pending.
 
-## Consolidated application ERD
+## Public-schema ERD
 
-- One editable diagram includes 21 application-owned tables: 12 `public` and 9 `private`.
-- The original public-table layout stays intact; the private tables appear in a separate compact panel with short labeled FK links.
-- Key fields are shown for readability; the full 224-field inventory remains in the Chapter 3 dictionary. All 33 declared foreign keys are represented.
+- The editable overview focuses on the 12 public tables and their 18 declared foreign-key relationships.
+- Its original simple business layout is restored.
+- Private application tables remain in the separate Chapter 3 relationship and security figures.
 
-Speaker notes: The first all-field layout was too crowded, so the drawing now keeps the original 12-table public arrangement and adds a separate private-table panel. Private cards show primary/foreign keys and selected identifiers, with repeated target labels for existing public/Auth tables. The public relationship paths and spacing retain the original styling; the short private arrows use a darker, thicker stroke and terminate at the table-card border. The former public-only drawing is preserved under `_Archive/Previous ERD Versions/05-gym-erd-public-only.svg` and `.drawio`. Use 05-gym-erd-editable.svg or its diagrams.net source. The submitted Word chapter figures remain separate and unchanged. This documentation update does not alter the application schema or deployment.
+Speaker notes: The user asked to keep the main ERD focused on the public schema. The standalone 05-gym-erd-editable.svg and its Draw.io source therefore show the 12 public tables only. The nine private application tables remain documented in the Chapter 3 relationship panels and administrator/member security supplements; across the full schema materials, 21 application-owned tables, 224 fields and 33 foreign keys are covered. The all-in-one 21-table draft is preserved under `_Archive/Previous ERD Versions/05-gym-erd-complete-with-private.svg` and `.drawio`. Use the public diagram as a focused reference, not as the only schema figure. No Word figures, application/schema code, or deployment state changed.
 
 ## Slide - Updated system context
 
