@@ -27,8 +27,9 @@ try {
    }
   }
  }
- if($slidesCount -ne 18 -or $notesCount -ne 18){throw 'Expected eighteen slides with notes'}
- $message="Passed: editable PowerPoint has 18 slides, 18 populated speaker-note parts, $xmlCount parseable XML/relationship parts and no missing relationship targets. Supporting notes/source map/setup guide exist. Visual PowerPoint review remains separate."
+ $expected=([regex]::Matches([IO.File]::ReadAllText((Join-Path $folder 'Capstone Presentation.md')),'(?m)^## Slide \d+ ')).Count
+ if(-not $expected -or $slidesCount -ne $expected -or $notesCount -ne $expected){throw 'PowerPoint slides/notes do not match presentation source'}
+ $message="Passed: editable PowerPoint has $slidesCount slides, $notesCount populated speaker-note parts, $xmlCount parseable XML/relationship parts and no missing relationship targets. Supporting notes/source map/setup guide exist. Visual PowerPoint review remains separate."
  $message|Set-Content -Encoding UTF8 (Join-Path $root 'Review Evidence/Defense Materials Verification.txt')
  $message
 }finally{$zip.Dispose()}

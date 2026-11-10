@@ -203,7 +203,8 @@ Context: one system boundary and external actors, no internal tables. DFD: nine 
 
 ## 13. Current revision checklist
 
-- Admin MFA source/SQL implemented locally; production application and physical-device testing are pending.
+- Admin MFA source and isolated tests are complete. The user supplied successful linked database push output on November 10 confirming application of migrations 20261108000012, 20261110000001 and 20261110000002. Auth settings, authentication-function/web deployment and physical enrollment/login remain separately unverified.
+- Read-only linked migration check on November 10 confirmed 20261108000012, 20261110000001 and 20261110000002 were not applied remotely. A client calling the missing MFA bootstrap fails closed; its error now explains incomplete setup instead of suggesting refresh. The initial migration check did not alter the database. The later user-supplied push output reports all three migrations applied and Finished supabase db push. This establishes reported migration completion, not an end-to-end MFA test.
 - New `admin_mfa_required`, private MFA checks and session/pre-request integrations; no new application table.
 - Login and phone scanner call MFA before activation; CSS/dialog and service-worker shell updated.
 - Security-event deployment prerequisites from the previous increment remain applicable.

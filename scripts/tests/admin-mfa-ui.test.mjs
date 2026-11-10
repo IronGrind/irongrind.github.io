@@ -37,3 +37,7 @@ test('cancel refuses completion; bootstrap failure fails closed',async()=>{
  f.node('button[type="button"]').onclick();await assert.rejects(pending,/cancelled/);assert.equal(f.calls.length,0);
  const other=fixture();other.client.rpc=async()=>({error:{message:'offline'}});await assert.rejects(other.run(),/Could not check/);
 });
+test('missing deployed MFA function explains incomplete setup instead of suggesting refresh',async()=>{
+ const f=fixture();f.client.rpc=async()=>({error:{code:'PGRST202'}});
+ await assert.rejects(f.run(),/setup is incomplete/);assert.equal(f.dialog(),undefined);
+});

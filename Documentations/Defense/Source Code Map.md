@@ -29,7 +29,7 @@ Generated from current source definitions. Use alongside the module explanations
 | Function / exported handler | Line |
 |---|---:|
 | requireAdminMfa | 2 |
-| finish | 45 |
+| finish | 50 |
 
 ### assets/js/admin.js
 

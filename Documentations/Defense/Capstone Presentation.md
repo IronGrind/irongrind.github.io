@@ -108,7 +108,7 @@ Speaker notes: Use the reviewed ERD and dictionary. The reviewed export has 174 
 - Administrator access and session activation require AAL2 on the server
 - Staff/member login remains separate; no current-device approval flow is claimed
 
-Speaker notes: Explain AAL1 versus AAL2 in plain terms: password alone versus password plus verified second factor. The first genuine administrator enrollment must be supervised before relying on this protection. Never demonstrate the real enrollment secret or QR on a public presentation. This revision is locally implemented and tested; hosted setup and physical verification remain pending until performed.
+Speaker notes: Explain AAL1 versus AAL2 in plain terms: password alone versus password plus verified second factor. The first genuine administrator enrollment must be supervised before relying on this protection. Never demonstrate the real enrollment secret or QR on a public presentation. This revision is locally implemented and tested. User-supplied November 10 CLI output confirms the three pending migrations applied successfully to the linked database. Hosted TOTP settings, function/web revision and physical enrollment/login must still be checked separately.
 
 ## Slide 15 — Accountability and session behavior
 - Readable actions, category badges and expandable log details
@@ -132,7 +132,7 @@ Speaker notes: Present the actual saved test output, not an invented overall pas
 - Test admin, staff, member and scanner paths after deployment
 - Lost authenticator requires verified project-owner recovery
 
-Speaker notes: Follow Admin MFA Setup and Deployment Guide.md. Local config.toml edits do not automatically change hosted Auth settings. Do not disable MFA enforcement casually to recover an account. Project owner verifies identity, uses supported administrative factor reset and supervises re-enrollment. The application does not provide backup codes or old-device approval.
+Speaker notes: Follow Admin MFA Setup and Deployment Guide.md. Local config.toml edits do not automatically change hosted Auth settings. A November 10 read-only check confirmed the name-validation, security-event and MFA migrations were pending remotely; the new login therefore fails closed until setup is completed. The later user-supplied CLI output confirms all three migrations were applied successfully. This does not independently verify Auth settings, deployed functions/client or actual authenticator login. Do not disable MFA enforcement casually to recover an account. Project owner verifies identity, uses supported administrative factor reset and supervises re-enrollment. The application does not provide backup codes or old-device approval.
 
 ## Slide 18 — Demonstration and closing
 - Follow one complete, role-appropriate gym scenario

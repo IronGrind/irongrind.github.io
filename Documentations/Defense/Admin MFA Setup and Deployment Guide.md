@@ -18,6 +18,8 @@ Revision: November 10, 2026. Code is prepared locally. This guide does not mean 
 
 ## 3. Check locally before rollout
 
+If PowerShell blocks `npx.ps1`, use `npx.cmd` in the commands below; no execution-policy change is needed. A November 10 read-only linked migration check confirmed versions 20261108000012, 20261110000001 and 20261110000002 were pending. This explains the incomplete security-setup sign-in error. The subsequent user-supplied push output confirms all three migrations applied successfully. Next, confirm hosted TOTP settings and test the matching deployed client/functions; do not repeat the migration just because the earlier diagnostic is retained here.
+
 From the project directory, run:
 
 ```powershell

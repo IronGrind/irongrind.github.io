@@ -1,7 +1,12 @@
 // Shared by main login and phone operator login. Protected data stays server-gated.
 window.requireAdminMfa = async client => {
     const { data: required, error } = await client.rpc('admin_mfa_required');
-    if (error) throw new Error('Could not check administrator security. Refresh and try again.');
+    if (error) {
+        if (['PGRST202', '42883'].includes(error.code)) {
+            throw new Error('Sign-in security setup is incomplete. Contact the project owner to finish setup.');
+        }
+        throw new Error('Could not check administrator security. Check your connection and try again.');
+    }
     if (required !== true) return;
     const { data: assurance, error: assuranceError } = await client.auth.mfa.getAuthenticatorAssuranceLevel();
     if (assuranceError) throw assuranceError;
