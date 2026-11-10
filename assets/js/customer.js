@@ -316,6 +316,10 @@ function logout() {
 
 async function completeLogout() {
     closeModal();
+    try {
+        const result = await window.ironGrindSupabase?.rpc('log_account_activity', { p_event: 'member_sign_out_requested' });
+        if (result?.error) console.error('Could not log member sign-out:', result.error);
+    } catch (error) { console.error('Could not log member sign-out:', error); }
     await window.ironGrindSupabase?.auth.signOut({ scope: 'local' });
     localStorage.removeItem('irongrind_session');
     sessionStorage.removeItem('irongrind_session');

@@ -148,6 +148,12 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-registration-form
 .staff-sale-stock-info:empty { display:none; }
 .staff-request-filters { display:grid; grid-template-columns:minmax(0,2fr) minmax(140px,1fr); gap:14px; margin:18px 0; }
 .staff-request-card[hidden] { display:none !important; }
+.staff-status.error { color:#ffb2b2; background:#a320201a; border-left:4px solid #cb4545; padding:12px 16px; border-radius:10px; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-status.error { color:#a32020 !important; }
+#staffAttendanceResults:not(:empty) { margin-top:16px; }
+#staffAttendanceResults .staff-member-result { width:100%; text-align:left; white-space:normal; line-height:1.6; overflow-wrap:anywhere; }
+.staff-product-card h5, .staff-product-card-bottom { overflow-wrap:anywhere; min-width:0; }
+@media(max-width:400px) { .staff-product-grid { grid-template-columns:minmax(0,1fr); } }
 .staff-scan-result { border:1px solid #36865a; border-left:5px solid #36865a; padding:18px; font-size:1.05rem; font-weight:600; line-height:1.6; border-radius:12px; background:#23834718; }
 .staff-tab[aria-current="page"] { box-shadow:inset 0 -3px 0 #d64a4a; }
 @media(max-width:650px) {

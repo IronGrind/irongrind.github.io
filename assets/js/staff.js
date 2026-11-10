@@ -13,6 +13,8 @@ let staffSignaturePad;
 let staffSaleBusy = false;
 let staffSelectedRenewalMember = null;
 let staffSelectedPlanChangeMember = null;
+let staffSelectedAttendanceMember = null;
+let staffAttendanceSearchRevision = 0;
 
 function hideStaffLoaderWhenReady() {
     if (staffLoaderDelayComplete && staffLoaderStartupComplete) {
@@ -470,7 +472,54 @@ async function recordStaffAttendance(value) {
     } catch (error) { staffStatus.classList.remove('staff-scan-result'); staffStatus.classList.add('error'); staffStatus.textContent = error.message; }
     finally { staffBusy = false; }
 }
-document.getElementById('staffScanForm').addEventListener('submit', event => { event.preventDefault(); recordStaffAttendance(document.getElementById('staffIdentifier').value); });
+function clearStaffAttendanceSelection() {
+    staffSelectedAttendanceMember = null;
+    staffAttendanceSearchRevision++;
+    document.getElementById('staffAttendanceResults').replaceChildren();
+    document.getElementById('staffAttendanceSelected').hidden = true;
+    const value = document.getElementById('staffIdentifier').value.trim();
+    document.getElementById('staffAttendanceSubmit').textContent = /^IRONGRIND\|/i.test(value) || /^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(value)
+        ? 'Record attendance' : 'Find member';
+}
+
+async function submitStaffAttendanceLookup(event) {
+    event.preventDefault();
+    if (staffBusy) return;
+    const value = document.getElementById('staffIdentifier').value.trim();
+    if (staffSelectedAttendanceMember || /^IRONGRIND\|/i.test(value) || /^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(value)) {
+        const identifier = staffSelectedAttendanceMember?.id || value;
+        await recordStaffAttendance(identifier);
+        if (!pendingStaffScan) clearStaffAttendanceSelection();
+        return;
+    }
+    const results = document.getElementById('staffAttendanceResults');
+    if (value.length < 2 || value.length > 80) { results.textContent = 'Enter 2–80 characters to search.'; return; }
+    const revision = ++staffAttendanceSearchRevision;
+    results.textContent = 'Searching members…';
+    try {
+        const { data, error } = await staffClient.rpc('staff_search_members', { p_query: value });
+        if (revision !== staffAttendanceSearchRevision) return;
+        if (error) throw error;
+        results.replaceChildren();
+        if (!data?.length) { results.textContent = 'No matching members.'; return; }
+        for (const member of data) {
+            const button = document.createElement('button');
+            button.type = 'button'; button.className = 'staff-member-result';
+            button.textContent = `${member.full_name} · ${member.email || 'No email'} · ${member.plan || 'No plan'} · ${member.status || 'Unknown'}`;
+            button.addEventListener('click', () => {
+                staffSelectedAttendanceMember = member;
+                const selected = document.getElementById('staffAttendanceSelected');
+                selected.textContent = `${member.full_name} · ${member.email || 'No email'}`;
+                selected.hidden = false;
+                results.replaceChildren();
+                document.getElementById('staffAttendanceSubmit').textContent = 'Record attendance';
+            });
+            results.append(button);
+        }
+    } catch (error) { if (revision === staffAttendanceSearchRevision) results.textContent = error.message || 'Could not search members.'; }
+}
+document.getElementById('staffIdentifier').addEventListener('input', clearStaffAttendanceSelection);
+document.getElementById('staffScanForm').addEventListener('submit', submitStaffAttendanceLookup);
 document.getElementById('refreshStaffAttendance').onclick = () => refreshStaffAttendance().catch(error => { staffStatus.textContent = error.message; });
 function staffCameraErrorMessage(error) {
     const detail = typeof error === 'string' ? error : error?.message || String(error || '');
@@ -480,7 +529,7 @@ function staffCameraErrorMessage(error) {
         return 'Camera access is blocked. Allow camera access for this site in your browser and Windows privacy settings, then reload the page.';
     }
     if (['NotFoundError', 'DevicesNotFoundError'].includes(errorName) || /no camera|device not found|no video input/.test(searchable)) {
-        return 'No usable camera was found. Check that the laptop camera is enabled, or enter the member QR code below.';
+        return 'No usable camera was found. Enable the laptop camera or search by member name or Gmail below.';
     }
     if (['NotReadableError', 'TrackStartError', 'AbortError'].includes(errorName) || /could not start video source|device in use|hardware error/.test(searchable)) {
         return 'The camera may be in use by another app. Close apps such as Camera, Teams, or Zoom, then try again.';

@@ -39,7 +39,10 @@ export async function handleAdminLogin(request: Request) {
     for (const [bucket, limit] of [[`user:${await hash(username)}`, 10], [`ip:${await hash(ip)}`, 50]] as const) {
       const { data, error } = await admin.rpc('consume_admin_login_attempt', { p_bucket: bucket, p_limit: limit });
       if (error) return respond({ error: 'Admin sign-in is unavailable. Contact the gym administrator.' }, 503);
-      if (data !== true) return respond({ error: 'Too many sign-in attempts. Please wait five minutes and try again.' }, 429);
+      if (data !== true) {
+        await admin.rpc('record_security_failure', { p_event: 'sign_in_throttled' });
+        return respond({ error: 'Too many sign-in attempts. Please wait five minutes and try again.' }, 429);
+      }
     }
     // Escape LIKE wildcards: this is an exact, case-insensitive username match.
     const pattern = username.replace(/[\\%_]/g, '\\$&');
@@ -60,6 +63,8 @@ export async function handleAdminLogin(request: Request) {
     const email = account?.user?.email || 'invalid-admin-login@example.invalid';
     const { data, error } = await login.auth.signInWithPassword({ email, password });
     if (error || !data.session || !profile || data.user?.id !== profile.id) {
+      const audit = await admin.rpc('record_security_failure', { p_event: 'username_sign_in_failed' });
+      if (audit.error) console.error('Username failure audit unavailable:', audit.error.code);
       if (data.session) await login.auth.signOut({ scope: 'local' });
       return respond({ error: invalidCredentials }, 401);
     }

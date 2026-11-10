@@ -203,7 +203,12 @@ async function handleLogin(event) {
             }
             result = await supabaseClient.auth.setSession(response.session);
         } else {
-            result = await supabaseClient.auth.signInWithPassword({ email, password });
+            const { data: response, error: loginError } = await supabaseClient.functions.invoke('member-password-login', { body: { email, password } });
+            if (loginError || !response?.session) {
+                let detail = response;
+                try { if (loginError?.context) detail = await loginError.context.json(); } catch {}
+                result = { data: {}, error: { message: detail?.error || 'Member sign-in is unavailable. Please try again.', code: detail?.code } };
+            } else result = await supabaseClient.auth.setSession(response.session);
         }
         const { data, error } = result;
 
@@ -292,6 +297,11 @@ async function handleLogin(event) {
                     const { error: logError } = await supabaseClient.rpc('admin_log_session_event', { p_event: 'signed_in' });
                     if (logError) console.error('Could not record staff/admin sign-in:', logError);
                 } catch (logError) { console.error('Could not record staff/admin sign-in:', logError); }
+            } else {
+                try {
+                    const { error: logError } = await supabaseClient.rpc('log_account_activity', { p_event: 'member_signed_in' });
+                    if (logError) console.error('Could not log member sign-in:', logError);
+                } catch (error) { console.error('Could not log member sign-in:', error); }
             }
             saveLoginSession(session, remember, email);
             return;

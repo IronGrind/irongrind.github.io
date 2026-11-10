@@ -35,7 +35,7 @@ async function signInPhoneOperator(event) {
         const { error: activationError } = await phoneOperatorClient.rpc('activate_attendance_session');
         if (activationError) throw new Error('Could not secure your sign-in session. Sign in again.');
         window.monitorAccountSession(phoneOperatorClient, async reason => {
-            await changePhoneOperator();
+            await changePhoneOperator(false);
             setPhoneAttendanceStatus(reason === 'expired' ? 'Your session ended. Sign in again to scan.' : 'Another attendance scanner signed in with this account. Sign in again to scan.', true);
         });
         const { data: { user }, error: userError } = await phoneOperatorClient.auth.getUser();
@@ -44,6 +44,8 @@ async function signInPhoneOperator(event) {
         if (profileError || !profile?.is_active || !['staff', 'admin'].includes(profile.role)) throw new Error('Active staff or admin account required.');
         phoneOperatorClient.auth.startAutoRefresh();
         phoneOperator = { id: user.id, name: profile.full_name || username };
+        const { error: auditError } = await phoneOperatorClient.rpc('log_account_activity', { p_event: 'scanner_signed_in' });
+        if (auditError) console.error('Could not log scanner sign-in:', auditError);
         document.body.classList.add('phone-operator-authenticated');
         document.getElementById('phoneOperatorSetup').hidden = true;
         document.getElementById('phoneOperatorIdentity').hidden = false;
@@ -55,8 +57,14 @@ async function signInPhoneOperator(event) {
     } catch (error) { setPhoneAttendanceStatus(error.message || 'Could not sign in.', true); }
     finally { document.getElementById('phoneOperatorPassword').value = ''; button.disabled = false; }
 }
-async function changePhoneOperator() {
+async function changePhoneOperator(logEvent = true) {
     await stopPhoneAttendanceScanner();
+    if (logEvent && phoneOperator) {
+        try {
+            const { error } = await phoneOperatorClient.rpc('log_account_activity', { p_event: 'scanner_sign_out_requested' });
+            if (error) console.error('Could not log scanner sign-out:', error);
+        } catch (error) { console.error('Could not log scanner sign-out:', error); }
+    }
     await phoneOperatorClient?.auth.signOut({ scope: 'local' });
     phoneOperator = null;
     pendingPhoneScan = null;

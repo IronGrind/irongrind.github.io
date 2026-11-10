@@ -4115,6 +4115,13 @@ function createMonthlyReportPDF(type, period) {
     return doc.output('blob');
 }
 
+async function logReportExportRequest() {
+    const client = window.ironGrindSupabase;
+    if (!client) return; // Local demonstration mode has no server audit log.
+    const { error } = await client.rpc('log_account_activity', { p_event: 'report_export_requested' });
+    if (error) throw new Error('Could not record the report export. Refresh your session and try again.');
+}
+
 async function exportAllReports() {
     let period;
     try { period = getSelectedReportPeriod(); }
@@ -4150,6 +4157,7 @@ async function exportAllReports() {
     };
     try {
         if (!types.length) throw new Error('Choose a valid report area.');
+        await logReportExportRequest();
         toast(`Preparing PDFs for ${period.label}…`, 'success');
         if (types.length === 1) {
             const type = types[0];
@@ -4183,7 +4191,7 @@ async function exportAllReports() {
     }
 }
 
-function downloadReportPDF(type) {
+async function downloadReportPDF(type) {
     let period;
     try { period = getSelectedReportPeriod(); }
     catch (error) { toast(error.message, 'error'); return; }
@@ -4198,6 +4206,7 @@ function downloadReportPDF(type) {
         sales: 'Sales Report'
     };
     try {
+        await logReportExportRequest();
         const pdfBlob = createMonthlyReportPDF(type, period);
         const url = URL.createObjectURL(pdfBlob);
         const link = document.createElement('a');

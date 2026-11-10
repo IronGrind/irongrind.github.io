@@ -5,8 +5,8 @@ import test from 'node:test';
 const source = fs.readFileSync('assets/js/staff.js', 'utf8');
 function load(name, context) {
     const start = source.search(new RegExp(`(?:async )?function ${name}\\(`));
-    const next = source.slice(start + 1).search(/\n(?:async )?function /);
-    vm.runInContext(source.slice(start, start + 1 + next), context);
+    const end = source.indexOf('\n}', start) + 2;
+    vm.runInContext(source.slice(start, end), context);
 }
 test('supplement groups use saved form and conservative legacy unit fallback', () => {
     const context = vm.createContext({}); load('staffSupplementForm', context);
@@ -43,4 +43,28 @@ test('cancelling membership confirmation prevents a payment write', async () => 
     load('submitStaffMembershipChange', context);
     await context.submitStaffMembershipChange('renewal');
     assert.match(prompt, /Ana/); assert.match(prompt, /PHP 800/); assert.match(prompt, /2026-12-10/);
+});
+
+test('attendance name lookup searches first and requires selection before recording', async () => {
+    const elements = { staffIdentifier: { value: 'Ana' }, staffAttendanceResults: { replaceChildren() {}, append() {} } };
+    let searched = false;
+    const context = vm.createContext({ staffBusy: false, staffSelectedAttendanceMember: null, staffAttendanceSearchRevision: 0,
+        document: { getElementById: id => elements[id] },
+        staffClient: { rpc: async (name, args) => { assert.equal(name, 'staff_search_members'); assert.equal(args.p_query, 'Ana'); searched = true; return { data: [] }; } },
+        recordStaffAttendance: () => { throw Error('Must select a member first'); }
+    });
+    load('submitStaffAttendanceLookup', context);
+    await context.submitStaffAttendanceLookup({ preventDefault() {} });
+    assert.ok(searched);
+});
+
+test('attendance records the selected member ID rather than their possibly shared name', async () => {
+    let recorded;
+    const context = vm.createContext({ staffBusy: false, staffSelectedAttendanceMember: { id: 'unique-member-id' }, pendingStaffScan: null,
+        document: { getElementById: () => ({ value: 'Ana' }) },
+        recordStaffAttendance: async id => { recorded = id; }, clearStaffAttendanceSelection() {}
+    });
+    load('submitStaffAttendanceLookup', context);
+    await context.submitStaffAttendanceLookup({ preventDefault() {} });
+    assert.equal(recorded, 'unique-member-id');
 });

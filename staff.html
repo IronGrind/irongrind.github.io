@@ -25,7 +25,9 @@
 <div class="panel-header"><h2 id="staffCheckinTitle"><i class="fas fa-qrcode" aria-hidden="true"></i> Check-in / check-out</h2></div>
 <p class="staff-help">Scan a member QR code to check them in. Scan it again when they leave to check them out.</p>
 <div class="staff-camera-area"><div class="staff-camera-icon"><i class="fas fa-qrcode" aria-hidden="true"></i></div><button id="startStaffCamera" class="btn-primary" type="button"><i class="fas fa-camera" aria-hidden="true"></i> Scan QR with camera</button></div>
-<form id="staffScanForm"><div class="form-group"><label for="staffIdentifier">Member QR</label><input id="staffIdentifier" required autocomplete="off" placeholder="Scan or enter a member QR code"></div><button class="btn-primary" type="submit"><i class="fas fa-check" aria-hidden="true"></i> Record attendance</button></form>
+<form id="staffScanForm"><div class="form-group"><label for="staffIdentifier">Member QR, name, or Gmail</label><input id="staffIdentifier" required autocomplete="off" placeholder="Scan QR or search by name / Gmail" aria-controls="staffAttendanceResults"></div><button id="staffAttendanceSubmit" class="btn-primary" type="submit">Find member</button></form>
+<div id="staffAttendanceResults" class="staff-member-results" aria-live="polite"></div>
+<div id="staffAttendanceSelected" class="staff-selected-member" hidden></div>
 <p id="staffStatus" class="staff-status" role="status" aria-live="polite"></p>
 </section>
 <section class="panel staff-history" aria-labelledby="staffHistoryTitle"><div class="panel-header"><h2 id="staffHistoryTitle"><i class="fas fa-clock" aria-hidden="true"></i> Attendance history</h2><button id="refreshStaffAttendance" class="btn-logout" type="button"><i class="fas fa-rotate" aria-hidden="true"></i> Refresh</button></div>
