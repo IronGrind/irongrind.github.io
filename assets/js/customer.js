@@ -225,8 +225,8 @@ function showMemberSettingsSection(section, focus = true) {
         panel.classList.toggle('active', active);
         if (active && focus) panel.focus({ preventScroll: true });
     });
-    const dialog = document.getElementById('memberSettingsDialog');
-    if (dialog) dialog.scrollTop = 0;
+    const content = document.querySelector('#memberSettingsDialog .member-settings-content');
+    if (content) content.scrollTop = 0;
 }
 function settingsFormMessage(message, type = '') {
     setSettingsStatus('memberSettingsStatus', message, type);

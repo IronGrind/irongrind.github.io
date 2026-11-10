@@ -347,3 +347,9 @@ Affected materials: Chapter 3 manuscript, chapter verifier, presentation slide c
 ### Complete DFD label clarification
 
 The user clarified that the visible store labels must be table names alone, for example `users`, `profiles` and `account_sessions`, without schema prefixes. Updated the standalone complete DFD generator and SVG accordingly. Schema-qualified names remain internal to validation against the documented baseline. All nine processes and existing table mappings are retained. Validation: regeneration and SVG XML/store-label checks. Documentation-only local correction; no database or deployment change.
+
+### Member settings dialog stability and responsive layout — November 10, 2026
+
+The member profile/settings window changed its apparent position when sections with different content heights were selected, and its width could exceed a narrow viewport. The dialog now keeps a steady responsive height and width; section content scrolls within the dialog, and section changes reset only that internal scroll position. The native modal continues to keep the dashboard behind it inactive. Tablet and phone layouts stack the section navigation and reduce form columns to prevent horizontal clipping. A stylesheet cache version was refreshed on `customer.html`.
+
+Affected modules: `customer.html`, `assets/css/style.css`, and `assets/js/customer.js`. Validation: source-level review and `git diff --check`; no browser/device interaction review was performed. This is a local UI change; no Vercel deployment is claimed. Database schema and Chapter 3 tables are unchanged.
