@@ -27,7 +27,7 @@ try{
  if(-not $captionTemplate -or -not $pictureTemplate -or -not $noteTemplate -or -not $securityCaption -or -not $securityPicture){throw 'Expected current DFD captions and source images were not found.'}
  $captionTemplate=$captionTemplate.CloneNode($true);$pictureTemplate=$pictureTemplate.CloneNode($true);$noteTemplate=$noteTemplate.CloneNode($true)
  foreach($paragraph in @($body.SelectNodes('w:p',$ns))){$value=(ParagraphText $paragraph).Trim();$target=ImageTarget $paragraph
-  if($target -eq 'media/detailed-dfd.png' -or $value -eq 'Figure 3a. Detailed Level 1 DFD - Individual Data Stores' -or $value -match '^Figure 3[a-i]\. Level 1 DFD - Process [1-9]\.0:'){
+  if($target -eq 'media/detailed-dfd.png' -or $value -eq 'Figure 3a. Detailed Level 1 DFD - Individual Data Stores' -or $value -match '^Figure 3[a-j]\. Level 1 DFD - Process [1-9]\.0:'){
    $next=$paragraph.NextSibling;$null=$body.RemoveChild($paragraph);if($next -and $next.SelectSingleNode('.//a:blip',$ns)){$null=$body.RemoveChild($next)}
   }
   elseif($value.StartsWith('Figure 3a expands the overview') -or $value.StartsWith('The nine process panels')){$null=$body.RemoveChild($paragraph)}

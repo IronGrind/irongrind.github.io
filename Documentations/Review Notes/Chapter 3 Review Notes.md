@@ -12,7 +12,7 @@ Per the adviser's requirement, Figure 3 now shows fourteen individual data-store
 
 ## Simplified DFD overview
 
-At the user's request, Chapter 3 Figure 3 now starts with an at-a-glance overview: the three actor groups, all nine system functions grouped into four areas, and five logical record categories. A visible note explains that these categories are for readability and do not combine physical tables. Figure 3a follows with the detailed operational DFD and its individual stores; Figure 3b keeps the trusted-device security stores as a focused supplement. The overview PNG was visually inspected and its copy inside Chapter 3.docx byte-matches the generated source. Full Word pagination and final thesis review are pending.
+At the user's request, Chapter 3 Figure 3 now starts with an at-a-glance overview: the three actor groups, all nine system functions grouped into four areas, and five logical record categories. A visible note explains that these categories are for readability and do not combine physical tables. Figures 3a-i follow as nine detailed operational DFD panels, one process per panel; Figure 3j keeps the trusted-device security stores as a focused supplement. The overview PNG was visually inspected and its copy inside Chapter 3.docx byte-matches the generated source. Full Word pagination and final thesis review are pending.
 
 ---
 
@@ -102,7 +102,7 @@ Reviewed against the checked-in system files on November 9, 2026 (Asia/Manila). 
 
 ## Diagram conventions
 
-The context and Level 1 DFD now use Gane-Sarson notation: numbered rounded process boxes with a separate number compartment, rectangular external entities, open-ended data stores with identifier compartments, and named directional flows. The Level 1 DFD uses five continuation panels (Figure 3a-e) for readability. The dedicated source is Chapter 3 Diagrams/gane-sarson.ps1, with its flow data in 03-gane-sarson-flows.json. Run that dedicated generator after the older general diagram generator to preserve the Gane-Sarson figures. It also updates their Word embeddings when Chapter 3 is closed.
+The context and Level 1 DFD use Gane-Sarson notation: numbered rounded process boxes with a separate number compartment, rectangular external entities, open-ended data stores with identifier compartments, and named directional flows. The operational Level 1 DFD now uses nine process panels (Figures 3a-i), one per function, to keep each actor/process/store flow distinct. Figure 3j supplements User Login with the three administrator security stores. The process-panel source is `Documentations/Tools/build-dfd-process-panels.mjs`; raster output uses `render-dfd-process-panels.ps1`, and `apply-clear-dfd.ps1` updates Word. The older five-panel output is superseded.
 
 The DFD uses repeated actor and data-store references in process lanes for readability. D0 is managed Auth storage; D10 is phone-pairing policy; D11 is pairing sessions; D13 is private attendance scan requests. D12 is reserved for the retained scan-event table and has no active frontend flow. D2-D8 in the reporting process groups the operational stores read for reports. Activity records are written through mutation triggers and logging functions. Grouped operations may be decomposed further if the professor requires a separate lower-level DFD for each workflow.
 
@@ -153,6 +153,12 @@ Verified locally: MFA UI fixtures (four), direct PostgreSQL access/enforcement f
 Prepared Defense/Capstone Study and Defense Notes.md, generated Source Code Map.md, separate Capstone Presentation.md and editable PowerPoint with eighteen slides and eighteen populated speaker-note sections, plus Admin MFA Setup and Deployment Guide.md. AGENTS.md now requires the notes and presentation to be updated with future material changes. Presentation generation/verification can be rerun after editing the slide source. Sources and implementation/deployment limitations are identified in the materials.
 
 Chapters 1 and 3 received scoped MFA addenda; no ERD/dictionary restructuring was needed. Backups: Review Backups/admin-mfa-20261110-112638. All 174 dictionary fields, 21 FK definitions, five unique fields and the existing figures remain verified. No actual setup secret or QR was inserted into documentation. Current-device approval/push notifications remain outside this increment. Deployment, supervised genuine-admin first enrollment and verified project-owner lost-factor recovery are documented prerequisites.
+
+## November 10, 2026 — DFD overlap correction
+
+The single crowded detailed Level 1 image has been replaced with nine Gane-Sarson process panels, Figures 3a-i, following the simplified overview. Each panel shows one numbered process, its participating role entities and individual data stores. Horizontal flow lanes show direction separately and do not cross; labels and symbols were visually reviewed in all nine rendered panels. The administrator login-security supplement is Figure 3j. The full diagram still represents the same nine processes and current operational stores, with D12 retained as reserved and without an active frontend dependency.
+
+Chapter 3's 23 tables were compared cell-by-cell with the pre-edit backup; all table content is unchanged. The document still has 18 dictionary tables, 201 dictionary fields, 27 foreign-key definitions and five individually unique fields. The Chapter 3 verifier passed after the Word image/relation update. Word pagination has not been visually rendered, so final page-break/print review remains pending. No application schema or database behavior changed.
 
 
 ## One trusted administrator browser ? November 10 local revision
