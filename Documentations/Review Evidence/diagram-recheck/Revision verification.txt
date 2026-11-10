@@ -1,0 +1,7 @@
+﻿PASS: all 26 requirements/dictionary tables byte-equivalent as XML; expected figure captions unique.
+PASS: embedded context, ERD and Gantt images match verified PNG files; no cropping or stale vector override.
+PASS: all unrelated package parts, including Agile, DFD, use-case and prototype image bytes, remain unchanged.
+PASS: full schema model has 21 tables / 224 fields / 33 foreign keys; public ERD retains 18 relationship edges.
+PASS: context, ERD and Gantt have dedicated landscape sections; all embedded image references resolve.
+PASS: generator/application-script preservation checks compare opening/Agile and entire DFD section XML with the backup.
+LIMIT: desktop Word automation did not complete; actual Word pagination and print layout are not certified. No completed PDF preview is claimed.
