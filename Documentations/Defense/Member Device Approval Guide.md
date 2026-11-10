@@ -1,6 +1,6 @@
 # Member browser registration and approval
 
-Status: local implementation only, as of November 10, 2026. Migration `20261110000006_member_device_approval.sql`, the `member-device-trust` Edge Function and matching browser changes have not been deployed or tested against the hosted project. No authenticator enrollment or code is added to member sign-in.
+Status: migration `20261110000006_member_device_approval.sql` and the `member-device-trust` and `member-password-login` Edge Functions were deployed to linked project `v1-IronGrind` on November 10, 2026. The live Vercel login and reset pages return HTTP 200. Safe unauthenticated probes confirmed member/admin login functions return 400 for empty credentials and device-trust functions return 401 without a session. Actual member login, first-browser enrollment, cross-device approval, and physical-device acceptance remain untested. No authenticator enrollment or code is added to member sign-in.
 
 ## Intended behavior
 
@@ -36,7 +36,7 @@ npx.cmd supabase functions deploy member-device-trust
 5. On a controlled member account, sign in once to enroll the first browser. Sign out and sign in again on the same browser. Then keep it open and connected while signing in from another browser; confirm Approve and Deny behavior, expiry, and loss of the displaced session.
 6. Confirm administrator and staff login, membership application recovery, and member logout still work. Record actual hosted results before describing the feature as deployed or verified.
 
-This feature does not require enabling or changing hosted TOTP settings. It does not add an authenticator code to members. Until the migration, function and website are deployed together, the hosted behavior remains unchanged.
+This feature does not require enabling or changing hosted TOTP settings. It does not add an authenticator code to members. The migration and Edge Functions are deployed and Vercel serves the matching client; complete the controlled member browser-acceptance steps above before claiming full workflow verification.
 
 ## Affected modules
 
@@ -47,4 +47,4 @@ This feature does not require enabling or changing hosted TOTP settings. It does
 
 ## Validation and limits
 
-This repository update is local. No migration push, Edge Function deployment, website deployment, browser acceptance test or database test is claimed. The first sign-in after rollout is initial enrollment: sessions predating this feature do not have a registered browser key, so an existing member must enroll once before subsequent browser transfers can be approved by that device. The member account continues to rely on its password when no current trusted browser can approve; this change does not add a second factor or claim phishing-resistant authentication.
+The migration and Edge Functions are deployed, Vercel serves the matching client, and the local SQL/browser fixtures passed. No real member credentials or physical browsers have been used for acceptance. The first sign-in after rollout is initial enrollment: sessions predating this feature do not have a registered browser key, so an existing member must enroll once before subsequent browser transfers can be approved by that device. The member account continues to rely on its password when no current trusted browser can approve; this change does not add a second factor or claim phishing-resistant authentication.
