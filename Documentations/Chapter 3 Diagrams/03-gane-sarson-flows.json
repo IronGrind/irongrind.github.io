@@ -2,7 +2,7 @@
     {
         "Id":  "1.0",
         "Name":  "Authenticate and authorize",
-        "Output":  "Access result and permitted role",
+        "Output":  "Access and device-approval result",
         "Stores":  [
                        [
                            "D0",
@@ -27,6 +27,24 @@
                            "activity_logs",
                            "Session event",
                            ""
+                       ],
+                       [
+                           "D15",
+                           "admin_login_approvals",
+                           "Approval request / decision",
+                           "Pending approval details"
+                       ],
+                       [
+                           "D16",
+                           "admin_trusted_devices",
+                           "Trusted public key",
+                           "Trust state"
+                       ],
+                       [
+                           "D17",
+                           "admin_device_sessions",
+                           "Challenge / authorization",
+                           "Authorized session boundary"
                        ]
                    ],
         "Actor":  "Member / Applicant; Administrator; Authorized Staff",
@@ -192,19 +210,19 @@
                        ],
                        [
                            "D10",
-                           "pairing policy",
+                           "mobile attendance pairing policy",
                            "Admin pairing settings",
                            "Phone-pairing policy"
                        ],
                        [
                            "D11",
-                           "pairing sessions",
+                           "mobile attendance scan sessions",
                            "Paired-device details",
                            "Paired phone authorization"
                        ],
                        [
                            "D13",
-                           "private scan requests",
+                           "private attendance scan requests",
                            "Processed scan result",
                            "Previous request result"
                        ],
@@ -278,10 +296,46 @@
         "Output":  "Report preview / PDF / ZIP",
         "Stores":  [
                        [
-                           "D2-D8",
-                           "Operational stores",
-                           "",
-                           "Report source records"
+                           "D2",
+                           "membership_applications",
+                           "Application report records",
+                           ""
+                       ],
+                       [
+                           "D3",
+                           "members",
+                           "Member report records",
+                           ""
+                       ],
+                       [
+                           "D4",
+                           "attendance",
+                           "Attendance report records",
+                           ""
+                       ],
+                       [
+                           "D5",
+                           "products",
+                           "Inventory report records",
+                           ""
+                       ],
+                       [
+                           "D6",
+                           "sales",
+                           "Sale report records",
+                           ""
+                       ],
+                       [
+                           "D7",
+                           "sale_items",
+                           "Sale item report records",
+                           ""
+                       ],
+                       [
+                           "D8",
+                           "membership_history",
+                           "Membership history records",
+                           ""
                        ]
                    ],
         "Actor":  "Administrator",
