@@ -267,4 +267,4 @@ A screenshot showed the Store password field overlapping its submit button. The 
 
 ### Activity Logs role filter
 
-The Activity Logs panel now includes an Account type selector for all users, members, staff and administrators. It filters the existing `activity_logs.actor_role` column alongside the account-name, category, action and date filters, preserving server-side pagination and the existing RLS-protected query. No schema change is needed. Source inspection and `git diff --check` passed; browser validation and website deployment remain pending.
+The Activity Logs panel now includes an Account type selector for all users, members, staff and administrators. It filters the existing `activity_logs.actor_role` column alongside the account-name, category, action and date filters, preserving server-side pagination and the existing RLS-protected query. Dropdown/date changes apply immediately; account-name typing is debounced. The redundant Apply filters button was removed; Reset filters remains. No schema change is needed. Source inspection and `git diff --check` passed; browser validation and website deployment remain pending.

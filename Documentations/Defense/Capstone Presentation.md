@@ -122,7 +122,7 @@ Speaker notes: This latest local increment supersedes the earlier approval-only 
 
 Speaker notes: Failed attempts are unverified events, not proof that the named account owner acted. Export requests do not prove files were saved. Custom logging does not mirror every MFA Auth audit event. Routine page views/searches are not comprehensive activity events. Main dashboard and scanner session ownership remain separate.
 
-The local Activity Logs UI now adds a server-side actor-role filter for members, staff and administrators; “All users” remains the default and includes other recorded/system actors. This is a client-only filter over the existing actor_role field, with no schema migration. Browser validation and website deployment remain pending.
+The local Activity Logs UI now adds an actor-role filter for members, staff and administrators; “All users” remains the default and includes other recorded/system actors. Dropdown and date changes apply immediately, while account-name typing is debounced. The Apply filters button was removed and Reset filters remains. This is a client-only filter over the existing actor_role field, with no schema migration. Browser validation and website deployment remain pending.
 
 ## Slide 16 — Testing and limitations
 - Unit and simulated UI tests cover selected workflows

@@ -3,6 +3,7 @@
     const pageSize = 50;
     let page = 0;
     let requestNumber = 0;
+    let actorSearchTimer = 0;
     const areas = { profiles: 'Accounts', members: 'Members', membership_applications: 'Applications', attendance: 'Attendance', products: 'Products', sales: 'Sales', sale_items: 'Sale items', membership_history: 'Membership history', session: 'Session', mobile_attendance_scan_sessions: 'Phone pairings' };
     const actions = { insert: 'Created', update: 'Updated', delete: 'Deleted', check_in: 'Checked in', check_out: 'Checked out', signed_in: 'Signed in', sign_out_requested: 'Requested sign-out', approved: 'Approved', rejected: 'Rejected', archived: 'Archived', restored: 'Restored', renewal: 'Renewed', expired: 'Expired', plan_change: 'Changed plan' };
     const escape = value => String(value ?? '').replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
@@ -130,8 +131,23 @@
             }
         }
     };
-    document.getElementById('activityFilters').addEventListener('submit', event => { event.preventDefault(); loadActivityLogs(); });
-    document.getElementById('activityFilters').addEventListener('reset', () => { window.setTimeout(() => loadActivityLogs(), 0); });
+    const filters = document.getElementById('activityFilters');
+    filters.querySelectorAll('select, input[type="date"]').forEach(control => {
+        control.addEventListener('change', () => loadActivityLogs());
+    });
+    document.getElementById('activityActor').addEventListener('input', () => {
+        window.clearTimeout(actorSearchTimer);
+        actorSearchTimer = window.setTimeout(() => loadActivityLogs(), 300);
+    });
+    filters.addEventListener('submit', event => {
+        event.preventDefault();
+        window.clearTimeout(actorSearchTimer);
+        loadActivityLogs();
+    });
+    document.getElementById('activityFilters').addEventListener('reset', () => {
+        window.clearTimeout(actorSearchTimer);
+        window.setTimeout(() => loadActivityLogs(), 0);
+    });
     document.getElementById('activityPrevious').addEventListener('click', () => loadActivityLogs(page - 1));
     document.getElementById('activityNext').addEventListener('click', () => loadActivityLogs(page + 1));
 })();
