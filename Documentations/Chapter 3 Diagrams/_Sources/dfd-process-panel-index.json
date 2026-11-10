@@ -1,0 +1,1205 @@
+[
+  {
+    "panel": 1,
+    "processId": "1.0",
+    "name": "Authenticate and authorize",
+    "actors": [
+      [
+        "Member / Applicant",
+        "Credentials / session",
+        "Own access result"
+      ],
+      [
+        "Administrator",
+        "Credentials / session",
+        "Administrator access"
+      ],
+      [
+        "Authorized Staff",
+        "Credentials / session",
+        "Staff access"
+      ]
+    ],
+    "stores": [
+      [
+        "D0",
+        "Auth accounts",
+        "Account / session data",
+        "Identity / session state"
+      ],
+      [
+        "D1",
+        "profiles",
+        "",
+        "Role and active status"
+      ],
+      [
+        "D14",
+        "private account sessions",
+        "Selected session scope",
+        "Session ownership"
+      ],
+      [
+        "D9",
+        "activity_logs",
+        "Session event",
+        ""
+      ],
+      [
+        "D15",
+        "private.admin_login_approvals",
+        "Approval request / decision",
+        "Pending approval details"
+      ],
+      [
+        "D16",
+        "private.admin_trusted_devices",
+        "Trusted public key",
+        "Trust state"
+      ],
+      [
+        "D17",
+        "private.admin_device_sessions",
+        "Challenge / authorization",
+        "Session boundary"
+      ]
+    ],
+    "actorLabels": [
+      [
+        "Credentials / session request",
+        "Sign-in result / permitted role"
+      ],
+      [
+        "Credentials / session request",
+        "Administrator access result"
+      ],
+      [
+        "Credentials / session request",
+        "Staff access result"
+      ]
+    ],
+    "storeLabels": {
+      "D0": [
+        "Account / session records",
+        "Identity / session state"
+      ],
+      "D1": [
+        "Profile / role records",
+        "Role / active status"
+      ],
+      "D2": [
+        "Application / review data",
+        "Submitted applications"
+      ],
+      "D3": [
+        "Member / membership data",
+        "Current member data"
+      ],
+      "D4": [
+        "Visit / time records",
+        "Attendance history"
+      ],
+      "D5": [
+        "Product / stock changes",
+        "Catalog / stock data"
+      ],
+      "D6": [
+        "Transaction records",
+        "Permitted sales data"
+      ],
+      "D7": [
+        "Sale-item records",
+        "Permitted line items"
+      ],
+      "D8": [
+        "Membership changes",
+        "Membership history"
+      ],
+      "D9": [
+        "Recorded operation event",
+        "Filtered activity records"
+      ],
+      "D10": [
+        "Pairing-policy changes",
+        "Phone-pairing policy"
+      ],
+      "D11": [
+        "Pairing-session changes",
+        "Paired phone sessions"
+      ],
+      "D13": [
+        "Scan request / result",
+        "Previous scan result"
+      ],
+      "D14": [
+        "Selected session scope",
+        "Session ownership"
+      ],
+      "D15": [
+        "Approval request / decision",
+        "Pending approval details"
+      ],
+      "D16": [
+        "Trusted public key",
+        "Trust state"
+      ],
+      "D17": [
+        "Challenge / authorization",
+        "Session boundary"
+      ]
+    }
+  },
+  {
+    "panel": 2,
+    "processId": "2.0",
+    "name": "Review online applications",
+    "actors": [
+      [
+        "Member / Applicant",
+        "Registration details",
+        "Application status"
+      ],
+      [
+        "Administrator",
+        "Review decision",
+        "Application / result"
+      ],
+      [
+        "Authorized Staff",
+        "Review decision",
+        "Limited request / result"
+      ]
+    ],
+    "stores": [
+      [
+        "D2",
+        "membership_applications",
+        "Application / review status",
+        "Submitted application"
+      ],
+      [
+        "D3",
+        "members",
+        "Approved member record",
+        ""
+      ],
+      [
+        "D1",
+        "profiles",
+        "",
+        "Reviewer role / active status"
+      ],
+      [
+        "D6",
+        "sales",
+        "Membership transaction",
+        ""
+      ],
+      [
+        "D7",
+        "sale_items",
+        "Membership charge",
+        ""
+      ],
+      [
+        "D9",
+        "activity_logs",
+        "Review / change event",
+        ""
+      ]
+    ],
+    "actorLabels": [
+      [
+        "Registration details",
+        "Application status"
+      ],
+      [
+        "Review decision",
+        "Application / result"
+      ],
+      [
+        "Review decision",
+        "Limited request / result"
+      ]
+    ],
+    "storeLabels": {
+      "D0": [
+        "Account / session records",
+        "Identity / session state"
+      ],
+      "D1": [
+        "Profile / role records",
+        "Role / active status"
+      ],
+      "D2": [
+        "Application / review data",
+        "Submitted applications"
+      ],
+      "D3": [
+        "Member / membership data",
+        "Current member data"
+      ],
+      "D4": [
+        "Visit / time records",
+        "Attendance history"
+      ],
+      "D5": [
+        "Product / stock changes",
+        "Catalog / stock data"
+      ],
+      "D6": [
+        "Transaction records",
+        "Permitted sales data"
+      ],
+      "D7": [
+        "Sale-item records",
+        "Permitted line items"
+      ],
+      "D8": [
+        "Membership changes",
+        "Membership history"
+      ],
+      "D9": [
+        "Recorded operation event",
+        "Filtered activity records"
+      ],
+      "D10": [
+        "Pairing-policy changes",
+        "Phone-pairing policy"
+      ],
+      "D11": [
+        "Pairing-session changes",
+        "Paired phone sessions"
+      ],
+      "D13": [
+        "Scan request / result",
+        "Previous scan result"
+      ],
+      "D14": [
+        "Selected session scope",
+        "Session ownership"
+      ],
+      "D15": [
+        "Approval request / decision",
+        "Pending approval details"
+      ],
+      "D16": [
+        "Trusted public key",
+        "Trust state"
+      ],
+      "D17": [
+        "Challenge / authorization",
+        "Session boundary"
+      ]
+    }
+  },
+  {
+    "panel": 3,
+    "processId": "3.0",
+    "name": "User management",
+    "actors": [
+      [
+        "Administrator",
+        "Profile query; counter / staff controls",
+        "Read-only profile; operation result"
+      ],
+      [
+        "Authorized Staff",
+        "Walk-in; renewal; plan change",
+        "Limited lookup; counter result"
+      ],
+      [
+        "Member / Applicant",
+        "Own profile query / changes",
+        "Own personal details"
+      ]
+    ],
+    "stores": [
+      [
+        "D0",
+        "Auth accounts",
+        "New member / staff account",
+        ""
+      ],
+      [
+        "D1",
+        "profiles",
+        "Own name / account provisioning",
+        "Own / permitted account"
+      ],
+      [
+        "D3",
+        "members",
+        "Own edits / membership operations",
+        "Own record / limited lookup"
+      ],
+      [
+        "D8",
+        "membership_history",
+        "Renewal / plan-change event",
+        ""
+      ],
+      [
+        "D6",
+        "sales",
+        "Membership transaction",
+        ""
+      ],
+      [
+        "D7",
+        "sale_items",
+        "Membership charge",
+        ""
+      ],
+      [
+        "D9",
+        "activity_logs",
+        "Operator change event",
+        ""
+      ]
+    ],
+    "actorLabels": [
+      [
+        "Profile / staff controls",
+        "Profile / operation result"
+      ],
+      [
+        "Walk-in / renewal / plan change",
+        "Limited lookup / confirmation"
+      ],
+      [
+        "Own profile request / changes",
+        "Own profile details"
+      ]
+    ],
+    "storeLabels": {
+      "D0": [
+        "Account / session records",
+        "Identity / session state"
+      ],
+      "D1": [
+        "Profile / role records",
+        "Role / active status"
+      ],
+      "D2": [
+        "Application / review data",
+        "Submitted applications"
+      ],
+      "D3": [
+        "Member / membership data",
+        "Current member data"
+      ],
+      "D4": [
+        "Visit / time records",
+        "Attendance history"
+      ],
+      "D5": [
+        "Product / stock changes",
+        "Catalog / stock data"
+      ],
+      "D6": [
+        "Transaction records",
+        "Permitted sales data"
+      ],
+      "D7": [
+        "Sale-item records",
+        "Permitted line items"
+      ],
+      "D8": [
+        "Membership changes",
+        "Membership history"
+      ],
+      "D9": [
+        "Recorded operation event",
+        "Filtered activity records"
+      ],
+      "D10": [
+        "Pairing-policy changes",
+        "Phone-pairing policy"
+      ],
+      "D11": [
+        "Pairing-session changes",
+        "Paired phone sessions"
+      ],
+      "D13": [
+        "Scan request / result",
+        "Previous scan result"
+      ],
+      "D14": [
+        "Selected session scope",
+        "Session ownership"
+      ],
+      "D15": [
+        "Approval request / decision",
+        "Pending approval details"
+      ],
+      "D16": [
+        "Trusted public key",
+        "Trust state"
+      ],
+      "D17": [
+        "Challenge / authorization",
+        "Session boundary"
+      ]
+    }
+  },
+  {
+    "panel": 4,
+    "processId": "4.0",
+    "name": "Review online renewals",
+    "actors": [
+      [
+        "Member / Applicant",
+        "Renewal request",
+        "Own renewal status"
+      ],
+      [
+        "Administrator",
+        "Renewal decision",
+        "Pending request / result"
+      ],
+      [
+        "Authorized Staff",
+        "Renewal decision",
+        "Limited request / result"
+      ]
+    ],
+    "stores": [
+      [
+        "D2",
+        "membership_applications",
+        "Renewal / review status",
+        "Renewal request"
+      ],
+      [
+        "D3",
+        "members",
+        "Renewed membership",
+        "Current dates and status"
+      ],
+      [
+        "D8",
+        "membership_history",
+        "Renewal event",
+        ""
+      ],
+      [
+        "D6",
+        "sales",
+        "Membership transaction",
+        ""
+      ],
+      [
+        "D7",
+        "sale_items",
+        "Membership charge",
+        ""
+      ],
+      [
+        "D9",
+        "activity_logs",
+        "Review / renewal event",
+        ""
+      ]
+    ],
+    "actorLabels": [
+      [
+        "Renewal request",
+        "Renewal status"
+      ],
+      [
+        "Renewal review decision",
+        "Request / result"
+      ],
+      [
+        "Renewal review decision",
+        "Limited request / result"
+      ]
+    ],
+    "storeLabels": {
+      "D0": [
+        "Account / session records",
+        "Identity / session state"
+      ],
+      "D1": [
+        "Profile / role records",
+        "Role / active status"
+      ],
+      "D2": [
+        "Application / review data",
+        "Submitted applications"
+      ],
+      "D3": [
+        "Member / membership data",
+        "Current member data"
+      ],
+      "D4": [
+        "Visit / time records",
+        "Attendance history"
+      ],
+      "D5": [
+        "Product / stock changes",
+        "Catalog / stock data"
+      ],
+      "D6": [
+        "Transaction records",
+        "Permitted sales data"
+      ],
+      "D7": [
+        "Sale-item records",
+        "Permitted line items"
+      ],
+      "D8": [
+        "Membership changes",
+        "Membership history"
+      ],
+      "D9": [
+        "Recorded operation event",
+        "Filtered activity records"
+      ],
+      "D10": [
+        "Pairing-policy changes",
+        "Phone-pairing policy"
+      ],
+      "D11": [
+        "Pairing-session changes",
+        "Paired phone sessions"
+      ],
+      "D13": [
+        "Scan request / result",
+        "Previous scan result"
+      ],
+      "D14": [
+        "Selected session scope",
+        "Session ownership"
+      ],
+      "D15": [
+        "Approval request / decision",
+        "Pending approval details"
+      ],
+      "D16": [
+        "Trusted public key",
+        "Trust state"
+      ],
+      "D17": [
+        "Challenge / authorization",
+        "Session boundary"
+      ]
+    }
+  },
+  {
+    "panel": 5,
+    "processId": "5.0",
+    "name": "Record and view attendance",
+    "actors": [
+      [
+        "Administrator",
+        "QR; visit query; pairing controls",
+        "Visits; pairing / scan results"
+      ],
+      [
+        "Authorized Staff",
+        "QR / permitted visit query",
+        "Permitted visits / scan result"
+      ],
+      [
+        "Member / Applicant",
+        "Own attendance query",
+        "Own visit history"
+      ]
+    ],
+    "stores": [
+      [
+        "D3",
+        "members",
+        "",
+        "Member and status"
+      ],
+      [
+        "D4",
+        "attendance",
+        "Visit and operator timestamps",
+        "Open visit"
+      ],
+      [
+        "D10",
+        "pairing policy",
+        "Admin pairing settings",
+        "Phone-pairing policy"
+      ],
+      [
+        "D11",
+        "pairing sessions",
+        "Paired-device details",
+        "Paired phone authorization"
+      ],
+      [
+        "D13",
+        "private scan requests",
+        "Processed scan result",
+        "Previous request result"
+      ],
+      [
+        "D9",
+        "activity_logs",
+        "Attendance event",
+        ""
+      ]
+    ],
+    "actorLabels": [
+      [
+        "QR / pairing / visit query",
+        "Visits / pairing / scan result"
+      ],
+      [
+        "QR / permitted visit query",
+        "Permitted visit / scan result"
+      ],
+      [
+        "Own attendance query",
+        "Own visit history"
+      ]
+    ],
+    "storeLabels": {
+      "D0": [
+        "Account / session records",
+        "Identity / session state"
+      ],
+      "D1": [
+        "Profile / role records",
+        "Role / active status"
+      ],
+      "D2": [
+        "Application / review data",
+        "Submitted applications"
+      ],
+      "D3": [
+        "Member / membership data",
+        "Current member data"
+      ],
+      "D4": [
+        "Visit / time records",
+        "Attendance history"
+      ],
+      "D5": [
+        "Product / stock changes",
+        "Catalog / stock data"
+      ],
+      "D6": [
+        "Transaction records",
+        "Permitted sales data"
+      ],
+      "D7": [
+        "Sale-item records",
+        "Permitted line items"
+      ],
+      "D8": [
+        "Membership changes",
+        "Membership history"
+      ],
+      "D9": [
+        "Recorded operation event",
+        "Filtered activity records"
+      ],
+      "D10": [
+        "Pairing-policy changes",
+        "Phone-pairing policy"
+      ],
+      "D11": [
+        "Pairing-session changes",
+        "Paired phone sessions"
+      ],
+      "D13": [
+        "Scan request / result",
+        "Previous scan result"
+      ],
+      "D14": [
+        "Selected session scope",
+        "Session ownership"
+      ],
+      "D15": [
+        "Approval request / decision",
+        "Pending approval details"
+      ],
+      "D16": [
+        "Trusted public key",
+        "Trust state"
+      ],
+      "D17": [
+        "Challenge / authorization",
+        "Session boundary"
+      ]
+    }
+  },
+  {
+    "panel": 6,
+    "processId": "6.0",
+    "name": "Manage inventory and read catalog",
+    "actors": [
+      [
+        "Administrator",
+        "Product / stock changes",
+        "Catalog; stock / alerts"
+      ],
+      [
+        "Authorized Staff",
+        "Sales catalog query",
+        "Permitted product catalog"
+      ],
+      [
+        "Member / Applicant",
+        "Active catalog query",
+        "Active product catalog"
+      ]
+    ],
+    "stores": [
+      [
+        "D5",
+        "products",
+        "Admin product / stock update",
+        "Permitted catalog / stock"
+      ],
+      [
+        "D9",
+        "activity_logs",
+        "Product mutation event",
+        ""
+      ]
+    ],
+    "actorLabels": [
+      [
+        "Product / stock changes",
+        "Catalog / stock / alerts"
+      ],
+      [
+        "Sales catalog query",
+        "Permitted catalog"
+      ],
+      [
+        "Active catalog query",
+        "Active products"
+      ]
+    ],
+    "storeLabels": {
+      "D0": [
+        "Account / session records",
+        "Identity / session state"
+      ],
+      "D1": [
+        "Profile / role records",
+        "Role / active status"
+      ],
+      "D2": [
+        "Application / review data",
+        "Submitted applications"
+      ],
+      "D3": [
+        "Member / membership data",
+        "Current member data"
+      ],
+      "D4": [
+        "Visit / time records",
+        "Attendance history"
+      ],
+      "D5": [
+        "Product / stock changes",
+        "Catalog / stock data"
+      ],
+      "D6": [
+        "Transaction records",
+        "Permitted sales data"
+      ],
+      "D7": [
+        "Sale-item records",
+        "Permitted line items"
+      ],
+      "D8": [
+        "Membership changes",
+        "Membership history"
+      ],
+      "D9": [
+        "Recorded operation event",
+        "Filtered activity records"
+      ],
+      "D10": [
+        "Pairing-policy changes",
+        "Phone-pairing policy"
+      ],
+      "D11": [
+        "Pairing-session changes",
+        "Paired phone sessions"
+      ],
+      "D13": [
+        "Scan request / result",
+        "Previous scan result"
+      ],
+      "D14": [
+        "Selected session scope",
+        "Session ownership"
+      ],
+      "D15": [
+        "Approval request / decision",
+        "Pending approval details"
+      ],
+      "D16": [
+        "Trusted public key",
+        "Trust state"
+      ],
+      "D17": [
+        "Challenge / authorization",
+        "Session boundary"
+      ]
+    }
+  },
+  {
+    "panel": 7,
+    "processId": "7.0",
+    "name": "Record product sale",
+    "actors": [
+      [
+        "Administrator",
+        "Sale details / transaction query",
+        "Transaction / result"
+      ],
+      [
+        "Authorized Staff",
+        "Sale details / own sales query",
+        "Sale result / own sales"
+      ]
+    ],
+    "stores": [
+      [
+        "D5",
+        "products",
+        "Deducted stock",
+        "Products, units and prices"
+      ],
+      [
+        "D6",
+        "sales",
+        "Product transaction",
+        "Permitted transaction records"
+      ],
+      [
+        "D7",
+        "sale_items",
+        "Item quantities and amounts",
+        "Permitted line items"
+      ],
+      [
+        "D9",
+        "activity_logs",
+        "Sale event",
+        ""
+      ]
+    ],
+    "actorLabels": [
+      [
+        "Sale / transaction query",
+        "Transaction / result"
+      ],
+      [
+        "Sale details / own sales query",
+        "Sale result / own sales"
+      ]
+    ],
+    "storeLabels": {
+      "D0": [
+        "Account / session records",
+        "Identity / session state"
+      ],
+      "D1": [
+        "Profile / role records",
+        "Role / active status"
+      ],
+      "D2": [
+        "Application / review data",
+        "Submitted applications"
+      ],
+      "D3": [
+        "Member / membership data",
+        "Current member data"
+      ],
+      "D4": [
+        "Visit / time records",
+        "Attendance history"
+      ],
+      "D5": [
+        "Product / stock changes",
+        "Catalog / stock data"
+      ],
+      "D6": [
+        "Transaction records",
+        "Permitted sales data"
+      ],
+      "D7": [
+        "Sale-item records",
+        "Permitted line items"
+      ],
+      "D8": [
+        "Membership changes",
+        "Membership history"
+      ],
+      "D9": [
+        "Recorded operation event",
+        "Filtered activity records"
+      ],
+      "D10": [
+        "Pairing-policy changes",
+        "Phone-pairing policy"
+      ],
+      "D11": [
+        "Pairing-session changes",
+        "Paired phone sessions"
+      ],
+      "D13": [
+        "Scan request / result",
+        "Previous scan result"
+      ],
+      "D14": [
+        "Selected session scope",
+        "Session ownership"
+      ],
+      "D15": [
+        "Approval request / decision",
+        "Pending approval details"
+      ],
+      "D16": [
+        "Trusted public key",
+        "Trust state"
+      ],
+      "D17": [
+        "Challenge / authorization",
+        "Session boundary"
+      ]
+    }
+  },
+  {
+    "panel": 8,
+    "processId": "8.0",
+    "name": "Generate reports",
+    "actors": [
+      [
+        "Administrator",
+        "Report type / period",
+        "Report preview / export"
+      ]
+    ],
+    "stores": [
+      [
+        "D2",
+        "membership_applications",
+        "",
+        "Application report records"
+      ],
+      [
+        "D3",
+        "members",
+        "",
+        "Member report records"
+      ],
+      [
+        "D4",
+        "attendance",
+        "",
+        "Attendance report records"
+      ],
+      [
+        "D5",
+        "products",
+        "",
+        "Product report records"
+      ],
+      [
+        "D6",
+        "sales",
+        "",
+        "Sales report records"
+      ],
+      [
+        "D7",
+        "sale_items",
+        "",
+        "Sale-item report records"
+      ],
+      [
+        "D8",
+        "membership_history",
+        "",
+        "Membership-history records"
+      ]
+    ],
+    "actorLabels": [
+      [
+        "Report type / period",
+        "Report preview / export"
+      ]
+    ],
+    "storeLabels": {
+      "D0": [
+        "Account / session records",
+        "Identity / session state"
+      ],
+      "D1": [
+        "Profile / role records",
+        "Role / active status"
+      ],
+      "D2": [
+        "Application / review data",
+        "Submitted applications"
+      ],
+      "D3": [
+        "Member / membership data",
+        "Current member data"
+      ],
+      "D4": [
+        "Visit / time records",
+        "Attendance history"
+      ],
+      "D5": [
+        "Product / stock changes",
+        "Catalog / stock data"
+      ],
+      "D6": [
+        "Transaction records",
+        "Permitted sales data"
+      ],
+      "D7": [
+        "Sale-item records",
+        "Permitted line items"
+      ],
+      "D8": [
+        "Membership changes",
+        "Membership history"
+      ],
+      "D9": [
+        "Recorded operation event",
+        "Filtered activity records"
+      ],
+      "D10": [
+        "Pairing-policy changes",
+        "Phone-pairing policy"
+      ],
+      "D11": [
+        "Pairing-session changes",
+        "Paired phone sessions"
+      ],
+      "D13": [
+        "Scan request / result",
+        "Previous scan result"
+      ],
+      "D14": [
+        "Selected session scope",
+        "Session ownership"
+      ],
+      "D15": [
+        "Approval request / decision",
+        "Pending approval details"
+      ],
+      "D16": [
+        "Trusted public key",
+        "Trust state"
+      ],
+      "D17": [
+        "Challenge / authorization",
+        "Session boundary"
+      ]
+    }
+  },
+  {
+    "panel": 9,
+    "processId": "9.0",
+    "name": "Activity logs",
+    "actors": [
+      [
+        "Administrator",
+        "Activity filters / page query",
+        "Filtered activity records"
+      ]
+    ],
+    "stores": [
+      [
+        "D9",
+        "activity_logs",
+        "",
+        "Filtered activity records"
+      ]
+    ],
+    "actorLabels": [
+      [
+        "Activity filters / page",
+        "Filtered activity results"
+      ]
+    ],
+    "storeLabels": {
+      "D0": [
+        "Account / session records",
+        "Identity / session state"
+      ],
+      "D1": [
+        "Profile / role records",
+        "Role / active status"
+      ],
+      "D2": [
+        "Application / review data",
+        "Submitted applications"
+      ],
+      "D3": [
+        "Member / membership data",
+        "Current member data"
+      ],
+      "D4": [
+        "Visit / time records",
+        "Attendance history"
+      ],
+      "D5": [
+        "Product / stock changes",
+        "Catalog / stock data"
+      ],
+      "D6": [
+        "Transaction records",
+        "Permitted sales data"
+      ],
+      "D7": [
+        "Sale-item records",
+        "Permitted line items"
+      ],
+      "D8": [
+        "Membership changes",
+        "Membership history"
+      ],
+      "D9": [
+        "Recorded operation event",
+        "Filtered activity records"
+      ],
+      "D10": [
+        "Pairing-policy changes",
+        "Phone-pairing policy"
+      ],
+      "D11": [
+        "Pairing-session changes",
+        "Paired phone sessions"
+      ],
+      "D13": [
+        "Scan request / result",
+        "Previous scan result"
+      ],
+      "D14": [
+        "Selected session scope",
+        "Session ownership"
+      ],
+      "D15": [
+        "Approval request / decision",
+        "Pending approval details"
+      ],
+      "D16": [
+        "Trusted public key",
+        "Trust state"
+      ],
+      "D17": [
+        "Challenge / authorization",
+        "Session boundary"
+      ]
+    }
+  }
+]
