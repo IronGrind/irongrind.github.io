@@ -10,9 +10,9 @@ Generated from current source definitions. Use alongside the module explanations
 
 | Function / exported handler | Line |
 |---|---:|
-| actionLabel | 32 |
-| renderLog | 41 |
-| loadActivityLogs | 69 |
+| actionLabel | 33 |
+| renderLog | 42 |
+| loadActivityLogs | 70 |
 
 ### assets/js/admin-access.js
 
@@ -22,6 +22,19 @@ Generated from current source definitions. Use alongside the module explanations
 |---|---:|
 | Module initialization and event handlers; read source | 1 |
 
+### assets/js/admin-device-approval.js
+
+[Open source](../../assets/js/admin-device-approval.js)
+
+| Function / exported handler | Line |
+|---|---:|
+| waitForAdminDeviceApproval | 2 |
+| finish | 19 |
+| leave | 23 |
+| stopAdminApprovalNotifications | 49 |
+| startAdminApprovalNotifications | 50 |
+| refresh | 53 |
+
 ### assets/js/admin-mfa.js
 
 [Open source](../../assets/js/admin-mfa.js)
@@ -29,7 +42,7 @@ Generated from current source definitions. Use alongside the module explanations
 | Function / exported handler | Line |
 |---|---:|
 | requireAdminMfa | 2 |
-| finish | 50 |
+| finish | 51 |
 
 ### assets/js/admin.js
 
@@ -237,34 +250,34 @@ Generated from current source definitions. Use alongside the module explanations
 |---|---:|
 | requirePhoneOperator | 6 |
 | signInPhoneOperator | 17 |
-| changePhoneOperator | 62 |
-| setPhoneAttendanceStatus | 88 |
-| getPhoneCameraErrorMessage | 95 |
-| setPhoneAttendanceMode | 108 |
-| isPhoneCameraAvailable | 115 |
-| createPhoneQrScanner | 119 |
-| setPhoneCameraButton | 136 |
-| setPhoneNextScanButton | 144 |
-| confirmPhoneCameraPreview | 151 |
-| getPhoneDeviceLabel | 166 |
-| registerPhoneAttendanceDevice | 181 |
-| getAttendancePhoneIdentity | 193 |
-| requestPhoneModelSetup | 202 |
-| savePhoneModelAndContinue | 214 |
-| savePhonePairing | 262 |
-| readPhonePairing | 271 |
-| clearPhonePairing | 287 |
-| acceptPhonePairingLink | 292 |
-| phonePairingRecoveryMessage | 300 |
-| startPhonePairingScanner | 307 |
-| startPhoneMemberScanner | 408 |
-| submitPhoneMemberScan | 477 |
-| stopPhoneAttendanceScanner | 511 |
-| togglePhoneAttendanceCamera | 542 |
-| resumePhoneAttendanceScanner | 574 |
-| installPhoneAttendanceApp | 585 |
-| configurePhoneAppInstall | 597 |
-| startPhoneAttendanceApp | 631 |
+| changePhoneOperator | 63 |
+| setPhoneAttendanceStatus | 90 |
+| getPhoneCameraErrorMessage | 97 |
+| setPhoneAttendanceMode | 110 |
+| isPhoneCameraAvailable | 117 |
+| createPhoneQrScanner | 121 |
+| setPhoneCameraButton | 138 |
+| setPhoneNextScanButton | 146 |
+| confirmPhoneCameraPreview | 153 |
+| getPhoneDeviceLabel | 168 |
+| registerPhoneAttendanceDevice | 183 |
+| getAttendancePhoneIdentity | 195 |
+| requestPhoneModelSetup | 204 |
+| savePhoneModelAndContinue | 216 |
+| savePhonePairing | 264 |
+| readPhonePairing | 273 |
+| clearPhonePairing | 289 |
+| acceptPhonePairingLink | 294 |
+| phonePairingRecoveryMessage | 302 |
+| startPhonePairingScanner | 309 |
+| startPhoneMemberScanner | 410 |
+| submitPhoneMemberScan | 479 |
+| stopPhoneAttendanceScanner | 513 |
+| togglePhoneAttendanceCamera | 544 |
+| resumePhoneAttendanceScanner | 576 |
+| installPhoneAttendanceApp | 587 |
+| configurePhoneAppInstall | 599 |
+| startPhoneAttendanceApp | 633 |
 
 ### assets/js/auth.js
 
@@ -465,8 +478,8 @@ Generated from current source definitions. Use alongside the module explanations
 | Function / exported handler | Line |
 |---|---:|
 | stopAccountSessionMonitor | 30 |
-| monitorAccountSession | 31 |
-| check | 37 |
+| monitorAccountSession | 34 |
+| check | 40 |
 
 ### assets/js/theme.js
 
@@ -535,15 +548,16 @@ A routine may be replaced or patched by a later migration. This lists the latest
 | Routine | Latest explicit source definition |
 |---|---|
 | private.account_session_is_current | 20261108000006_separate_attendance_sessions.sql:7 |
-| private.admin_mfa_satisfied | 20261110000002_admin_mfa.sql:10 |
+| private.admin_mfa_satisfied | 20261110000003_admin_device_approval.sql:18 |
 | private.capture_activity | 20261105043517_remote_schema.sql:54 |
 | private.capture_password_change | 20261110000001_security_activity_events.sql:37 |
 | private.capture_recovery_request | 20261110000001_security_activity_events.sql:54 |
 | private.describe_sale_activity | 20261105043517_remote_schema.sql:115 |
-| private.is_admin | 20261110000002_admin_mfa.sql:28 |
+| private.is_admin | 20261110000003_admin_device_approval.sql:25 |
 | private.is_staff | 20261105043517_remote_schema.sql:181 |
 | private.is_valid_person_name | 20261108000012_validate_person_names.sql:4 |
 | private.normalize_profile_username | 20261108000002_unique_account_usernames.sql:5 |
+| private.require_admin_login_scope | 20261110000003_admin_device_approval.sql:105 |
 | private.require_admin_mfa | 20261110000002_admin_mfa.sql:17 |
 | private.require_attendance_removal_pin | 20261105043517_remote_schema.sql:195 |
 | private.require_pairing_password | 20261105043517_remote_schema.sql:214 |
@@ -558,12 +572,14 @@ A routine may be replaced or patched by a later migration. This lists the latest
 | public.admin_mfa_required | 20261110000002_admin_mfa.sql:3 |
 | public.admin_record_membership_change | 20261105043518_staff_active_plan_change_search.sql:48 |
 | public.admin_record_registration_sale | 20261105043517_remote_schema.sql:535 |
+| public.cancel_admin_login_approval | 20261110000003_admin_device_approval.sql:95 |
 | public.close_mobile_attendance_scan_session | 20261105043517_remote_schema.sql:575 |
 | public.consume_admin_login_attempt | 20261105043517_remote_schema.sql:604 |
 | public.create_member_and_sale_with_actor | 20261105043517_remote_schema.sql:628 |
 | public.create_mobile_attendance_scan_session | 20261105043517_remote_schema.sql:649 |
 | public.create_profile_for_auth_user | 20261105043517_remote_schema.sql:708 |
 | public.current_account_session_is_active | 20261108000003_single_account_session.sql:22 |
+| public.decide_admin_login_approval | 20261110000003_admin_device_approval.sql:74 |
 | public.enforce_account_session | 20261108000003_single_account_session.sql:78 |
 | public.enforce_member_renewal_window | 20261105043517_remote_schema.sql:727 |
 | public.get_admin_mobile_attendance_device | 20261105043517_remote_schema.sql:756 |
@@ -573,6 +589,7 @@ A routine may be replaced or patched by a later migration. This lists the latest
 | public.is_admin_mobile_attendance_scan_session_active | 20261105043517_remote_schema.sql:860 |
 | public.is_registration_email_available | 20261108000005_unique_registration_emails.sql:4 |
 | public.is_registration_username_available | 20261108000002_unique_account_usernames.sql:16 |
+| public.list_admin_login_approvals | 20261110000003_admin_device_approval.sql:63 |
 | public.list_admin_mobile_attendance_devices | 20261105043517_remote_schema.sql:897 |
 | public.list_admin_mobile_attendance_pending_sessions | 20261105043517_remote_schema.sql:923 |
 | public.log_account_activity | 20261110000001_security_activity_events.sql:16 |
@@ -580,6 +597,7 @@ A routine may be replaced or patched by a later migration. This lists the latest
 | public.record_security_failure | 20261110000001_security_activity_events.sql:2 |
 | public.record_walk_in_sale | 20261105043517_remote_schema.sql:1015 |
 | public.register_mobile_attendance_device | 20261108000008_bind_pairing_to_device.sql:3 |
+| public.request_admin_login_approval | 20261110000003_admin_device_approval.sql:30 |
 | public.restock_product | 20261105043517_remote_schema.sql:1185 |
 | public.review_membership_request | 20261108000001_staff_request_reviews.sql:15 |
 | public.set_mobile_attendance_pairing_limit | 20261105043517_remote_schema.sql:1251 |

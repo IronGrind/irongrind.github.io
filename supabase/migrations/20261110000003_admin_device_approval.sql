@@ -2,7 +2,7 @@ create table if not exists private.admin_login_approvals (
  id uuid primary key default gen_random_uuid(),
  user_id uuid not null references auth.users(id) on delete cascade,
  requesting_session_id uuid not null references auth.sessions(id) on delete cascade,
- approver_session_id uuid not null references auth.sessions(id) on delete cascade,
+ approver_session_id uuid references auth.sessions(id) on delete set null,
  session_scope text not null check(session_scope in ('dashboard','attendance')),
  device_label text not null,
  status text not null default 'pending' check(status in ('pending','approved','denied','cancelled')),

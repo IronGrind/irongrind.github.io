@@ -96,7 +96,8 @@ Package declarations, CDN script URLs and test imports describe different depend
 
 | Module | What it does / key reasoning |
 |---|---|
-| auth.js | Parses email versus assigned username; obtains an Auth session through the applicable login function; now runs MFA before session activation; verifies profile/membership state and routes to a role-specific page |
+| auth.js | Parses email versus assigned username; obtains an Auth session through the applicable login function; now runs administrator device approval or the MFA fallback before session activation; verifies profile/membership state and routes to a role-specific page |
+| admin-device-approval.js | Requests session-bound approval, polls the waiting state, displays Approve/Deny on an active administrator device and cancels pending requests before the authenticator fallback |
 | admin-mfa.js | Queries own MFA requirement, checks assurance level, lists factors, enrolls TOTP if needed and presents QR/manual key; challengeAndVerify must succeed before resolving the login gate; cancelling rejects login |
 | supabase-client.js | Creates the browser client using session storage, checks server session ownership, and provides monitor cleanup so intentional logout is not reported as expiry |
 | admin.js | Administrator membership, attendance, pairing, product, sale and reporting views; composes split member names; converts product units; calculates alert thresholds; generates report files and logs export requests |
@@ -118,7 +119,7 @@ Important code patterns: `async/await` orders dependent work; `try/catch/finally
 
 ## 7. Database explanation
 
-The documented physical schema contains twelve public tables and three private supporting tables. `auth.users` is a managed reference, not another public application table. The current MFA increment adds functions/guards, not a new application table or a current-device approval table.
+The documented physical schema contains twelve public tables and three private supporting tables. `auth.users` is a managed reference, not another public application table. The deployed MFA baseline added functions/guards without an application table. The subsequent local device-approval increment adds private.admin_login_approvals; its schema supplement distinguishes that pending migration from the deployed baseline.
 
 | Table | Purpose / scenario |
 |---|---|
@@ -159,13 +160,13 @@ These application-code defaults are alerts, not predicted reorder quantities or 
 
 ## 9. Security: how to explain it accurately
 
-Authentication establishes identity; authorization determines allowed actions. AAL1 is password-level assurance; a verified second factor raises the session to AAL2. The own-account MFA bootstrap returns only whether an active administrator must verify. Administrators at AAL1 cannot activate dashboard/scanner sessions or use protected Data API operations. The session/RLS guard also rejects direct table reads before AAL2. Edge Functions that read the caller's protected profile pass through these checks before privileged operations.
+Authentication establishes identity; authorization determines allowed actions. AAL1 is password-level assurance; a verified second factor raises the session to AAL2. The own-account MFA bootstrap returns only whether an active administrator must verify. Under the subsequent approval migration, an AAL1 administrator needs an explicit, unexpired grant bound to that exact Auth session and intended activation scope; otherwise activation and protected Data API access remain blocked. An AAL2 administrator continues to use the authenticator route. The session/RLS guard also rejects direct table reads before AAL2. Edge Functions that read the caller's protected profile pass through these checks before privileged operations.
 
 First enrollment is a controlled rollout task: a valid password alone cannot distinguish the real owner from an attacker before any factor has been enrolled. The real administrator must enroll on a trusted device during deployment. Thereafter, knowing the password does not supply the authenticator code. A password reset does not automatically remove the existing factor.
 
 The setup QR/manual secret is sensitive, shown only in a temporary enrollment dialog. Do not put it in screenshots, activity logs, the paper, slides or source control. Supabase manages factor secrets; no custom public secret table is added. Existing member password minimum is eight characters; staff creation minimum is twelve, with implemented character requirements. MFA does not silently change those rules.
 
-Current-device approval notifications are a future enhancement, not part of this MFA increment. A new verified login still follows the existing replacement rules within its session scope. MFA does not ask the old device for approval. TOTP enrollment/challenge outcomes remain available through configured Supabase Auth audit facilities; the custom activity viewer does not currently mirror every MFA challenge outcome.
+Current-device approval is implemented in a separate migration and module. Subsequent user-supplied CLI output confirms 20261110000003 applied successfully to the linked database; matching web deployment and the physical two-device flow remain unverified. A new password-authenticated administrator session can request approval from an active verified administrator session of the same account. The dashboard is preferred as approver; a verified active scanner session is eligible when no dashboard is available. No SMS is used. The old website polls every five seconds and the requesting website polls every three seconds. Requests expire after two minutes. A successful approval permits that requesting session for up to eight hours, subject to Auth expiry, active account and application session ownership; this is not a remembered-device token. Approval does not rewrite the Auth JWT to claim AAL2. The new session must still activate its approved dashboard/scanner scope before replacing that scope. Denial, cancellation, expiry and network uncertainty never grant access. If no approver is available, or the user chooses the explicit fallback, the authenticator flow remains required. TOTP enrollment/challenge outcomes remain available through configured Supabase Auth audit facilities; the custom activity viewer does not currently mirror every MFA challenge outcome.
 
 Recovery requires the trusted project owner to verify identity outside the application, investigate possible compromise, use Supabase's supported administrative MFA-factor reset process and arrange supervised re-enrollment. There is no in-app password-only bypass, no automatic approval because an old device is offline, and no custom recovery-code feature in this increment.
 
@@ -179,7 +180,7 @@ Recovery requires the trusted project owner to verify identity outside the appli
 | Scan is retried after uncertain response | Reuse request ID; server deduplication protects against a second state change |
 | Member forgets to check out | Old visit becomes Incomplete without a fictional exit timestamp |
 | Another device signs in | Existing scope ownership is replaced only after the login gates; monitor detects displaced sessions |
-| Admin password is stolen | Enrolled TOTP is also required; no claim that MFA makes compromise impossible |
+| Admin password is stolen | New access requires an existing verified session to approve or the enrolled TOTP; approving an unfamiliar request would defeat this protection |
 | Authenticator phone is lost | Trusted project-owner recovery, factor reset and supervised enrollment; see the setup guide |
 | App icon is deleted | Reopen direct scanner URL and install; pairing reuse depends on saved browser data and expiry |
 | Pairing exists but saved token is lost | Administrator ends the stale pairing and issues a fresh QR; don't silently bypass device binding |
@@ -209,6 +210,7 @@ Context: one system boundary and external actors, no internal tables. DFD: nine 
 - Login and phone scanner call MFA before activation; CSS/dialog and service-worker shell updated.
 - Security-event deployment prerequisites from the previous increment remain applicable.
 - Existing project title and nine functions retained.
+- Latest local increment: private.admin_login_approvals and request/list/decision/cancel RPCs implement in-website approval. The user supplied successful linked push output for 20261110000003_admin_device_approval.sql. Matching client deployment and two-device approval/denial tests still require confirmation. See Device Approval Schema Supplement.md and the approval deployment section of the guide.
 - Old Word prototype captures remain historical until refreshed. Chapter MFA addendum records the revision; no revised screenshot is fabricated.
 - Repository AGENTS.md requires both this file and presentation/speaker notes to be maintained for future material changes.
 

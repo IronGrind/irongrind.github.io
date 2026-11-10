@@ -1,6 +1,6 @@
 # Administrator MFA — Setup and Deployment Guide
 
-Revision: November 10, 2026. Code is prepared locally. This guide does not mean any production change has already been applied. Current-device approval and push notifications are not implemented; the approved smaller scope is administrator authenticator MFA.
+Revision: November 10, 2026. Code is prepared locally. This guide does not mean any production change has already been applied. The original administrator MFA baseline is followed by a local current-device approval increment. In-website approval is implemented; user-supplied CLI output confirms its migration applied successfully. Matching client deployment and the two-device test remain unverified. SMS and background push notifications are not used.
 
 ## 1. Prepare access and backups
 
@@ -119,3 +119,18 @@ This increment has no self-service recovery codes or old-device approval mechani
 - https://supabase.com/docs/guides/auth/auth-mfa/totp
 - https://supabase.com/docs/guides/local-development/cli/config
 - https://supabase.com/docs/guides/auth/audit-logs
+
+## 9. Deploy and use in-website device approval
+
+The earlier successful push applied migrations through 20261110000002. This new increment needs 20261110000003_admin_device_approval.sql; it does not require SMS or an upgrade to Pro within Free-plan usage limits.
+
+1. Keep the genuine administrator signed in on Device A after its existing authenticator verification. Keep its website open and connected.
+2. Review the new migration with `npx.cmd supabase db push --linked --dry-run`. Confirm that the new device-approval migration is the expected pending item; inspect any extra items before applying.
+3. In a coordinated maintenance window apply the reviewed migration with `npx.cmd supabase db push --linked`, then deploy the matching web revision and refresh Device A so its new notification script is loaded. Existing authentication-function endpoints are unchanged by this increment.
+4. On Device B, enter the same administrator credentials. It should display Waiting for approval rather than opening the dashboard.
+5. Device A should show Is this you? with reported browser information, time and Approve/Deny. Approve only a request you initiated; browser descriptions are not proof of physical identity.
+6. Approve on A. B completes session activation and receives access; A loses the replaced application scope when its existing monitor checks. Dashboard and scanner scopes remain separate.
+7. Repeat with Deny, expiry, Cancel and Use authenticator instead. No failed/pending path should expose protected records or replace A's session. Requests expire in two minutes; approval grants last no more than eight hours and cannot outlive their Auth session.
+8. If there is no active eligible session, sign-in uses the authenticator. If A is offline, B can select the authenticator fallback; it is never approved automatically due to timeout/offline status. Losing the authenticator as well requires the verified project-owner process above.
+9. Verify the security log contains request and approval/denial events. No secret or code should appear. Check the private schema supplement and update diagram/dictionary evidence after deployment.
+10. Record actual two-browser/two-device outcomes and update both notes and slide speaker notes. User-supplied output now confirms the approval migration applied successfully. Matching web deployment and physical testing remain unverified.

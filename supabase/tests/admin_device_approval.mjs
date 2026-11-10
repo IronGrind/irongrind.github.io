@@ -42,6 +42,8 @@ try{
  await assert.rejects(db.exec('select activate_attendance_session()'),/ADMIN_APPROVAL_REQUIRED/);
  await db.exec('select activate_account_session()');assert.equal((await db.query('select * from protected_records')).rows.length,1);
  await login(owner,first,'aal2');assert.equal((await db.query('select * from protected_records')).rows.length,0);
+ await db.exec('reset role');await db.query('delete from auth.sessions where id=$1',[first]);
+ await login(owner,second);assert.equal((await db.query('select * from protected_records')).rows.length,1,'Approval survives displaced old session sign-out');
  await login(owner,third);const next=await request();assert.equal(next.status,'pending');
  await login(owner,second);await db.query('select decide_admin_login_approval($1,false)',[next.request_id]);
  await login(owner,third);assert.equal((await request()).status,'denied');await assert.rejects(db.exec('select activate_account_session()'),/ADMIN_APPROVAL_REQUIRED/);
@@ -49,7 +51,10 @@ try{
  await login(owner,third);assert.equal((await request()).status,'expired');
  await login(owner,second);await assert.rejects(db.query('select decide_admin_login_approval($1,true)',[next.request_id]),/expired/);
  await login(owner,third);const scanner=await request('attendance');assert.equal(scanner.status,'pending');
+ await login(owner,second);await db.query('select decide_admin_login_approval($1,true)',[scanner.request_id]);
+ await login(owner,third);
  await db.exec("select cancel_admin_login_approval('attendance')");assert.equal((await request('attendance')).status,'cancelled');
+ await assert.rejects(db.exec('select activate_attendance_session()'),/ADMIN_APPROVAL_REQUIRED/);
  await login(owner,second);await assert.rejects(db.query('select decide_admin_login_approval($1,true)',[scanner.request_id]),/unavailable/);
  await db.exec('reset role');await db.query("update private.admin_login_approvals set approval_expires_at=now()-interval '1 second' where id=$1",[pending.request_id]);
  await login(owner,second);assert.equal((await db.query('select * from protected_records')).rows.length,0);

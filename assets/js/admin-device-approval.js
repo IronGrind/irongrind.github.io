@@ -61,7 +61,7 @@ window.startAdminApprovalNotifications = client => {
             panel?.remove();
             const request = data[0];
             panel = document.createElement('section'); panel.className = 'admin-login-notification';
-            panel.dataset.requestId = request.id; panel.setAttribute('role', 'region'); panel.setAttribute('aria-label', 'Sign-in approval request');
+            panel.dataset.requestId = request.id; panel.setAttribute('role', 'region'); panel.setAttribute('aria-label', 'Sign-in approval request'); panel.setAttribute('aria-live', 'polite');
             panel.innerHTML = `<h3>Is this you?</h3><p>Another browser is requesting administrator access.</p><p class="approval-device"></p><p class="approval-time"></p><small>Approve only a sign-in you started. Browser details are reported by the requesting device.</small><p class="approval-result" role="status" aria-live="polite"></p><div class="modal-actions"><button type="button" class="btn-danger" data-decision="deny">Deny</button><button type="button" class="btn-primary" data-decision="approve">Approve sign-in</button></div>`;
             panel.querySelector('.approval-device').textContent = request.device_label;
             panel.querySelector('.approval-time').textContent = `${request.session_scope === 'attendance' ? 'Attendance scanner' : 'Dashboard'} · ${new Date(request.requested_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })}`;
