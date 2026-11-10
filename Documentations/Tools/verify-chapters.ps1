@@ -77,13 +77,18 @@ foreach($chapter in $Chapters){
    for($ti=0;$ti -lt $dictionary.Count;$ti++){
     $tableName=$order[$ti];$modelTable=$schema.Tables|Where-Object Name -EQ $tableName
     $heads=@($dictionary[$ti].SelectSingleNode('w:tr',$ns).SelectNodes('w:tc',$ns)|ForEach-Object {($_.SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join ''})
-    if(($heads -join '|') -cne 'Name|Type|Constraints|Description'){throw "Incorrect four-column dictionary header: $tableName"}
+    if(($heads -join '|') -cne 'Field Name|Field Type|Length / Precision / Scale|Key|Description and Validation Details'){throw "Incorrect five-column dictionary header: $tableName"}
     foreach($row in ($dictionary[$ti].SelectNodes('w:tr',$ns)|Select-Object -Skip 1)){
-     $cells=$row.SelectNodes('w:tc',$ns);if($cells.Count -ne 4){throw "Dictionary row does not have four columns: $tableName"};$field=(($cells[0].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim()
-     $description=(($cells[3].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim();if(-not $description){throw "Missing dictionary description: $tableName.$field"}
+     $cells=$row.SelectNodes('w:tc',$ns);if($cells.Count -ne 5){throw "Dictionary row does not have five columns: $tableName"};$field=(($cells[0].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim()
+     $description=(($cells[4].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim();if(-not $description){throw "Missing dictionary description: $tableName.$field"}
      $column=@($modelTable.Columns|Where-Object Name -EQ $field);if($column.Count -ne 1){throw "Unknown dictionary field $tableName.$field"};$column=$column[0]
-     $actualType=(($cells[1].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim();if($actualType -cne $column.Type){throw "Incorrect declared type or size: $tableName.$field"}
-     $details=($cells[2].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join ''
+     $actualType=(($cells[1].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim()
+     if($actualType -eq 'character varying'){$actualType='varchar'}
+     $size=(($cells[2].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim()
+     if($size -notin @('N/A','Not declared')){$actualType+='('+$size+')'}
+     if($actualType -cne $column.Type){throw "Incorrect declared type or size: $tableName.$field"}
+     $keyText=(($cells[3].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim()
+     $details=if($keyText){$keyText+'. '+$description}else{$description}
      $keyMatch=[regex]::Match($details,'^((?:PK|FK|UQ)(?:, (?:PK|FK|UQ))*)\.\s');$actualKeys=@($keyMatch.Groups[1].Value -split ',\s*'|Where-Object {$_})
      if(@(Compare-Object @($column.Keys|Sort-Object) @($actualKeys|Sort-Object)).Count){throw "Incorrect dictionary keys: $tableName.$field"}
      $required=if($column.Required){'NOT NULL.'}else{'Nullable at column level.'};if(-not $details.Contains($required)){throw "Incorrect nullability: $tableName.$field"}
@@ -106,7 +111,7 @@ foreach($chapter in $Chapters){
    foreach($panel in @('3a','3b','3c','3d','3e')){if(@($doc.SelectNodes('//wp:docPr',$ns)|Where-Object {$_.GetAttribute('name') -eq "Level 1 DFD panel $panel"}).Count -ne 1){throw "Missing restored DFD panel $panel"}}
    foreach($panel in @('5a','5b','5c')){if(@($doc.SelectNodes('//wp:docPr',$ns)|Where-Object {$_.GetAttribute('name') -eq "Physical ERD panel $panel"}).Count -ne 1){throw "Missing restored physical ERD panel $panel"}}
    foreach($phrase in @('No new application table or column is introduced','Current-device approval and push notifications are not included in this increment','complete fifteen-table, 174-field','All fifteen application tables and twenty-one foreign keys')){if($all.Contains($phrase)){throw "Superseded security documentation: $phrase"}}
-   $results.Add('Chapter 3: four-column dictionary with 201 descriptions and declared types; 27 FK targets/actions, five individually unique fields, approval composite UQ, identity generation and composite PK verified; earlier Gane-Sarson/physical-ERD figure layout restored, current administrator-security supplements retained, simplified public-schema ERD omitted.')
+   $results.Add('Chapter 3: five-column dictionary with 201 descriptions, declared base types and separate lengths/precision; 27 FK targets/actions, five individually unique fields, approval composite UQ, identity generation and composite PK verified; earlier Gane-Sarson/physical-ERD figure layout restored, current administrator-security supplements retained, simplified public-schema ERD omitted.')
    $dfdSvg=Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3 Diagrams/03-dfd-complete-gane-sarson.svg'
    if(-not (Test-Path -LiteralPath $dfdSvg)){throw 'The standalone Level 1 DFD SVG is missing.'}
    [xml]$svg=Get-Content -Raw -LiteralPath $dfdSvg

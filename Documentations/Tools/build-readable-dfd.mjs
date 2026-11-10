@@ -18,12 +18,30 @@ const reportStores = [
   ['D8', 'membership_history', '', 'Membership history records']
 ];
 processes.find(process => process.Id === '8.0').Stores = reportStores;
-const login = processes.find(process => process.Id === '1.0');
-login.Stores.push(
-  ['D15', 'private.admin_login_approvals', 'Approval request / decision', 'Pending approval details'],
-  ['D16', 'private.admin_trusted_devices', 'Trusted public key', 'Trust state'],
-  ['D17', 'private.admin_device_sessions', 'Challenge / authorization', 'Session boundary']
-);
+// Resolve stores to exact tables in the documented database baseline.
+const schema = readJson(path.join(root, 'schema-visualizer.json'));
+const tableNames = new Set(schema.Tables.map(table => table.Name));
+tableNames.add('auth.users');
+const storeTables = {
+ D0:'auth.users', D1:'public.profiles', D2:'public.membership_applications',
+ D3:'public.members', D4:'public.attendance', D5:'public.products',
+ D6:'public.sales', D7:'public.sale_items', D8:'public.membership_history',
+ D9:'public.activity_logs', D10:'public.mobile_attendance_pairing_policy',
+ D11:'public.mobile_attendance_scan_sessions', D13:'private.attendance_scan_requests',
+ D14:'private.account_sessions', D15:'private.admin_login_approvals',
+ D16:'private.admin_trusted_devices', D17:'private.admin_device_sessions'
+};
+for (const process of processes) {
+ const seen = new Set();
+ process.Stores = process.Stores.filter(store => {
+  if (seen.has(store[0])) return false;
+  seen.add(store[0]); return true;
+ }).map(store => {
+  const name = storeTables[store[0]];
+  if (!tableNames.has(name)) throw new Error('Unverified DFD table: ' + store[0]);
+  return [store[0], name.split('.').at(-1), store[2], store[3]];
+ });
+}
 
 const esc = value => String(value).replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&apos;' })[char]);
 const wrap = (value, max = 32) => {
@@ -46,6 +64,7 @@ const text = (x, y, value, className, anchor = 'middle', max = 32) => {
 const box = (x, y, w, h, radius = 0, cls = 'entity') => `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="${radius}" class="${cls}"/>`;
 const dataStore = (x, y, w, h, id, name) => `<path d="M${x} ${y}h${w} M${x} ${y}v${h} M${x} ${y + h}h${w} M${x + 70} ${y}v${h}" class="store"/>${text(x + 35, y + h / 2 + 6, id, 'store-id')}${text(x + 92, y + h / 2 + 6, name, 'store-name', 'start', 48)}`;
 const arrow = (x1, y, x2, label, direction = 'right') => {
+  if (direction === 'left' && x1 < x2) [x1, x2] = [x2, x1];
   // Keep the endpoint at the flow destination so every arrowhead points into
   // the receiving actor/process/store, regardless of flow direction.
   const mid = (x1 + x2) / 2;
@@ -53,7 +72,7 @@ const arrow = (x1, y, x2, label, direction = 'right') => {
   return `<path d="M${x1} ${y}H${x2}" class="flow" marker-end="url(#arrow-end)"/><rect x="${mid - labelWidth / 2}" y="${y - 20}" width="${labelWidth}" height="17" rx="7" class="label-bg"/>${text(mid, y - 7, label, 'flow-label', 'middle', 62)}`;
 };
 
-let cursorY = 0;
+let cursorY = 320;
 const panels = [];
 const panelGap = 44;
 const actorX = 80, actorW = 390, processX = 1210, processW = 500, storeX = 2460, storeW = 870;
@@ -106,8 +125,8 @@ const header = `<g><text x="80" y="82" class="title">Iron Grind Fitness Gym — 
 ${box(350, 0, 300, 58, 14, 'process')}<text x="500" y="36" class="legend">Process</text>
 <path d="M740 0h310 M740 0v58 M740 58h310 M810 0v58" class="store"/><text x="900" y="36" class="legend">Data store</text>
 <path d="M1140 30h310" class="flow" marker-end="url(#arrow-end)"/><text x="1295" y="18" class="legend">Data flow</text></g>
-<text x="80" y="250" class="note">Each panel expands one Level 1 process. Repeated D identifiers refer to the same store. D12 is reserved and has no active process dependency in the documented model.</text>
-<text x="80" y="276" class="note">Membership review, user management, attendance, inventory, sales, reporting, and activity history use the individual flows shown below.</text></g>`;
+<text x="80" y="250" class="note">Each data store uses its database table name. Repeated D identifiers refer to the same table; no placeholder stores are included.</text>
+<text x="80" y="276" class="note">Table names match the documented pgAdmin baseline and migrations through 20261110000004; this is not fresh live-schema introspection.</text></g>`;
 const style = `<style>
  text{font-family:Arial,sans-serif;fill:#172235}.title{font-size:38px;font-weight:700}.subtitle{font-size:22px;fill:#536274}.panel-title{font-size:25px;font-weight:700}.note{font-size:17px;fill:#536274}.legend{font-size:18px;font-weight:600;text-anchor:middle}.panel{fill:#fff;stroke:#d1d9e3;stroke-width:2}.entity{fill:#fff;stroke:#40516a;stroke-width:2.5}.entity-title{font-size:20px;font-weight:700}.process{fill:#e1ebf8;stroke:#244a78;stroke-width:3}.process-separator{stroke:#244a78;stroke-width:2}.process-number{font-size:21px;font-weight:700}.process-name{font-size:26px;font-weight:700}.store{fill:none;stroke:#40516a;stroke-width:2.5}.store-id{font-size:18px;font-weight:700}.store-name{font-size:17px}.flow{fill:none;stroke:#34445a;stroke-width:2}.flow-label{font-size:14px;fill:#26364a}.label-bg{fill:#fff;stroke:#e1e6ed;stroke-width:1}.page{fill:#f6f8fb}
 </style>`;

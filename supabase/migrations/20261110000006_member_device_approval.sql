@@ -205,7 +205,7 @@ begin
 end
 $$;
 
-revoke all on function public.member_device_session_is_trusted(uuid,uuid),public.require_member_device_session() from public,anon,authenticated;
+revoke all on function private.member_device_session_is_trusted(uuid,uuid),private.require_member_device_session() from public,anon,authenticated;
 revoke all on function public.create_member_device_challenge(uuid,uuid,uuid,jsonb),public.get_member_device_challenge(uuid,uuid),
  public.get_member_device_approval_status(uuid,uuid),public.finish_member_device_login(uuid,uuid,text,text) from public,anon,authenticated;
 grant execute on function public.create_member_device_challenge(uuid,uuid,uuid,jsonb),public.get_member_device_challenge(uuid,uuid),

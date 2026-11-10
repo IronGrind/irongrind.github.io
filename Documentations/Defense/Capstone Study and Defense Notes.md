@@ -327,3 +327,19 @@ The staff member-creation Edge Function now validates membership terms on the se
 ### PowerPoint open error and native rebuild
 
 A user screenshot showed PowerPoint reporting a problem with `Capstone Presentation.pptx`. The package's XML and relationship targets passed the repository checker, but PowerPoint's own open operation rejected the hand-built Open XML package. The deck was rebuilt from the current Markdown slide source through native PowerPoint automation, then reopened and checked for all 18 slides and 18 speaker-note sections before replacing the failing file. `build-defense-materials.mjs` now delegates editable deck creation to `build-defense-presentation.ps1`, preventing the former package writer from being used again. The repository verifier passes with 109 parseable XML/relationship parts and no missing targets. This confirms package structure and PowerPoint reopen, not visual slide review. The rebuilt deck and generator change are local; no presentation content has been deployed or externally published.
+
+
+### Complete DFD SVG: exact database table names
+
+Corrected the standalone `03-dfd-complete-gane-sarson.svg` and its `build-readable-dfd.mjs` generator to use exact schema-qualified table names from `schema-visualizer.json`, plus managed `auth.users`. Removed generic store aliases, duplicate administrator security stores and the reserved-store note. Retained real private supporting tables supported by the documented pgAdmin baseline and migrations through 20261110000004; pending member-device tables are excluded. Repeated identifiers denote the same physical table. The generator rejects unmapped tables. Also separated the header from the first panel and corrected actor result arrow direction. Validation: regenerated SVG, XML parse and store inventory checks. This is a local documentation correction, not fresh live-schema verification; no database, application, Word manuscript or deployment change.
+
+## Chapter 3 format alignment — November 10, 2026
+
+Updated Chapter 3.docx to follow the user-supplied chapter structure and five-column data-dictionary format: Field Name, Field Type, Length / Precision / Scale, Key, and Description and Validation Details. Restored the Entity Relationship Diagram heading. Separated declared varchar lengths and numeric precision/scale from base types; moved nullability, referential actions, composite constraints and other validation details into the descriptions without discarding them. Existing methodology, requirements, diagrams, forms, prototype figures, Gantt schedule, current security supplements and verified-versus-pending distinctions are retained. The duplicate Gantt ending in the pasted sample was not introduced.
+
+Affected materials: Chapter 3 manuscript, chapter verifier, presentation slide content and speaker notes, and these study notes. Validation checks all 23 tables, 201 fields, 27 foreign keys, five individually unique fields, composite constraints and figure relationships against the repository schema model. This is a documentation-only change; no application, database or deployment action is involved. Final visual pagination review in desktop Word remains pending. Backup: Documentations/Review Backups/sample-format-20261110-203446/Chapter 3.docx.
+
+
+### Complete DFD label clarification
+
+The user clarified that the visible store labels must be table names alone, for example `users`, `profiles` and `account_sessions`, without schema prefixes. Updated the standalone complete DFD generator and SVG accordingly. Schema-qualified names remain internal to validation against the documented baseline. All nine processes and existing table mappings are retained. Validation: regeneration and SVG XML/store-label checks. Documentation-only local correction; no database or deployment change.

@@ -14,6 +14,12 @@ const localStorage = {
     setItem: (key, value) => storage.set(key, String(value)),
     removeItem: key => storage.delete(key)
 };
+const tabSessionStorage = new Map();
+const sessionStorage = {
+    getItem: key => tabSessionStorage.get(key) ?? null,
+    setItem: (key, value) => tabSessionStorage.set(key, String(value)),
+    removeItem: key => tabSessionStorage.delete(key)
+};
 const adminId = '11111111-1111-4111-8111-111111111111';
 const memberId = '22222222-2222-4222-8222-222222222222';
 const user = id => ({ id, aud: 'authenticated', role: 'authenticated', email: `${id}@example.test`, app_metadata: {}, user_metadata: {}, identities: [] });
@@ -31,7 +37,7 @@ function page(registration, hash = '') {
     const location = new URL(`https://example.test/${registration ? 'register' : 'admin'}.html${hash}`);
     const window = { document, location, localStorage, addEventListener() {}, removeEventListener() {} };
     const context = vm.createContext({
-        window, document, location, localStorage, console, URL, URLSearchParams, navigator: { onLine: true },
+        window, document, location, localStorage, sessionStorage, console, URL, URLSearchParams, navigator: { onLine: true },
         Headers, Request, Response, TextEncoder, TextDecoder, AbortController, WebSocket,
         crypto: globalThis.crypto, atob, btoa,
         setTimeout, clearTimeout, setInterval: (...args) => { const timer = setInterval(...args); timer.unref(); return timer; }, clearInterval,
@@ -58,21 +64,21 @@ const previousRegistration = page(false);
 await previousRegistration.auth.signUp({ email: 'member@example.test', password: 'fixture-only' });
 assert.equal((await admin.auth.getSession()).data.session.user.id, memberId, 'A shared signup client replaces the admin session');
 await admin.auth.signInWithPassword({ email: 'admin@example.test', password: 'fixture-only' });
-const adminStorage = Array.from(storage.entries());
+const adminStorage = Array.from(tabSessionStorage.entries());
 assert.ok(adminStorage.length > 0, 'Normal login must retain its session');
 
 const registration = page(true);
 const signup = await registration.auth.signUp({ email: 'member@example.test', password: 'fixture-only' });
 assert.equal(signup.error, null);
 assert.equal((await registration.auth.getSession()).data.session.user.id, memberId);
-assert.deepEqual(Array.from(storage.entries()), adminStorage, 'Registration must not overwrite the admin session');
+assert.deepEqual(Array.from(tabSessionStorage.entries()), adminStorage, 'Registration must not overwrite the admin session');
 assert.equal((await admin.auth.getSession()).data.session.user.id, adminId);
 
 const callback = page(true, `#access_token=${token(memberId)}&refresh_token=confirmation-token&expires_in=3600&token_type=bearer&type=signup`);
 const confirmed = await callback.auth.getSession();
 assert.equal(confirmed.error, null);
 assert.equal(confirmed.data.session?.user.id, memberId, 'Email confirmation must still authenticate the application submission');
-assert.deepEqual(Array.from(storage.entries()), adminStorage, 'Email confirmation must also leave the admin session intact');
+assert.deepEqual(Array.from(tabSessionStorage.entries()), adminStorage, 'Email confirmation must also leave the admin session intact');
 
 for (const client of [admin, previousRegistration, registration, callback]) client.auth.stopAutoRefresh();
 console.log('Passed: signup and email confirmation retain their temporary member session without replacing a signed-in admin in the same browser.');

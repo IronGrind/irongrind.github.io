@@ -31,7 +31,7 @@ function setup(role, unavailable = false, activationFails = false) {
         return { getItem: key => records.get(key) || null, setItem: (key, value) => records.set(key, value), removeItem: key => records.delete(key) };
     };
     let destination;
-    const context = vm.createContext({ document: { getElementById: element, querySelector: () => element('submit') }, window: { ironGrindSupabase: client, requireAdminMfa: async () => {}, location: { search: '', replace: url => destination = url } }, localStorage: storage(), sessionStorage: storage(), URLSearchParams, console });
+    const context = vm.createContext({ document: { getElementById: element, querySelector: () => element('submit') }, window: { ironGrindSupabase: client, requireMemberDeviceApproval: async () => {}, requireAdminMfa: async () => {}, location: { search: '', replace: url => destination = url } }, localStorage: storage(), sessionStorage: storage(), URLSearchParams, console });
     vm.runInContext(code, context);
     return { context, element, counters, destination: () => destination };
 }

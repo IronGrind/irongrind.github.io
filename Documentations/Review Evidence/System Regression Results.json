@@ -1,6 +1,6 @@
 {
-  "completedAt": "2026-11-08T12:54:12.945Z",
-  "passed": 40,
+  "completedAt": "2026-11-10T12:40:00.840Z",
+  "passed": 49,
   "failed": 0,
   "checks": [
     {
@@ -10,6 +10,21 @@
     },
     {
       "name": "Syntax: admin-access.js",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "name": "Syntax: admin-device-approval.js",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "name": "Syntax: admin-device-trust.js",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "name": "Syntax: admin-mfa.js",
       "passed": true,
       "output": ""
     },
@@ -35,6 +50,11 @@
     },
     {
       "name": "Syntax: customer.js",
+      "passed": true,
+      "output": ""
+    },
+    {
+      "name": "Syntax: member-device-approval.js",
       "passed": true,
       "output": ""
     },
@@ -85,7 +105,7 @@
     {
       "name": "Browser unit tests",
       "passed": true,
-      "output": "✔ pairing requires a verified admin login independently of UI storage (3.8248ms)\n✔ expired admin auth clears stale UI state and redirects to sign-in (0.2504ms)\n✔ admin scans use the atomic RPC and reuse uncertain request identifiers (8.6534ms)\n✔ remembered phone pairing survives a new app instance (8.6998ms)\n✔ every camera entry requires operator identity (2.7692ms)\n✔ transient validation failure retains saved pairing and does not start pairing camera (1.1735ms)\n✔ uncertain scan response reuses request id on retry and reports saved outcome (1.7019ms)\nPassed: success\nPassed: unauthorized\nPassed: missing-account\nPassed: mismatch\nPassed: partial\n✔ scripts\\tests\\reset-admin-passwords.test.mjs (2545.1436ms)\nℹ tests 8\nℹ suites 0\nℹ pass 8\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 2600.6684"
+      "output": "✔ action remains distinct from descriptions and technical IDs stay inside details (123.5908ms)\n✔ category and action filters are applied together on the server (4.3463ms)\n✔ stock updates do not imply stock was added and rendered data is escaped (2.926ms)\n✔ pairing requires a verified admin login independently of UI storage (4.0785ms)\n✔ expired admin auth clears stale UI state and redirects to sign-in (0.4588ms)\n✔ admin scans use the atomic RPC and reuse uncertain request identifiers (9.5236ms)\n✔ staff plan duration and price are validated using the Philippine business date (56.4784ms)\n✔ staff registration rejects mismatched price, arbitrary term, stale or future dates, and unknown plans (20.7671ms)\n✔ date-only parsing rejects impossible or noncanonical dates (1.0101ms)\n✔ no active approver chooses MFA rather than granting access (4.4892ms)\n✔ requesting browser waits until exact server approval (7.955ms)\n✔ denial rejects login and authenticator fallback cancels the pending request (4.2857ms)\n✔ active-device notification uses safe text and sends the selected decision (50.0306ms)\n(node:44684) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✔ browser private key is non-extractable but its proof verifies with the public key (25.9337ms)\n✔ trusted browser skips approval and MFA; untrusted browser completes both before registration (9.5924ms)\n✔ failed MFA never attempts registration or transfer (3.5324ms)\n✔ Edge Function rejects invalid signatures before calling trusted completion (58.4815ms)\n✔ Edge Function accepts signed proof with fresh MFA and does not treat old MFA as fresh (9.4539ms)\n✔ admin member names preserve compound and accented names and normalize initials (13.9112ms)\n✔ admin member names reject missing names, numbers, invalid initials and overlong parts (0.7313ms)\n✔ admin modal and submission use the split fields and retain the fullName API contract (7.3677ms)\n✔ staff/member accounts bypass MFA prompt and verified admins do not repeat it (9.1771ms)\n✔ administrator cannot complete gate before verification and code is checked with Auth (6.535ms)\n✔ first setup displays enrollment data only inside the temporary dialog (11.6131ms)\n✔ cancel refuses completion; bootstrap failure fails closed (3.474ms)\n✔ missing deployed MFA function explains incomplete setup instead of suggesting refresh (1.3456ms)\n✔ rejected code reports safe service reason and keeps the login gate closed (2.2012ms)\n✔ post-verification session error is not described as an incorrect code (2.677ms)\n✔ remembered phone pairing survives a new app instance (15.8575ms)\n✔ opening another QR to reinstall preserves the existing pairing and token (2.2687ms)\n✔ first pairing and expired saved pairing accept a fresh QR (2.0533ms)\n✔ lost connection recovery explains administrator removal and separate installation (2.2903ms)\n✔ every camera entry requires operator identity (3.1937ms)\n✔ transient validation failure retains saved pairing and does not start pairing camera (2.1985ms)\n✔ uncertain scan response reuses request id on retry and reports saved outcome (3.7244ms)\n✔ low-stock defaults use supplement type for powder and units for other forms (2.5173ms)\n✔ alerts include the threshold and convert stock units before comparison (2.1309ms)\n✔ pounds and ounces trigger the same powder alerts as equivalent metric stock (0.5454ms)\n✔ inventory card separates selling price, pounds on hand, and converted alert level (30.6558ms)\n(node:29528) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n✔ member credential rejection is audited without credentials (61.0623ms)\n✔ member throttle is enforced and audited (3.7356ms)\n✔ successful member login returns session without a false failure event (3.773ms)\nPassed: success\nPassed: unauthorized\nPassed: missing-account\nPassed: mismatch\nPassed: partial\n✔ scripts\\tests\\reset-admin-passwords.test.mjs (3578.7709ms)\n✔ intentional logout stops checks and suppresses expiry redirects (11.0863ms)\n✔ unexpected session loss still reports expiry (1.9404ms)\n✔ logout cancels an already-running session check (3.2235ms)\n✔ revoked or transferred administrator trust has a distinct redirect reason (2.9679ms)\n✔ supplement groups use saved form and conservative legacy unit fallback (2.7694ms)\n✔ request search and type filters combine without changing request records (1.5268ms)\n✔ cancelling membership confirmation prevents a payment write (1.5405ms)\n✔ attendance name lookup searches first and requires selection before recording (1.9412ms)\n✔ attendance records the selected member ID rather than their possibly shared name (1.318ms)\nℹ tests 52\nℹ suites 0\nℹ pass 52\nℹ fail 0\nℹ cancelled 0\nℹ skipped 0\nℹ todo 0\nℹ duration_ms 3750.2425"
     },
     {
       "name": "check-ui-improvements",
@@ -120,7 +140,7 @@
     {
       "name": "admin_login_form",
       "passed": true,
-      "output": "Passed: admin endpoint/session flow, unchanged member email flow, activity attribution call, non-admin rejection, unavailable-function recovery."
+      "output": "Passed: username/member audited endpoint flows, session activation, activity calls, role rejection, and unavailable-function recovery.\nPassed: cancelled MFA does not activate or replace the existing application session."
     },
     {
       "name": "Registration SDK isolation",
@@ -201,6 +221,31 @@
       "name": "admin_membership_validation",
       "passed": true,
       "output": "Passed: active-admin authorization, inactive-admin denial, numeric renewal and plan-change payments, and inactive-staff denial."
+    },
+    {
+      "name": "security_activity_events",
+      "passed": true,
+      "output": "Passed: security activity migration, repeat application, role restrictions, password/recovery triggers, and secret exclusion."
+    },
+    {
+      "name": "admin_mfa",
+      "passed": true,
+      "output": "Passed: admin MFA blocks direct RLS reads, dashboard/scanner activation and protected RPC requests at AAL1; bootstrap limited to own boolean; AAL2 and staff access preserved; migration rerun passes."
+    },
+    {
+      "name": "admin_device_approval",
+      "passed": true,
+      "output": "Passed: pending isolation, exact approver/requester binding, cross-account/self-approval denial, request deduplication, approved transfer, scoped activation, denial/expiry/cancellation, stale-session denial, MFA fallback and migration rerun."
+    },
+    {
+      "name": "admin_trusted_device",
+      "passed": true,
+      "output": "Passed: first enrollment MFA, password-only key reuse after logout, service-only challenge APIs, consumed proof rejection, trusted AAL1 approver, approval plus MFA transfer, atomic old-device revocation, denied transfer isolation, offline MFA recovery, forget-device revocation and migration rerun."
+    },
+    {
+      "name": "member_device_approval",
+      "passed": true,
+      "output": "Passed: initial device enrollment, untrusted-session guard, service-only APIs/private-table isolation, trusted-device approval and transfer, previous-session revocation, denial and expiry preservation, unapproved applicant handling, challenge binding, and migration rerun."
     }
   ]
 }

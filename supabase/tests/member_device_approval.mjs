@@ -125,6 +125,7 @@ try {
   await setRole('service_role');
   assert.equal((await db.query('select public.create_member_device_challenge($1,$2,$3,$4) result', [nonmember, sessions.noMembership, devices.expired, key('e')])).rows[0].result.skip, true, 'Unapproved applicant without a member row does not enroll a device');
   await assert.rejects(db.query('select public.finish_member_device_login($1,$2,$3,$4)', [member, sessions.first, 'wrong-challenge', 'Browser']), /challenge expired or consumed/);
+  await db.exec('reset role');
   await db.exec(fs.readFileSync('supabase/migrations/20261110000006_member_device_approval.sql', 'utf8'));
   console.log('Passed: initial device enrollment, untrusted-session guard, service-only APIs/private-table isolation, trusted-device approval and transfer, previous-session revocation, denial and expiry preservation, unapproved applicant handling, challenge binding, and migration rerun.');
 } finally {
