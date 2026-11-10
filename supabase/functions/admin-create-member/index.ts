@@ -63,7 +63,7 @@ Deno.serve(async (request) => {
   }
   if (!email || password.length < 8 || !validPersonName(fullName) || !validPersonName(emergencyName) || !mobile || !plan
     || !Number.isFinite(price) || price <= 0 || !isValidDateOnly(startDate) || !isValidDateOnly(expiryDate) || expiryDate < startDate) {
-    return response({ error: 'Required member or membership details are missing, or a name contains numbers or invalid characters.' }, 400);
+    return response({ error: 'Required member details are missing, a name is invalid, or the membership dates are invalid.' }, 400);
   }
   if (!/^09\d{9}$/.test(mobile) || !/^09\d{9}$/.test(emergencyContact)) {
     return response({ error: 'Mobile and emergency contact numbers must each be 11 digits and start with 09.' }, 400);

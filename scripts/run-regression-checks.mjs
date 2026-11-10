@@ -31,7 +31,7 @@ for(const file of ['registration_submission','admin_membership_sync','admin_logi
 run('Registration SDK isolation',['supabase/tests/registration_session.mjs',sdk]);
 for(const file of ['activity_logs','admin_username_login','admin_login_profile_access','members_inactive_status','phone_pairing_repair','membership_paid_compatibility','reliable_attendance_scanning','unique_usernames','unique_registration_emails','staff_service_profile_access','staff_request_reviews','single_account_session','shared_pairing_capacity','monthly_phone_pairing','admin_membership_validation'])run(file,[`supabase/tests/${file}.mjs`,pglite]);
 const folder='Documentations/Review Evidence';fs.mkdirSync(folder,{recursive:true});
-for (const file of ['security_activity_events','admin_mfa','admin_device_approval','admin_trusted_device']) run(file,[`supabase/tests/${file}.mjs`,pglite]);
+for (const file of ['security_activity_events','admin_mfa','admin_device_approval','admin_trusted_device','member_device_approval']) run(file,[`supabase/tests/${file}.mjs`,pglite]);
 const report={completedAt:new Date().toISOString(),passed:results.filter(test=>test.passed).length,failed:results.filter(test=>!test.passed).length,checks:results};
 fs.writeFileSync(`${folder}/System Regression Results.json`,JSON.stringify(report,null,2)+'\n');
 console.log(`${report.passed} checks passed; ${report.failed} failed.`);
