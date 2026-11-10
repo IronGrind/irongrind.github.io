@@ -199,3 +199,35 @@ Chapter 3 uses the original figure presentation: Figures 3a-e contain the nine-p
 - Exact table names and individual stores remain visible.
 
 Speaker notes: Use the standalone 03-dfd-complete-gane-sarson.svg. For example, login verifies identity and authorizes access; sales records transactions and sale items; activity records are filtered and viewed. Read each connector label by its stated destination. Two-way exchanges retain distinct input and output meanings on one line. Generation and XML checks passed: nine panels and 68 pair connectors. Adviser notation review and desktop visual review remain pending. This local SVG revision does not replace the Word figures or change deployed application/database behavior.
+
+## Gane?Sarson DFD: single-headed presentation
+
+- Rectangular entities; rounded numbered processes; open-ended identified stores.
+- Specific process actions and one single-headed arrow per pair.
+- Simplified view shows input/write flows for two-way pairs and reads for read-only stores.
+
+Speaker notes: This supersedes the prior double-headed presentation in the standalone SVG. One arrow represents only the named flow in its indicated direction. Reverse flows are omitted for two-way pairs and remain in the source model; do not describe this view as complete directional coverage. A full DFD would draw separate arrows for both directions. Generation, syntax and SVG XML checks passed with nine panels and 68 single-headed connectors. Visual/adviser review remains pending. Word figures and deployed application/database behavior are unchanged.
+
+## DFD line clarity and reference styling
+
+- Pale-blue entities and numbered headers with white process bodies follow the supplied Gane?Sarson example.
+- Darker, thicker single-headed arrows and larger separated flow labels improve tracing.
+- Horizontal lanes keep connections distinct.
+
+Speaker notes: Use the updated standalone SVG. All nine specific process actions and individual table names remain. This remains the simplified one-arrow-per-pair view; reverse flows are omitted as stated on the diagram. Generation, syntax and XML checks passed, and the visible first-panel styling was inspected in an Edge screenshot. Full page and adviser review remain pending. Word diagrams and deployed behavior are unchanged.
+
+## DFD reference layout and connector routing
+
+- Shared entities left, nine compact processes center, individual shared stores right.
+- Bent routes use distinct ports and lanes with gaps at crossings.
+- One single-headed named flow per pair remains.
+
+Speaker notes: This replaces the standalone SVG panel layout to match how connections travel in the supplied reference. Generate it with build-dfd-reference-routing.mjs. Generation produced three entities, nine processes, seventeen stores and 68 connectors; syntax, XML parsing and a full-layout browser preview were checked. Zoom the SVG to read dense routes. Reverse flows remain omitted from this simplified view; the source model retains them. Adviser review and Word replacement remain pending. No application/database deployment occurred.
+
+## DFD shared same-name flows
+
+- Identically named flows to the same receiver share one labeled trunk.
+- Branch dots show real joins; crossing gaps keep unrelated flows separate.
+- 68 represented source connections now use 60 connector groups.
+
+Speaker notes: Five compatible same-name groups were merged while retaining every connection represented by the prior simplified view. Different names and destinations remain separate. A shared arrow describes only its stated receiving direction; omitted reverse flows remain in the source model. Generation, syntax and XML checks passed; full visual/adviser review remains pending. Word figures and deployed application/database behavior are unchanged.

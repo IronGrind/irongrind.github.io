@@ -82,18 +82,15 @@ const arrow = (x1, y, x2, label, direction = 'right') => {
   // Keep the endpoint at the flow destination so every arrowhead points into
   // the receiving actor/process/store, regardless of flow direction.
   const mid = (x1 + x2) / 2;
-  const labelWidth = Math.min(480, Math.max(210, label.length * 9));
-  return `<path d="M${x1} ${y}H${x2}" class="flow" marker-end="url(#arrow-end)"/><rect x="${mid - labelWidth / 2}" y="${y - 20}" width="${labelWidth}" height="17" rx="7" class="label-bg"/>${text(mid, y - 7, label, 'flow-label', 'middle', 62)}`;
+  const labelWidth = Math.min(Math.abs(x2 - x1) - 40, Math.max(210, label.length * 9));
+  return `<path d="M${x1} ${y}H${x2}" class="flow" marker-end="url(#arrow-end)"/><rect x="${mid - labelWidth / 2}" y="${y - 38}" width="${labelWidth}" height="28" rx="2" class="label-bg"/>${text(mid, y - 18, label, 'flow-label', 'middle', 62)}`;
 };
 
-// A single connector per pair; labels state both destinations explicitly.
+// Simplified view: show one actual directional flow per pair, never imply
+// that a single-headed arrow represents both a request and its response.
 const pairedFlow = (left, y, right, toRight, toLeft) => {
- const mid = (left + right) / 2;
- const markers = (toRight ? ' marker-end="url(#arrow-end)"' : '') + (toLeft ? ' marker-start="url(#arrow-start)"' : '');
- const label = (value, target, baseline) => value ? text(mid, baseline, target + ': ' + value, 'flow-label', 'middle', 90) : '';
- return '<path d="M' + left + ' ' + y + 'H' + right + '" class="flow"' + markers + '/>'
-  + label(toRight, 'To ' + (left === actorX + actorW ? 'process' : 'store'), y - 10)
-  + label(toLeft, 'To ' + (left === actorX + actorW ? 'entity' : 'process'), y + 23);
+ if (!toRight && !toLeft) return '';
+ return toRight ? arrow(left, y, right, toRight) : arrow(right, y, left, toLeft, 'left');
 };
 
 let cursorY = 320;
@@ -115,7 +112,7 @@ for (let i = 0; i < processes.length; i++) {
 
   actors.forEach((actor, index) => {
     const y = 76 + index * 142;
-    body += box(actorX, y, actorW, 104, 12, 'entity');
+    body += box(actorX, y, actorW, 104, 0, 'entity');
     body += text(actorX + actorW / 2, y + 31, actor[0], 'entity-title', 'middle', 34);
     body += pairedFlow(actorX + actorW, y + 66, actorFlowEnd, actor[1], actor[2]);
   });
@@ -123,6 +120,7 @@ for (let i = 0; i < processes.length; i++) {
   const processY = 60;
   const processH = height - 120;
   body += box(processX, processY, processW, processH, 18, 'process');
+  body += `<path d="M${processX+18} ${processY}H${processX+processW-18}Q${processX+processW} ${processY} ${processX+processW} ${processY+18}V${processY+48}H${processX}V${processY+18}Q${processX} ${processY} ${processX+18} ${processY}Z" class="process-header"/>`;
   body += `<path d="M${processX} ${processY + 48}H${processX + processW}" class="process-separator"/>`;
   body += text(processX + processW / 2, processY + 33, process.Id, 'process-number');
   body += `<text x="${processX + processW / 2}" y="${processY + processH / 2}" class="process-name" text-anchor="middle">${esc(process.Name)}</text>`;
@@ -139,16 +137,16 @@ for (let i = 0; i < processes.length; i++) {
 
 const width = 3360;
 const height = cursorY + 190;
-const header = `<g><text x="80" y="82" class="title">Iron Grind Fitness Gym — Complete Level 1 DFD</text>
+const header = `<g><text x="80" y="82" class="title">Iron Grind Fitness Gym — Simplified Level 1 DFD</text>
 <text x="80" y="122" class="subtitle">Gane–Sarson notation · nine processes · named actors and individual data stores</text>
 <g transform="translate(80 160)">${box(0, 0, 280, 58, 0, 'entity')}<text x="140" y="36" class="legend">External entity</text>
 ${box(350, 0, 300, 58, 14, 'process')}<text x="500" y="36" class="legend">Process</text>
 <path d="M740 0h310 M740 0v58 M740 58h310 M810 0v58" class="store"/><text x="900" y="36" class="legend">Data store</text>
 <path d="M1140 30h310" class="flow" marker-end="url(#arrow-end)"/><text x="1295" y="18" class="legend">Data flow</text></g>
-<text x="80" y="250" class="note">Each data store uses its database table name. Repeated D identifiers refer to the same table; one connector per pair; arrowheads and destination labels show flow direction.</text>
-<text x="80" y="276" class="note">Table names match the documented pgAdmin baseline and migrations through 20261110000004; this is not fresh live-schema introspection.</text></g>`;
+<text x="80" y="250" class="note">Each data store uses its database table name. Repeated D identifiers refer to the same table; one single-headed flow per pair. For exchanges, the initiating input or store write is shown.</text>
+<text x="80" y="276" class="note">Simplified directional view: return flows are omitted where a pair exchanges data both ways; consult the source model for complete flows.</text></g>`;
 const style = `<style>
- text{font-family:Arial,sans-serif;fill:#172235}.title{font-size:38px;font-weight:700}.subtitle{font-size:22px;fill:#536274}.panel-title{font-size:25px;font-weight:700}.note{font-size:17px;fill:#536274}.legend{font-size:18px;font-weight:600;text-anchor:middle}.panel{fill:#fff;stroke:#d1d9e3;stroke-width:2}.entity{fill:#fff;stroke:#40516a;stroke-width:2.5}.entity-title{font-size:20px;font-weight:700}.process{fill:#e1ebf8;stroke:#244a78;stroke-width:3}.process-separator{stroke:#244a78;stroke-width:2}.process-number{font-size:21px;font-weight:700}.process-name{font-size:22px;font-weight:700}.store{fill:none;stroke:#40516a;stroke-width:2.5}.store-id{font-size:18px;font-weight:700}.store-name{font-size:17px}.flow{fill:none;stroke:#34445a;stroke-width:2}.flow-label{font-size:14px;fill:#26364a}.label-bg{fill:#fff;stroke:#e1e6ed;stroke-width:1}.page{fill:#f6f8fb}
+ text{font-family:Arial,sans-serif;fill:#172235}.title{font-size:38px;font-weight:700}.subtitle{font-size:22px;fill:#536274}.panel-title{font-size:25px;font-weight:700}.note{font-size:17px;fill:#536274}.legend{font-size:18px;font-weight:600;text-anchor:middle}.panel{fill:#fff;stroke:#d1d9e3;stroke-width:2}.entity{fill:#d5e2f5;stroke:#172235;stroke-width:2.5}.entity-title{font-size:20px;font-weight:700}.process{fill:#fff;stroke:#172235;stroke-width:3}.process-header{fill:#d5e2f5;stroke:none}.process-separator{stroke:#244a78;stroke-width:2}.process-number{font-size:21px;font-weight:700}.process-name{font-size:22px;font-weight:700}.store{fill:none;stroke:#40516a;stroke-width:2.5}.store-id{font-size:18px;font-weight:700}.store-name{font-size:17px}.flow{fill:none;stroke:#111827;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.flow-label{font-size:17px;fill:#111827}.label-bg{fill:#fff;stroke:none}.page{fill:#fff}
 </style>`;
-const svg = `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="title desc"><title id="title">Iron Grind Fitness Gym — Complete Level 1 DFD</title><desc id="desc">Nine process panels in Gane–Sarson notation, with external entities, separately identified data stores, and labeled data flows.</desc><defs><marker id="arrow-start" markerWidth="9" markerHeight="9" refX="1" refY="4.5" orient="auto"><path d="M9 0L0 4.5L9 9Z" fill="#34445a"/></marker><marker id="arrow-end" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#34445a"/></marker></defs>${style}<rect class="page" width="100%" height="100%"/>${header}${panels.join('')}<text x="80" y="${height - 42}" class="note">Source: Chapter 3 Level 1 process/actor-flow model and User Login security-store supplement. Standalone complete Level 1 DFD. The Word chapter presents the same model in five panels (Figures 3a-e); Figure 3f isolates the administrator security stores.</text></svg>`;
+const svg = `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="title desc"><title id="title">Iron Grind Fitness Gym — Complete Level 1 DFD</title><desc id="desc">Nine process panels in Gane–Sarson notation, with external entities, separately identified data stores, and labeled data flows.</desc><defs><marker id="arrow-end" markerWidth="12" markerHeight="12" refX="10" refY="6" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L11 6L0 12Z" fill="#111827"/></marker></defs>${style}<rect class="page" width="100%" height="100%"/>${header}${panels.join('')}<text x="80" y="${height - 42}" class="note">Source: Chapter 3 Level 1 process/actor-flow model and User Login security-store supplement. Standalone complete Level 1 DFD. The Word chapter presents the same model in five panels (Figures 3a-e); Figure 3f isolates the administrator security stores.</text></svg>`;
 fs.writeFileSync(path.join(root, '03-dfd-complete-gane-sarson.svg'), svg, 'utf8');
