@@ -102,11 +102,12 @@ foreach($chapter in $Chapters){
     $row=@($dictionary[15].SelectNodes('w:tr',$ns)|Where-Object {(($_.SelectSingleNode('w:tc',$ns).SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim() -eq $field})
     if($row.Count -ne 1 -or -not (($row[0].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Contains('Part of composite UQ (requesting_session_id, session_scope)')){throw 'Approval composite uniqueness is missing.'}
    }
-   foreach($phrase in @('Figure 3j. User Login - Additional Individual Security Stores','Figure 5a. Administrator Security Schema Supplement','Approval alone does not authorize access.','Normal logout retains browser trust','not a fresh live-schema introspection')){if(-not $all.Contains($phrase)){throw "Current security documentation missing: $phrase"}}
-   foreach($processId in 1..9){$letter=[char](96+$processId);if(-not $all.Contains("Figure 3$letter. Level 1 DFD - Process $processId.0:")){throw "Missing non-overlapping Level 1 DFD panel for process $processId.0."}}
+   foreach($phrase in @('Figure 3a. Complete Level 1 DFD - All Nine Processes','Figure 3b. User Login - Additional Individual Security Stores','Approval alone does not authorize access.','Normal logout retains browser trust','not a fresh live-schema introspection')){if(-not $all.Contains($phrase)){throw "Current security documentation missing: $phrase"}}
+   if(([regex]::Matches($all,'Figure 3a\. Complete Level 1 DFD - All Nine Processes')).Count -ne 1){throw 'Chapter 3 must contain exactly one complete Level 1 DFD caption.'}
+   foreach($letter in 'c','d','e','f','g','h','i','j'){if($all.Contains("Figure 3$letter. Level 1 DFD - Process")){throw "Obsolete split DFD caption remains: Figure 3$letter."}}
    foreach($phrase in @('No new application table or column is introduced','Current-device approval and push notifications are not included in this increment','complete fifteen-table, 174-field','All fifteen application tables and twenty-one foreign keys')){if($all.Contains($phrase)){throw "Superseded security documentation: $phrase"}}
    $results.Add('Chapter 3: four-column dictionary with 201 descriptions and declared types; 27 FK targets/actions, five individually unique fields, approval composite UQ, identity generation and composite PK verified; public ERD landscape section retained.')
-   $results.Add('Chapter 3: 12 public and 6 private dictionary tables, 201 fields, 23 total tables, and linked figures verified. Security DFD/schema supplements retain nine main functions and distinguish live acceptance tests from deployment output.')
+   $results.Add('Chapter 3: one complete nine-process Level 1 DFD and security supplement captions verified; 12 public and 6 private dictionary tables, 201 fields, and 23 total tables verified. Security supplements retain nine main functions and distinguish live acceptance tests from deployment output.')
   }
   $results.Add("Chapter ${chapter}: XML opens; no unexpected body/data-row bold, stale approval wording, garbled punctuation, or missing figure links detected.")
  }finally{$zip.Dispose()}
