@@ -39,7 +39,8 @@ const slides=[...markdown.matchAll(/^## Slide (\d+) — (.+)\r?\n([\s\S]*?)(?=^#
  const body=match[3],notes=body.split('Speaker notes:')[1]?.trim()||'';
  return {title:match[2],bullets:[...body.split('Speaker notes:')[0].matchAll(/^- (.+)$/gm)].map(m=>m[1]),notes};
 });
-if(!slides.length||slides.some(s=>!s.notes||!s.bullets.length))throw Error('Incomplete slide/speaker-note source');
+const expectedSlides=[...markdown.matchAll(/^## Slide \d+ /gm)].length;
+if(!slides.length||slides.length!==expectedSlides||slides.some(s=>!s.notes||!s.bullets.length))throw Error('Incomplete slide/speaker-note source or malformed slide heading');
 const P='http://schemas.openxmlformats.org/presentationml/2006/main',A='http://schemas.openxmlformats.org/drawingml/2006/main',R='http://schemas.openxmlformats.org/officeDocument/2006/relationships';
 const relType='http://schemas.openxmlformats.org/officeDocument/2006/relationships/';
 const head='<?xml version="1.0" encoding="UTF-8" standalone="yes"?>';

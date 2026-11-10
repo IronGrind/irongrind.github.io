@@ -17,7 +17,7 @@ window.readAdminDeviceKey = async () => {
         // add, not put: another tab may have won the first-enrollment storage race.
         await new Promise((resolve, reject) => {
             const transaction = db.transaction('keys', 'readwrite'); transaction.objectStore('keys').add(value, 'device');
-            transaction.oncomplete = () => resolve(); transaction.onerror = () => reject(transaction.error);
+            transaction.oncomplete = () => resolve(); transaction.onerror = transaction.onabort = () => reject(transaction.error);
         });
         return value;
     } catch (error) {

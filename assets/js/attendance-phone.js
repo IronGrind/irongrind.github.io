@@ -38,7 +38,7 @@ async function signInPhoneOperator(event) {
         if (activationError) throw new Error('Could not secure your sign-in session. Sign in again.');
         window.monitorAccountSession(phoneOperatorClient, async reason => {
             await changePhoneOperator(false);
-            setPhoneAttendanceStatus(reason === 'expired' ? 'Your session ended. Sign in again to scan.' : 'Another attendance scanner signed in with this account. Sign in again to scan.', true);
+            setPhoneAttendanceStatus(reason === 'device' ? 'This browser’s administrator trust ended. Sign in and verify again.' : reason === 'expired' ? 'Your session ended. Sign in again to scan.' : 'Another attendance scanner signed in with this account. Sign in again to scan.', true);
         });
         const { data: { user }, error: userError } = await phoneOperatorClient.auth.getUser();
         if (userError || !user) throw new Error('Could not verify your sign-in.');

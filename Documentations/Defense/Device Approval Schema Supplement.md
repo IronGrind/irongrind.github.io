@@ -1,5 +1,7 @@
 # Current-device approval — schema and flow supplement
 
+This describes the earlier session-only approval baseline. The subsequent trusted-browser target supersedes its access policy and adds a device snapshot field; see [Trusted Administrator Device Guide](Trusted%20Administrator%20Device%20Guide.md) for the latest flow and schema additions.
+
 Source: `supabase/migrations/20261110000003_admin_device_approval.sql`. User-supplied CLI output confirms this migration applied successfully after the earlier deployment through 20261110000002. Matching web deployment and live two-device behavior are not yet verified. Public tables are unchanged. This extends the supporting schema from three to four private tables in the deployed migration reported by the user; the prior 174-field dictionary baseline gains eleven fields. `auth.sessions` is managed Auth storage, not a new public application table.
 
 ## private.admin_login_approvals

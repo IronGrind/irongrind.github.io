@@ -10,9 +10,9 @@ Generated from current source definitions. Use alongside the module explanations
 
 | Function / exported handler | Line |
 |---|---:|
-| actionLabel | 33 |
-| renderLog | 42 |
-| loadActivityLogs | 70 |
+| actionLabel | 34 |
+| renderLog | 43 |
+| loadActivityLogs | 71 |
 
 ### assets/js/admin-access.js
 
@@ -35,14 +35,26 @@ Generated from current source definitions. Use alongside the module explanations
 | startAdminApprovalNotifications | 50 |
 | refresh | 53 |
 
+### assets/js/admin-device-trust.js
+
+[Open source](../../assets/js/admin-device-trust.js)
+
+| Function / exported handler | Line |
+|---|---:|
+| readAdminDeviceKey | 2 |
+| prepareAdminDeviceTrust | 29 |
+| call | 31 |
+| requireAdminMfa | 54 |
+| forgetAdminDevice | 66 |
+
 ### assets/js/admin-mfa.js
 
 [Open source](../../assets/js/admin-mfa.js)
 
 | Function / exported handler | Line |
 |---|---:|
-| requireAdminMfa | 2 |
-| finish | 51 |
+| verifyAdminAuthenticator | 2 |
+| finish | 50 |
 
 ### assets/js/admin.js
 
@@ -101,146 +113,146 @@ Generated from current source definitions. Use alongside the module explanations
 | switchMemberTab | 430 |
 | switchApprovalType | 440 |
 | logout | 448 |
-| renderDashboard | 471 |
-| getPlanDurationDays | 515 |
-| getPlanPrice | 522 |
-| isPastMembershipArchiveGrace | 529 |
-| isMembershipArchiveReady | 533 |
-| hasPendingRenewalForMember | 539 |
-| isInactiveMember | 547 |
-| renderMembers | 553 |
-| filterPlan | 597 |
-| viewMemberDetails | 603 |
-| renderApprovals | 633 |
-| approveApplication | 704 |
-| completeApproval | 712 |
-| completeSupabaseRegistrationApproval | 814 |
-| completeSupabaseRenewalApproval | 817 |
-| completeSupabaseRequestApproval | 820 |
-| mapSupabaseMember | 831 |
-| loadSupabaseMembershipData | 865 |
-| loadSupabaseOperationalData | 928 |
-| scheduleAdminRealtimeRefresh | 1018 |
-| subscribeAdminRealtimeUpdates | 1041 |
-| initializeSupabaseAdminData | 1065 |
-| startAdminMembershipRefresh | 1111 |
-| rejectApplication | 1127 |
-| completeRejection | 1134 |
-| openAddMemberModal | 1156 |
-| clearSignature | 1332 |
-| submitNewMember | 1336 |
-| openChangePlanModal | 1443 |
-| updatePlanChangePrice | 1459 |
-| submitMemberPlanChange | 1468 |
-| renewMember | 1565 |
-| completeMemberRenewal | 1586 |
-| renderAttendance | 1661 |
-| startQRScanner | 1681 |
-| startPhoneQRPairing | 1690 |
-| createPhonePairingSession | 1711 |
-| showMobileAttendancePairingModal | 1757 |
-| startPhonePairingListPolling | 1795 |
-| togglePhonePairingQrVisibility | 1807 |
-| applyPhonePairingCapacityState | 1813 |
-| requestPairingPassword | 1849 |
-| submitPairingPassword | 1865 |
-| cancelPairingPasswordPrompt | 1891 |
-| requestPairingRemovalPin | 1898 |
-| submitPairingRemovalPin | 1914 |
-| cancelPairingRemovalPin | 1934 |
-| renderPhonePairingSettings | 1941 |
-| refreshPhonePairingLimitSummary | 1956 |
-| changePhonePairingLimit | 1965 |
-| cancelPhonePairingLimit | 1984 |
-| authorizePhonePairingLimit | 1990 |
-| startMobileAttendancePolling | 2017 |
-| savePersistentMobileAttendanceSessions | 2029 |
-| setAttendancePhoneStatus | 2036 |
-| refreshPairedAttendancePhones | 2043 |
-| refreshAttendancePhoneStatus | 2147 |
-| restoreMobileAttendancePairing | 2170 |
-| endMobileAttendanceSession | 2198 |
-| restorePhonePairingModal | 2233 |
-| pollMobileAttendanceScans | 2257 |
-| startLocalQRScanner | 2268 |
-| getQRScannerErrorMessage | 2408 |
-| stopQRScanner | 2424 |
-| findMemberFromQR | 2435 |
-| resolveMemberFromQR | 2449 |
-| recordMemberAttendanceScan | 2482 |
-| checkOut | 2524 |
-| unlockStore | 2549 |
-| renderStore | 2585 |
-| productCard | 2602 |
-| restockProduct | 2630 |
-| updateRestockQuantityInput | 2650 |
-| submitRestock | 2658 |
-| unitLabelPlural | 2687 |
-| merchandiseSizeOptions | 2694 |
-| merchandiseTypeOptions | 2701 |
-| merchandiseTypeLabel | 2705 |
-| supplementTypeOptions | 2709 |
-| supplementTypeLabel | 2713 |
-| supplementFormOptions | 2717 |
-| supplementFormLabel | 2721 |
-| stockUnitOptions | 2722 |
-| stockStep | 2729 |
-| productPhotoPicker | 2731 |
-| openAddProductModal | 2747 |
-| toggleAddProductSize | 2765 |
-| convertInventoryUnit | 2795 |
-| submitAddProduct | 2819 |
-| editProduct | 2865 |
-| toggleEditSupplementUnits | 2895 |
-| toggleEditProductSize | 2921 |
-| submitEditProduct | 2926 |
-| previewProductPhoto | 2982 |
-| getProductPhoto | 3002 |
-| archiveProduct | 3031 |
-| completeProductArchive | 3037 |
-| openNewSaleModal | 3059 |
-| updateSaleQuantityMode | 3079 |
-| updateSaleTotalPreview | 3116 |
-| submitNewSale | 3124 |
-| switchSalesView | 3206 |
-| renderWalkinSalesReport | 3224 |
-| updateProductSalesPeriodControls | 3245 |
-| getProductSalesPeriod | 3252 |
-| isProductSaleInSelectedPeriod | 3271 |
-| getMembershipSalesPeriod | 3276 |
-| updateMembershipSalesPeriod | 3290 |
-| isWalkinProductSale | 3300 |
-| getSaleProductCategory | 3306 |
-| getSaleProductNames | 3316 |
-| isMembershipSale | 3324 |
-| getMembershipPlanFromSale | 3333 |
-| renderSales | 3344 |
-| getMemberActivityStatus | 3449 |
-| archiveExpiredMembership | 3461 |
-| captureExpiredMemberships | 3482 |
-| renderReports | 3489 |
-| updateReportPeriodControls | 3565 |
-| updateReportExportAction | 3570 |
-| closeReportActionsMenus | 3581 |
-| toggleReportActionsMenu | 3591 |
-| printSelectedReport | 3601 |
-| getSelectedReportPeriod | 3610 |
-| reportDateMatchesPeriod | 3629 |
-| isRenewalSale | 3636 |
-| getRenewalChannel | 3643 |
-| getRenewalPlan | 3651 |
-| getRenewalReportRows | 3659 |
-| groupAttendanceByMonth | 3674 |
-| viewReport | 3691 |
-| setReportPreviewZoom | 3758 |
-| getMembershipIncomeBreakdown | 3767 |
-| viewReportPDF | 3800 |
-| printReportPDF | 3815 |
-| reportDateBelongsToMonth | 3990 |
-| createMonthlyReportPDF | 3998 |
-| logReportExportRequest | 4119 |
-| exportAllReports | 4126 |
-| downloadReportPDF | 4195 |
+| renderDashboard | 480 |
+| getPlanDurationDays | 524 |
+| getPlanPrice | 531 |
+| isPastMembershipArchiveGrace | 538 |
+| isMembershipArchiveReady | 542 |
+| hasPendingRenewalForMember | 548 |
+| isInactiveMember | 556 |
+| renderMembers | 562 |
+| filterPlan | 606 |
+| viewMemberDetails | 612 |
+| renderApprovals | 642 |
+| approveApplication | 713 |
+| completeApproval | 721 |
+| completeSupabaseRegistrationApproval | 823 |
+| completeSupabaseRenewalApproval | 826 |
+| completeSupabaseRequestApproval | 829 |
+| mapSupabaseMember | 840 |
+| loadSupabaseMembershipData | 874 |
+| loadSupabaseOperationalData | 937 |
+| scheduleAdminRealtimeRefresh | 1027 |
+| subscribeAdminRealtimeUpdates | 1050 |
+| initializeSupabaseAdminData | 1074 |
+| startAdminMembershipRefresh | 1120 |
+| rejectApplication | 1136 |
+| completeRejection | 1143 |
+| openAddMemberModal | 1165 |
+| clearSignature | 1341 |
+| submitNewMember | 1345 |
+| openChangePlanModal | 1452 |
+| updatePlanChangePrice | 1468 |
+| submitMemberPlanChange | 1477 |
+| renewMember | 1574 |
+| completeMemberRenewal | 1595 |
+| renderAttendance | 1670 |
+| startQRScanner | 1690 |
+| startPhoneQRPairing | 1699 |
+| createPhonePairingSession | 1720 |
+| showMobileAttendancePairingModal | 1766 |
+| startPhonePairingListPolling | 1804 |
+| togglePhonePairingQrVisibility | 1816 |
+| applyPhonePairingCapacityState | 1822 |
+| requestPairingPassword | 1858 |
+| submitPairingPassword | 1874 |
+| cancelPairingPasswordPrompt | 1900 |
+| requestPairingRemovalPin | 1907 |
+| submitPairingRemovalPin | 1923 |
+| cancelPairingRemovalPin | 1943 |
+| renderPhonePairingSettings | 1950 |
+| refreshPhonePairingLimitSummary | 1965 |
+| changePhonePairingLimit | 1974 |
+| cancelPhonePairingLimit | 1993 |
+| authorizePhonePairingLimit | 1999 |
+| startMobileAttendancePolling | 2026 |
+| savePersistentMobileAttendanceSessions | 2038 |
+| setAttendancePhoneStatus | 2045 |
+| refreshPairedAttendancePhones | 2052 |
+| refreshAttendancePhoneStatus | 2156 |
+| restoreMobileAttendancePairing | 2179 |
+| endMobileAttendanceSession | 2207 |
+| restorePhonePairingModal | 2242 |
+| pollMobileAttendanceScans | 2266 |
+| startLocalQRScanner | 2277 |
+| getQRScannerErrorMessage | 2417 |
+| stopQRScanner | 2433 |
+| findMemberFromQR | 2444 |
+| resolveMemberFromQR | 2458 |
+| recordMemberAttendanceScan | 2491 |
+| checkOut | 2533 |
+| unlockStore | 2558 |
+| renderStore | 2594 |
+| productCard | 2611 |
+| restockProduct | 2639 |
+| updateRestockQuantityInput | 2659 |
+| submitRestock | 2667 |
+| unitLabelPlural | 2696 |
+| merchandiseSizeOptions | 2703 |
+| merchandiseTypeOptions | 2710 |
+| merchandiseTypeLabel | 2714 |
+| supplementTypeOptions | 2718 |
+| supplementTypeLabel | 2722 |
+| supplementFormOptions | 2726 |
+| supplementFormLabel | 2730 |
+| stockUnitOptions | 2731 |
+| stockStep | 2738 |
+| productPhotoPicker | 2740 |
+| openAddProductModal | 2756 |
+| toggleAddProductSize | 2774 |
+| convertInventoryUnit | 2804 |
+| submitAddProduct | 2828 |
+| editProduct | 2874 |
+| toggleEditSupplementUnits | 2904 |
+| toggleEditProductSize | 2930 |
+| submitEditProduct | 2935 |
+| previewProductPhoto | 2991 |
+| getProductPhoto | 3011 |
+| archiveProduct | 3040 |
+| completeProductArchive | 3046 |
+| openNewSaleModal | 3068 |
+| updateSaleQuantityMode | 3088 |
+| updateSaleTotalPreview | 3125 |
+| submitNewSale | 3133 |
+| switchSalesView | 3215 |
+| renderWalkinSalesReport | 3233 |
+| updateProductSalesPeriodControls | 3254 |
+| getProductSalesPeriod | 3261 |
+| isProductSaleInSelectedPeriod | 3280 |
+| getMembershipSalesPeriod | 3285 |
+| updateMembershipSalesPeriod | 3299 |
+| isWalkinProductSale | 3309 |
+| getSaleProductCategory | 3315 |
+| getSaleProductNames | 3325 |
+| isMembershipSale | 3333 |
+| getMembershipPlanFromSale | 3342 |
+| renderSales | 3353 |
+| getMemberActivityStatus | 3458 |
+| archiveExpiredMembership | 3470 |
+| captureExpiredMemberships | 3491 |
+| renderReports | 3498 |
+| updateReportPeriodControls | 3574 |
+| updateReportExportAction | 3579 |
+| closeReportActionsMenus | 3590 |
+| toggleReportActionsMenu | 3600 |
+| printSelectedReport | 3610 |
+| getSelectedReportPeriod | 3619 |
+| reportDateMatchesPeriod | 3638 |
+| isRenewalSale | 3645 |
+| getRenewalChannel | 3652 |
+| getRenewalPlan | 3660 |
+| getRenewalReportRows | 3668 |
+| groupAttendanceByMonth | 3683 |
+| viewReport | 3700 |
+| setReportPreviewZoom | 3767 |
+| getMembershipIncomeBreakdown | 3776 |
+| viewReportPDF | 3809 |
+| printReportPDF | 3824 |
+| reportDateBelongsToMonth | 3999 |
+| createMonthlyReportPDF | 4007 |
+| logReportExportRequest | 4128 |
+| exportAllReports | 4135 |
+| downloadReportPDF | 4204 |
 
 ### assets/js/attendance-phone.js
 
@@ -250,34 +262,35 @@ Generated from current source definitions. Use alongside the module explanations
 |---|---:|
 | requirePhoneOperator | 6 |
 | signInPhoneOperator | 17 |
-| changePhoneOperator | 63 |
-| setPhoneAttendanceStatus | 90 |
-| getPhoneCameraErrorMessage | 97 |
-| setPhoneAttendanceMode | 110 |
-| isPhoneCameraAvailable | 117 |
-| createPhoneQrScanner | 121 |
-| setPhoneCameraButton | 138 |
-| setPhoneNextScanButton | 146 |
-| confirmPhoneCameraPreview | 153 |
-| getPhoneDeviceLabel | 168 |
-| registerPhoneAttendanceDevice | 183 |
-| getAttendancePhoneIdentity | 195 |
-| requestPhoneModelSetup | 204 |
-| savePhoneModelAndContinue | 216 |
-| savePhonePairing | 264 |
-| readPhonePairing | 273 |
-| clearPhonePairing | 289 |
-| acceptPhonePairingLink | 294 |
-| phonePairingRecoveryMessage | 302 |
-| startPhonePairingScanner | 309 |
-| startPhoneMemberScanner | 410 |
-| submitPhoneMemberScan | 479 |
-| stopPhoneAttendanceScanner | 513 |
-| togglePhoneAttendanceCamera | 544 |
-| resumePhoneAttendanceScanner | 576 |
-| installPhoneAttendanceApp | 587 |
-| configurePhoneAppInstall | 599 |
-| startPhoneAttendanceApp | 633 |
+| forgetPhoneAdminDevice | 64 |
+| changePhoneOperator | 74 |
+| setPhoneAttendanceStatus | 101 |
+| getPhoneCameraErrorMessage | 108 |
+| setPhoneAttendanceMode | 121 |
+| isPhoneCameraAvailable | 128 |
+| createPhoneQrScanner | 132 |
+| setPhoneCameraButton | 149 |
+| setPhoneNextScanButton | 157 |
+| confirmPhoneCameraPreview | 164 |
+| getPhoneDeviceLabel | 179 |
+| registerPhoneAttendanceDevice | 194 |
+| getAttendancePhoneIdentity | 206 |
+| requestPhoneModelSetup | 215 |
+| savePhoneModelAndContinue | 227 |
+| savePhonePairing | 275 |
+| readPhonePairing | 284 |
+| clearPhonePairing | 300 |
+| acceptPhonePairingLink | 305 |
+| phonePairingRecoveryMessage | 313 |
+| startPhonePairingScanner | 320 |
+| startPhoneMemberScanner | 421 |
+| submitPhoneMemberScan | 490 |
+| stopPhoneAttendanceScanner | 524 |
+| togglePhoneAttendanceCamera | 555 |
+| resumePhoneAttendanceScanner | 587 |
+| installPhoneAttendanceApp | 598 |
+| configurePhoneAppInstall | 610 |
+| startPhoneAttendanceApp | 644 |
 
 ### assets/js/auth.js
 
@@ -290,12 +303,12 @@ Generated from current source definitions. Use alongside the module explanations
 | hideError | 15 |
 | restoreRememberedLogin | 20 |
 | showAuthRedirectMessage | 37 |
-| showForgotPassword | 50 |
-| closeForgotPassword | 64 |
-| sendPasswordReset | 68 |
-| recoverConfirmedRegistration | 111 |
-| handleLogin | 170 |
-| saveLoginSession | 334 |
+| showForgotPassword | 55 |
+| closeForgotPassword | 69 |
+| sendPasswordReset | 73 |
+| recoverConfirmedRegistration | 116 |
+| handleLogin | 175 |
+| saveLoginSession | 339 |
 
 ### assets/js/button-feedback.js
 
@@ -480,6 +493,7 @@ Generated from current source definitions. Use alongside the module explanations
 | stopAccountSessionMonitor | 30 |
 | monitorAccountSession | 34 |
 | check | 40 |
+| startDashboardSessionMonitor | 91 |
 
 ### assets/js/theme.js
 
@@ -536,6 +550,7 @@ Generated from current source definitions. Use alongside the module explanations
 |---|---|
 | admin-create-member | [index.ts](../../supabase/functions/admin-create-member/index.ts) |
 | admin-create-staff | [index.ts](../../supabase/functions/admin-create-staff/index.ts) |
+| admin-device-trust | [index.ts](../../supabase/functions/admin-device-trust/index.ts) |
 | admin-manage-staff |  |
 | admin-username-login | [handler.ts](../../supabase/functions/admin-username-login/handler.ts), [handler_test.ts](../../supabase/functions/admin-username-login/handler_test.ts), [index.ts](../../supabase/functions/admin-username-login/index.ts) |
 | member-password-login | [index.ts](../../supabase/functions/member-password-login/index.ts) |
@@ -548,7 +563,7 @@ A routine may be replaced or patched by a later migration. This lists the latest
 | Routine | Latest explicit source definition |
 |---|---|
 | private.account_session_is_current | 20261108000006_separate_attendance_sessions.sql:7 |
-| private.admin_mfa_satisfied | 20261110000003_admin_device_approval.sql:18 |
+| private.admin_mfa_satisfied | 20261110000004_admin_trusted_device.sql:26 |
 | private.capture_activity | 20261105043517_remote_schema.sql:54 |
 | private.capture_password_change | 20261110000001_security_activity_events.sql:37 |
 | private.capture_recovery_request | 20261110000001_security_activity_events.sql:54 |
@@ -557,8 +572,8 @@ A routine may be replaced or patched by a later migration. This lists the latest
 | private.is_staff | 20261105043517_remote_schema.sql:181 |
 | private.is_valid_person_name | 20261108000012_validate_person_names.sql:4 |
 | private.normalize_profile_username | 20261108000002_unique_account_usernames.sql:5 |
-| private.require_admin_login_scope | 20261110000003_admin_device_approval.sql:105 |
-| private.require_admin_mfa | 20261110000002_admin_mfa.sql:17 |
+| private.require_admin_login_scope | 20261110000004_admin_trusted_device.sql:35 |
+| private.require_admin_mfa | 20261110000004_admin_trusted_device.sql:44 |
 | private.require_attendance_removal_pin | 20261105043517_remote_schema.sql:195 |
 | private.require_pairing_password | 20261105043517_remote_schema.sql:214 |
 | private.require_recent_admin_auth | 20261105043517_remote_schema.sql:234 |
@@ -575,6 +590,7 @@ A routine may be replaced or patched by a later migration. This lists the latest
 | public.cancel_admin_login_approval | 20261110000003_admin_device_approval.sql:95 |
 | public.close_mobile_attendance_scan_session | 20261105043517_remote_schema.sql:575 |
 | public.consume_admin_login_attempt | 20261105043517_remote_schema.sql:604 |
+| public.create_admin_device_challenge | 20261110000004_admin_trusted_device.sql:52 |
 | public.create_member_and_sale_with_actor | 20261105043517_remote_schema.sql:628 |
 | public.create_mobile_attendance_scan_session | 20261105043517_remote_schema.sql:649 |
 | public.create_profile_for_auth_user | 20261105043517_remote_schema.sql:708 |
@@ -582,6 +598,9 @@ A routine may be replaced or patched by a later migration. This lists the latest
 | public.decide_admin_login_approval | 20261110000003_admin_device_approval.sql:74 |
 | public.enforce_account_session | 20261108000003_single_account_session.sql:78 |
 | public.enforce_member_renewal_window | 20261105043517_remote_schema.sql:727 |
+| public.finish_admin_device_login | 20261110000004_admin_trusted_device.sql:80 |
+| public.forget_admin_trusted_device | 20261110000004_admin_trusted_device.sql:153 |
+| public.get_admin_device_challenge | 20261110000004_admin_trusted_device.sql:71 |
 | public.get_admin_mobile_attendance_device | 20261105043517_remote_schema.sql:756 |
 | public.get_mobile_attendance_pairing_settings | 20261105043517_remote_schema.sql:786 |
 | public.handle_new_auth_user | 20261105043517_remote_schema.sql:825 |

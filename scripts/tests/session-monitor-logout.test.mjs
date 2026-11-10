@@ -41,3 +41,9 @@ test('logout cancels an already-running session check', async () => {
     complete({ data: { session: null } }); await pending;
     assert.deepEqual(fixture.reasons, []);
 });
+test('revoked or transferred administrator trust has a distinct redirect reason', async () => {
+    const fixture = setup(); await settle();
+    fixture.client.rpc = async () => ({ error: { message: 'ADMIN_DEVICE_REQUIRED' } });
+    fixture.client.auth.signOut = async () => {};
+    await fixture.tick(); assert.deepEqual(fixture.reasons, ['device']);
+});

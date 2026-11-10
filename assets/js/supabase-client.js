@@ -54,11 +54,11 @@ window.monitorAccountSession = (client, onReplaced) => {
             if (stopping) return;
             // Ignore an in-flight check belonging to credentials that have changed.
             if (latest.session?.access_token !== token) return;
-            if (error?.message === 'ADMIN_MFA_REQUIRED' || error?.message === 'ADMIN_APPROVAL_REQUIRED') {
+            if (['ADMIN_MFA_REQUIRED', 'ADMIN_APPROVAL_REQUIRED', 'ADMIN_DEVICE_REQUIRED'].includes(error?.message)) {
                 stopping = true; client.__accountSessionMonitor = false;
                 window.stopAdminApprovalNotifications?.(client);
                 await client.auth.signOut({ scope: 'local' });
-                await onReplaced('expired'); return;
+                await onReplaced(error.message === 'ADMIN_DEVICE_REQUIRED' ? 'device' : 'expired'); return;
             }
             if (data === false || error?.code === 'PT401' || error?.message === 'ACCOUNT_SESSION_REPLACED') {
                 stopping = true;
@@ -92,7 +92,7 @@ window.startDashboardSessionMonitor = () => {
     window.monitorAccountSession(window.ironGrindSupabase, async reason => {
         localStorage.removeItem('irongrind_session');
         sessionStorage.removeItem('irongrind_session');
-        window.location.replace(`index.html?auth=${reason === 'expired' ? 'expired' : 'replaced'}`);
+        window.location.replace(`index.html?auth=${reason === 'device' ? 'device' : reason === 'expired' ? 'expired' : 'replaced'}`);
     });
 };
 if (/(?:^|\/)(?:admin|customer|staff)\.html$/.test(window.location.pathname)) window.startDashboardSessionMonitor();

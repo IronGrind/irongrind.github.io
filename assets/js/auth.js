@@ -36,6 +36,11 @@ const REMEMBERED_LOGIN_KEY = 'ig_remembered_login_identifier';
 
 (function showAuthRedirectMessage() {
     const params = new URLSearchParams(window.location.search);
+    if (params.get('auth') === 'device') {
+        showError('This browser’s administrator trust ended or moved to another device. Sign in and verify to register it again.');
+        window.history.replaceState(null, '', 'index.html');
+        return;
+    }
     if (params.get('auth') === 'replaced') {
         showError('Your account was signed in on another device. Sign in again to continue.');
         return;

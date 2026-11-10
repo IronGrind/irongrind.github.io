@@ -2,7 +2,7 @@ $ErrorActionPreference='Stop'
 Add-Type -AssemblyName System.IO.Compression.FileSystem
 $root=Split-Path $PSScriptRoot -Parent
 $folder=Join-Path $root 'Defense'
-foreach($name in @('Capstone Study and Defense Notes.md','Capstone Presentation.md','Source Code Map.md','Admin MFA Setup and Deployment Guide.md')){
+foreach($name in @('Capstone Study and Defense Notes.md','Capstone Presentation.md','Source Code Map.md','Admin MFA Setup and Deployment Guide.md','Trusted Administrator Device Guide.md')){
  if(-not (Test-Path -LiteralPath (Join-Path $folder $name))){throw "Missing $name"}
 }
 $zip=[IO.Compression.ZipFile]::OpenRead((Join-Path $folder 'Capstone Presentation.pptx'))

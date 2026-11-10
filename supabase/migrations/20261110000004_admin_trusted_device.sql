@@ -41,6 +41,12 @@ begin
  end if;
 end;
 $$;
+create or replace function private.require_admin_mfa()
+returns void language plpgsql stable security definer set search_path='' as $$
+begin
+ if not private.admin_mfa_satisfied() then raise sqlstate 'PT403' using message='ADMIN_DEVICE_REQUIRED'; end if;
+end;
+$$;
 
 -- Service-only functions: the Edge Function validates Auth and the ECDSA proof.
 create or replace function public.create_admin_device_challenge(p_user uuid,p_session uuid,p_device uuid,p_scope text,p_key jsonb)
