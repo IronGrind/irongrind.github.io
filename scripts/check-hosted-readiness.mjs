@@ -9,9 +9,10 @@ const folder='Documentations/Review Evidence';
 fs.mkdirSync(folder,{recursive:true});
 const report={completedAt:null,base,scope:'Unauthenticated hosted page, asset, browser and API checks; no account or operational writes.',assets:[],pages:[],api:[]};
 const sha=b=>createHash('sha256').update(b).digest('hex');
+const normalize=b=>b.toString('utf8').replace(/^\uFEFF/,'').replaceAll('\r\n','\n').trimEnd();
 const files=fs.readdirSync('.').filter(f=>f.endsWith('.html')).concat(['attendance-phone-sw.js','attendance-app.webmanifest'],...['assets/js','assets/css'].map(dir=>fs.existsSync(dir)?fs.readdirSync(dir).filter(f=>/\.(js|css)$/.test(f)).map(f=>`${dir}/${f}`):[]));
 for(const file of files){
- try{const r=await fetch(`${base}/${file}`,{signal:AbortSignal.timeout(20000)});const bytes=Buffer.from(await r.arrayBuffer());report.assets.push({file,status:r.status,matchesLocal:r.ok&&sha(bytes)===sha(fs.readFileSync(file))});}
+ try{const r=await fetch(`${base}/${file}`,{signal:AbortSignal.timeout(20000)});const bytes=Buffer.from(await r.arrayBuffer()),local=fs.readFileSync(file);report.assets.push({file,status:r.status,matchesLocal:r.ok&&sha(bytes)===sha(local),matchesNormalized:r.ok&&normalize(bytes)===normalize(local)});}
  catch(e){report.assets.push({file,error:e.message,matchesLocal:false});}
 }
 const config=fs.readFileSync('assets/js/supabase-client.js','utf8');
@@ -60,4 +61,4 @@ try{
  await send('Browser.close');
 }catch(e){report.browserError=e.message;}finally{socket?.close();browser.kill();report.completedAt=new Date().toISOString();fs.writeFileSync(`${folder}/Hosted Readiness Results.json`,JSON.stringify(report,null,2)+'\n');}
 console.log(JSON.stringify({assets:report.assets.length,matchingAssets:report.assets.filter(a=>a.matchesLocal).length,api:report.api,pages:report.pages.length,browserError:report.browserError}));
-if(report.browserError||report.assets.some(a=>!a.matchesLocal)||report.pages.some(p=>p.errors.length||p.httpErrors.length||p.overflow||p.redirectedToLogin===false)||report.api.some(a=>!(a.unauthenticatedDenied||a.invalidInputDenied)))process.exitCode=1;
+if(report.browserError||report.assets.some(a=>!a.matchesLocal&&!a.matchesNormalized)||report.pages.some(p=>p.errors.length||p.httpErrors.length||p.overflow||p.redirectedToLogin===false)||report.api.some(a=>!(a.unauthenticatedDenied||a.invalidInputDenied)))process.exitCode=1;

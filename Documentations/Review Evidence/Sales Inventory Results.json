@@ -1,0 +1,16 @@
+{
+  "completedAt": "2026-11-10T14:53:51.213Z",
+  "passed": 8,
+  "failed": 0,
+  "scope": "Isolated database, checked-in table definitions and sales function. No live transactions; concurrency and full hosted role integration are not tested.",
+  "checks": [
+    "Gram sale deducts kilogram stock and saves correct total/header/line.",
+    "Insufficient stock rejects sale without partial stock/header/line writes.",
+    "Weight/volume mismatch and fractional or mismatched discrete units are denied.",
+    "Zero and negative quantities are denied.",
+    "Pounds convert to grams for pricing and kilograms for stock deduction.",
+    "Archived products cannot be sold.",
+    "Member role cannot record counter sales.",
+    "Administrator merchandise sale saves total and deducts whole items."
+  ]
+}

@@ -1,0 +1,72 @@
+{
+  "completedAt": "2026-11-10T14:55:24.067Z",
+  "scope": "Anonymous GET of id only, limit one. Empty results do not prove absence of all possible access-policy gaps. No identifiers or personal data retained.",
+  "results": [
+    {
+      "table": "profiles",
+      "status": 401,
+      "exposedRows": 0,
+      "passed": true
+    },
+    {
+      "table": "members",
+      "status": 401,
+      "exposedRows": 0,
+      "passed": true
+    },
+    {
+      "table": "membership_applications",
+      "status": 401,
+      "exposedRows": 0,
+      "passed": true
+    },
+    {
+      "table": "attendance",
+      "status": 401,
+      "exposedRows": 0,
+      "passed": true
+    },
+    {
+      "table": "products",
+      "status": 401,
+      "exposedRows": 0,
+      "passed": true
+    },
+    {
+      "table": "sales",
+      "status": 401,
+      "exposedRows": 0,
+      "passed": true
+    },
+    {
+      "table": "sale_items",
+      "status": 401,
+      "exposedRows": 0,
+      "passed": true
+    },
+    {
+      "table": "membership_history",
+      "status": 401,
+      "exposedRows": 0,
+      "passed": true
+    },
+    {
+      "table": "activity_logs",
+      "status": 401,
+      "exposedRows": 0,
+      "passed": true
+    },
+    {
+      "table": "mobile_attendance_scan_sessions",
+      "status": 401,
+      "exposedRows": 0,
+      "passed": true
+    },
+    {
+      "table": "mobile_attendance_scan_events",
+      "status": 401,
+      "exposedRows": 0,
+      "passed": true
+    }
+  ]
+}

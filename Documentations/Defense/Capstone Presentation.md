@@ -139,8 +139,9 @@ Chapter 3 uses the original multi-panel DFD layout: Figures 3a-e continue the ni
 - Isolated SQL tests check permissions, transactions and MFA denial paths
 - Real devices, hosted settings and complete visual flows still need verification
 - Historical screenshots and planned schedules are labeled honestly
+- November 10 readiness review: 49 regression groups and eight added sales scenarios passed; full hosted acceptance remains pending
 
-Speaker notes: Present the actual saved test output, not an invented overall pass rate. MFA tests prove AAL1 denial/AAL2 access in fixtures; they do not prove the deployed project's Auth configuration. Formal usability results must be added only after real evaluation. Keep production data out of demonstrations where possible.
+Speaker notes: Present the actual saved test output, not an invented overall pass rate. MFA tests prove AAL1 denial/AAL2 access in fixtures; they do not prove the deployed project's Auth configuration. Formal usability results must be added only after real evaluation. Keep production data out of demonstrations where possible. The current review also confirmed 20 matching migration versions, clean error-level linked DB lint, eight active Edge Functions, 30 hosted files matching normalized local content, and 14 unauthenticated browser navigations without JS exceptions or horizontal overflow. Eleven anonymous table reads were denied. A favicon 404 and misleading missing-Authorization responses (500/503) remain observed minor issues; invalid bearer tokens are rejected with 401. These checks do not prove successful signed-in transactions, email delivery, camera scanning or two-browser transfers. See Review Notes/System Readiness Review.md before claiming whole-system acceptance. This review deployed no fixes; the editable PowerPoint was not regenerated.
 
 ## Slide 17 — Deployment and recovery
 - Enable hosted TOTP and coordinate client, functions and SQL migration

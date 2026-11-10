@@ -1,0 +1,420 @@
+{
+  "completedAt": "2026-11-10T14:52:11.585Z",
+  "base": "https://irongrind-github-io.vercel.app",
+  "scope": "Unauthenticated hosted page, asset, browser and API checks; no account or operational writes.",
+  "assets": [
+    {
+      "file": "admin.html",
+      "status": 200,
+      "matchesLocal": false,
+      "matchesNormalized": true
+    },
+    {
+      "file": "attendance-phone.html",
+      "status": 200,
+      "matchesLocal": true
+    },
+    {
+      "file": "customer.html",
+      "status": 200,
+      "matchesLocal": false,
+      "matchesNormalized": true
+    },
+    {
+      "file": "index.html",
+      "status": 200,
+      "matchesLocal": false,
+      "matchesNormalized": true
+    },
+    {
+      "file": "register.html",
+      "status": 200,
+      "matchesLocal": false,
+      "matchesNormalized": true
+    },
+    {
+      "file": "reset-password.html",
+      "status": 200,
+      "matchesLocal": true
+    },
+    {
+      "file": "staff.html",
+      "status": 200,
+      "matchesLocal": false,
+      "matchesNormalized": true
+    },
+    {
+      "file": "attendance-phone-sw.js",
+      "status": 200,
+      "matchesLocal": true
+    },
+    {
+      "file": "attendance-app.webmanifest",
+      "status": 200,
+      "matchesLocal": true
+    },
+    {
+      "file": "assets/js/activity-logs.js",
+      "status": 200,
+      "matchesLocal": true
+    },
+    {
+      "file": "assets/js/admin-access.js",
+      "status": 200,
+      "matchesLocal": true
+    },
+    {
+      "file": "assets/js/admin-device-approval.js",
+      "status": 200,
+      "matchesLocal": true
+    },
+    {
+      "file": "assets/js/admin-device-trust.js",
+      "status": 200,
+      "matchesLocal": true
+    },
+    {
+      "file": "assets/js/admin-mfa.js",
+      "status": 200,
+      "matchesLocal": true
+    },
+    {
+      "file": "assets/js/admin.js",
+      "status": 200,
+      "matchesLocal": true
+    },
+    {
+      "file": "assets/js/attendance-phone.js",
+      "status": 200,
+      "matchesLocal": true
+    },
+    {
+      "file": "assets/js/auth.js",
+      "status": 200,
+      "matchesLocal": false,
+      "matchesNormalized": true
+    },
+    {
+      "file": "assets/js/button-feedback.js",
+      "status": 200,
+      "matchesLocal": true
+    },
+    {
+      "file": "assets/js/customer.js",
+      "status": 200,
+      "matchesLocal": false,
+      "matchesNormalized": true
+    },
+    {
+      "file": "assets/js/member-device-approval.js",
+      "status": 200,
+      "matchesLocal": true
+    },
+    {
+      "file": "assets/js/register.js",
+      "status": 200,
+      "matchesLocal": false,
+      "matchesNormalized": true
+    },
+    {
+      "file": "assets/js/reset-password.js",
+      "status": 200,
+      "matchesLocal": true
+    },
+    {
+      "file": "assets/js/signature.js",
+      "status": 200,
+      "matchesLocal": false,
+      "matchesNormalized": true
+    },
+    {
+      "file": "assets/js/staff-accounts.js",
+      "status": 200,
+      "matchesLocal": true
+    },
+    {
+      "file": "assets/js/staff.js",
+      "status": 200,
+      "matchesLocal": false,
+      "matchesNormalized": true
+    },
+    {
+      "file": "assets/js/supabase-client.js",
+      "status": 200,
+      "matchesLocal": true
+    },
+    {
+      "file": "assets/js/theme.js",
+      "status": 200,
+      "matchesLocal": true
+    },
+    {
+      "file": "assets/js/ui-improvements.js",
+      "status": 200,
+      "matchesLocal": true
+    },
+    {
+      "file": "assets/css/staff.css",
+      "status": 200,
+      "matchesLocal": true
+    },
+    {
+      "file": "assets/css/style.css",
+      "status": 200,
+      "matchesLocal": false,
+      "matchesNormalized": true
+    }
+  ],
+  "pages": [
+    {
+      "file": "index.html",
+      "viewport": "desktop",
+      "errors": [],
+      "networkFailures": [],
+      "httpErrors": [],
+      "url": "https://irongrind-github-io.vercel.app/index.html",
+      "title": "IronGrind · Login",
+      "ready": "interactive",
+      "theme": "dark",
+      "overflow": false,
+      "hasClient": true,
+      "themeToggle": {
+        "theme": "light",
+        "modalOpened": true
+      }
+    },
+    {
+      "file": "register.html",
+      "viewport": "desktop",
+      "errors": [],
+      "networkFailures": [],
+      "httpErrors": [
+        {
+          "url": "https://irongrind-github-io.vercel.app/favicon.ico",
+          "status": 404
+        }
+      ],
+      "url": "https://irongrind-github-io.vercel.app/register.html",
+      "title": "IronGrind · Membership Registration",
+      "ready": "complete",
+      "theme": "light",
+      "overflow": false,
+      "hasClient": true,
+      "themeToggle": {
+        "theme": "light"
+      }
+    },
+    {
+      "file": "reset-password.html",
+      "viewport": "desktop",
+      "errors": [],
+      "networkFailures": [],
+      "httpErrors": [],
+      "url": "https://irongrind-github-io.vercel.app/reset-password.html",
+      "title": "Reset Password · IronGrind",
+      "ready": "complete",
+      "theme": "light",
+      "overflow": false,
+      "hasClient": true
+    },
+    {
+      "file": "attendance-phone.html",
+      "viewport": "desktop",
+      "errors": [],
+      "networkFailures": [],
+      "httpErrors": [],
+      "url": "https://irongrind-github-io.vercel.app/attendance-phone.html",
+      "title": "Phone Attendance Scanner | Iron Grind",
+      "ready": "complete",
+      "overflow": false,
+      "hasClient": true
+    },
+    {
+      "file": "admin.html",
+      "viewport": "desktop",
+      "errors": [],
+      "networkFailures": [],
+      "httpErrors": [],
+      "url": "https://irongrind-github-io.vercel.app/index.html",
+      "title": "IronGrind · Login",
+      "ready": "complete",
+      "theme": "light",
+      "overflow": false,
+      "hasClient": true,
+      "redirectedToLogin": true
+    },
+    {
+      "file": "staff.html",
+      "viewport": "desktop",
+      "errors": [],
+      "networkFailures": [],
+      "httpErrors": [],
+      "url": "https://irongrind-github-io.vercel.app/index.html",
+      "title": "IronGrind · Login",
+      "ready": "complete",
+      "theme": "light",
+      "overflow": false,
+      "hasClient": true,
+      "redirectedToLogin": true
+    },
+    {
+      "file": "customer.html",
+      "viewport": "desktop",
+      "errors": [],
+      "networkFailures": [],
+      "httpErrors": [],
+      "url": "https://irongrind-github-io.vercel.app/index.html?role=customer",
+      "title": "IronGrind · Login",
+      "ready": "complete",
+      "theme": "light",
+      "overflow": false,
+      "hasClient": true,
+      "redirectedToLogin": true
+    },
+    {
+      "file": "index.html",
+      "viewport": "mobile",
+      "errors": [],
+      "networkFailures": [],
+      "httpErrors": [],
+      "url": "https://irongrind-github-io.vercel.app/index.html",
+      "title": "IronGrind · Login",
+      "ready": "complete",
+      "theme": "light",
+      "overflow": false,
+      "hasClient": true,
+      "themeToggle": {
+        "theme": "light",
+        "modalOpened": true
+      }
+    },
+    {
+      "file": "register.html",
+      "viewport": "mobile",
+      "errors": [],
+      "networkFailures": [],
+      "httpErrors": [],
+      "url": "https://irongrind-github-io.vercel.app/register.html",
+      "title": "IronGrind · Membership Registration",
+      "ready": "complete",
+      "theme": "light",
+      "overflow": false,
+      "hasClient": true,
+      "themeToggle": {
+        "theme": "light"
+      }
+    },
+    {
+      "file": "reset-password.html",
+      "viewport": "mobile",
+      "errors": [],
+      "networkFailures": [],
+      "httpErrors": [],
+      "url": "https://irongrind-github-io.vercel.app/reset-password.html",
+      "title": "Reset Password · IronGrind",
+      "ready": "complete",
+      "theme": "light",
+      "overflow": false,
+      "hasClient": true
+    },
+    {
+      "file": "attendance-phone.html",
+      "viewport": "mobile",
+      "errors": [],
+      "networkFailures": [],
+      "httpErrors": [],
+      "url": "https://irongrind-github-io.vercel.app/attendance-phone.html",
+      "title": "Phone Attendance Scanner | Iron Grind",
+      "ready": "complete",
+      "overflow": false,
+      "hasClient": true
+    },
+    {
+      "file": "admin.html",
+      "viewport": "mobile",
+      "errors": [],
+      "networkFailures": [],
+      "httpErrors": [],
+      "url": "https://irongrind-github-io.vercel.app/index.html",
+      "title": "IronGrind · Login",
+      "ready": "complete",
+      "theme": "light",
+      "overflow": false,
+      "hasClient": true,
+      "redirectedToLogin": true
+    },
+    {
+      "file": "staff.html",
+      "viewport": "mobile",
+      "errors": [],
+      "networkFailures": [],
+      "httpErrors": [],
+      "url": "https://irongrind-github-io.vercel.app/index.html",
+      "title": "IronGrind · Login",
+      "ready": "complete",
+      "theme": "light",
+      "overflow": false,
+      "hasClient": true,
+      "redirectedToLogin": true
+    },
+    {
+      "file": "customer.html",
+      "viewport": "mobile",
+      "errors": [],
+      "networkFailures": [],
+      "httpErrors": [],
+      "url": "https://irongrind-github-io.vercel.app/index.html?role=customer",
+      "title": "IronGrind · Login",
+      "ready": "complete",
+      "theme": "light",
+      "overflow": false,
+      "hasClient": true,
+      "redirectedToLogin": true
+    }
+  ],
+  "api": [
+    {
+      "name": "admin-device-trust",
+      "status": 401,
+      "unauthenticatedDenied": true
+    },
+    {
+      "name": "member-device-trust",
+      "status": 401,
+      "unauthenticatedDenied": true
+    },
+    {
+      "name": "admin-create-member",
+      "status": 500,
+      "unauthenticatedDenied": false
+    },
+    {
+      "name": "admin-create-staff",
+      "status": 401,
+      "unauthenticatedDenied": true
+    },
+    {
+      "name": "verify-store-password",
+      "status": 503,
+      "unauthenticatedDenied": false
+    },
+    {
+      "name": "member-registration empty input",
+      "status": 400,
+      "invalidInputDenied": true
+    },
+    {
+      "name": "admin-create-member invalid bearer",
+      "status": 401,
+      "body": "{\"code\":\"UNAUTHORIZED_INVALID_JWT_FORMAT\",\"message\":\"Invalid JWT\"}",
+      "unauthenticatedDenied": true
+    },
+    {
+      "name": "verify-store-password invalid bearer",
+      "status": 401,
+      "body": "{\"code\":\"UNAUTHORIZED_INVALID_JWT_FORMAT\",\"message\":\"Invalid JWT\"}",
+      "unauthenticatedDenied": true
+    }
+  ],
+  "followupAt": "2026-11-10T14:52:50.609Z"
+}
