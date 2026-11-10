@@ -41,3 +41,20 @@ test('missing deployed MFA function explains incomplete setup instead of suggest
  const f=fixture();f.client.rpc=async()=>({error:{code:'PGRST202'}});
  await assert.rejects(f.run(),/setup is incomplete/);assert.equal(f.dialog(),undefined);
 });
+test('rejected code reports safe service reason and keeps the login gate closed',async()=>{
+ const f=fixture();f.client.auth.mfa.challengeAndVerify=async()=>({error:{code:'mfa_verification_failed'}});
+ const pending=f.run();await settle();await f.node('form').onsubmit({preventDefault(){}});
+ assert.match(f.node('[role="status"]').textContent,/mfa_verification_failed/);
+ assert.match(f.node('[role="status"]').textContent,/IronGrind authenticator entry/);
+ assert.equal(f.dialog().removed,undefined);
+ f.node('button[type="button"]').onclick();await assert.rejects(pending,/cancelled/);
+});
+test('post-verification session error is not described as an incorrect code',async()=>{
+ const f=fixture();let calls=0;
+ f.client.auth.mfa.getAuthenticatorAssuranceLevel=async()=>++calls===1?{data:{currentLevel:'aal1'}}:{error:{code:'session_expired'}};
+ const pending=f.run();await settle();await f.node('form').onsubmit({preventDefault(){}});
+ assert.match(f.node('[role="status"]').textContent,/session could not be confirmed/);
+ assert.doesNotMatch(f.node('[role="status"]').textContent,/code does not match/);
+ assert.equal(f.dialog().removed,undefined);
+ f.node('button[type="button"]').onclick();await assert.rejects(pending,/cancelled/);
+});

@@ -58,13 +58,37 @@ window.requireAdminMfa = async (client, scope = 'dashboard') => {
         dialog.querySelector('form').onsubmit = async event => {
             event.preventDefault(); if (verify.disabled) return;
             verify.disabled = true; status.textContent = 'Verifying…';
+            let phase = 'code';
             try {
-                const { error } = await client.auth.mfa.challengeAndVerify({ factorId: factor.id, code: input.value.trim() });
+                const code = input.value.replace(/\s/g, '');
+                if (!/^[0-9]{6}$/.test(code)) {
+                    status.textContent = 'Enter the six-digit code from the IronGrind entry in your authenticator.';
+                    return;
+                }
+                const { error } = await client.auth.mfa.challengeAndVerify({ factorId: factor.id, code });
                 if (error) throw error;
+                phase = 'session';
                 const { data, error: checkError } = await client.auth.mfa.getAuthenticatorAssuranceLevel();
-                if (checkError || data.currentLevel !== 'aal2') throw new Error('Verification could not be confirmed.');
+                if (checkError) throw checkError;
+                if (data?.currentLevel !== 'aal2') throw new Error('Verification could not be confirmed.');
                 finish();
-            } catch { status.textContent = 'Code not accepted. Use the current code from your authenticator and try again.'; input.value = ''; input.focus(); }
+            } catch (error) {
+                const code = /^[a-z0-9_]{1,80}$/.test(error?.code || '') ? error.code : '';
+                const messages = {
+                    mfa_verification_failed: 'The code does not match this account. Use the IronGrind authenticator entry and check your phone’s automatic date/time.',
+                    mfa_challenge_expired: 'The verification request expired. Enter a new current code and try again.',
+                    mfa_factor_not_found: 'This authenticator is no longer linked. Cancel and sign in again.',
+                    mfa_ip_address_mismatch: 'Your connection changed during verification. Keep the same connection and sign in again.',
+                    mfa_verification_rejected: 'Verification was blocked by the authentication service. Wait before retrying or contact the project owner.',
+                    over_request_rate_limit: 'Too many attempts. Wait before trying again.',
+                    mfa_totp_verify_not_enabled: 'Authenticator verification is disabled in the project settings. Contact the project owner.'
+                };
+                status.textContent = phase === 'session'
+                    ? 'The verification request completed, but the verified sign-in session could not be confirmed. Cancel and sign in again.'
+                    : messages[code] || 'Could not complete authenticator verification. Check your connection and try again.';
+                if (code) status.textContent += ` (${code})`;
+                input.value = ''; input.focus();
+            }
             finally { verify.disabled = false; }
         };
         dialog.showModal(); input.focus();

@@ -134,3 +134,7 @@ The earlier successful push applied migrations through 20261110000002. This new 
 8. If there is no active eligible session, sign-in uses the authenticator. If A is offline, B can select the authenticator fallback; it is never approved automatically due to timeout/offline status. Losing the authenticator as well requires the verified project-owner process above.
 9. Verify the security log contains request and approval/denial events. No secret or code should appear. Check the private schema supplement and update diagram/dictionary evidence after deployment.
 10. Record actual two-browser/two-device outcomes and update both notes and slide speaker notes. User-supplied output now confirms the approval migration applied successfully. Matching web deployment and physical testing remain unverified.
+
+## 10. If a current authenticator code is rejected
+
+Use the IronGrind account entry in the authenticator, not the project owner?s separate Supabase dashboard entry. Enable automatic phone date/time. Refresh the matching updated website to obtain the specific safe error code. A code-mismatch response differs from a failure to confirm the session after verification. Report the displayed error text/code only; never share the six-digit code, setup QR, manual key, access token or full network request. This diagnostic UI update requires no additional SQL migration and does not reset factors. The reported live problem remains under investigation until its actual error is known.

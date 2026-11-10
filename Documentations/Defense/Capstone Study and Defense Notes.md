@@ -224,3 +224,7 @@ Context: one system boundary and external actors, no internal tables. DFD: nine 
 - [Supabase Auth audit logs](https://supabase.com/docs/guides/auth/audit-logs): Auth-event storage/configuration.
 
 These technical links support implementation explanations; they do not replace the verified scholarly related literature in Chapter 2.
+
+### MFA troubleshooting follow-up
+
+A user reported rejection after entering a current authenticator code. The prior browser catch used the same incorrect-code message for all Auth and post-verification session errors, so the screenshot did not establish the cause. Local UI now distinguishes documented Auth error codes from post-verification session confirmation failures, keeps access blocked, and displays only a safe error identifier. No token, code or setup key is logged/displayed as diagnostic data. Focused tests cover incorrect-code and session-error paths. The actual user failure remains unresolved until the new error category is observed; no factor was reset and no bypass was introduced. Use the IronGrind account entry, not the separate Supabase dashboard account authenticator.
