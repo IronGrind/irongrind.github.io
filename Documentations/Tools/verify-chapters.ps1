@@ -1,4 +1,4 @@
-param([ValidateSet(1,2,3)][int[]]$Chapters=@(1,2,3),[string]$DocumentPath)
+﻿param([ValidateSet(1,2,3)][int[]]$Chapters=@(1,2,3),[string]$DocumentPath)
 $ErrorActionPreference='Stop'
 if($DocumentPath -and $Chapters.Count -ne 1){throw 'Specify one chapter when verifying an alternate document path.'}
 Add-Type -AssemblyName System.IO.Compression.FileSystem
@@ -62,17 +62,17 @@ foreach($chapter in $Chapters){
    foreach($phrase in @('Recorded verification as of November 8, 2026 comprised forty automated check groups','A separate performance evaluation remains necessary.','The Create Staff Account form collects first name','Phone pairing capacity counts both paired devices')){if(-not $all.Contains($phrase)){throw "Chapter 3 is missing a verified implementation statement: $phrase"}}
    foreach($phrase in @('Members sign in using their email address.','New member records do not receive a username; members sign in using email.','Current member registration uses email and does not collect a username.')){if(-not $all.Contains($phrase)){throw "Chapter 3 contains missing or outdated member-identifier documentation: $phrase"}}
    if($all.Contains('used to identify an account within supported sign-in and member-lookup workflows')){throw 'Chapter 3 still describes legacy username fields as current member sign-in identifiers.'}
-   if($doc.SelectNodes('//w:body/w:tbl',$ns).Count -ne 23){throw 'Expected five requirements tables and eighteen dictionary tables.'}
+   if($doc.SelectNodes('//w:body/w:tbl',$ns).Count -ne 26){throw 'Expected five requirements tables and twenty-one dictionary tables.'}
    $dictionary=@($doc.SelectNodes('//w:body/w:tbl',$ns)|Select-Object -Skip 5)
    $columns=0;foreach($table in $dictionary){$columns+=$table.SelectNodes('w:tr',$ns).Count-1}
-   if($columns -ne 201){throw "Expected 201 documented fields, found $columns"}
-   if(([regex]::Matches($all,'The eighteen application-owned tables comprise')).Count -ne 1){throw 'Duplicate or missing schema-count explanation.'}
+   if($columns -ne 224){throw "Expected 224 documented fields, found $columns"}
+   if(([regex]::Matches($all,'The twenty-one application-owned tables comprise')).Count -ne 1){throw 'Duplicate or missing schema-count explanation.'}
    if($all.Contains('Figure 5. Public-Schema Entity Relationship Diagram') -or $all.Contains('public-schema ERD in Figure 5')){throw 'The simplified public-schema ERD should not appear in the paper.'}
    if(-not $all.Contains('Figure 5d. Administrator Security Schema Supplement')){throw 'The administrator security-schema supplement was not retained as Figure 5d.'}
    $securitySchemaImage=@($doc.SelectNodes('//wp:docPr',$ns)|Where-Object {$_.GetAttribute('name') -eq 'Figure 5d. Administrator Security Schema Supplement'})
    if($securitySchemaImage.Count -ne 1){throw 'Expected one administrator security-schema figure in Chapter 3.'}
    $schema=Get-Content -Raw -LiteralPath (Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3 Diagrams/schema-visualizer.json')|ConvertFrom-Json
-   $order=@('public.profiles','public.members','public.membership_applications','public.attendance','public.products','public.sales','public.sale_items','public.membership_history','public.activity_logs','public.mobile_attendance_pairing_policy','public.mobile_attendance_scan_sessions','public.mobile_attendance_scan_events','private.attendance_scan_requests','private.admin_login_attempts','private.account_sessions','private.admin_login_approvals','private.admin_trusted_devices','private.admin_device_sessions')
+   $order=@('public.profiles','public.members','public.membership_applications','public.attendance','public.products','public.sales','public.sale_items','public.membership_history','public.activity_logs','public.mobile_attendance_pairing_policy','public.mobile_attendance_scan_sessions','public.mobile_attendance_scan_events','private.attendance_scan_requests','private.admin_login_attempts','private.account_sessions','private.admin_login_approvals','private.admin_trusted_devices','private.admin_device_sessions','private.member_trusted_devices','private.member_device_sessions','private.member_device_approvals')
    $verifiedFKs=0;$verifiedUnique=0
    for($ti=0;$ti -lt $dictionary.Count;$ti++){
     $tableName=$order[$ti];$modelTable=$schema.Tables|Where-Object Name -EQ $tableName
@@ -100,7 +100,7 @@ foreach($chapter in $Chapters){
      if($tableName -eq 'public.activity_logs' -and $field -eq 'id' -and -not $details.Contains('Identity (GENERATED ALWAYS).')){throw 'Activity-log identity generation is missing.'}
     }
    }
-   if($verifiedFKs -ne 27 -or $verifiedUnique -ne 5){throw 'Incomplete FK or unique-key dictionary coverage.'}
+   if($verifiedFKs -ne 33 -or $verifiedUnique -ne 6){throw 'Incomplete FK or unique-key dictionary coverage.'}
    foreach($field in @('requesting_session_id','session_scope')){
     $row=@($dictionary[15].SelectNodes('w:tr',$ns)|Where-Object {(($_.SelectSingleNode('w:tc',$ns).SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim() -eq $field})
     if($row.Count -ne 1 -or -not (($row[0].SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Contains('Part of composite UQ (requesting_session_id, session_scope)')){throw 'Approval composite uniqueness is missing.'}
@@ -111,13 +111,13 @@ foreach($chapter in $Chapters){
    foreach($panel in @('3a','3b','3c','3d','3e')){if(@($doc.SelectNodes('//wp:docPr',$ns)|Where-Object {$_.GetAttribute('name') -eq "Level 1 DFD panel $panel"}).Count -ne 1){throw "Missing restored DFD panel $panel"}}
    foreach($panel in @('5a','5b','5c')){if(@($doc.SelectNodes('//wp:docPr',$ns)|Where-Object {$_.GetAttribute('name') -eq "Physical ERD panel $panel"}).Count -ne 1){throw "Missing restored physical ERD panel $panel"}}
    foreach($phrase in @('No new application table or column is introduced','Current-device approval and push notifications are not included in this increment','complete fifteen-table, 174-field','All fifteen application tables and twenty-one foreign keys')){if($all.Contains($phrase)){throw "Superseded security documentation: $phrase"}}
-   $results.Add('Chapter 3: five-column dictionary with 201 descriptions, declared base types and separate lengths/precision; 27 FK targets/actions, five individually unique fields, approval composite UQ, identity generation and composite PK verified; earlier Gane-Sarson/physical-ERD figure layout restored, current administrator-security supplements retained, simplified public-schema ERD omitted.')
+   $results.Add('Chapter 3: five-column dictionary with 224 descriptions, declared base types and separate lengths/precision; 33 FK targets/actions, six individually unique fields, approval composite UQ, identity generation and composite PK verified; earlier Gane-Sarson/physical-ERD figure layout restored, current administrator-security supplements retained, simplified public-schema ERD omitted.')
    $dfdSvg=Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3 Diagrams/03-dfd-complete-gane-sarson.svg'
    if(-not (Test-Path -LiteralPath $dfdSvg)){throw 'The standalone Level 1 DFD SVG is missing.'}
    [xml]$svg=Get-Content -Raw -LiteralPath $dfdSvg
    if($svg.DocumentElement.LocalName -ne 'svg' -or $svg.DocumentElement.GetAttribute('viewBox') -notmatch '^0 0 3360 [7-9]\d{3}$'){throw 'The standalone Level 1 DFD SVG is invalid.'}
    foreach($processId in 1..9){if(-not $svg.OuterXml.Contains("process-$processId")){throw "The standalone SVG is missing process $processId."}}
-   $results.Add('Chapter 3: restored five-panel Gane-Sarson DFD Figures 3a-e and physical relationship panels Figures 5a-c; current security supplements Figures 3f and 5d retained. The separate complete nine-process SVG is valid. The 12 public and 6 private dictionary tables, 201 fields, and all 23 Word tables remain verified. Simplified public-schema ERD remains omitted. Security supplements retain nine main functions and distinguish live acceptance tests from deployment output.')
+   $results.Add('Chapter 3: restored five-panel Gane-Sarson DFD Figures 3a-e and physical relationship panels Figures 5a-c; current security supplements Figures 3f and 5d retained. The separate complete nine-process SVG is valid. The 12 public and 9 private dictionary tables, 224 fields, and all 26 Word tables remain verified. Simplified public-schema ERD remains omitted. Security supplements retain nine main functions and distinguish live acceptance tests from deployment output.')
   }
   $results.Add("Chapter ${chapter}: XML opens; no unexpected body/data-row bold, stale approval wording, garbled punctuation, or missing figure links detected.")
  }finally{$zip.Dispose()}
@@ -126,3 +126,4 @@ foreach($chapter in $Chapters){
 $report=if($Chapters.Count -eq 3){'Chapter Review Verification.txt'}else{'Chapter '+($Chapters -join '-')+' Review Verification.txt'}
 $results|Set-Content -Encoding UTF8 (Join-Path (Split-Path $PSScriptRoot -Parent) ('Review Evidence/'+$report))
 $results
+

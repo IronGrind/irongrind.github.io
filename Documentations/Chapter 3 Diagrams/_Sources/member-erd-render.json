@@ -1,0 +1,192 @@
+{
+  "H": 1455,
+  "items": [
+    {
+      "x": 30,
+      "y": 20,
+      "w": 1740,
+      "h": 85,
+      "text": "Member browser security â€” migration 20261110000006\nDeclared FK links only; repeated Auth cards refer to the same managed tables."
+    },
+    {
+      "x": 30,
+      "y": 140,
+      "w": 880,
+      "h": 300,
+      "text": "private.member_trusted_devices\nPK/FK  user_id: uuid *\nâ€”  device_id: uuid *\nâ€”  public_key: jsonb *\nâ€”  device_label: text *\nâ€”  registered_at: timestamptz *\nâ€”  last_seen_at: timestamptz *"
+    },
+    {
+      "x": 1160,
+      "y": 140,
+      "w": 610,
+      "h": 85,
+      "text": "auth.users (id: PK)\nuser_id â†’ id; DELETE CASCADE"
+    },
+    {
+      "x": 30,
+      "y": 505,
+      "w": 880,
+      "h": 300,
+      "text": "private.member_device_sessions\nPK/FK  session_id: uuid *\nFK  user_id: uuid *\nâ€”  device_id: uuid *\nâ€”  public_key: jsonb *\nâ€”  challenge: text *\nâ€”  challenge_expires_at: timestamptz *\nâ€”  authorized_until: timestamptz"
+    },
+    {
+      "x": 1160,
+      "y": 505,
+      "w": 610,
+      "h": 85,
+      "text": "auth.sessions (id: PK)\nsession_id â†’ id; DELETE CASCADE"
+    },
+    {
+      "x": 1160,
+      "y": 605,
+      "w": 610,
+      "h": 85,
+      "text": "auth.users (id: PK)\nuser_id â†’ id; DELETE CASCADE"
+    },
+    {
+      "x": 30,
+      "y": 870,
+      "w": 880,
+      "h": 385,
+      "text": "private.member_device_approvals\nPK  id: uuid *\nFK  user_id: uuid *\nFK/UQ  requesting_session_id: uuid *\nFK  approver_session_id: uuid\nâ€”  device_id: uuid *\nâ€”  device_label: text *\nâ€”  status: text *\nâ€”  requested_at: timestamptz *\nâ€”  expires_at: timestamptz *\nâ€”  decided_at: timestamptz"
+    },
+    {
+      "x": 1160,
+      "y": 870,
+      "w": 610,
+      "h": 85,
+      "text": "auth.users (id: PK)\nuser_id â†’ id; DELETE CASCADE"
+    },
+    {
+      "x": 1160,
+      "y": 970,
+      "w": 610,
+      "h": 85,
+      "text": "auth.sessions (id: PK)\nrequesting_session_id â†’ id; DELETE CASCADE"
+    },
+    {
+      "x": 1160,
+      "y": 1070,
+      "w": 610,
+      "h": 85,
+      "text": "auth.sessions (id: PK)\napprover_session_id â†’ id; DELETE SET NULL"
+    },
+    {
+      "x": 30,
+      "y": 1320,
+      "w": 1740,
+      "h": 105,
+      "text": "* = NOT NULL. Each FK references one existing parent when non-null; a nullable FK permits no parent.\nPK on user_id/session_id and UQ on requesting_session_id permit at most one child for that link.\nOther links permit many children. device_id has no declared FK."
+    }
+  ],
+  "lines": [
+    [
+      [
+        910,
+        198
+      ],
+      [
+        970,
+        198
+      ],
+      [
+        970,
+        182
+      ],
+      [
+        1160,
+        182
+      ]
+    ],
+    [
+      [
+        910,
+        563
+      ],
+      [
+        970,
+        563
+      ],
+      [
+        970,
+        547
+      ],
+      [
+        1160,
+        547
+      ]
+    ],
+    [
+      [
+        910,
+        595
+      ],
+      [
+        1018,
+        595
+      ],
+      [
+        1018,
+        647
+      ],
+      [
+        1160,
+        647
+      ]
+    ],
+    [
+      [
+        910,
+        960
+      ],
+      [
+        970,
+        960
+      ],
+      [
+        970,
+        912
+      ],
+      [
+        1160,
+        912
+      ]
+    ],
+    [
+      [
+        910,
+        992
+      ],
+      [
+        1018,
+        992
+      ],
+      [
+        1018,
+        1012
+      ],
+      [
+        1160,
+        1012
+      ]
+    ],
+    [
+      [
+        910,
+        1024
+      ],
+      [
+        1066,
+        1024
+      ],
+      [
+        1066,
+        1112
+      ],
+      [
+        1160,
+        1112
+      ]
+    ]
+  ]
+}

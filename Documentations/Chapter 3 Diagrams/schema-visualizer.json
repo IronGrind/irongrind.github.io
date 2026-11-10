@@ -1,5 +1,5 @@
 {
-  "Source": "Author-supplied pgAdmin export and checked-in migrations through 20261110000004; user-supplied CLI output confirms application of migrations 03 and 04. Not a fresh live database introspection.",
+  "Source": "Supplied public-schema context export and checked-in migrations through 20261110000006. Deployment status follows the repository Member Device Approval Guide; this is not fresh live-schema introspection.",
   "Tables": [
     {
       "Name": "private.account_sessions",
@@ -1449,6 +1449,225 @@
           "Extra": ""
         }
       ]
+    },
+    {
+      "Name": "private.member_trusted_devices",
+      "Purpose": "Stores one registered browser public key per member account; separate from administrator trust and attendance phone pairing.",
+      "Columns": [
+        {
+          "Name": "user_id",
+          "Type": "uuid",
+          "Required": true,
+          "Keys": [
+            "PK",
+            "FK"
+          ],
+          "Description": "Identifies the member account. A trusted-device primary key permits at most one registered browser per account.",
+          "Extra": ""
+        },
+        {
+          "Name": "device_id",
+          "Type": "uuid",
+          "Required": true,
+          "Keys": [],
+          "Description": "Identifies the browser key; no foreign key or hardware identity is implied.",
+          "Extra": ""
+        },
+        {
+          "Name": "public_key",
+          "Type": "jsonb",
+          "Required": true,
+          "Keys": [],
+          "Description": "Stores the public ECDSA P-256 JWK. The private signing key remains in browser IndexedDB.",
+          "Extra": ""
+        },
+        {
+          "Name": "device_label",
+          "Type": "text",
+          "Required": true,
+          "Keys": [],
+          "Description": "Stores a reported browser label, not verified hardware identity.",
+          "Extra": ""
+        },
+        {
+          "Name": "registered_at",
+          "Type": "timestamptz",
+          "Required": true,
+          "Keys": [],
+          "Description": "Records browser enrollment time.",
+          "Extra": "Default now()."
+        },
+        {
+          "Name": "last_seen_at",
+          "Type": "timestamptz",
+          "Required": true,
+          "Keys": [],
+          "Description": "Records the recent dashboard heartbeat used to select an available approving browser.",
+          "Extra": "Default now()."
+        }
+      ]
+    },
+    {
+      "Name": "private.member_device_sessions",
+      "Purpose": "Binds an Auth session to a browser signing challenge and authorization boundary.",
+      "Columns": [
+        {
+          "Name": "session_id",
+          "Type": "uuid",
+          "Required": true,
+          "Keys": [
+            "PK",
+            "FK"
+          ],
+          "Description": "Identifies the Auth session awaiting or holding browser authorization.",
+          "Extra": ""
+        },
+        {
+          "Name": "user_id",
+          "Type": "uuid",
+          "Required": true,
+          "Keys": [
+            "FK"
+          ],
+          "Description": "Identifies the member account. A trusted-device primary key permits at most one registered browser per account.",
+          "Extra": ""
+        },
+        {
+          "Name": "device_id",
+          "Type": "uuid",
+          "Required": true,
+          "Keys": [],
+          "Description": "Identifies the browser key; no foreign key or hardware identity is implied.",
+          "Extra": ""
+        },
+        {
+          "Name": "public_key",
+          "Type": "jsonb",
+          "Required": true,
+          "Keys": [],
+          "Description": "Stores the public ECDSA P-256 JWK. The private signing key remains in browser IndexedDB.",
+          "Extra": ""
+        },
+        {
+          "Name": "challenge",
+          "Type": "text",
+          "Required": true,
+          "Keys": [],
+          "Description": "Stores the session-bound signing message. Successful verification consumes it.",
+          "Extra": ""
+        },
+        {
+          "Name": "challenge_expires_at",
+          "Type": "timestamptz",
+          "Required": true,
+          "Keys": [],
+          "Description": "Bounds the signing challenge; the creating function uses a ten-minute window.",
+          "Extra": ""
+        },
+        {
+          "Name": "authorized_until",
+          "Type": "timestamptz",
+          "Required": false,
+          "Keys": [],
+          "Description": "Remains null before authorization and bounds the authorized member session.",
+          "Extra": ""
+        }
+      ]
+    },
+    {
+      "Name": "private.member_device_approvals",
+      "Purpose": "Stores session-bound requests to replace a member browser, including approval, denial and consumption.",
+      "Columns": [
+        {
+          "Name": "id",
+          "Type": "uuid",
+          "Required": true,
+          "Keys": [
+            "PK"
+          ],
+          "Description": "Identifies this browser-replacement approval request.",
+          "Extra": "Default gen_random_uuid()."
+        },
+        {
+          "Name": "user_id",
+          "Type": "uuid",
+          "Required": true,
+          "Keys": [
+            "FK"
+          ],
+          "Description": "Identifies the member account. A trusted-device primary key permits at most one registered browser per account.",
+          "Extra": ""
+        },
+        {
+          "Name": "requesting_session_id",
+          "Type": "uuid",
+          "Required": true,
+          "Keys": [
+            "FK",
+            "UQ"
+          ],
+          "Description": "Binds the request to one Auth session; this column must be unique.",
+          "Extra": ""
+        },
+        {
+          "Name": "approver_session_id",
+          "Type": "uuid",
+          "Required": false,
+          "Keys": [
+            "FK"
+          ],
+          "Description": "Records the deciding Auth session. Session deletion clears attribution while preserving the request.",
+          "Extra": ""
+        },
+        {
+          "Name": "device_id",
+          "Type": "uuid",
+          "Required": true,
+          "Keys": [],
+          "Description": "Identifies the browser key; no foreign key or hardware identity is implied.",
+          "Extra": ""
+        },
+        {
+          "Name": "device_label",
+          "Type": "text",
+          "Required": true,
+          "Keys": [],
+          "Description": "Stores a reported browser label, not verified hardware identity.",
+          "Extra": ""
+        },
+        {
+          "Name": "status",
+          "Type": "text",
+          "Required": true,
+          "Keys": [],
+          "Description": "Stores pending, approved, denied, or consumed. Expiration is derived from timestamps.",
+          "Extra": "Default 'pending'. CHECK pending, approved, denied, or consumed."
+        },
+        {
+          "Name": "requested_at",
+          "Type": "timestamptz",
+          "Required": true,
+          "Keys": [],
+          "Description": "Records request creation.",
+          "Extra": "Default now()."
+        },
+        {
+          "Name": "expires_at",
+          "Type": "timestamptz",
+          "Required": true,
+          "Keys": [],
+          "Description": "Limits the approval request to two minutes by default.",
+          "Extra": "Default now()+interval '2 minutes'."
+        },
+        {
+          "Name": "decided_at",
+          "Type": "timestamptz",
+          "Required": false,
+          "Keys": [],
+          "Description": "Records the approval or denial time when present.",
+          "Extra": ""
+        }
+      ]
     }
   ],
   "Relations": [
@@ -1640,6 +1859,48 @@
       "Parent": "auth.users",
       "ParentField": "id",
       "Delete": "CASCADE"
+    },
+    {
+      "Child": "private.member_trusted_devices",
+      "Field": "user_id",
+      "Parent": "auth.users",
+      "ParentField": "id",
+      "Delete": "CASCADE"
+    },
+    {
+      "Child": "private.member_device_sessions",
+      "Field": "session_id",
+      "Parent": "auth.sessions",
+      "ParentField": "id",
+      "Delete": "CASCADE"
+    },
+    {
+      "Child": "private.member_device_sessions",
+      "Field": "user_id",
+      "Parent": "auth.users",
+      "ParentField": "id",
+      "Delete": "CASCADE"
+    },
+    {
+      "Child": "private.member_device_approvals",
+      "Field": "user_id",
+      "Parent": "auth.users",
+      "ParentField": "id",
+      "Delete": "CASCADE"
+    },
+    {
+      "Child": "private.member_device_approvals",
+      "Field": "requesting_session_id",
+      "Parent": "auth.sessions",
+      "ParentField": "id",
+      "Delete": "CASCADE"
+    },
+    {
+      "Child": "private.member_device_approvals",
+      "Field": "approver_session_id",
+      "Parent": "auth.sessions",
+      "ParentField": "id",
+      "Delete": "SET NULL"
     }
   ]
 }

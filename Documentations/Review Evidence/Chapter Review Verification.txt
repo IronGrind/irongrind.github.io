@@ -1,6 +1,6 @@
 ﻿Chapter 1: XML opens; no unexpected body/data-row bold, stale approval wording, garbled punctuation, or missing figure links detected.
 Chapter 2: reference heading, fourteen-entry alphabetical order, hanging indents, thirteen italic spans, and Supabase source labels verified.
 Chapter 2: XML opens; no unexpected body/data-row bold, stale approval wording, garbled punctuation, or missing figure links detected.
-Chapter 3: four-column dictionary layout with 174 descriptions, declared types/sizes and key/nullability definitions; 21 FK targets/actions, five unique fields, identity generation and composite PK verified; public ERD landscape section retained.
-Chapter 3: 12 public and 3 private dictionary tables, 174 fields, 20 total tables, and linked figures verified.
+Chapter 3: five-column dictionary with 224 descriptions, declared base types and separate lengths/precision; 33 FK targets/actions, six individually unique fields, approval composite UQ, identity generation and composite PK verified; earlier Gane-Sarson/physical-ERD figure layout restored, current administrator-security supplements retained, simplified public-schema ERD omitted.
+Chapter 3: restored five-panel Gane-Sarson DFD Figures 3a-e and physical relationship panels Figures 5a-c; current security supplements Figures 3f and 5d retained. The separate complete nine-process SVG is valid. The 12 public and 9 private dictionary tables, 224 fields, and all 26 Word tables remain verified. Simplified public-schema ERD remains omitted. Security supplements retain nine main functions and distinguish live acceptance tests from deployment output.
 Chapter 3: XML opens; no unexpected body/data-row bold, stale approval wording, garbled punctuation, or missing figure links detected.
