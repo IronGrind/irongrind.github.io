@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { spawnSync } from 'node:child_process';
 import { deflateRawSync } from 'node:zlib';
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const out=path.join(root,'Documentations/Defense');fs.mkdirSync(out,{recursive:true});
@@ -33,6 +34,13 @@ for(const file of fs.readdirSync(path.join(root,'supabase/migrations')).filter(f
 }
 for(const [name,location] of [...routines].sort((a,b)=>a[0].localeCompare(b[0])))sourceMap.push(`| ${name} | ${location} |`);
 fs.writeFileSync(path.join(out,'Source Code Map.md'),sourceMap.join('\n')+'\n');
+
+// Use PowerPoint's native writer for the editable deck. The former hand-built
+// Open XML package passed basic ZIP/XML checks but PowerPoint rejected it.
+const nativeBuild = spawnSync('powershell.exe', ['-NoProfile','-ExecutionPolicy','Bypass','-File',path.join(root,'Documentations/Tools/build-defense-presentation.ps1')], {stdio:'inherit', windowsHide:true});
+if (nativeBuild.error) throw nativeBuild.error;
+if (nativeBuild.status !== 0) throw new Error(`Native PowerPoint generation failed with exit code ${nativeBuild.status}.`);
+process.exit(0);
 
 const markdown=fs.readFileSync(path.join(out,'Capstone Presentation.md'),'utf8');
 const slides=[...markdown.matchAll(/^## Slide (\d+) — (.+)\r?\n([\s\S]*?)(?=^## |$(?![\s\S]))/gm)].map(match=>{
