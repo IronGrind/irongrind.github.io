@@ -59,11 +59,13 @@ const svg = [`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="$
 const oldSvg = readFileSync(join(archive, '05-gym-erd-public-only.svg'), 'utf8');
 const match = oldSvg.match(/^<svg[^>]*>([\s\S]*)<\/svg>\s*$/);
 if (!match) throw new Error('Could not read the preserved public ERD SVG.');
+// Keep the user's original public routes and spacing unchanged. The private-panel
+// links below use stronger strokes, where each line has its own field row.
 svg.push(match[1]);
 svg.push(`<path d="M ${leftWidth + 24} 35 V ${height - 45}" stroke="#aab2bd" stroke-width="2"/>`);
 svg.push(escText('Private application tables', `x="${panelX}" y="67" font-family="Arial" font-size="25" font-weight="700" fill="#172b46"`));
 svg.push(escText('Key fields and short, local FK links; repeated target labels refer to existing tables.', `x="${panelX}" y="101" font-family="Arial" font-size="15" fill="#53647a"`));
-svg.push('<defs><marker id="private-fk-arrow" markerWidth="8" markerHeight="8" refX="1" refY="4" orient="auto"><path d="M8 0L0 4L8 8Z" fill="#58687c"/></marker></defs>');
+svg.push('<defs><marker id="private-fk-arrow" markerWidth="10" markerHeight="10" refX="1" refY="5" orient="auto"><path d="M10 0L0 5L10 10Z" fill="#344257"/></marker></defs>');
 
 const tagRecords = [];
 for (let index = 0; index < privateOrder.length; index++) {
@@ -91,9 +93,9 @@ for (let index = 0; index < privateOrder.length; index++) {
 
 // Draw each private FK as a short parent-to-child link with an explicit target label.
 for (const item of tagRecords) {
-  const path = `M ${refX} ${item.y} H ${cardX + cardW + 18}`;
-  svg.push(`<path class="private-fk" d="${path}" fill="none" stroke="#58687c" stroke-width="1.4" marker-end="url(#private-fk-arrow)"><title>${esc(`${item.target} references ${item.name}.${item.field}`)}</title></path>`);
-  svg.push(`<rect x="${refX}" y="${item.y - 12}" width="${refW}" height="24" rx="4" fill="white" stroke="#b7c1ce" stroke-width="1"/>`);
+  const path = `M ${refX} ${item.y} H ${cardX + cardW}`;
+  svg.push(`<path class="private-fk" d="${path}" fill="none" stroke="#344257" stroke-width="2.6" marker-end="url(#private-fk-arrow)"><title>${esc(`${item.target} references ${item.name}.${item.field}`)}</title></path>`);
+  svg.push(`<rect x="${refX}" y="${item.y - 9}" width="${refW}" height="18" rx="4" fill="white" stroke="#68778b" stroke-width="1.4"/>`);
   svg.push(escText(item.target, `x="${refX + 10}" y="${item.y + 4}" font-family="Arial" font-size="13" fill="#26364a"`));
 }
 svg.push(escText('21 unique application tables: 12 public + 9 private. The left panel retains the original public ERD layout. Private cards show PK/FK fields and selected identifiers; the data dictionary remains the source for all 224 fields.', `x="${panelX}" y="${height - 20}" font-family="Arial" font-size="14" fill="#53647a"`));
@@ -125,9 +127,9 @@ for (const name of privateOrder) {
 for (const item of tagRecords) {
   const target = id();
   tagIds.push(target);
-  cells.push(`<mxCell id="${target}" value="${esc(item.target)}" style="rounded=1;whiteSpace=wrap;html=0;align=left;verticalAlign=middle;spacing=6;fontFamily=Arial;fontSize=12;fillColor=#ffffff;strokeColor=#b7c1ce;" vertex="1" parent="1">${geom(refX, item.y - 12, refW, 24)}</mxCell>`);
+  cells.push(`<mxCell id="${target}" value="${esc(item.target)}" style="rounded=1;whiteSpace=wrap;html=0;align=left;verticalAlign=middle;spacing=4;fontFamily=Arial;fontSize=11;fillColor=#ffffff;strokeColor=#68778b;" vertex="1" parent="1">${geom(refX, item.y - 9, refW, 18)}</mxCell>`);
   const edgeId = id();
-  cells.push(`<mxCell id="${edgeId}" value="" style="edgeStyle=none;endArrow=block;endFill=1;strokeColor=#58687c;strokeWidth=1.2;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="${refX}" y="${item.y}" as="sourcePoint"/><mxPoint x="${cardX + cardW + 18}" y="${item.y}" as="targetPoint"/></mxGeometry></mxCell>`);
+  cells.push(`<mxCell id="${edgeId}" value="" style="edgeStyle=none;endArrow=block;endFill=1;strokeColor=#344257;strokeWidth=2.4;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="${refX}" y="${item.y}" as="sourcePoint"/><mxPoint x="${cardX + cardW}" y="${item.y}" as="targetPoint"/></mxGeometry></mxCell>`);
 }
 const dividerId = id();
 cells.push(`<mxCell id="${dividerId}" value="" style="strokeColor=#aab2bd;strokeWidth=1.5;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"><mxPoint x="${leftWidth + 24}" y="35" as="sourcePoint"/><mxPoint x="${leftWidth + 24}" y="${height - 45}" as="targetPoint"/></mxGeometry></mxCell>`);
