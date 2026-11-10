@@ -2059,6 +2059,11 @@ html[data-dashboard-theme="light"] .product-photo-dialog.photo-bubble .photo-lig
 .admin-mfa-dialog input { width:100%; padding:12px; border:1px solid #8886; border-radius:10px; background:#101010; color:#fff; font-size:16px; }
 .admin-mfa-enrollment img { display:block; width:200px; margin:16px auto; background:#fff; padding:8px; }
 .admin-mfa-status { min-height:24px; margin-top:10px; }
+.admin-login-notification { position:fixed; right:20px; bottom:20px; z-index:1600; width:min(420px,calc(100vw - 32px)); max-height:calc(100dvh - 40px); overflow:auto; padding:22px; border:1px solid #c54b4b; border-top:4px solid #a60000; border-radius:16px; background:#17191e; color:#f1f3f7; box-shadow:0 12px 45px #0005; }
+.admin-login-notification h3 { font-size:1.15rem; margin-bottom:12px; }
+.admin-login-notification p { font-size:.85rem; margin:8px 0; line-height:1.5; overflow-wrap:anywhere; }
+.admin-login-notification small { display:block; line-height:1.5; opacity:.75; }
+html[data-dashboard-theme="light"] .admin-login-notification { background:#fff; color:#202938; }
 html[data-dashboard-theme="light"] .admin-mfa-dialog { background:#fff; color:#202938; }
 html[data-dashboard-theme="light"] .admin-mfa-dialog input { background:#fafafa; color:#202938; }
 /* Shared dashboard interaction and narrow-screen form refinements. */

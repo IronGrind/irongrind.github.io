@@ -32,7 +32,7 @@ async function signInPhoneOperator(event) {
         if (!data?.session) throw new Error(data?.error || 'Sign-in failed.');
         const { error: sessionError } = await phoneOperatorClient.auth.setSession(data.session);
         if (sessionError) throw sessionError;
-        try { await window.requireAdminMfa(phoneOperatorClient); }
+        try { await window.requireAdminMfa(phoneOperatorClient, 'attendance'); }
         catch (error) { await phoneOperatorClient.auth.signOut({ scope: 'local' }); throw error; }
         const { error: activationError } = await phoneOperatorClient.rpc('activate_attendance_session');
         if (activationError) throw new Error('Could not secure your sign-in session. Sign in again.');
@@ -46,6 +46,7 @@ async function signInPhoneOperator(event) {
         if (profileError || !profile?.is_active || !['staff', 'admin'].includes(profile.role)) throw new Error('Active staff or admin account required.');
         phoneOperatorClient.auth.startAutoRefresh();
         phoneOperator = { id: user.id, name: profile.full_name || username };
+        if (profile.role === 'admin') window.startAdminApprovalNotifications?.(phoneOperatorClient);
         const { error: auditError } = await phoneOperatorClient.rpc('log_account_activity', { p_event: 'scanner_signed_in' });
         if (auditError) console.error('Could not log scanner sign-in:', auditError);
         document.body.classList.add('phone-operator-authenticated');
@@ -60,6 +61,7 @@ async function signInPhoneOperator(event) {
     finally { document.getElementById('phoneOperatorPassword').value = ''; button.disabled = false; }
 }
 async function changePhoneOperator(logEvent = true) {
+    window.stopAdminApprovalNotifications?.(phoneOperatorClient);
     await stopPhoneAttendanceScanner();
     if (logEvent && phoneOperator) {
         try {

@@ -9,6 +9,7 @@
     const dateFormat = new Intl.DateTimeFormat('en-PH', { timeZone: 'Asia/Manila', dateStyle: 'medium', timeStyle: 'short' });
     Object.assign(areas, { security: 'Security', reports: 'Report exports' });
     Object.assign(actions, {
+        admin_login_approval_requested: 'Device sign-in requested', admin_login_approved: 'Device sign-in approved', admin_login_denied: 'Device sign-in denied',
         username_sign_in_failed: 'Username sign-in failed', member_sign_in_failed: 'Member sign-in failed',
         sign_in_throttled: 'Sign-in rate limit reached', password_updated: 'Password updated',
         password_reset_requested: 'Password reset requested', member_signed_in: 'Member signed in',

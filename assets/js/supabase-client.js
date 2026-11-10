@@ -27,7 +27,10 @@ window.ironGrindSupabase = window.supabase.createClient(
 );
 
 // A guard verifies the server-issued session; page reloads never reclaim a session.
-window.stopAccountSessionMonitor = client => client?.__stopAccountSessionMonitor?.();
+window.stopAccountSessionMonitor = client => {
+    window.stopAdminApprovalNotifications?.(client);
+    client?.__stopAccountSessionMonitor?.();
+};
 window.monitorAccountSession = (client, onReplaced) => {
     if (client.__accountSessionMonitor) return;
     client.__accountSessionMonitor = true;
@@ -51,9 +54,16 @@ window.monitorAccountSession = (client, onReplaced) => {
             if (stopping) return;
             // Ignore an in-flight check belonging to credentials that have changed.
             if (latest.session?.access_token !== token) return;
+            if (error?.message === 'ADMIN_MFA_REQUIRED' || error?.message === 'ADMIN_APPROVAL_REQUIRED') {
+                stopping = true; client.__accountSessionMonitor = false;
+                window.stopAdminApprovalNotifications?.(client);
+                await client.auth.signOut({ scope: 'local' });
+                await onReplaced('expired'); return;
+            }
             if (data === false || error?.code === 'PT401' || error?.message === 'ACCOUNT_SESSION_REPLACED') {
                 stopping = true;
                 client.__accountSessionMonitor = false;
+                window.stopAdminApprovalNotifications?.(client);
                 await client.auth.signOut({ scope: 'local' });
                 await onReplaced();
             }
