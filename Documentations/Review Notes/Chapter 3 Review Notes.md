@@ -121,3 +121,21 @@ User Management has distinct actor arrows: administrator read-only member-profil
 | Staff | No | No |
 
 Membership registration, renewal, plan changes, staff-account provisioning, and attendance are separate operational functions; their database writes must not be described as permission to edit an existing member's personal profile. Staff counter lookup supplies limited operation-specific details, not a profile page. The requirement descriptions, prototype narrative, User Management use case, member self-profile use case, context flows, and DFD actor arrows were checked and corrected to use this distinction.
+
+## November 10, 2026 source-alignment review
+
+Chapters 1 and 3 were compared with the recent source revisions and updated. This entry supersedes older implementation statements where they conflict with the following changes.
+
+- Retained the existing project title and nine main functions. Clarified the web application and installable attendance-scanner PWA without describing it as a separate native application or an offline attendance service.
+- Added staff attendance lookup by name/Gmail with explicit member selection and submission of the unique identifier. Lookup alone does not record attendance or expose a general member-profile page.
+- Documented separate scanner installation, pairing and operator authentication; active saved pairings can be reused in the same browser, while lost/expired/removed connections need recovery or new pairing.
+- Aligned administrator and staff walk-in registration with split first name, optional middle initial and last name, composed into the existing full-name field. Retained the actual eight-character member and twelve-character staff-creation minimums.
+- Documented unit-aware initial low-stock thresholds, pound/ounce conversion, stock-versus-sale-unit presentation and staff supplement-form catalog groups. These are starting policy alerts, not optimized demand forecasts or new database columns.
+- Expanded the activity-log scope and described action/category/date/account filters and expandable details. Failed credential attempts are not attributed to an assumed account owner. Passwords/hashes/tokens and report contents are excluded from log entries. Export requests do not prove download completion; browser closure does not prove explicit logout.
+- Distinguished local security logging from verified production deployment. Migration 20261110000001_security_activity_events.sql, member-password-login, updated admin-username-login and the dependent web client require coordinated deployment. Auth database audit storage must be enabled for recovery-request capture.
+- Kept the historical November 8 regression statement dated. The new review does not claim a fresh full production or physical-device test.
+- Marked prototype captures as earlier interface evidence; revised administrator registration, staff directory, activity-log and catalog descriptions distinguish later source changes. Refreshed captures and final Word pagination review remain necessary.
+
+Validation: chapter XML and figure relationships passed verification; 20 Chapter 3 tables, all 174 dictionary descriptions/types/constraints, 21 FK definitions and five unique fields were verified. Dictionary XML and figure counts were preserved by the update. Prototype verification confirmed 27 complete main screenshots and eight supplementary details, with all 35 media placements resolving correctly. No schema table/column changes were introduced by the reviewed UI and logging revisions; the existing ERD/dictionary structure remains applicable. DFD and use-case artwork was retained; the explanations extend attendance lookup and security audit behavior within the same nine functions, rather than claiming every added audit event is individually drawn.
+
+Backup: Review Backups/system-alignment-20261110-105401. Original Chapter 1 and Chapter 3 files are retained there alongside staged updated copies.
