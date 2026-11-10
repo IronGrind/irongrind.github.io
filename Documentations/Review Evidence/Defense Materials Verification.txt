@@ -1,0 +1,1 @@
+﻿Passed: editable PowerPoint has 18 slides, 18 populated speaker-note parts, 83 parseable XML/relationship parts and no missing relationship targets. Supporting notes/source map/setup guide exist. Visual PowerPoint review remains separate.

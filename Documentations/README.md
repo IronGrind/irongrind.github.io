@@ -1,5 +1,7 @@
 # Documentation files
 
+- **Defense/** — detailed study/defense notes, source code map, separate presentation text and editable PowerPoint with speaker notes, and the administrator MFA deployment/recovery guide. Start with `Defense/Admin MFA Setup and Deployment Guide.md` for setup steps.
+
 - **Chapter 1.docx**, **Chapter 2.docx**, **Chapter 3.docx** — the manuscript chapters.
 - **Chapter 3 Diagrams/** — figures; use `05-gym-erd-editable.drawio` to edit the current ERD and `05-gym-erd-editable.svg` for its vector figure.
 - **Prototype Screenshots/** — 27 complete interface captures, selected enlarged form details, and the figure index for Chapter 3's prototype section.

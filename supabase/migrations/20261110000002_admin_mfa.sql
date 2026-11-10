@@ -25,6 +25,13 @@ $$;
 revoke all on function private.require_admin_mfa() from public,anon;
 grant execute on function private.require_admin_mfa() to authenticated;
 
+create or replace function private.is_admin()
+returns boolean language sql stable security definer set search_path='' as $$
+ select public.admin_mfa_required() and coalesce(auth.jwt()->>'aal','aal1')='aal2';
+$$;
+revoke all on function private.is_admin() from public,anon;
+grant execute on function private.is_admin() to authenticated;
+
 do $$
 declare definition text; name text;
 begin

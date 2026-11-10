@@ -62,3 +62,11 @@ failedActivation.element('loginEmail').value='admin'; failedActivation.element('
 await vm.runInContext('handleLogin({preventDefault(){}})',failedActivation.context);
 assert.equal(failedActivation.destination(),undefined);
 assert.equal(failedActivation.counters.signOut,1,'Failed activation cannot open a dashboard');
+const cancelledMfa=setup('admin');
+cancelledMfa.element('loginEmail').value='admin';cancelledMfa.element('loginPassword').value='password';
+cancelledMfa.context.window.requireAdminMfa=async()=>{throw new Error('Sign-in cancelled.');};
+await vm.runInContext('handleLogin({preventDefault(){}})',cancelledMfa.context);
+assert.equal(cancelledMfa.counters.activation,0,'MFA must finish before replacing an application session');
+assert.equal(cancelledMfa.destination(),undefined);
+assert.equal(cancelledMfa.counters.signOut,1,'Cancelled new login is signed out');
+console.log('Passed: cancelled MFA does not activate or replace the existing application session.');

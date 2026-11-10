@@ -35,7 +35,8 @@ window.requireAdminMfa = async client => {
         document.body.append(dialog);
         if (enrollment) {
             const panel = dialog.querySelector('.admin-mfa-enrollment'); panel.hidden = false;
-            panel.querySelector('img').src = enrollment.totp.qr_code;
+            const qr = enrollment.totp.qr_code;
+            panel.querySelector('img').src = qr.trim().startsWith('<svg') ? `data:image/svg+xml;charset=utf-8,${encodeURIComponent(qr)}` : qr;
             panel.querySelector('input').value = enrollment.totp.secret;
         }
         const input = dialog.querySelector('#adminMfaCode'), status = dialog.querySelector('[role="status"]');

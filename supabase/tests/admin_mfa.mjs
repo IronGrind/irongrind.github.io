@@ -30,6 +30,7 @@ try {
  }
  await login(admin,session,'aal1');
  assert.equal((await db.query('select public.admin_mfa_required() required')).rows[0].required,true);
+ assert.equal((await db.query('select private.is_admin() allowed')).rows[0].allowed,false);
  assert.equal((await db.query('select * from protected_records')).rows.length,0);
  await assert.rejects(db.exec('select activate_account_session()'),/ADMIN_MFA_REQUIRED/);
  await assert.rejects(db.exec('select activate_attendance_session()'),/ADMIN_MFA_REQUIRED/);
@@ -37,6 +38,7 @@ try {
  await db.exec("select set_config('request.path','/profiles',false)");
  await assert.rejects(db.exec('select enforce_account_session()'),/ADMIN_MFA_REQUIRED/);
  await login(admin,session,'aal2'); await db.exec('select activate_account_session(); select enforce_account_session()');
+ assert.equal((await db.query('select private.is_admin() allowed')).rows[0].allowed,true);
  assert.equal((await db.query('select * from protected_records')).rows.length,1);
  await login(staff,next,'aal1'); await db.exec('select activate_account_session()');
  assert.equal((await db.query('select * from protected_records')).rows.length,1);
