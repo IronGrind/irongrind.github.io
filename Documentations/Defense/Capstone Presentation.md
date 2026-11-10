@@ -167,3 +167,9 @@ Speaker notes: Suggested sequence: member request, authorized review, attendance
 Keep the final thesis reference list in its approved format. These are presentation source notes, not fabricated related literature.
 
 Dashboard light mode received a source-level completion pass for nested cards, dialogs, filters, form controls, tables, scanner/phone pairing panels, inventory and sales surfaces. Staff-specific light rules account for its later-loaded stylesheet. This revision is local and still needs visual review across admin, member, staff and mobile views before deployment; do not present it as browser-validated.
+
+A screenshot identified one missed Light Mode surface: the login page's Forgot your password dialog used the shared dark modal styling outside the dashboard theme scope. Login-specific overrides now theme the dialog, email field, copy, Cancel button and backdrop. The change is local and needs browser review in both themes, including mobile, before deployment.
+
+The follow-up Light Mode audit found registration was missing the shared theme bootstrap and used dark inline surfaces. Registration now follows the saved preference, offers a theme toggle, and styles its sections, plan choices, fields and modal for Light Mode. Password reset also loads the saved theme and offers a toggle. The login recovery dialog was corrected in the prior local pass. These authentication-page changes have not received browser acceptance or deployment; review the full login → registration/password-reset paths and their success/error dialogs before release.
+
+A final registration screenshot review caught the dark `+63` country-code blocks. They now use a muted gray fill with a matching border and dark text in Light Mode; dark mode is unchanged. The CSS revision is local and awaits browser review/deployment.

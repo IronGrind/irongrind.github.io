@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IronGrind · Membership Registration</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261108-attendance-incomplete">
+    <script src="assets/js/theme.js?v=20261110-auth-pages-light-mode"></script>
+    <link rel="stylesheet" href="assets/css/style.css?v=20261110-light-phone-prefix">
 </head>
 <body class="register-body" style="padding:24px; background: radial-gradient(circle at 20% 20%, #1a1207, #0b0e14 60%);">
     <div class="registration-shell" style="max-width:900px; margin:0 auto; background:#11161f; border:1px solid #1e2533; border-radius:24px; padding:32px;">
@@ -17,7 +18,10 @@
                     <p>Fitness Gym · Dapitan City</p>
                 </div>
             </div>
-            <a href="index.html" class="btn-sm"><i class="fas fa-arrow-left"></i> Back to Login</a>
+            <div class="registration-header-actions">
+                <button type="button" class="auth-theme-toggle" data-login-theme-toggle onclick="toggleDashboardTheme()" aria-label="Switch to light mode" title="Switch to light mode"><i class="fas fa-sun" aria-hidden="true"></i></button>
+                <a href="index.html" class="btn-sm"><i class="fas fa-arrow-left"></i> Back to Login</a>
+            </div>
         </div>
 
         <div style="text-align:center; margin:28px 0;">
