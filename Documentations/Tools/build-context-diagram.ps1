@@ -34,34 +34,42 @@ function Draw-Label([string]$text,[single]$x,[single]$y,[single]$w,[single]$h,[D
 Draw-Actor 35 300 270 150 "Member /`nApplicant"
 Draw-Actor 1880 55 280 145 'Administrator'
 Draw-Actor 1880 530 280 145 'Authorized Staff'
-$g.FillRectangle([Drawing.Brushes]::White,850,230,500,250)
-$g.FillRectangle($actorFill,850,230,500,52)
-$g.DrawRectangle($line,850,230,500,250)
+$systemPath = [Drawing.Drawing2D.GraphicsPath]::new()
+$systemPath.AddArc(850,230,36,36,180,90); $systemPath.AddArc(1314,230,36,36,270,90)
+$systemPath.AddArc(1314,444,36,36,0,90); $systemPath.AddArc(850,444,36,36,90,90); $systemPath.CloseFigure()
+$g.FillPath([Drawing.Brushes]::White,$systemPath)
+$headerPath = [Drawing.Drawing2D.GraphicsPath]::new()
+$headerPath.AddArc(850,230,36,36,180,90); $headerPath.AddArc(1314,230,36,36,270,90)
+$headerPath.AddLine(1350,248,1350,282); $headerPath.AddLine(1350,282,850,282); $headerPath.AddLine(850,282,850,248); $headerPath.CloseFigure()
+$g.FillPath($actorFill,$headerPath)
+$g.DrawPath($line,$systemPath)
 $g.DrawLine($line,850,282,1350,282)
 $g.DrawString('0',$numFont,$ink,[Drawing.RectangleF]::new(850,232,500,45),$fmt)
 $g.DrawString('IronGrind Membership and'+"`n"+'Operations Management System',$systemFont,$ink,[Drawing.RectangleF]::new(875,310,450,100),$fmt)
 
 # Member / applicant request and result flows.
 Draw-Arrow 305 335 850 335
-Draw-Label "Credentials, registration details, renewal`nrequests, and permitted profile changes" 355 250 455 62
 Draw-Arrow 850 410 305 410
-Draw-Label "Sign-in / application status; own membership,`nQR, visits, and product catalog" 355 420 455 62
 
 # Administrator responsibilities and system results.
-Draw-Arrow 1350 295 1880 165
-Draw-Label "Review online applications / renewals; manage`nmemberships, inventory, staff, and devices" 1410 205 455 62
-Draw-Arrow 1880 190 1350 355
-Draw-Label "Operation results; member, staff, and device status;`nreports and activity logs" 1455 345 410 62
+Draw-Arrow 1880 165 1350 295
+Draw-Arrow 1350 355 1880 190
 
 # Authorized staff responsibilities and system results.
-Draw-Arrow 1350 405 1880 565
-Draw-Label "Credentials; counter work; request decisions;`nQR scans and product sales" 1415 455 455 62
-Draw-Arrow 1880 610 1350 445
+Draw-Arrow 1880 565 1350 405
+Draw-Arrow 1350 445 1880 610
+
+# Place labels after every connector so later arrows cannot cut through their text.
+Draw-Label "Credentials, registration details, renewal`nrequests, and permitted profile changes" 355 250 455 62
+Draw-Label "Sign-in / application status; own membership,`nQR, visits, and product catalog" 355 420 455 62
+Draw-Label "Review online applications / renewals; manage`nmemberships, inventory, staff, and devices" 1410 205 455 62
+Draw-Label "Operation results, member / staff status,`nreports, and activity logs" 1455 345 410 62
+Draw-Label "Credentials; counter work; online request`ndecisions; QR scans and product sales" 1415 455 455 62
 Draw-Label "Access and task results; permitted attendance`nand own product-sale records" 1415 615 455 62
 
 Draw-Label 'Walk-in customers transact through an operator. Payment is recorded at the gym; no online payment gateway or customer receipt is represented.' 35 715 2130 32 $small
 $png = Join-Path $out '02-context.png'
 $bmp.Save($png,[Drawing.Imaging.ImageFormat]::Png)
-$fmt.Dispose(); $small.Dispose(); $regular.Dispose(); $bold.Dispose(); $systemFont.Dispose(); $numFont.Dispose()
+$fmt.Dispose(); $small.Dispose(); $regular.Dispose(); $bold.Dispose(); $systemFont.Dispose(); $numFont.Dispose(); $headerPath.Dispose(); $systemPath.Dispose()
 $arrow.Dispose(); $line.Dispose(); $actorFill.Dispose(); $ink.Dispose(); $g.Dispose(); $bmp.Dispose()
 Write-Output "Rendered $png"

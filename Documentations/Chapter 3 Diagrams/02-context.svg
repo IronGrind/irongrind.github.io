@@ -31,19 +31,19 @@
   <text class="actor-label" x="2020" y="613">Authorized Staff</text>
 
   <path class="flow" d="M305 325 H850"/>
-  <text class="flow-label" x="365" y="277"><tspan x="365">Credentials, registration details,</tspan><tspan x="365" dy="23">renewal requests, and permitted</tspan><tspan x="365" dy="23">profile changes</tspan></text>
+  <text class="flow-label" x="365" y="277"><tspan x="365">Credentials, registration details, renewal</tspan><tspan x="365" dy="23">requests, and permitted profile changes</tspan></text>
   <path class="flow" d="M850 405 H305"/>
-  <text class="flow-label" x="365" y="455"><tspan x="365">Sign-in and application status;</tspan><tspan x="365" dy="23">own membership, QR, attendance</tspan><tspan x="365" dy="23">history, and product catalog</tspan></text>
+  <text class="flow-label" x="365" y="455"><tspan x="365">Sign-in / application status; own membership,</tspan><tspan x="365" dy="23">QR, visits, and product catalog</tspan></text>
 
-  <path class="flow" d="M1350 300 C1535 255 1685 175 1880 160"/>
-  <text class="flow-label" x="1450" y="215"><tspan x="1450">Application and renewal review decisions;</tspan><tspan x="1450" dy="22">membership operations, inventory, staff and</tspan><tspan x="1450" dy="22">device controls, report and activity-log queries</tspan></text>
-  <path class="flow" d="M1880 190 C1690 230 1535 320 1350 350"/>
-  <text class="flow-label" x="1460" y="365"><tspan x="1460">Member and operation results, staff and</tspan><tspan x="1460" dy="22">device status, filtered activity logs, and reports</tspan></text>
+  <path class="flow" d="M1880 160 C1685 175 1535 255 1350 300"/>
+  <text class="flow-label" x="1450" y="215"><tspan x="1450">Review online applications / renewals; manage</tspan><tspan x="1450" dy="22">memberships, inventory, staff, and devices</tspan></text>
+  <path class="flow" d="M1350 350 C1535 320 1690 230 1880 190"/>
+  <text class="flow-label" x="1460" y="365"><tspan x="1460">Operation results; member, staff, and device status;</tspan><tspan x="1460" dy="22">reports and activity logs</tspan></text>
 
-  <path class="flow" d="M1350 405 C1535 445 1685 560 1880 575"/>
-  <text class="flow-label" x="1450" y="485"><tspan x="1450">Credentials, counter details, online</tspan><tspan x="1450" dy="22">application and renewal decisions, QR scans,</tspan><tspan x="1450" dy="22">and product-sale entries</tspan></text>
-  <path class="flow" d="M1880 610 C1685 580 1535 465 1350 445"/>
-  <text class="flow-label" x="1450" y="660"><tspan x="1450">Access, request-review and counter results,</tspan><tspan x="1450" dy="22">scan results, permitted attendance and</tspan><tspan x="1450" dy="22">own product-sale records</tspan></text>
+  <path class="flow" d="M1880 575 C1685 560 1535 445 1350 405"/>
+  <text class="flow-label" x="1450" y="485"><tspan x="1450">Credentials; counter work; request decisions;</tspan><tspan x="1450" dy="22">QR scans and product sales</tspan></text>
+  <path class="flow" d="M1350 445 C1535 465 1685 580 1880 610"/>
+  <text class="flow-label" x="1450" y="660"><tspan x="1450">Access and task results; permitted attendance</tspan><tspan x="1450" dy="22">and own product-sale records</tspan></text>
 
   <text class="note" x="35" y="725">Walk-in customers transact through an operator. Payment is recorded at the gym; the diagram does not represent an online payment gateway or customer receipt.</text>
 </svg>

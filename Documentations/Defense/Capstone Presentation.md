@@ -284,8 +284,17 @@ Speaker notes: The checklist was exported to `Documentations/Testing/Iron Grind 
 
 ## Consolidated application ERD
 
-- One editable diagram includes 21 application-owned tables across `public` and `private`.
-- All 224 modeled fields and 33 declared foreign keys are represented.
-- Supabase-managed Auth tables appear only as reference nodes.
+- One editable diagram includes 21 application-owned tables: 12 `public` and 9 `private`.
+- The original public-table layout stays intact; the private tables appear in a separate compact panel with short labeled FK links.
+- Key fields are shown for readability; the full 224-field inventory remains in the Chapter 3 dictionary. All 33 declared foreign keys are represented.
 
-Speaker notes: The original editable ERD showed the 12 public tables only. The consolidated version adds all nine private application tables using the supplied full pgAdmin export and checked-in schema model through migration 20261110000006. It includes auth.users and auth.sessions only where needed to show declared foreign keys; Supabase-managed auth, storage, realtime and migration tables are not counted as application tables. The former public-only drawing is preserved under `_Archive/Previous ERD Versions/05-gym-erd-public-only.svg` and `.drawio`. See 05-gym-erd-editable.svg or the editable diagrams.net source. The Word chapter figures remain separate and unchanged; this documentation update does not alter the application schema or deployment.
+Speaker notes: The first all-field layout was too crowded, so the drawing now keeps the original 12-table public arrangement and adds a separate private-table panel. Private cards show primary/foreign keys and selected identifiers, with repeated target labels for existing public/Auth tables. The former public-only drawing is preserved under `_Archive/Previous ERD Versions/05-gym-erd-public-only.svg` and `.drawio`. Use 05-gym-erd-editable.svg or its diagrams.net source. The submitted Word chapter figures remain separate and unchanged. This documentation update does not alter the application schema or deployment.
+
+## Slide - Updated system context
+
+- Members and applicants submit credentials, registration and renewal requests, and permitted profile changes.
+- Administrators and authorized staff can review online applications and renewal requests.
+- Role-specific membership, attendance, counter-operation, and administrative results return to the appropriate user.
+- Gym payments are recorded in person; no online payment gateway or customer receipt is represented.
+
+Speaker notes: The context diagram uses the supplied horizontal layout and pale-blue actor/process-header colors. Member / Applicant appears on the left, process 0 is centered, and Administrator and Authorized Staff appear at the right. The administrator and staff inputs now both state online request-review decisions, matching the implemented role permissions. Separate arrows indicate each role's input and returned information. Walk-in customers transact through an operator. The context diagram shows information exchange, not internal MFA, trusted-device, database, or hosting details. The 2200-by-760 PNG was rendered and visually inspected; the Chapter 3 Word image byte-matches it, and the Word package XML parses. Word pagination and adviser review remain pending. This was a documentation-only update; application, schema, and deployment behavior did not change.

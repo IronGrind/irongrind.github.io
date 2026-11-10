@@ -1,4 +1,4 @@
-## Prototype whole-screenshot presentation - November 10, 2026
+﻿## Prototype whole-screenshot presentation - November 10, 2026
 
 Updated Chapter 3 at the user's request: all 27 supplied original screenshots now appear whole as the main Figures 6-32. Eight supplementary enlarged views are retained only for the online registration form, administrator walk-in form, and staff add-member form (Figures 7a-c, 12a-c, and 26a-b). Other formerly split screens now use their complete captures. Captions and explanations distinguish the complete layout from supplementary details. The Gantt remains Figure 33.
 
@@ -69,7 +69,7 @@ Reviewed against the checked-in system files on November 9, 2026 (Asia/Manila). 
 ## Updated in Chapter 3.docx
 
 - Replaced the context diagram with one whole-system process and separate member/applicant, administrator, and staff actors. Internal stores are excluded from the context view.
-- Arranged the Gane–Sarson context diagram in the requested vertical composition: Member / Applicant above process 0, Administrator and Authorized Staff below, with distinct labeled, directional input and output arrows.
+- Arranged the Ganeâ€“Sarson context diagram in the requested vertical composition: Member / Applicant above process 0, Administrator and Authorized Staff below, with distinct labeled, directional input and output arrows.
 - Replaced the Level 1 data-flow figure and descriptions, distinguishing administrator review of online requests from staff counter operations.
 - Replaced the use-case figure with separate role associations. Actors are outside the system boundary. Shared use cases repeat for readability.
 - Replaced the ERD with four schema-style panels derived from the supplied pgAdmin export: membership, account/history/audit, attendance/pairing, and products/sales. Full columns, data types, PK/FK/UQ markers, and required status are shown, with reference-key connections. Editable SVGs and the normalized schema JSON accompany the PNGs; the Mermaid relationship source is also retained.
@@ -97,7 +97,7 @@ Reviewed against the checked-in system files on November 9, 2026 (Asia/Manila). 
 - Final page layout has not been rendered in Microsoft Word. Check pagination, caption placement, and image text size before submission.
 - Existing interface screenshots, other than the replaced receipt illustration, are historical prototype images and were not recaptured. Capture the current interfaces before presenting those figures as current screenshots.
 - The Agile illustration was inspected and retained. The Gantt chart remains the original planned schedule, not evidence of actual completion dates.
-- Some staff messages still use the word ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œreceiptÃƒÂ¢Ã¢â€šÂ¬Ã‚Â for the internal reference. No application code was changed in this documentation task.
+- Some staff messages still use the word ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã¢â‚¬Å“receiptÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â for the internal reference. No application code was changed in this documentation task.
 - Illustrations and editable ERD source are in Chapter 3 Diagrams. build-chapter3-diagrams.ps1 regenerates those source images; regenerating the images alone does not replace images already embedded in Word.
 
 ## Diagram conventions
@@ -144,7 +144,7 @@ Validation: chapter XML and figure relationships passed verification; 20 Chapter
 
 Backup: Review Backups/system-alignment-20261110-105401. Original Chapter 1 and Chapter 3 files are retained there alongside staged updated copies.
 
-## Administrator MFA and defense materials — November 10, 2026
+## Administrator MFA and defense materials â€” November 10, 2026
 
 Implemented administrator TOTP enrollment/challenge before main-dashboard and administrator scanner activation. The MFA migration enforces AAL2 through the active-admin role helper, current-session/RLS guard, both activation functions and the preserved API pre-request guard. The own-account bootstrap returns only a Boolean requirement and is the narrow pre-request exception. Staff/member flows retain their existing authentication/authorization. No application table/column was added; managed Supabase factors supply the second factor.
 
@@ -154,7 +154,7 @@ Prepared Defense/Capstone Study and Defense Notes.md, generated Source Code Map.
 
 Chapters 1 and 3 received scoped MFA addenda; no ERD/dictionary restructuring was needed. Backups: Review Backups/admin-mfa-20261110-112638. All 174 dictionary fields, 21 FK definitions, five unique fields and the existing figures remain verified. No actual setup secret or QR was inserted into documentation. Current-device approval/push notifications remain outside this increment. Deployment, supervised genuine-admin first enrollment and verified project-owner lost-factor recovery are documented prerequisites.
 
-## November 10, 2026 — DFD overlap correction
+## November 10, 2026 â€” DFD overlap correction
 
 The single crowded detailed Level 1 image has been replaced with nine Gane-Sarson process panels, Figures 3a-i, following the simplified overview. Each panel shows one numbered process, its participating role entities and individual data stores. Horizontal flow lanes show direction separately and do not cross; labels and symbols were visually reviewed in all nine rendered panels. The administrator login-security supplement is Figure 3j. The full diagram still represents the same nine processes and current operational stores, with D12 retained as reserved and without an active frontend dependency.
 
@@ -169,12 +169,12 @@ New migration: 20261110000004_admin_trusted_device.sql. New authenticated Edge F
 
 Validation: 27 focused browser/crypto/Edge simulation/MFA/scanner/logout tests passed, including invalid signatures, stale MFA, reuse without a code and failure without transfer. Isolated SQL checks passed initial MFA enrollment, post-logout reuse, service API isolation, consumed challenge rejection, AAL1 trusted approvers, required approval plus MFA, atomic revocation, denial, inactivity recovery, forget revocation and migration rerun. UI/form/session checks and login fixtures passed. Notes, PPT speaker notes, source map and the deployment guide were updated. Physical IndexedDB/authenticator/two-device hosted testing remains pending.
 
-## Chapter 3 format alignment — November 10, 2026
+## Chapter 3 format alignment â€” November 10, 2026
 
 Updated Chapter 3.docx to follow the user-supplied chapter structure and five-column data-dictionary format: Field Name, Field Type, Length / Precision / Scale, Key, and Description and Validation Details. Restored the Entity Relationship Diagram heading. Separated declared varchar lengths and numeric precision/scale from base types; moved nullability, referential actions, composite constraints and other validation details into the descriptions without discarding them. Existing methodology, requirements, diagrams, forms, prototype figures, Gantt schedule, current security supplements and verified-versus-pending distinctions are retained. The duplicate Gantt ending in the pasted sample was not introduced.
 
 Affected materials: Chapter 3 manuscript, chapter verifier, presentation slide content and speaker notes, and these study notes. Validation checks all 23 tables, 201 fields, 27 foreign keys, five individually unique fields, composite constraints and figure relationships against the repository schema model. This is a documentation-only change; no application, database or deployment action is involved. Final visual pagination review in desktop Word remains pending. Backup: Documentations/Review Backups/sample-format-20261110-203446/Chapter 3.docx.
 
-## Public-table-only DFD revision � November 11, 2026
+## Public-table-only DFD revision — November 11, 2026
 
-At the user's request, the nine-process DFD now uses public application tables only as data-store symbols. Auth accounts and all private-schema stores were removed from the DFD; login remains Process 1.0 and the operational flows remain documented. The Figure 3f private-store DFD supplement was removed from Chapter 3 and its editable/vector/source assets were archived. Private structures remain documented in the separate physical security ERD where relevant. Five Word panel images were regenerated and synchronized. Source-based generator and package checks are pending; final desktop Word pagination review remains pending. No application/schema change or deployment occurred.
+At the user's request, the nine-process DFD now uses public application tables only as data-store symbols. Auth accounts and all private-schema stores were removed from the DFD; login remains Process 1.0 and the operational flows remain documented. The Figure 3f private-store DFD supplement was removed from Chapter 3 and its editable/vector/source assets were archived. Private structures remain documented in the separate physical security ERD where relevant. Five Word panel images were regenerated and synchronized. Both DFD generators completed successfully; source and panel index checks confirm nine processes and 39 public-table store references. Chapter 3 Word XML parses, Figure 3f is absent, and all five embedded DFD panel images byte-match their generated PNG sources. Final desktop Word pagination review remains pending. No application/schema change or deployment occurred.

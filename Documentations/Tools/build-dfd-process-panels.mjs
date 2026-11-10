@@ -1,10 +1,12 @@
-import fs from 'node:fs';
+﻿import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const dir = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../Chapter 3 Diagrams');
 const read = file => JSON.parse(fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, ''));
 const processes = read(path.join(dir, '03-gane-sarson-flows.json'));
+const allowedPublicStoreIds = new Set(['D1','D2','D3','D4','D5','D6','D7','D8','D9','D10','D11']);
+for (const process of processes) for (const store of process.Stores) if (!allowedPublicStoreIds.has(store[0])) throw new Error('Non-public DFD store: ' + store[0]);
 const actorFlows = read(path.join(dir, ' _Sources/dfd-actor-flows.json'.trim()));
 
 const reportStores = [
@@ -59,7 +61,6 @@ const actorLabels = [
 ];
 
 const shortStoreLabels = {
-  D0: ['Account / session records', 'Identity / session state'],
   D1: ['Profile / role records', 'Role / active status'],
   D2: ['Application / review data', 'Submitted applications'],
   D3: ['Member / membership data', 'Current member data'],
@@ -71,11 +72,6 @@ const shortStoreLabels = {
   D9: ['Recorded operation event', 'Filtered activity records'],
   D10: ['Pairing-policy changes', 'Phone-pairing policy'],
   D11: ['Pairing-session changes', 'Paired phone sessions'],
-  D13: ['Scan request / result', 'Previous scan result'],
-  D14: ['Selected session scope', 'Session ownership'],
-  D15: ['Approval request / decision', 'Pending approval details'],
-  D16: ['Trusted public key', 'Trust state'],
-  D17: ['Challenge / authorization', 'Session boundary'],
 };
 
 const escape = value => String(value).replace(/[&<>"']/g, char => ({
@@ -108,8 +104,8 @@ function makePanel(process, processIndex) {
   const height = top + processHeight + 85;
   const parts = [];
   parts.push(`<rect width="${width}" height="${height}" fill="#ffffff"/>`);
-  parts.push(text(48, 52, `Process ${process.Id} — ${process.Name}`, 32, '#172235', 'start', 65, 700));
-  parts.push(text(48, 94, 'Gane–Sarson notation · arrows show the direction of each data flow', 19, '#536274', 'start', 100));
+  parts.push(text(48, 52, `Process ${process.Id} â€” ${process.Name}`, 32, '#172235', 'start', 65, 700));
+  parts.push(text(48, 94, 'Ganeâ€“Sarson notation Â· arrows show the direction of each data flow', 19, '#536274', 'start', 100));
 
   const actorX = 48, actorW = 285, processX = 700, processW = 440, storeX = 1605, storeW = 445;
   const actorH = 92, processY = top;
@@ -160,7 +156,7 @@ function makePanel(process, processIndex) {
   });
 
   parts.push(text(48, height - 24, 'Repeated actor and store names across panels identify the same system roles and physical data stores.', 17, '#536274', 'start', 105));
-  const svg = `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="title desc">${marker}<title id="title">Process ${escape(process.Id)} — ${escape(process.Name)}</title><desc id="desc">Gane–Sarson DFD process with role-specific entities, individually labeled data stores, and separate directional flows.</desc>${parts.join('')}</svg>`;
+  const svg = `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="title desc">${marker}<title id="title">Process ${escape(process.Id)} â€” ${escape(process.Name)}</title><desc id="desc">Ganeâ€“Sarson DFD process with role-specific entities, individually labeled data stores, and separate directional flows.</desc>${parts.join('')}</svg>`;
   return { svg, width, height };
 }
 
@@ -177,4 +173,4 @@ fs.writeFileSync(path.join(dir, '_Sources/dfd-process-panel-index.json'), JSON.s
   actorLabels: actorLabels[index],
   storeLabels: shortStoreLabels,
 })), null, 2) + '\n');
-console.log('Generated nine process-specific Gane–Sarson panels; each panel routes actor and store flows in separate lanes without crossing connectors.');
+console.log('Generated nine process-specific Ganeâ€“Sarson panels; each panel routes actor and store flows in separate lanes without crossing connectors.');

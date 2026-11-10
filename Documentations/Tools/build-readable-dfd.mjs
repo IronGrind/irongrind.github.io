@@ -1,4 +1,4 @@
-import fs from 'node:fs';
+﻿import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -105,7 +105,7 @@ for (let i = 0; i < processes.length; i++) {
   const height = Math.max(420, actorBlock, storeBlock) + 40;
   let body = `<g id="process-${i + 1}" transform="translate(0 ${cursorY})">`;
   body += `<rect x="45" y="0" width="3260" height="${height}" rx="22" class="panel"/>`;
-  body += `<text x="80" y="40" class="panel-title">${esc(process.Id)} · ${esc(process.Name)}</text>`;
+  body += `<text x="80" y="40" class="panel-title">${esc(process.Id)} Â· ${esc(process.Name)}</text>`;
 
   actors.forEach((actor, index) => {
     const y = 76 + index * 142;
@@ -134,16 +134,16 @@ for (let i = 0; i < processes.length; i++) {
 
 const width = 3360;
 const height = cursorY + 190;
-const header = `<g><text x="80" y="82" class="title">Iron Grind Fitness Gym — Simplified Level 1 DFD</text>
-<text x="80" y="122" class="subtitle">Gane–Sarson notation · nine processes · named actors and individual data stores</text>
+const header = `<g><text x="80" y="82" class="title">Iron Grind Fitness Gym â€” Simplified Level 1 DFD</text>
+<text x="80" y="122" class="subtitle">Ganeâ€“Sarson notation Â· nine processes Â· named actors and individual data stores</text>
 <g transform="translate(80 160)">${box(0, 0, 280, 58, 0, 'entity')}<text x="140" y="36" class="legend">External entity</text>
 ${box(350, 0, 300, 58, 14, 'process')}<text x="500" y="36" class="legend">Process</text>
 <path d="M740 0h310 M740 0v58 M740 58h310 M810 0v58" class="store"/><text x="900" y="36" class="legend">Data store</text>
 <path d="M1140 30h310" class="flow" marker-end="url(#arrow-end)"/><text x="1295" y="18" class="legend">Data flow</text></g>
-<text x="80" y="250" class="note">Each data store uses its database table name. Repeated D identifiers refer to the same table; one single-headed flow per pair. For exchanges, the initiating input or store write is shown.</text>
+<text x="80" y="250" class="note">Store symbols show public application tables only. Repeated D identifiers refer to the same table; one single-headed flow per pair.</text>
 <text x="80" y="276" class="note">Simplified directional view: return flows are omitted where a pair exchanges data both ways; consult the source model for complete flows.</text></g>`;
 const style = `<style>
  text{font-family:Arial,sans-serif;fill:#172235}.title{font-size:38px;font-weight:700}.subtitle{font-size:22px;fill:#536274}.panel-title{font-size:25px;font-weight:700}.note{font-size:17px;fill:#536274}.legend{font-size:18px;font-weight:600;text-anchor:middle}.panel{fill:#fff;stroke:#d1d9e3;stroke-width:2}.entity{fill:#d5e2f5;stroke:#172235;stroke-width:2.5}.entity-title{font-size:20px;font-weight:700}.process{fill:#fff;stroke:#172235;stroke-width:3}.process-header{fill:#d5e2f5;stroke:none}.process-separator{stroke:#244a78;stroke-width:2}.process-number{font-size:21px;font-weight:700}.process-name{font-size:22px;font-weight:700}.store{fill:none;stroke:#40516a;stroke-width:2.5}.store-id{font-size:18px;font-weight:700}.store-name{font-size:17px}.flow{fill:none;stroke:#111827;stroke-width:3;stroke-linecap:round;stroke-linejoin:round}.flow-label{font-size:17px;fill:#111827}.label-bg{fill:#fff;stroke:none}.page{fill:#fff}
 </style>`;
-const svg = `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="title desc"><title id="title">Iron Grind Fitness Gym — Complete Level 1 DFD</title><desc id="desc">Nine process panels in Gane–Sarson notation, with external entities, separately identified data stores, and labeled data flows.</desc><defs><marker id="arrow-end" markerWidth="12" markerHeight="12" refX="10" refY="6" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L11 6L0 12Z" fill="#111827"/></marker></defs>${style}<rect class="page" width="100%" height="100%"/>${header}${panels.join('')}<text x="80" y="${height - 42}" class="note">Source: Chapter 3 Level 1 process/actor-flow model and User Login security-store supplement. Standalone complete Level 1 DFD. The Word chapter presents the same model in five panels (Figures 3a-e); Figure 3f isolates the administrator security stores.</text></svg>`;
+const svg = `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="title desc"><title id="title">Iron Grind Fitness Gym â€” Complete Level 1 DFD</title><desc id="desc">Nine process panels in Ganeâ€“Sarson notation, with external entities, separately identified data stores, and labeled data flows.</desc><defs><marker id="arrow-end" markerWidth="12" markerHeight="12" refX="10" refY="6" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L11 6L0 12Z" fill="#111827"/></marker></defs>${style}<rect class="page" width="100%" height="100%"/>${header}${panels.join('')}<text x="80" y="${height - 42}" class="note">Source: Chapter 3 Level 1 process/actor-flow model. Store symbols show public application tables only; authentication records and private security stores are omitted.</text></svg>`;
 fs.writeFileSync(path.join(root, '03-dfd-complete-gane-sarson.svg'), svg, 'utf8');
