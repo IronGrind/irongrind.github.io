@@ -188,26 +188,26 @@ async function submitRegistration(event) {
         const { data: emailAvailable, error: emailCheckError } = await window.ironGrindSupabase.rpc('is_registration_email_available', { p_email: email });
         if (emailCheckError) { showError('Could not check this email address. Please try again.'); return; }
         if (!emailAvailable) {
-            showError('This email is linked to an account or an earlier registration. Sign in or use Forgot Password. If you just created this Gmail, contact gym staff to check for a pending registration.');
-            document.getElementById('regEmail').focus(); return;
+            await resumeExistingAccountRegistration(email, password, application);
+            return;
         }
         const { data, error } = await window.ironGrindSupabase.auth.signUp({
             email,
             password,
             options: {
                 data: { full_name: fullName },
-                emailRedirectTo: `${window.location.origin}${window.location.pathname}?completeApplication=1`
+                emailRedirectTo: 'https://irongrind-github-io.vercel.app/register.html?completeApplication=1'
             }
         });
 
         if (error) {
             showError(error.message.includes('already registered')
-                ? 'An account already exists for this email. Sign in or contact the gym admin.'
+                ? 'An account already exists for this email. Return to sign in and use Forgot Password if needed.'
                 : error.message);
             return;
         }
         if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
-            showError('This email is linked to an account or an earlier registration. Sign in or use Forgot Password. If you just created this Gmail, contact gym staff to check for a pending registration.');
+            showError('An account already uses this email. Enter its existing password, or return to sign in and use Forgot Password. Contact gym staff if you cannot access the account.');
             return;
         }
         if (!data.user) {
@@ -223,6 +223,12 @@ async function submitRegistration(event) {
         localStorage.setItem('ig_registration_draft', JSON.stringify(draft));
 
         if (data.session) {
+            const { error: sessionError } = await window.ironGrindSupabase.rpc('activate_account_session');
+            if (sessionError) {
+                console.error('Could not activate registration session:', sessionError);
+                showError('Your account was created, but the application could not be submitted yet. Sign in again to complete your application.');
+                return;
+            }
             const saved = await insertSupabaseApplication(draft);
             if (!saved) return;
             showSuccessModal(application, false);
@@ -239,6 +245,71 @@ async function submitRegistration(event) {
         submitButton.disabled = false;
         submitButton.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Membership Application';
     }
+}
+
+async function resumeExistingAccountRegistration(email, password, application) {
+    const client = window.ironGrindSupabase;
+    const { data, error } = await client.auth.signInWithPassword({ email, password });
+    if (error || !data.session || !data.user) {
+        const notConfirmed = error?.code === 'email_not_confirmed' || /email not confirmed/i.test(error?.message || '');
+        if (notConfirmed) {
+            const draft = { userId: null, application, savedAt: Date.now() };
+            try { localStorage.setItem('ig_registration_draft', JSON.stringify(draft)); }
+            catch { showError('This browser could not save your application. Enable browser storage and try again.'); return; }
+            const { error: resendError } = await client.auth.resend({
+                type: 'signup',
+                email,
+                options: { emailRedirectTo: 'https://irongrind-github-io.vercel.app/register.html?completeApplication=1' }
+            });
+            if (resendError) {
+                console.error('Could not resend registration confirmation:', resendError);
+                showError('This account still needs email confirmation, but a new confirmation link could not be sent. Try again later or contact gym staff.');
+                return;
+            }
+            showSuccessModal(application, true);
+            return;
+        }
+        showError('An account already uses this email. Enter its existing password, use Forgot Password, or contact gym staff if you never completed the earlier signup.');
+        return;
+    }
+
+    const { error: sessionError } = await client.rpc('activate_account_session');
+    if (sessionError) {
+        console.error('Could not activate existing registration session:', sessionError);
+        showError('We could not securely open this account to complete its application. Please sign in again or contact gym staff.');
+        return;
+    }
+    const userId = data.user.id;
+    const [{ data: member, error: memberError }, { data: prior, error: priorError }] = await Promise.all([
+        client.from('members').select('id').eq('auth_user_id', userId).maybeSingle(),
+        client.from('membership_applications').select('id, status').eq('auth_user_id', userId)
+            .eq('application_type', 'registration').in('status', ['pending', 'approved'])
+            .order('submitted_at', { ascending: false }).limit(1).maybeSingle()
+    ]);
+    if (memberError || priorError) {
+        await client.auth.signOut({ scope: 'local' });
+        console.error('Could not check existing registration records:', memberError || priorError);
+        showError('We could not check this account’s membership records. Please contact gym staff.');
+        return;
+    }
+    if (member || prior) {
+        await client.auth.signOut({ scope: 'local' });
+        showError(member
+            ? 'This account already has a gym membership. Sign in to your member account or contact gym staff for help.'
+            : `A ${prior.status} application is already on file for this account. Contact gym staff to check its status.`);
+        return;
+    }
+
+    application.email = email;
+    application.submittedAt = new Date().toISOString();
+    const draft = { userId, application, savedAt: Date.now() };
+    try { localStorage.setItem('ig_registration_draft', JSON.stringify(draft)); }
+    catch {
+        await client.auth.signOut({ scope: 'local' });
+        showError('This browser could not save your application. Enable browser storage and try again.');
+        return;
+    }
+    if (await insertSupabaseApplication(draft)) showSuccessModal(application, false);
 }
 
 async function insertSupabaseApplication(draft) {
@@ -302,8 +373,17 @@ async function completeConfirmedRegistration() {
         return;
     }
     const { data: { session }, error } = await window.ironGrindSupabase.auth.getSession();
-    if (error || !session || session.user.id !== draft.userId) {
+    const callbackEmail = String(session?.user?.email || '').trim().toLowerCase();
+    if (error || !session || (draft.userId && session.user.id !== draft.userId)
+        || (!draft.userId && callbackEmail !== String(draft.application?.email || '').trim().toLowerCase())) {
         showError('Your registration could not be completed in this browser. Sign in with your email and password to try submitting the saved application again. If it is still missing, contact the gym admin.');
+        return;
+    }
+    draft.userId = session.user.id;
+    const { error: activationError } = await window.ironGrindSupabase.rpc('activate_account_session');
+    if (activationError) {
+        console.error('Could not activate confirmed registration session:', activationError);
+        showError('Your email is confirmed, but we could not securely submit the application. Sign in and try again.');
         return;
     }
     if (await insertSupabaseApplication(draft)) showSuccessModal(draft.application, false, true);
