@@ -2,6 +2,8 @@
 
 For the latest one-trusted-browser administrator sign-in, use **Defense/Trusted Administrator Device Guide.md**. It supersedes the earlier MFA-only/session-approval rollout instructions and includes the pending migration, new Edge Function, recovery behavior and supporting-schema additions.
 
+New public member registrations also require deployment of `supabase/functions/member-registration` with JWT verification disabled as declared in `supabase/config.toml`. The function creates the Auth user and pending application together operationally: if the application insert or confirmation-email request fails, it attempts to remove the new Auth user, which cascades its profile/application rows. If cleanup itself fails, staff must remove the incomplete account. Deploy the function before the matching Vercel registration page; the Supabase redirect allowlist must include `https://irongrind-github-io.vercel.app/register.html?completeApplication=1`.
+
 - **Defense/** — detailed study/defense notes, source code map, separate presentation text and editable PowerPoint with speaker notes, and the administrator MFA deployment/recovery guide. Start with `Defense/Admin MFA Setup and Deployment Guide.md` for setup steps.
 
 - **Chapter 1.docx**, **Chapter 2.docx**, **Chapter 3.docx** — the manuscript chapters.

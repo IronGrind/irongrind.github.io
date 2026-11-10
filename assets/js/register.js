@@ -191,53 +191,23 @@ async function submitRegistration(event) {
             await resumeExistingAccountRegistration(email, password, application);
             return;
         }
-        const { data, error } = await window.ironGrindSupabase.auth.signUp({
-            email,
-            password,
-            options: {
-                data: { full_name: fullName },
-                emailRedirectTo: 'https://irongrind-github-io.vercel.app/register.html?completeApplication=1'
-            }
+        const { data, error } = await window.ironGrindSupabase.functions.invoke('member-registration', {
+            body: { email, password, application, acceptedRules: true, acceptedWaiver: true }
         });
-
-        if (error) {
-            showError(error.message.includes('already registered')
-                ? 'An account already exists for this email. Return to sign in and use Forgot Password if needed.'
-                : error.message);
-            return;
-        }
-        if (data.user && Array.isArray(data.user.identities) && data.user.identities.length === 0) {
-            showError('An account already uses this email. Enter its existing password, or return to sign in and use Forgot Password. Contact gym staff if you cannot access the account.');
-            return;
-        }
-        if (!data.user) {
-            showError('We could not create your account. Please try again.');
-            return;
-        }
-
-        application.id = data.user.id;
-        application.submittedAt = new Date().toISOString();
-        const draft = { userId: data.user.id, application, savedAt: Date.now() };
-        // Keep a short-lived recovery copy until the database confirms insert.
-        // The password is intentionally excluded from the saved application.
-        localStorage.setItem('ig_registration_draft', JSON.stringify(draft));
-
-        if (data.session) {
-            const { error: sessionError } = await window.ironGrindSupabase.rpc('activate_account_session');
-            if (sessionError) {
-                console.error('Could not activate registration session:', sessionError);
-                showError('Your account was created, but the application could not be submitted yet. Sign in again to complete your application.');
+        if (error || !data?.applicationId) {
+            let details = data;
+            try { if (error?.context) details = await error.context.json(); } catch { /* Keep the generic response when no JSON body is available. */ }
+            if (details?.code === 'EMAIL_IN_USE') {
+                await resumeExistingAccountRegistration(email, password, application);
                 return;
             }
-            const saved = await insertSupabaseApplication(draft);
-            if (!saved) return;
-            showSuccessModal(application, false);
-        } else {
-            // If email confirmation is enabled in Supabase, wait for its callback
-            // before submitting because an unauthenticated user cannot insert.
-            // Keep the form data briefly in this browser, never the password.
-            showSuccessModal(application, true);
+            showError(details?.error || 'The application could not be submitted. No account should have been kept; try again or contact gym staff.');
+            return;
         }
+        application.id = data.applicationId;
+        application.submittedAt = new Date().toISOString();
+        localStorage.removeItem('ig_registration_draft');
+        showSuccessModal(application, true, false, true);
     } catch (error) {
         console.error('Registration submission failed:', error);
         showError('Could not connect to the registration service. Please try again.');
@@ -368,11 +338,30 @@ async function completeConfirmedRegistration() {
         draft = null;
     }
     if (new URLSearchParams(window.location.search).get('completeApplication') !== '1') return;
-    if (!draft) {
-        showError('Your saved application expired. Sign in and contact the gym admin to continue.');
+    const { data: { session }, error } = await window.ironGrindSupabase.auth.getSession();
+    if (!draft && session && !error) {
+        const { error: activationError } = await window.ironGrindSupabase.rpc('activate_account_session');
+        if (activationError) {
+            showError('Your email is confirmed, but we could not securely check your application. Sign in and contact gym staff if needed.');
+            return;
+        }
+        const { data: submitted, error: lookupError } = await window.ironGrindSupabase
+            .from('membership_applications').select('id, full_name, email, plan, plan_price, status')
+            .eq('auth_user_id', session.user.id).eq('application_type', 'registration')
+            .order('submitted_at', { ascending: false }).limit(1).maybeSingle();
+        if (lookupError || !submitted) {
+            showError(lookupError
+                ? 'Your email is confirmed, but we could not load the application status. Contact gym staff.'
+                : 'Your email is confirmed, but no application is on file. Return to the registration form or contact gym staff.');
+            return;
+        }
+        showSuccessModal(submitted, false, true, true);
         return;
     }
-    const { data: { session }, error } = await window.ironGrindSupabase.auth.getSession();
+    if (!draft) {
+        showError('Your email confirmation did not open a signed-in session. Return to sign in or request a new confirmation email.');
+        return;
+    }
     const callbackEmail = String(session?.user?.email || '').trim().toLowerCase();
     if (error || !session || (draft.userId && session.user.id !== draft.userId)
         || (!draft.userId && callbackEmail !== String(draft.application?.email || '').trim().toLowerCase())) {
@@ -391,7 +380,7 @@ async function completeConfirmedRegistration() {
 
 document.addEventListener('DOMContentLoaded', completeConfirmedRegistration);
 
-function showSuccessModal(app, confirmationRequired = false, emailJustConfirmed = false) {
+function showSuccessModal(app, confirmationRequired = false, emailJustConfirmed = false, applicationAlreadySubmitted = false) {
     openModal(`
         <div style="text-align:center; padding:8px 0;">
             <div style="width:72px; height:72px; border-radius:50%; background:rgba(46,204,113,0.15); color:#2ecc71; display:flex; align-items:center; justify-content:center; font-size:2rem; margin:0 auto 16px;">
@@ -399,21 +388,25 @@ function showSuccessModal(app, confirmationRequired = false, emailJustConfirmed 
             </div>
             <h3 style="justify-content:center; display:flex;"><i class="fas ${confirmationRequired ? 'fa-envelope' : 'fa-check-circle'}"></i> ${confirmationRequired ? 'Confirm Your Email' : 'Application Submitted!'}</h3>
             <p class="modal-sub" style="text-align:center;">${confirmationRequired
-                ? `Your account was created, ${app.fullName}. Confirm your email to submit your application for staff or administrator review.`
+                ? applicationAlreadySubmitted
+                    ? `Your application has been received, ${app.fullName}, and is waiting for gym review. Confirm your email before signing in.`
+                    : `Your account was created, ${app.fullName}. Confirm your email to submit your application for staff or administrator review.`
                 : emailJustConfirmed
                     ? `Your application has been sent to the gym for review, ${app.fullName}, and is awaiting approval.`
                     : `Thank you, <strong>${app.fullName}</strong>. Your application is now pending staff or administrator approval.`}</p>
             <div style="background:#0d1219; border:1px solid #1e2533; border-radius:16px; padding:16px; text-align:left; font-size:0.85rem;">
-                ${confirmationRequired ? '' : `<div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:#8b95a9;">Application ID:</span><code style="color:#ff6b2b;">${app.id}</code></div>`}
+                ${confirmationRequired && !applicationAlreadySubmitted ? '' : `<div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:#8b95a9;">Application ID:</span><code style="color:#ff6b2b;">${app.id}</code></div>`}
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:#8b95a9;">Plan:</span><strong>${app.plan}</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:#8b95a9;">Amount:</span><strong>₱${app.planPrice.toLocaleString()}</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:#8b95a9;">Email:</span><strong>${app.email}</strong></div>
-                <div style="display:flex; justify-content:space-between;"><span style="color:#8b95a9;">Status:</span><span class="badge-status reserved">${confirmationRequired ? 'Confirm email first' : 'Pending review'}</span></div>
+                <div style="display:flex; justify-content:space-between;"><span style="color:#8b95a9;">Status:</span><span class="badge-status reserved">${confirmationRequired && !applicationAlreadySubmitted ? 'Confirm email first' : 'Pending review'}</span></div>
             </div>
             <div style="background:rgba(255,107,43,0.08); border:1px solid rgba(255,107,43,0.25); border-radius:14px; padding:14px; font-size:0.8rem; color:#8b95a9; text-align:left; margin-top:16px;">
                 <i class="fas fa-info-circle" style="color:#ff6b2b;"></i>
                 ${confirmationRequired
-                    ? 'Check your email and confirm your account. Return to this browser after confirmation to finish submitting your application. Your form is saved here temporarily; your password is not stored.'
+                    ? applicationAlreadySubmitted
+                        ? 'Your application is already in the gym review queue. Confirm your email to activate sign-in, then wait for staff or administrator review.'
+                        : 'Check your email and confirm your account. Return to this browser after confirmation to finish submitting your application. Your form is saved here temporarily; your password is not stored.'
                     : emailJustConfirmed
                         ? 'Authorized staff or the administrator must approve your registration before you can access the member portal. Contact the gym if you need to follow up.'
                         : 'Visit the gym to complete your payment. Once approved, sign in with your email and password.'}

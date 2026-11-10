@@ -4,6 +4,8 @@
 verify_jwt = false
 [functions.member-password-login]
 verify_jwt = false
+[functions.member-registration]
+verify_jwt = false
 [functions.admin-device-trust]
 verify_jwt = false
 [functions.member-device-trust]

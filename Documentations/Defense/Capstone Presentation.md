@@ -56,13 +56,14 @@ Speaker notes: Explain Agile using the documented project process, not an invent
 
 ## Slide 8 — Application to active membership
 - Applicant submits account and membership information
+- New signup creates its Auth account and pending application in one server workflow; failed application saves trigger account cleanup
 - Authorized operator reviews the pending request and gym payment
 - Approval creates or updates applicable membership records
 - Member signs in to access only permitted own information
 - Existing Auth accounts can resume an application missing after signup confirmation
 - Member profile sections stay in a fixed, responsive settings window
 
-Speaker notes: Distinguish Auth account, application, profile and approved member record. A pending application does not mean active membership. Demonstrate the real counter payment step without implying online payment verification. If Auth created an account but the application is missing, the registration form can authenticate that existing account and submit one application, or resend confirmation and finish on the same browser. It checks for an existing membership/pending application before inserting. A duplicate-email response may come from an earlier or unfinished account/registration; use password recovery if needed or ask staff to check a pending record. The member settings dialog keeps a steady size as Personal Info, Emergency Contact, Health & Fitness, Login Email and Password sections change; its content scrolls inside the dialog, and the dashboard behind it remains modal/inert. These local changes have not been browser-accepted or deployed.
+Speaker notes: Distinguish Auth account, application, profile and approved member record. A pending application does not mean active membership. Demonstrate the real counter payment step without implying online payment verification. New registration is handled by `member-registration`: it creates the Auth user, stores the pending application, then requests email confirmation. If application storage or confirmation sending fails, it attempts to delete the new Auth user; cleanup failures are reported for staff follow-up. Existing Auth accounts with no application can authenticate and submit one application; the flow checks for an existing membership/pending application before inserting. A duplicate-email response may come from an earlier or unfinished account/registration; use password recovery if needed or ask staff to check a pending record. The member settings dialog keeps a steady size as Personal Info, Emergency Contact, Health & Fitness, Login Email and Password sections change; its content scrolls inside the dialog, and the dashboard behind it remains modal/inert. These local changes have not been browser-accepted or deployed.
 
 ## Slide 9 — Attendance in practice
 - Scan a member QR or search by name/Gmail in the staff portal
