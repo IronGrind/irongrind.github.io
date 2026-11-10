@@ -2139,5 +2139,139 @@ html[data-dashboard-theme="light"] .inventory-status.out { color:#a60000; }
 .scanner-install-link:focus-visible { outline:3px solid #e55b5b; outline-offset:4px; }
 .scanner-install-link .fa-arrow-up-right-from-square { font-size:.75em; opacity:.8; }
 .badge-status.incomplete { background:rgba(230,162,60,.15); color:#d89627; }
+
+/* Complete light palette for dashboard surfaces and nested controls. Keep this
+   after legacy component rules so page-specific dark defaults cannot win. */
+html[data-dashboard-theme="light"] body.dashboard-body {
+    color-scheme: light;
+    color: #202938;
+    background: #f4f5f7;
+}
+html[data-dashboard-theme="light"] body.dashboard-body :is(
+    .sidebar, .stat-card, .panel, .member-settings-dialog, .member-settings-nav,
+    .member-settings-nav-item, .settings-choice-list label, .admin-tabs,
+    .member-account-menu, .modal-content, .confirm-dialog, .store-lock,
+    .product-card, .product-card > .product-img-wrap, .product-img-wrap, .product-photo-preview,
+    .approval-card, .approval-detail-grid, .approval-signature, .member-detail-field,
+    .member-detail-signature, .sale-total-preview, .paired-phone-row,
+    .phone-pairing-limit-controls, .attendance-phone-status, .scanner-install-card,
+    .qr-scanner-box, .qr-reader-frame, .qr-reader, .qr-scan-processing,
+    .reports-toolbar, .report-card, .report-actions-menu-popover, .staff-create-panel,
+    .staff-directory-panel, .staff-account-card, .sales-month-overview,
+    .sales-section-tabs, #salesTransactionsPanel, .sales-subfilter,
+    .membership-income-card, .membership-income-card.overall,
+    .customer-hero, .supplement-card, .membership-form-card, .inventory-product-card, .registration-notice,
+    .low-stock-item, .activity-log-card, .activity-log-entry, .activity-table-wrap
+) {
+    color: #202938;
+    border-color: #d9dee7;
+    background-color: #fff;
+    background-image: none;
+    box-shadow: 0 7px 20px rgba(35, 45, 60, .045);
+}
+html[data-dashboard-theme="light"] body.admin-dashboard :is(
+    .reports-toolbar, .staff-create-panel, .staff-directory-panel,
+    .staff-account-card, .sales-month-overview, #salesTransactionsPanel,
+    .sales-section-tabs, .membership-income-card, .membership-income-card.overall,
+    .report-card, .report-actions-menu-popover, .approval-card,
+    .approval-detail-grid, .approval-signature, .member-detail-field,
+    .member-detail-signature, .sale-total-preview, .paired-phone-row,
+    .phone-pairing-limit-controls, .qr-camera-modal, .qr-camera-modal > input,
+    .attendance-phone-status, .scanner-install-card, .registration-notice,
+    .low-stock-item, .store-lock, .product-card, .supplement-card, .membership-form-card,
+    .product-img-wrap, .product-photo-preview, .product-photo-upload .product-photo-preview,
+    .progress-alert
+) { background: #fff !important; color: #202938 !important; border-color: #d9dee7 !important; }
+html[data-dashboard-theme="light"] body.member-dashboard :is(
+    .customer-hero, .stat-card, .panel, .member-settings-dialog,
+    .member-settings-nav, .member-detail-field, .member-detail-signature,
+    .attendance-phone-status, .product-card, .product-card > .product-img-wrap,
+    .product-photo-preview, .view-only-note, .supplement-card, .membership-form-card,
+    .product-img-wrap, .progress-alert
+) { background: #fff !important; color: #202938 !important; border-color: #d9dee7 !important; }
+html[data-dashboard-theme="light"] body.dashboard-body :is(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+    select, textarea, .activity-filters input, .activity-filters select,
+    .report-export-controls input, .report-export-controls select,
+    .membership-sales-period-controls input, .membership-sales-period-controls select,
+    .sales-product-filter select, .attendance-date-filter input,
+    .walkin-date-filter input, .qr-camera-modal > input,
+    .password-input-group input, .membership-controls .search input,
+    .form-group input, .form-group select, .form-group textarea
+) {
+    color-scheme: light;
+    color: #202938;
+    background-color: #fff;
+    border-color: #c9d0dc;
+}
+html[data-dashboard-theme="light"] body.dashboard-body :is(input, select, textarea)::placeholder { color: #778194; opacity: 1; }
+html[data-dashboard-theme="light"] body.dashboard-body :is(
+    .report-card-copy p, .membership-income-card span, .membership-income-card small,
+    .stat-label, .stat-sub, .empty-state, .activity-table small, .field-hint,
+    .member-detail-field span, .member-account-meta, .staff-account-meta,
+    .section-heading-block p, .activity-help, .view-only-note, .product-card .stock,
+    .customer-hero p, .progress-label, .progress-dates, .ps-label,
+    .phone-pairing-limit-controls label, .paired-phone-meta, .scanner-install-card p
+) { color: #586579 !important; }
+html[data-dashboard-theme="light"] body.dashboard-body :is(
+    .activity-table th, .attendance-table th, #salesTable .attendance-table th
+) { color: #354052; background: #edf0f4; }
+html[data-dashboard-theme="light"] body.dashboard-body :is(
+    .activity-table td, .attendance-table td, .report-card-copy h4,
+    .membership-income-card strong, .member-detail-field strong,
+    .member-detail-signature strong, .sale-total-preview strong
+) { color: #202938; }
+html[data-dashboard-theme="light"] body.dashboard-body :is(
+    .member-account-menu, .modal-content, .confirm-dialog, .member-settings-dialog,
+    .report-actions-menu-popover, .qr-camera-modal, .admin-mfa-dialog,
+    .admin-login-notification
+) { background: #fff !important; color: #202938 !important; border-color: #d9dee7 !important; }
+html[data-dashboard-theme="light"] body.dashboard-body :is(.modal-overlay, dialog)::backdrop { background: rgba(20, 27, 38, .48); }
+html[data-dashboard-theme="light"] body.dashboard-body .qr-scan-processing { background: rgba(246, 248, 251, .92); color: #202938; }
+html[data-dashboard-theme="light"] body.dashboard-body .progress-bar-track,
+html[data-dashboard-theme="light"] body.dashboard-body .progress-stats,
+html[data-dashboard-theme="light"] body.dashboard-body .progress-stat,
+html[data-dashboard-theme="light"] body.dashboard-body .approval-detail-grid,
+html[data-dashboard-theme="light"] body.dashboard-body .approval-signature {
+    background-color: #f2f4f7 !important;
+    border-color: #d9dee7 !important;
+}
+html[data-dashboard-theme="light"] body.dashboard-body .progress-alert.warn {
+    color: #745000;
+    background: #fff5d8;
+    border-color: #ecd28d;
+}
+html[data-dashboard-theme="light"] body.dashboard-body .gram-setup-notice {
+    color: #684d00;
+    background: #fff8df;
+    border-color: #ead89e;
+}
+html[data-dashboard-theme="light"] body.member-dashboard :is(.supplement-card, .membership-form-card) h4,
+html[data-dashboard-theme="light"] body.member-dashboard .membership-form-card h3 { color: #202938; }
+html[data-dashboard-theme="light"] body.member-dashboard .supplement-card .desc { color: #586579; }
+html[data-dashboard-theme="light"] body.member-dashboard :is(.supplement-card .stock-badge, .view-only-card .stock-tag) { color: #17683e; background: #e3f3e9; }
+html[data-dashboard-theme="light"] body.member-dashboard :is(.supplement-card .stock-badge.low, .view-only-card .stock-tag.low) { color: #795400; background: #fff2cc; }
+html[data-dashboard-theme="light"] body.dashboard-body :is(.paired-phone-row, .member-row, .activity-log-entry, .activity-table tr) { border-color: #e0e4eb; }
+html[data-dashboard-theme="light"] body.dashboard-body :is(.inventory-status.available, .badge-status.active) { color: #17683e; }
+html[data-dashboard-theme="light"] body.dashboard-body :is(.inventory-status.low, .badge-status.reserved) { color: #795400; }
+html[data-dashboard-theme="light"] body.dashboard-body :is(.inventory-status.out, .badge-status.inactive, .badge-status.expired) { color: #a32020; }
+html[data-dashboard-theme="light"] body.dashboard-body .badge-status.active { background: #e3f3e9; }
+html[data-dashboard-theme="light"] body.dashboard-body .badge-status.incomplete { color: #795400; background: #fff2cc; }
+html[data-dashboard-theme="light"] body.dashboard-body .product-photo-dialog:not(.photo-bubble) {
+    color: #202938;
+    background: rgba(248, 249, 251, .98);
+}
+html[data-dashboard-theme="light"] body.dashboard-body .product-photo-dialog:not(.photo-bubble) :is(.photo-lightbox-title, .photo-lightbox-controls output) { color: #202938; }
+html[data-dashboard-theme="light"] body.dashboard-body .product-photo-dialog:not(.photo-bubble) :is(button, .photo-lightbox-controls) {
+    color: #354052;
+    border-color: #d9dee7;
+    background-color: #edf0f4;
+}
+html[data-dashboard-theme="light"] body.admin-dashboard .product-photo-upload.has-photo .product-photo-upload-button {
+    color: #354052;
+    border-color: #d1d7e0;
+    background: #fff;
+}
+html[data-dashboard-theme="light"] body.dashboard-body .product-photo-dialog:not(.photo-bubble) .photo-lightbox-footer > p { color: #586579; }
 .staff-name-fields { display:grid; grid-template-columns:minmax(0,1fr) minmax(100px,.65fr) minmax(0,1fr); gap:14px; }
 @media (max-width:560px) { .staff-name-fields { grid-template-columns:minmax(0,1fr); } }

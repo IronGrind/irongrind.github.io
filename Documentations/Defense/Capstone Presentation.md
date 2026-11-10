@@ -165,3 +165,5 @@ Speaker notes: Suggested sequence: member request, authorized review, attendance
 - Local configuration: https://supabase.com/docs/guides/local-development/cli/config
 
 Keep the final thesis reference list in its approved format. These are presentation source notes, not fabricated related literature.
+
+Dashboard light mode received a source-level completion pass for nested cards, dialogs, filters, form controls, tables, scanner/phone pairing panels, inventory and sales surfaces. Staff-specific light rules account for its later-loaded stylesheet. This revision is local and still needs visual review across admin, member, staff and mobile views before deployment; do not present it as browser-validated.
