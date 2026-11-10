@@ -32,6 +32,7 @@
                     <button id="adminThemeLight" class="member-account-menu-item admin-theme-option" type="button" role="menuitemradio" data-dashboard-theme-option="light" aria-checked="false" onclick="setAdminTheme('light')"><i class="fas fa-sun" aria-hidden="true"></i><span>Light mode</span><i class="fas fa-check admin-theme-check" aria-hidden="true"></i></button>
                     <button id="adminThemeDark" class="member-account-menu-item admin-theme-option" type="button" role="menuitemradio" data-dashboard-theme-option="dark" aria-checked="true" onclick="setAdminTheme('dark')"><i class="fas fa-moon" aria-hidden="true"></i><span>Dark mode</span><i class="fas fa-check admin-theme-check" aria-hidden="true"></i></button>
                     <button class="member-account-menu-item member-account-menu-logout" type="button" role="menuitem" onclick="closeAdminAccountMenu(); logout()"><i class="fas fa-sign-out-alt" aria-hidden="true"></i><span>Logout</span></button>
+                    <button class="member-account-menu-item member-account-menu-logout" type="button" role="menuitem" onclick="closeAdminAccountMenu(); logout(true)"><i class="fas fa-shield-halved" aria-hidden="true"></i><span>Log out and forget this device</span></button>
                 </div>
             </div>
         </div>
@@ -328,6 +329,7 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/supabase-client.js?v=20261108-remember-identifier"></script>
 <script src="assets/js/admin-device-approval.js?v=20261110-device-approval"></script>
+<script src="assets/js/admin-device-trust.js?v=20261110-device-trust"></script>
 <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>

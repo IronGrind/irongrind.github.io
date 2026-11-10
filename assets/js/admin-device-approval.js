@@ -11,7 +11,7 @@ window.waitForAdminDeviceApproval = async (client, scope) => {
     return new Promise((resolve, reject) => {
         const dialog = document.createElement('dialog'); dialog.className = 'admin-mfa-dialog';
         dialog.setAttribute('aria-label', 'Administrator device approval');
-        dialog.innerHTML = `<h2>Approve this sign-in on your current device</h2><p>Open IronGrind on your signed-in device and approve the request.</p><p role="status" aria-live="polite">Waiting for approval…</p><div class="modal-actions"><button type="button" data-action="cancel" class="btn-sm">Cancel sign-in</button><button type="button" data-action="mfa" class="btn-primary">Use authenticator instead</button></div>`;
+        dialog.innerHTML = `<h2>Approve this device transfer</h2><p>Approve from your current device, then verify your authenticator here.</p><p role="status" aria-live="polite">Waiting for approval…</p><div class="modal-actions"><button type="button" data-action="cancel" class="btn-sm">Cancel sign-in</button><button type="button" data-action="mfa" class="btn-primary">Authenticator recovery</button></div><small>Recovery requires the old device to be signed out or inactive for at least two minutes.</small>`;
         document.body.append(dialog);
         let done = false, busy = false, timer;
         const expires = Date.parse(first.data.expires_at);

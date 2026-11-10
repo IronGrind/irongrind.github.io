@@ -445,14 +445,23 @@ function switchApprovalType(type) {
     renderApprovals(currentApprovalType);
 }
 
-function logout() {
-    askConfirmation('Log out?', 'Are you sure you want to log out?', 'Log out', async () => {
+function logout(forgetDevice = false) {
+    askConfirmation(forgetDevice ? 'Forget this device and log out?' : 'Log out?', forgetDevice ? 'This revokes administrator trust and ends this device’s dashboard and scanner sessions. Your next sign-in will require verification.' : 'Are you sure you want to log out?', 'Log out', async () => {
+        window.stopAccountSessionMonitor?.(window.ironGrindSupabase);
+        if (forgetDevice) {
+            try { await window.forgetAdminDevice(window.ironGrindSupabase); }
+            catch (error) {
+                window.startDashboardSessionMonitor?.();
+                window.startAdminApprovalNotifications?.(window.ironGrindSupabase);
+                toast(error.message, 'error'); return;
+            }
+        }
         // Signing out stops this dashboard, but trusted phone pairings remain active.
         if (mobileAttendancePollTimer) clearInterval(mobileAttendancePollTimer);
         mobileAttendancePollTimer = null;
         const storeUnlockKey = adminStoreUnlockKey();
         if (storeUnlockKey) localStorage.removeItem(storeUnlockKey);
-        if (activeDashboardRole === 'admin') {
+        if (activeDashboardRole === 'admin' && !forgetDevice) {
             try {
                 const result = await window.ironGrindSupabase?.rpc('admin_log_session_event', { p_event: 'sign_out_requested' });
                 if (result?.error) console.error('Could not record sign-out request:', result.error);

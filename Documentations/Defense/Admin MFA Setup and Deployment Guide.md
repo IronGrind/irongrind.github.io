@@ -2,6 +2,8 @@
 
 Revision: November 10, 2026. Code is prepared locally. This guide does not mean any production change has already been applied. The original administrator MFA baseline is followed by a local current-device approval increment. In-website approval is implemented; user-supplied CLI output confirms its migration applied successfully. Matching client deployment and the two-device test remain unverified. SMS and background push notifications are not used.
 
+The latest source adds one trusted browser per administrator; use **Trusted Administrator Device Guide.md** for the new migration/function rollout. Earlier sections below describe the staged MFA and approval baseline and remain useful for recovery/troubleshooting.
+
 ## 1. Prepare access and backups
 
 1. Confirm which Supabase project and Vercel project serve IronGrind. Check the project's database migration history; do not execute an old full schema export against production.

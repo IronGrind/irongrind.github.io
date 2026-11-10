@@ -1,5 +1,5 @@
 // Shared by main login and phone operator login. Protected data stays server-gated.
-window.requireAdminMfa = async (client, scope = 'dashboard') => {
+window.verifyAdminAuthenticator = async (client, force = false) => {
     const { data: required, error } = await client.rpc('admin_mfa_required');
     if (error) {
         if (['PGRST202', '42883'].includes(error.code)) {
@@ -10,8 +10,7 @@ window.requireAdminMfa = async (client, scope = 'dashboard') => {
     if (required !== true) return;
     const { data: assurance, error: assuranceError } = await client.auth.mfa.getAuthenticatorAssuranceLevel();
     if (assuranceError) throw assuranceError;
-    if (assurance.currentLevel === 'aal2') return;
-    if (window.waitForAdminDeviceApproval && await window.waitForAdminDeviceApproval(client, scope)) return;
+    if (assurance.currentLevel === 'aal2' && !force) return;
     const { data: factors, error: factorsError } = await client.auth.mfa.listFactors();
     if (factorsError) throw factorsError;
     let factor = factors.totp?.find(item => item.status === 'verified');

@@ -46,6 +46,7 @@ async function signInPhoneOperator(event) {
         if (profileError || !profile?.is_active || !['staff', 'admin'].includes(profile.role)) throw new Error('Active staff or admin account required.');
         phoneOperatorClient.auth.startAutoRefresh();
         phoneOperator = { id: user.id, name: profile.full_name || username };
+        document.getElementById('phoneForgetAdminDevice').hidden = profile.role !== 'admin';
         if (profile.role === 'admin') window.startAdminApprovalNotifications?.(phoneOperatorClient);
         const { error: auditError } = await phoneOperatorClient.rpc('log_account_activity', { p_event: 'scanner_signed_in' });
         if (auditError) console.error('Could not log scanner sign-in:', auditError);
@@ -59,6 +60,16 @@ async function signInPhoneOperator(event) {
         else setPhoneAttendanceStatus('Phone not paired. You need to pair this phone before scanning attendance. Tap Open camera and scan the pairing QR from the administrator’s Attendance → Phone Camera page. Pairing lasts 30 days.');
     } catch (error) { setPhoneAttendanceStatus(error.message || 'Could not sign in.', true); }
     finally { document.getElementById('phoneOperatorPassword').value = ''; button.disabled = false; }
+}
+async function forgetPhoneAdminDevice() {
+    if (!phoneOperator || !window.confirm('Revoke this administrator device’s trust and log out?')) return;
+    window.stopAccountSessionMonitor?.(phoneOperatorClient);
+    try { await window.forgetAdminDevice(phoneOperatorClient); await changePhoneOperator(false); }
+    catch (error) {
+        window.monitorAccountSession(phoneOperatorClient, async () => { await changePhoneOperator(false); });
+        window.startAdminApprovalNotifications?.(phoneOperatorClient);
+        setPhoneAttendanceStatus(error.message || 'Could not revoke device trust.', true);
+    }
 }
 async function changePhoneOperator(logEvent = true) {
     window.stopAdminApprovalNotifications?.(phoneOperatorClient);

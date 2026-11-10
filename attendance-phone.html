@@ -48,7 +48,7 @@
 <label for="phoneOperatorId">Username</label><input id="phoneOperatorId" autocomplete="username" required maxlength="30" autocapitalize="none" spellcheck="false" placeholder="Enter your username">
 <label for="phoneOperatorPassword" style="margin-top:12px">Password</label><input id="phoneOperatorPassword" type="password" autocomplete="current-password" required>
 <button id="phoneOperatorSignIn" class="phone-model-save-button" type="submit">Sign in to scan</button></form>
-<div id="phoneOperatorIdentity" class="phone-model-setup" hidden><p id="phoneOperatorName"></p><button type="button" class="phone-next-scan-button" onclick="changePhoneOperator()">Change operator</button></div>
+<div id="phoneOperatorIdentity" class="phone-model-setup" hidden><p id="phoneOperatorName"></p><button type="button" class="phone-next-scan-button" onclick="changePhoneOperator()">Change operator</button><button id="phoneForgetAdminDevice" type="button" class="phone-next-scan-button" onclick="forgetPhoneAdminDevice()" hidden>Log out and forget this device</button></div>
 <div id="phoneQrReader" hidden></div>
         <p id="phoneQrStatus" role="status" aria-live="polite">Preparing your attendance scanner…</p>
         <button id="phoneInstallButton" class="phone-install-button" type="button" onclick="installPhoneAttendanceApp()">Install attendance app</button>
@@ -67,6 +67,7 @@
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
     <script src="assets/js/admin-device-approval.js?v=20261110-device-approval"></script>
     <script src="assets/js/admin-mfa.js?v=20261110-mfa-errors"></script>
+    <script src="assets/js/admin-device-trust.js?v=20261110-device-trust"></script>
     <script src="assets/js/attendance-phone.js?v=20261110-admin-mfa"></script>
 </body>
 </html>

@@ -2,6 +2,10 @@
 
 Maintained baseline: November 10, 2026 (Asia/Manila). Read alongside the source and Chapters 1–3. This is a study companion, not a substitute for the approved paper. Subsequent changes must update this file and the separate presentation.
 
+## Current security revision ? one trusted administrator browser
+
+The latest local increment supersedes the earlier session-only MFA/approval descriptions below. One browser-held, non-extractable ECDSA signing key is trusted per administrator account for 30 days. Repeat password logins from that browser prove possession of the key without another code. A new browser requires current-device approval plus a fresh authenticator verification before an atomic trust transfer; the previous device stays trusted if verification fails or is cancelled. Ordinary logout preserves trust; Log out and forget this device revokes it. When no eligible live approver exists, fresh MFA is the recovery route. A trusted page heartbeat is considered recent for two minutes; hidden/offline pages may stop heartbeat updates. This is browser/origin trust, not hardware attestation or a permanent login token. The migration and new admin-device-trust Edge Function still need deployment and physical testing.
+
 ## 1. Explain the project in one minute
 
 IronGrind: A Fitness Gym Membership and Operations Management System is a web application for Iron Grind Fitness Gym. It brings membership applications, membership periods, attendance, inventory, sales, reports and operational accountability into one system. Applicants submit requests; authorized staff or administrators verify the transaction at the gym before approval. Members access their own information. Operators record attendance and in-person transactions. The administrator supervises inventory, staff accounts, reports and logs. Supabase supplies authentication and PostgreSQL services, while the web client is hosted through Vercel. A phone attendance scanner can be installed as a Progressive Web App (PWA).
@@ -48,7 +52,7 @@ Use `git log --date=short` for actual repository commit dates. A commit date is 
 
 | Function | Member / applicant | Staff | Administrator |
 |---|---|---|---|
-| User Login | Email/password | Assigned username/password | Assigned username/password plus TOTP MFA after deployment |
+| User Login | Email/password | Assigned username/password | Password plus trusted-browser proof, or approval and fresh TOTP for a browser transfer after deployment |
 | Membership Application | Submit own request / view own state | Review authorized pending requests | Review authorized pending requests |
 | User Management | Update own permitted information | Counter creation and limited operational lookup | Read member profiles; administer staff access; no member-personal-detail edit |
 | Renewals | Request renewal | Direct renewal and active-plan changes | Membership operations and request review |
@@ -97,6 +101,7 @@ Package declarations, CDN script URLs and test imports describe different depend
 | Module | What it does / key reasoning |
 |---|---|
 | auth.js | Parses email versus assigned username; obtains an Auth session through the applicable login function; now runs administrator device approval or the MFA fallback before session activation; verifies profile/membership state and routes to a role-specific page |
+| admin-device-trust.js | Stores a non-extractable browser signing key in IndexedDB; gets and signs session-bound challenges; coordinates trusted reuse, approval, fresh MFA and server registration; forget control revokes server trust |
 | admin-device-approval.js | Requests session-bound approval, polls the waiting state, displays Approve/Deny on an active administrator device and cancels pending requests before the authenticator fallback |
 | admin-mfa.js | Queries own MFA requirement, checks assurance level, lists factors, enrolls TOTP if needed and presents QR/manual key; challengeAndVerify must succeed before resolving the login gate; cancelling rejects login |
 | supabase-client.js | Creates the browser client using session storage, checks server session ownership, and provides monitor cleanup so intentional logout is not reported as expiry |
@@ -209,6 +214,7 @@ Context: one system boundary and external actors, no internal tables. DFD: nine 
 - New `admin_mfa_required`, private MFA checks and session/pre-request integrations; no new application table.
 - Login and phone scanner call MFA before activation; CSS/dialog and service-worker shell updated.
 - Security-event deployment prerequisites from the previous increment remain applicable.
+- Latest local trust increment: migration 20261110000004_admin_trusted_device.sql adds two private supporting tables and a trusted-device snapshot column on approval requests. It adds the admin-device-trust Edge Function; this function must deploy with the migration and matching website. See Trusted Administrator Device Guide.md.
 - Existing project title and nine functions retained.
 - Latest local increment: private.admin_login_approvals and request/list/decision/cancel RPCs implement in-website approval. The user supplied successful linked push output for 20261110000003_admin_device_approval.sql. Matching client deployment and two-device approval/denial tests still require confirmation. See Device Approval Schema Supplement.md and the approval deployment section of the guide.
 - Old Word prototype captures remain historical until refreshed. Chapter MFA addendum records the revision; no revised screenshot is fabricated.
@@ -228,3 +234,9 @@ These technical links support implementation explanations; they do not replace t
 ### MFA troubleshooting follow-up
 
 A user reported rejection after entering a current authenticator code. The prior browser catch used the same incorrect-code message for all Auth and post-verification session errors, so the screenshot did not establish the cause. Local UI now distinguishes documented Auth error codes from post-verification session confirmation failures, keeps access blocked, and displays only a safe error identifier. No token, code or setup key is logged/displayed as diagnostic data. Focused tests cover incorrect-code and session-error paths. The actual user failure remains unresolved until the new error category is observed; no factor was reset and no bypass was introduced. Use the IronGrind account entry, not the separate Supabase dashboard account authenticator.
+
+## Trusted-browser implementation details
+
+The server stores only a public EC P-256 key. A random, expiring challenge is bound to an Auth session and its requested scope. The Edge Function validates the JWT with Auth, verifies the ECDSA signature using Web Crypto, and checks a recent TOTP authentication-method timestamp for new registration. Direct client access to service-only completion RPCs is revoked. First registration, renewal and transfer require fresh MFA; current trust reuse only needs password authentication and valid key proof. The completion transaction takes the per-account session lock, verifies the current approval when a recently active trusted session exists, swaps the trusted row, revokes both old device scopes and activates the new scope atomically. A stale or failed completion rolls back rather than removing the old device. No private key, code or signature is written into activity logs. IndexedDB CryptoKeys are non-extractable, but this is not protection against all same-origin script compromise; normal XSS defenses and device access controls remain necessary. Private browsing, clearing site data, changing browser/origin or trust expiry can require verification again.
+
+The latest schema supplement covers 201 application/supporting fields across twelve public and six private tables in the local target schema. This target is separate from the prior reviewed/deployed dictionary baseline. It is not a claim that the trust migration has been applied to production.

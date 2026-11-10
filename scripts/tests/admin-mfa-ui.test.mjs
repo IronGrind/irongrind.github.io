@@ -15,7 +15,7 @@ function fixture(required=true,level='aal1',enroll=false) {
   challengeAndVerify:async args=>{calls.push(args);verified=true;return {};}
  }}};
  vm.runInContext(source,context);
- return {client,run:()=>context.window.requireAdminMfa(client),node,calls,dialog:()=>dialog};
+ return {client,run:()=>context.window.verifyAdminAuthenticator(client),node,calls,dialog:()=>dialog};
 }
 const settle=()=>new Promise(resolve=>setImmediate(resolve));
 test('staff/member accounts bypass MFA prompt and verified admins do not repeat it',async()=>{

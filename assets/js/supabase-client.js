@@ -88,10 +88,11 @@ window.monitorAccountSession = (client, onReplaced) => {
     };
     check();
 };
-if (/(?:^|\/)(?:admin|customer|staff)\.html$/.test(window.location.pathname)) {
+window.startDashboardSessionMonitor = () => {
     window.monitorAccountSession(window.ironGrindSupabase, async reason => {
         localStorage.removeItem('irongrind_session');
         sessionStorage.removeItem('irongrind_session');
         window.location.replace(`index.html?auth=${reason === 'expired' ? 'expired' : 'replaced'}`);
     });
-}
+};
+if (/(?:^|\/)(?:admin|customer|staff)\.html$/.test(window.location.pathname)) window.startDashboardSessionMonitor();
