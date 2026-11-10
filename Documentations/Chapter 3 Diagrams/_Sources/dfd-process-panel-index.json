@@ -22,46 +22,16 @@
     ],
     "stores": [
       [
-        "D0",
-        "Auth accounts",
-        "Account / session data",
-        "Identity / session state"
-      ],
-      [
         "D1",
         "profiles",
         "",
         "Role and active status"
       ],
       [
-        "D14",
-        "private account sessions",
-        "Selected session scope",
-        "Session ownership"
-      ],
-      [
         "D9",
         "activity_logs",
         "Session event",
         ""
-      ],
-      [
-        "D15",
-        "private.admin_login_approvals",
-        "Approval request / decision",
-        "Pending approval details"
-      ],
-      [
-        "D16",
-        "private.admin_trusted_devices",
-        "Trusted public key",
-        "Trust state"
-      ],
-      [
-        "D17",
-        "private.admin_device_sessions",
-        "Challenge / authorization",
-        "Session boundary"
       ]
     ],
     "actorLabels": [
@@ -315,12 +285,6 @@
       ]
     ],
     "stores": [
-      [
-        "D0",
-        "Auth accounts",
-        "New member / staff account",
-        ""
-      ],
       [
         "D1",
         "profiles",
@@ -623,21 +587,15 @@
       ],
       [
         "D10",
-        "pairing policy",
+        "mobile attendance pairing policy",
         "Admin pairing settings",
         "Phone-pairing policy"
       ],
       [
         "D11",
-        "pairing sessions",
+        "mobile attendance scan sessions",
         "Paired-device details",
         "Paired phone authorization"
-      ],
-      [
-        "D13",
-        "private scan requests",
-        "Processed scan result",
-        "Previous request result"
       ],
       [
         "D9",

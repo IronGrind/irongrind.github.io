@@ -32,18 +32,15 @@ const reportStores = [
   ['D8', 'membership_history', '', 'Membership history records']
 ];
 processes.find(process => process.Id === '8.0').Stores = reportStores;
-// Resolve stores to exact tables in the documented database baseline.
+// Resolve stores to exact public tables in the documented database baseline.
 const schema = readJson(path.join(root, 'schema-visualizer.json'));
 const tableNames = new Set(schema.Tables.map(table => table.Name));
-tableNames.add('auth.users');
 const storeTables = {
- D0:'auth.users', D1:'public.profiles', D2:'public.membership_applications',
+ D1:'public.profiles', D2:'public.membership_applications',
  D3:'public.members', D4:'public.attendance', D5:'public.products',
  D6:'public.sales', D7:'public.sale_items', D8:'public.membership_history',
  D9:'public.activity_logs', D10:'public.mobile_attendance_pairing_policy',
- D11:'public.mobile_attendance_scan_sessions', D13:'private.attendance_scan_requests',
- D14:'private.account_sessions', D15:'private.admin_login_approvals',
- D16:'private.admin_trusted_devices', D17:'private.admin_device_sessions'
+ D11:'public.mobile_attendance_scan_sessions'
 };
 for (const process of processes) {
  const seen = new Set();
@@ -52,7 +49,7 @@ for (const process of processes) {
   seen.add(store[0]); return true;
  }).map(store => {
   const name = storeTables[store[0]];
-  if (!tableNames.has(name)) throw new Error('Unverified DFD table: ' + store[0]);
+  if (!name || !name.startsWith('public.') || !tableNames.has(name)) throw new Error('DFD store is not a verified public table: ' + store[0]);
   return [store[0], name.split('.').at(-1), store[2], store[3]];
  });
 }

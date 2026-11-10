@@ -1,5 +1,5 @@
 {
-  "Source": "Supplied public-schema context export and checked-in migrations through 20261110000006. Deployment status follows the repository Member Device Approval Guide; this is not fresh live-schema introspection.",
+  "Source": "User-supplied Supabase public-schema context and full pgAdmin schema export, reconciled with checked-in migrations through 20261110000006. Deployment status follows the repository Member Device Approval Guide; this is not direct live-schema introspection.",
   "Tables": [
     {
       "Name": "private.account_sessions",

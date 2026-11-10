@@ -17,11 +17,7 @@ const reportStores = [
   ['D8', 'membership_history', '', 'Membership-history records'],
 ];
 processes.find(process => process.Id === '8.0').Stores = reportStores;
-processes.find(process => process.Id === '1.0').Stores.push(
-  ['D15', 'private.admin_login_approvals', 'Approval request / decision', 'Pending approval details'],
-  ['D16', 'private.admin_trusted_devices', 'Trusted public key', 'Trust state'],
-  ['D17', 'private.admin_device_sessions', 'Challenge / authorization', 'Session boundary'],
-);
+// DFD store symbols intentionally cover public application tables only.
 
 const actorLabels = [
   [

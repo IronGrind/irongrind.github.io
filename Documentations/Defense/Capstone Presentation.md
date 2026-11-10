@@ -110,7 +110,7 @@ Speaker notes: The 250 g group covers creatine, pre-workout, amino-acid and vita
 ## Slide 13 — Data model
 - Twelve public application tables and six private supporting tables
 - Managed Auth users remain separate from public application tables
-- Complete DFD SVG uses exact table names without schema prefixes; repeated stores refer to the same table
+- Complete DFD SVG uses exact public application table names; repeated stores refer to the same table
 - Figures 5a-c show the main physical relationships; Figure 5d shows administrator security storage
 - Data dictionary follows the Chapter 3 sample: field, type, length/precision, key, and validation details
 
@@ -134,7 +134,7 @@ Speaker notes: Failed attempts are unverified events, not proof that the named a
 
 The local Activity Logs UI now adds an actor-role filter for members, staff and administrators; “All users” remains the default and includes other recorded/system actors. Dropdown and date changes apply immediately, while account-name typing is debounced. The Apply filters button was removed and Reset filters remains. This is a client-only filter over the existing actor_role field, with no schema migration. Browser validation and website deployment remain pending.
 
-Chapter 3 uses the original multi-panel DFD layout: Figures 3a-e continue the nine processes and Figure 3f isolates the administrator login-security stores. The separate complete Level 1 SVG is at `Documentations/Chapter 3 Diagrams/03-dfd-complete-gane-sarson.svg`. Final Word pagination in desktop Word remains pending.
+Chapter 3 uses the original multi-panel DFD layout: Figures 3a-e continue the nine processes, and data-store symbols show public application tables only. Authentication records and private security stores are omitted from the DFD; login remains Process 1.0. The separate complete Level 1 SVG is at `Documentations/Chapter 3 Diagrams/03-dfd-complete-gane-sarson.svg`. The Word images were refreshed and the private-store DFD supplement was removed. Final desktop Word pagination remains pending.
 
 ## Slide 16 — Testing and limitations
 - Unit and simulated UI tests cover selected workflows
@@ -189,7 +189,7 @@ Staff member creation now checks membership plans, prices and exact durations on
 
 PowerPoint reported a content problem opening the editable deck. Although basic XML checks passed, PowerPoint rejected the previous hand-built package. The 18-slide deck was rebuilt from this Markdown using native PowerPoint automation and reopened successfully with all 18 speaker-note sections present. The repository package checker also passes. Slide appearance still needs a human visual review; the rebuilt deck and generator changes are local.
 
-Chapter 3 uses the original figure presentation: Figures 3a-e contain the nine-process DFD, Figure 3f is the administrator security-store supplement, Figures 5a-c show the main physical relationships, and Figure 5d shows the new administrator-security schema. A standalone Gane-Sarson Level 1 SVG with all nine processes is supplied at `Documentations/Chapter 3 Diagrams/03-dfd-complete-gane-sarson.svg`. Chapter 3's 23 tables and 201 dictionary fields remain unchanged. Final Word pagination in desktop Word remains pending.
+Chapter 3 uses the original figure presentation: Figures 3a-e contain the nine-process DFD with public application tables as data stores; Figures 5a-c show the main physical relationships and Figure 5d shows the administrator-security schema. A standalone Gane-Sarson Level 1 DFD with all nine processes is supplied at `Documentations/Chapter 3 Diagrams/03-dfd-complete-gane-sarson.svg`. The public-only choice applies to DFD store symbols; database dictionary and ERD content retain private schema documentation where needed. Final desktop Word pagination remains pending.
 
 ## Complete DFD connector presentation
 
@@ -281,3 +281,11 @@ Speaker notes: This is the user-authorized repeated-reference layout trial. The 
 - Each case includes actual-result, status and evidence fields; all begin as Not tested.
 
 Speaker notes: The checklist was exported to `Documentations/Testing/Iron Grind End-to-End Manual Testing Checklist - Final.docx` on 2026-11-10 from the checklist supplied in the conversation handoff. It provides a start-to-end test plan, not test results. No application or database behavior changed, and execution and outcomes remain pending.
+
+## Consolidated application ERD
+
+- One editable diagram includes 21 application-owned tables across `public` and `private`.
+- All 224 modeled fields and 33 declared foreign keys are represented.
+- Supabase-managed Auth tables appear only as reference nodes.
+
+Speaker notes: The original editable ERD showed the 12 public tables only. The consolidated version adds all nine private application tables using the supplied full pgAdmin export and checked-in schema model through migration 20261110000006. It includes auth.users and auth.sessions only where needed to show declared foreign keys; Supabase-managed auth, storage, realtime and migration tables are not counted as application tables. The former public-only drawing is preserved under `_Archive/Previous ERD Versions/05-gym-erd-public-only.svg` and `.drawio`. See 05-gym-erd-editable.svg or the editable diagrams.net source. The Word chapter figures remain separate and unchanged; this documentation update does not alter the application schema or deployment.
