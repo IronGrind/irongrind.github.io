@@ -458,6 +458,7 @@ function logout() {
                 if (result?.error) console.error('Could not record sign-out request:', result.error);
             } catch (error) { console.error('Could not record sign-out request:', error); }
         }
+        window.stopAccountSessionMonitor?.(window.ironGrindSupabase);
         await window.ironGrindSupabase?.auth.signOut({ scope: 'local' });
         localStorage.removeItem('irongrind_session');
         sessionStorage.removeItem('irongrind_session');

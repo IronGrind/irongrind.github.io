@@ -5,7 +5,7 @@ const code = await readFile(new URL('../../assets/js/auth.js', import.meta.url),
 function setup(role, unavailable = false, activationFails = false) {
     const elements = new Map();
     const element = id => {
-        if (!elements.has(id)) elements.set(id, { value: '', disabled: false, checked: false, textContent: '', classList: { add() {}, remove() {} }, setAttribute(name, value) { this[name] = value; } });
+        if (!elements.has(id)) elements.set(id, { value: '', disabled: false, checked: false, textContent: '', addEventListener() {}, classList: { add() {}, remove() {} }, setAttribute(name, value) { this[name] = value; } });
         return elements.get(id);
     };
     const counters = { password: 0, endpoint: 0, session: 0, signOut: 0, logs: 0, activation: 0 };
@@ -41,9 +41,9 @@ for (const [mode, role, target] of [['admin', 'admin', 'admin.html'], ['admin', 
     test.element('loginPassword').value = 'password';
     await vm.runInContext('handleLogin({preventDefault(){}})', test.context);
     assert.equal(test.destination(), target);
-    assert.equal(test.counters.endpoint, mode === 'admin' ? 1 : 0);
-    assert.equal(test.counters.password, mode === 'member' ? 1 : 0);
-    assert.equal(test.counters.logs, mode === 'admin' ? 1 : 0);
+    assert.equal(test.counters.endpoint, 1);
+    assert.equal(test.counters.password, 0);
+    assert.equal(test.counters.logs, 1);
     assert.equal(test.counters.activation, 1, 'Every successful login secures its session');
     assert.equal(test.element('submit').disabled, false);
 }
@@ -56,7 +56,7 @@ for (const [role, unavailable] of [['member', false], ['admin', true]]) {
     assert.equal(test.element('submit').disabled, false);
     assert.ok(test.element('loginErrorText').textContent);
 }
-console.log('Passed: admin endpoint/session flow, unchanged member email flow, activity attribution call, non-admin rejection, unavailable-function recovery.');
+console.log('Passed: username/member audited endpoint flows, session activation, activity calls, role rejection, and unavailable-function recovery.');
 const failedActivation=setup('admin',false,true);
 failedActivation.element('loginEmail').value='admin'; failedActivation.element('loginPassword').value='password';
 await vm.runInContext('handleLogin({preventDefault(){}})',failedActivation.context);

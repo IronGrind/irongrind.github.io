@@ -7,6 +7,64 @@
     const actions = { insert: 'Created', update: 'Updated', delete: 'Deleted', check_in: 'Checked in', check_out: 'Checked out', signed_in: 'Signed in', sign_out_requested: 'Requested sign-out', approved: 'Approved', rejected: 'Rejected', archived: 'Archived', restored: 'Restored', renewal: 'Renewed', expired: 'Expired', plan_change: 'Changed plan' };
     const escape = value => String(value ?? '').replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character]));
     const dateFormat = new Intl.DateTimeFormat('en-PH', { timeZone: 'Asia/Manila', dateStyle: 'medium', timeStyle: 'short' });
+    Object.assign(areas, { security: 'Security', reports: 'Report exports' });
+    Object.assign(actions, {
+        username_sign_in_failed: 'Username sign-in failed', member_sign_in_failed: 'Member sign-in failed',
+        sign_in_throttled: 'Sign-in rate limit reached', password_updated: 'Password updated',
+        password_reset_requested: 'Password reset requested', member_signed_in: 'Member signed in',
+        member_sign_out_requested: 'Member requested sign-out', scanner_signed_in: 'Scanner operator signed in',
+        scanner_sign_out_requested: 'Scanner operator requested sign-out', report_export_requested: 'Report export requested'
+    });
+    const categories = {
+        membership: { label: 'Membership', types: ['members', 'membership_applications', 'membership_history'] },
+        attendance: { label: 'Attendance', types: ['attendance'] },
+        inventory: { label: 'Inventory', types: ['products'] },
+        sales: { label: 'Sales', types: ['sales', 'sale_items'] },
+        accounts: { label: 'Accounts', types: ['profiles'] },
+        security: { label: 'Security', types: ['security'] },
+        session: { label: 'Sessions', types: ['session'] },
+        pairing: { label: 'Phone pairings', types: ['mobile_attendance_scan_sessions', 'mobile_attendance_pairing_policy'] },
+        reports: { label: 'Reports', types: ['reports'] }
+    };
+    Object.assign(actions, { renewal: 'Membership renewed', plan_change: 'Membership plan changed',
+        phone_pairing_created: 'Pairing QR created', phone_paired: 'Phone paired', phone_unpaired: 'Phone unpaired',
+        phone_pairing_ended: 'Pairing ended', phone_pairing_limit_changed: 'Phone limit changed' });
+    function actionLabel(log) {
+        if (log.action === 'update' && log.entity_type === 'products' && log.changed_fields?.includes('stock')) return 'Product stock updated';
+        // Field names alone cannot tell whether stock was added or deducted.
+        if (['insert', 'update', 'delete'].includes(log.action)) {
+            const record = { profiles: 'Account', members: 'Member', products: 'Product', sales: 'Sale', sale_items: 'Sale item', membership_applications: 'Application' }[log.entity_type] || 'Record';
+            return `${record} ${{ insert: 'created', update: 'updated', delete: 'deleted' }[log.action]}`;
+        }
+        return actions[log.action] || String(log.action || 'Unknown action').replaceAll('_', ' ');
+    }
+    function renderLog(log) {
+        const [categoryKey, category] = Object.entries(categories).find(([, category]) => category.types.includes(log.entity_type)) || ['other', { label: areas[log.entity_type] || 'Other' }];
+        const date = new Date(log.occurred_at);
+        const timestamp = Number.isNaN(date.getTime()) ? 'Time unavailable' : dateFormat.format(date);
+        const fields = (log.changed_fields || []).map(field => String(field).replaceAll('_', ' ')).join(', ');
+        return `<tr role="row">
+            <td role="cell" data-label="Time (Philippine)">${escape(timestamp)}</td>
+            <td role="cell" data-label="Account"><strong>${escape(log.actor_name || 'System')}</strong><small>${escape(log.actor_role || '')}</small></td>
+            <td role="cell" data-label="Action"><strong>${escape(actionLabel(log))}</strong></td>
+            <td role="cell" data-label="Category"><span class="activity-category activity-category-${categoryKey}">${escape(category.label)}</span></td>
+            <td role="cell" data-label="Record">${escape(log.record_label || areas[log.entity_type] || '—')}</td>
+            <td role="cell" data-label="Details"><details class="activity-event-details"><summary>Details</summary><dl>
+                ${log.details ? `<dt>Description</dt><dd>${escape(log.details)}</dd>` : ''}
+                <dt>Fields changed</dt><dd>${escape(fields || 'None recorded')}</dd>
+                <dt>Account ID</dt><dd>${escape(log.actor_id || 'Not available')}</dd>
+                <dt>Record ID</dt><dd>${escape(log.entity_id || 'Not available')}</dd>
+                <dt>Event ID</dt><dd>${escape(log.id)}</dd>
+                <dt>Event type</dt><dd>${escape(log.action)}</dd>
+            </dl></details></td>
+        </tr>`;
+    }
+    const actionSelect = document.getElementById('activityAction');
+    if (actionSelect) {
+        for (const [value, label] of Object.entries(actions).sort((a, b) => a[1].localeCompare(b[1]))) {
+            const option = document.createElement('option'); option.value = value; option.textContent = label; actionSelect.append(option);
+        }
+    }
 
     window.loadActivityLogs = async (requestedPage = 0) => {
         const thisRequest = ++requestNumber;
@@ -32,7 +90,9 @@
             const actor = document.getElementById('activityActor').value.trim();
             const area = document.getElementById('activityArea').value;
             if (actor) query = query.ilike('actor_name', `%${actor.replace(/[\\%_]/g, '\\$&')}%`);
-            if (area) query = query.eq('entity_type', area);
+            if (area) query = categories[area] ? query.in('entity_type', categories[area].types) : query.eq('entity_type', area);
+            const action = document.getElementById('activityAction')?.value;
+            if (action) query = query.eq('action', action);
             if (from) query = query.gte('occurred_at', `${from}T00:00:00+08:00`);
             if (to) {
                 const end = new Date(`${to}T00:00:00+08:00`);
@@ -47,14 +107,7 @@
                     ? 'Activity logging needs setup. Apply the activity_logs migration in Supabase, then refresh.'
                     : 'Could not load activity logs. Check your admin session and connection, then refresh.');
             }
-            table.innerHTML = data.length ? `<table class="attendance-table" role="table"><thead role="rowgroup"><tr role="row"><th role="columnheader">Time (Manila)</th><th role="columnheader">Account</th><th role="columnheader">Action</th><th role="columnheader">Area</th><th role="columnheader">Record</th><th role="columnheader">Fields changed</th></tr></thead><tbody role="rowgroup">${data.map(log => `<tr role="row">
-                <td role="cell" data-label="Time (Manila)">${escape(dateFormat.format(new Date(log.occurred_at)))}</td>
-                <td role="cell" data-label="Account"><strong>${escape(log.actor_name)}</strong><small>${escape(log.actor_role)}${log.actor_id ? ` · ${escape(log.actor_id)}` : ''}</small></td>
-                <td role="cell" data-label="Action">${escape(log.details || actions[log.action] || log.action)}</td>
-                <td role="cell" data-label="Area">${escape(areas[log.entity_type] || log.entity_type)}</td>
-                <td role="cell" data-label="Record">${escape(log.record_label || '—')}<small>${escape(log.entity_id || '')}</small></td>
-                <td role="cell" data-label="Fields changed">${escape((log.changed_fields || []).join(', ') || '—')}</td>
-            </tr>`).join('')}</tbody></table>` : '<div class="empty-state">No activity matches these filters. Logs begin after activity logging is enabled.</div>';
+            table.innerHTML = data.length ? `<table class="attendance-table" role="table"><thead role="rowgroup"><tr role="row"><th scope="col">Time (Philippine)</th><th scope="col">Account</th><th scope="col">Action</th><th scope="col">Category</th><th scope="col">Record</th><th scope="col">Details</th></tr></thead><tbody role="rowgroup">${data.map(renderLog).join('')}</tbody></table>` : '<div class="empty-state">No activity matches these filters.</div>';
             status.textContent = `${count || 0} events found.`;
             document.getElementById('activityPage').textContent = `Page ${page + 1} of ${Math.max(1, Math.ceil((count || 0) / pageSize))}`;
             previous.disabled = page === 0;

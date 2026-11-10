@@ -27,6 +27,7 @@ window.ironGrindSupabase = window.supabase.createClient(
 );
 
 // A guard verifies the server-issued session; page reloads never reclaim a session.
+window.stopAccountSessionMonitor = client => client?.__stopAccountSessionMonitor?.();
 window.monitorAccountSession = (client, onReplaced) => {
     if (client.__accountSessionMonitor) return;
     client.__accountSessionMonitor = true;
@@ -38,6 +39,7 @@ window.monitorAccountSession = (client, onReplaced) => {
         busy = true;
         try {
             const { data: { session } } = await client.auth.getSession();
+            if (stopping) return;
             if (!session) {
                 if (hadSession) { stopping = true; client.__accountSessionMonitor = false; await onReplaced('expired'); }
                 return;
@@ -46,6 +48,7 @@ window.monitorAccountSession = (client, onReplaced) => {
             const token = session.access_token;
             const { data, error } = await client.rpc('current_account_session_is_active');
             const { data: latest } = await client.auth.getSession();
+            if (stopping) return;
             // Ignore an in-flight check belonging to credentials that have changed.
             if (latest.session?.access_token !== token) return;
             if (data === false || error?.code === 'PT401' || error?.message === 'ACCOUNT_SESSION_REPLACED') {
@@ -58,11 +61,21 @@ window.monitorAccountSession = (client, onReplaced) => {
             console.warn('Could not check the account session:', error);
         } finally { busy = false; }
     }
-    setInterval(check, 5000);
+    const timer = setInterval(check, 5000);
     window.addEventListener('focus', check);
     window.addEventListener('online', check);
     document.addEventListener('visibilitychange', check);
-    client.auth.onAuthStateChange(() => { setTimeout(check, 0); });
+    const listener = client.auth.onAuthStateChange(() => { setTimeout(check, 0); });
+    client.__stopAccountSessionMonitor = () => {
+        stopping = true;
+        client.__accountSessionMonitor = false;
+        clearInterval(timer);
+        window.removeEventListener('focus', check);
+        window.removeEventListener('online', check);
+        document.removeEventListener('visibilitychange', check);
+        listener?.data?.subscription?.unsubscribe();
+        client.__stopAccountSessionMonitor = null;
+    };
     check();
 };
 if (/(?:^|\/)(?:admin|customer|staff)\.html$/.test(window.location.pathname)) {

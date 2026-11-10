@@ -300,13 +300,14 @@
             <div id="section-activity" class="admin-section hidden">
                 <div class="panel activity-panel">
                     <div class="panel-header"><h2><i class="fas fa-clock-rotate-left"></i> Activity Logs</h2><button id="activityRefresh" class="btn-sm" type="button" onclick="loadActivityLogs()"><i class="fas fa-rotate"></i> Refresh</button></div>
-                    <p class="activity-help">See which account changed a record and when. Times are shown in Manila time.</p>
+                    <p class="activity-help">Times shown in Philippine time (UTC+8).</p>
                     <form id="activityFilters" class="activity-filters">
                         <label>Account name<input id="activityActor" type="search" placeholder="Search staff or member name" maxlength="150"></label>
-                        <label>Area<select id="activityArea"><option value="">All areas</option><option value="members">Members</option><option value="membership_applications">Applications</option><option value="attendance">Attendance</option><option value="mobile_attendance_scan_sessions">Phone pairings</option><option value="products">Products</option><option value="sales">Sales</option><option value="sale_items">Sale items</option><option value="membership_history">Membership history</option><option value="profiles">Accounts</option><option value="session">Sign-in / sign-out</option></select></label>
+                        <label>Category<select id="activityArea"><option value="">All categories</option><option value="membership">Membership</option><option value="attendance">Attendance</option><option value="inventory">Inventory</option><option value="sales">Sales</option><option value="accounts">Accounts</option><option value="security">Security</option><option value="session">Sessions</option><option value="pairing">Phone pairings</option><option value="reports">Reports</option></select></label>
+                        <label>Action<select id="activityAction"><option value="">All actions</option></select></label>
                         <label>From<input id="activityFrom" type="date"></label>
                         <label>To<input id="activityTo" type="date"></label>
-                        <button class="btn-primary" type="submit">Apply</button><button class="btn-sm" type="reset">Clear</button>
+                        <div class="activity-filter-actions"><button class="btn-primary" type="submit">Apply filters</button><button class="btn-sm" type="reset">Reset filters</button></div>
                     </form>
                     <p id="activityStatus" class="activity-help" role="status" aria-live="polite"></p>
                     <div id="activityTable" class="table-scroll activity-table"></div>

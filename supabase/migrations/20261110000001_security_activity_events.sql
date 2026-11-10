@@ -39,9 +39,9 @@ returns trigger language plpgsql security definer set search_path='' as $$
 declare account public.profiles%rowtype;
 begin
   if old.encrypted_password is not distinct from new.encrypted_password then return new; end if;
-  select * into account from public.profiles where id=new.id;
+  select * into account from public.profiles where id=auth.uid();
   insert into public.activity_logs(actor_id,actor_name,actor_role,action,entity_type,entity_id)
-  values(new.id,coalesce(account.full_name,'Account holder'),coalesce(account.role,'account'),'password_updated','security',new.id::text);
+  values(auth.uid(),coalesce(account.full_name,'Authentication service'),coalesce(account.role,'system'),'password_updated','security',new.id::text);
   return new;
 end;
 $$;

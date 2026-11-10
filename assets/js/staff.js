@@ -649,6 +649,7 @@ document.getElementById('staffLogout').onclick = async () => {
         const { error } = await staffClient.rpc('admin_log_session_event', { p_event: 'sign_out_requested' });
         if (error) console.error('Could not record staff sign-out:', error);
     } catch (error) { console.error('Could not record staff sign-out:', error); }
+    window.stopAccountSessionMonitor?.(staffClient);
     await staffClient.auth.signOut({ scope: 'local' });
     localStorage.removeItem('irongrind_session'); sessionStorage.removeItem('irongrind_session');
     location.replace('index.html');

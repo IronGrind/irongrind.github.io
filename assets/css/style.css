@@ -501,6 +501,33 @@ label:has(input[name="wiPlan"]:checked) {
 .staff-account-details[hidden] { display:none !important; }
 .staff-account-card[hidden] { display:none !important; }
 .staff-directory-search { margin:16px 0; }
+.activity-filters { grid-template-columns:repeat(3,minmax(0,1fr)); }
+.activity-filter-actions { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+.activity-filters :is(input, select) { min-height:44px; }
+.activity-category { display:inline-block; padding:5px 9px; border:1px solid #8885; border-radius:20px; background:#8881; font-size:.72rem; font-weight:600; line-height:1.4; }
+.activity-category-security { border-color:#c76a6a; }
+.activity-category-inventory { border-color:#b68a3d; }
+.activity-category-attendance { border-color:#438d70; }
+.activity-category-membership { border-color:#658ab8; }
+.activity-event-details summary { cursor:pointer; font-size:.8rem; font-weight:600; padding:8px 0; }
+.activity-event-details dl { margin:8px 0 0; padding:12px; border:1px solid #8884; border-radius:10px; background:#8881; }
+.activity-event-details dt { font-size:.7rem; opacity:.7; margin-top:10px; }
+.activity-event-details dt:first-child { margin-top:0; }
+.activity-event-details dd { margin:4px 0 0; font-size:.75rem; line-height:1.5; overflow-wrap:anywhere; }
+.activity-table th:nth-child(3) { width:20%; }
+.activity-table th:nth-child(5) { width:20%; }
+.activity-table th:nth-child(6) { width:12%; }
+@container activity (max-width:850px) {
+    .activity-filters { grid-template-columns:repeat(2,minmax(0,1fr)); }
+    .activity-filter-actions { align-self:end; }
+    .activity-table td[data-label="Details"] { grid-column:1 / -1; }
+}
+@container activity (max-width:480px) {
+    .activity-filters { grid-template-columns:minmax(0,1fr); }
+    .activity-table tbody tr { grid-template-columns:minmax(0,1fr); }
+    .activity-filter-actions > button { flex:1; }
+    .activity-filters :is(input,select) { font-size:16px; }
+}
 .staff-account-details dl { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px 20px; margin:0; }
 .staff-account-details dt { font-size:.75rem; opacity:.7; margin-bottom:4px; }
 .staff-account-details dd { margin:0; font-size:.88rem; overflow-wrap:anywhere; }

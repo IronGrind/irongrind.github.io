@@ -17,7 +17,7 @@ Deno.serve(async request => {
     const admin = createClient(url, service, options), login = createClient(url, anon, options);
     const hash = async (value: string) => Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(`${service}:${value}`)))).map(v => v.toString(16).padStart(2, '0')).join('');
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
-    for (const [bucket, limit] of [[`member:${await hash(email)}`, 10], [`member-ip:${await hash(ip)}`, 50]] as const) {
+    for (const [bucket, limit] of [[`user:${await hash(`member:${email}`)}`, 10], [`ip:${await hash(ip)}`, 50]] as const) {
       const { data, error } = await admin.rpc('consume_admin_login_attempt', { p_bucket: bucket, p_limit: limit });
       if (error) return respond({ error: 'Sign-in is unavailable.' }, 503);
       if (data !== true) {

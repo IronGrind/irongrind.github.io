@@ -65,6 +65,7 @@ async function changePhoneOperator(logEvent = true) {
             if (error) console.error('Could not log scanner sign-out:', error);
         } catch (error) { console.error('Could not log scanner sign-out:', error); }
     }
+    window.stopAccountSessionMonitor?.(phoneOperatorClient);
     await phoneOperatorClient?.auth.signOut({ scope: 'local' });
     phoneOperator = null;
     pendingPhoneScan = null;
