@@ -12,7 +12,7 @@ Per the adviser's requirement, Figure 3 now shows fourteen individual data-store
 
 ## Simplified DFD overview
 
-At the user's request, Chapter 3 Figure 3 now starts with an at-a-glance overview: the three actor groups, all nine system functions grouped into four areas, and five logical record categories. A visible note explains that these categories are for readability and do not combine physical tables. The detailed DFD remains as a companion and retains individually identified data stores and specific actor/process/store flows. The overview PNG was visually inspected and its copy inside Chapter 3.docx byte-matches the generated source. Full Word pagination and final thesis review are pending.
+At the user's request, Chapter 3 Figure 3 now starts with an at-a-glance overview: the three actor groups, all nine system functions grouped into four areas, and five logical record categories. A visible note explains that these categories are for readability and do not combine physical tables. Figure 3a follows with the detailed operational DFD and its individual stores; Figure 3b keeps the trusted-device security stores as a focused supplement. The overview PNG was visually inspected and its copy inside Chapter 3.docx byte-matches the generated source. Full Word pagination and final thesis review are pending.
 
 ---
 

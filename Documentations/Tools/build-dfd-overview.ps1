@@ -44,7 +44,7 @@ function StoreBox($x, $y, $w, $heading, $detail) {
     Text $detail $small $muted ($x + 15) ($y + 52) ($w - 30) 56 $center
 }
 Text 'Figure 3. Simplified Data Flow Overview' $title $ink 55 24 1690 48
-Text 'Read left to right: people send requests, the system performs its work, and information is read or saved.' $normal $muted 58 82 1680 34
+Text 'Read top to bottom: people use the system, its functions do the work, and information is read or saved.' $normal $muted 58 82 1680 34
 $actors = @(
     @{ x = 55; title = 'Member / Applicant'; detail = 'Sign in · apply or renew · view own account, attendance history and product catalog'; },
     @{ x = 640; title = 'Authorized Staff'; detail = 'Sign in · review permitted requests · scan attendance · register members · record sales'; },
