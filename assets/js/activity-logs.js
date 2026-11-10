@@ -90,8 +90,10 @@
             let query = client.from('activity_logs').select('*', { count: 'exact' })
                 .order('occurred_at', { ascending: false }).order('id', { ascending: false });
             const actor = document.getElementById('activityActor').value.trim();
+            const role = document.getElementById('activityRole').value;
             const area = document.getElementById('activityArea').value;
             if (actor) query = query.ilike('actor_name', `%${actor.replace(/[\\%_]/g, '\\$&')}%`);
+            if (role) query = query.eq('actor_role', role);
             if (area) query = categories[area] ? query.in('entity_type', categories[area].types) : query.eq('entity_type', area);
             const action = document.getElementById('activityAction')?.value;
             if (action) query = query.eq('action', action);

@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IronGrind · Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261110-trusted-device-ui">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261110-store-password-layout">
     <script src="assets/js/theme.js?v=20261105-login-toggle"></script>
 </head>
 <body class="dashboard-body admin-dashboard admin-auth-pending">
@@ -304,7 +304,8 @@
                     <div class="panel-header"><h2><i class="fas fa-clock-rotate-left"></i> Activity Logs</h2><button id="activityRefresh" class="btn-sm" type="button" onclick="loadActivityLogs()"><i class="fas fa-rotate"></i> Refresh</button></div>
                     <p class="activity-help">Times shown in Philippine time (UTC+8).</p>
                     <form id="activityFilters" class="activity-filters">
-                        <label>Account name<input id="activityActor" type="search" placeholder="Search staff or member name" maxlength="150"></label>
+                        <label>Account name<input id="activityActor" type="search" placeholder="Search account name" maxlength="150"></label>
+                        <label>Account type<select id="activityRole"><option value="">All users</option><option value="member">Members</option><option value="staff">Staff</option><option value="admin">Administrators</option></select></label>
                         <label>Category<select id="activityArea"><option value="">All categories</option><option value="membership">Membership</option><option value="attendance">Attendance</option><option value="inventory">Inventory</option><option value="sales">Sales</option><option value="accounts">Accounts</option><option value="security">Security</option><option value="session">Sessions</option><option value="pairing">Phone pairings</option><option value="reports">Reports</option></select></label>
                         <label>Action<select id="activityAction"><option value="">All actions</option></select></label>
                         <label>From<input id="activityFrom" type="date"></label>
@@ -337,7 +338,7 @@
 <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
 <script src="assets/js/signature.js"></script>
-<script src="assets/js/activity-logs.js?v=20261104-phone-pairing-audit"></script>
+<script src="assets/js/activity-logs.js?v=20261110-account-role-filter"></script>
 <script src="assets/js/admin-access.js?v=20261108-reviewed"></script>
 <script src="assets/js/admin.js?v=20261110-trusted-device-ui"></script>
 <script src="assets/js/staff-accounts.js?v=20261108-names-member-email"></script>

@@ -260,3 +260,11 @@ The phone attendance scanner page now follows the app's dark navy and Iron Grind
 ### Trusted browser display and logout wording
 
 The administrator account menu now displays the registered browser's browser/platform name and clarifies that ordinary logout preserves trust while “Forget this trusted browser” revokes trust and signs out. The label is derived from the user-agent string already stored at device registration. A new authenticated, admin/session-scoped read function exposes only the label and registration/expiry metadata; the private key is never exposed. User-supplied terminal output confirms migration `20261110000005_admin_trusted_device_label.sql` was applied successfully to the linked database after dry-run showed it was the only pending migration. The matching dashboard UI is local and has not been deployed or browser-validated. A missing/expired registration is displayed as no trusted browser.
+
+### Store unlock layout correction
+
+A screenshot showed the Store password field overlapping its submit button. The shared password-visibility helper wraps password inputs, while the store form's flex styling expected a direct input child; the wrapper's intrinsic width caused overflow. The admin stylesheet now constrains that wrapper and preserves the submit button width. Source/CSS inspection and `git diff --check` passed; no browser/device visual check was performed. The stylesheet cache version was bumped. This frontend fix is local and deployment remains pending.
+
+### Activity Logs role filter
+
+The Activity Logs panel now includes an Account type selector for all users, members, staff and administrators. It filters the existing `activity_logs.actor_role` column alongside the account-name, category, action and date filters, preserving server-side pagination and the existing RLS-protected query. No schema change is needed. Source inspection and `git diff --check` passed; browser validation and website deployment remain pending.

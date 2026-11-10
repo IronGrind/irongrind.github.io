@@ -80,6 +80,8 @@ Speaker notes: Show the scanner install button and distinguish member QR from pa
 
 The administrator account menu also has a local update showing the registered browser label and explaining the difference between ordinary logout (trust retained) and forgetting the browser (trust revoked). User-supplied terminal output confirms migration 20261110000005 was applied to the linked database after a dry run listed only that migration. The matching website revision remains local and has not been visually validated or deployed.
 
+Store unlock UI follow-up: fixed flex sizing for the password-visibility wrapper so the password field no longer intrudes into the Open Store button. Source inspection passed; browser visual validation and website deployment remain pending.
+
 ## Slide 11 — Inventory and sales
 - Stock quantity, stock unit and selling price are displayed separately
 - Pounds/ounces convert to base units before comparison or deduction
@@ -114,11 +116,13 @@ Speaker notes: This latest local increment supersedes the earlier approval-only 
 
 ## Slide 15 — Accountability and session behavior
 - Readable actions, category badges and expandable log details
-- Filter by account, category, action and Philippine date range
+- Filter by account name, account type (all users, members, staff or administrators), category, action and Philippine date range
 - Operational/security events exclude passwords and tokens
 - Explicit logout differs from expiry or session replacement
 
 Speaker notes: Failed attempts are unverified events, not proof that the named account owner acted. Export requests do not prove files were saved. Custom logging does not mirror every MFA Auth audit event. Routine page views/searches are not comprehensive activity events. Main dashboard and scanner session ownership remain separate.
+
+The local Activity Logs UI now adds a server-side actor-role filter for members, staff and administrators; “All users” remains the default and includes other recorded/system actors. This is a client-only filter over the existing actor_role field, with no schema migration. Browser validation and website deployment remain pending.
 
 ## Slide 16 — Testing and limitations
 - Unit and simulated UI tests cover selected workflows
