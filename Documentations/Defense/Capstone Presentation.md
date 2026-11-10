@@ -308,3 +308,11 @@ Speaker notes: The context diagram uses the supplied horizontal layout and pale-
 Speaker notes: Supersedes earlier manuscript-layout descriptions in these historical maintenance entries. The current Word manuscript includes one public-schema ERD overview and the full 21-table dictionary; earlier claims that it contains separate Figures 5a-e no longer describe the current layout. No Agile or DFD change was made. Diagram source/PNG inspection and preservation checks are recorded in the review evidence; no deployment occurred.
 
 Diagram validation status: all 26 requirements/dictionary tables and unrelated Word image parts are preserved; the embedded replacement PNGs match their sources. Desktop Word automation did not complete, including the local-copy retry, so pagination remains pending. No generated PDF is presented as a completed preview.
+
+## Chapter 1–3 manuscript format
+
+- Times New Roman, 12 pt, with 1.5-line spacing, including tables and captions.
+- Margins: 1.5 inches left; 1 inch right, top and bottom in every section.
+- Existing wording, diagram image bytes and page orientations are preserved.
+
+Speaker notes: The November 11 formatting pass follows the user's supplied manuscript specification. Twenty-three Chapter 3 table grids were fitted to the available text width. Staged documents passed font, spacing, margin and content-preservation checks before replacement; the report and backups are retained in Review Evidence and Review Backups. Existing paragraph before/after spacing and emphasis are retained. Font requirements apply to editable Word text, not lettering already contained in supplied image assets. Final visual pagination review remains separate. This is a manuscript-only change, with no application, schema or deployment action and no change to the eighteen-slide PowerPoint.
