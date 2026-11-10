@@ -2384,6 +2384,26 @@ html[data-dashboard-theme="light"] body.register-body .developer-credit { color:
 html[data-dashboard-theme="light"] body.register-body .modal-overlay { background: rgba(32,41,56,.28); }
 html[data-dashboard-theme="light"] body.register-body .modal-content { color: #202938; background: #fff; border-color: #d9dee7; }
 html[data-dashboard-theme="light"] body.register-body .modal-content h3 { color: #202938; }
+.register-body .registration-summary {
+    background: #0d1219;
+    border: 1px solid #1e2533;
+    border-radius: 16px;
+    padding: 16px;
+    text-align: left;
+    font-size: 0.85rem;
+}
+.register-body .registration-summary > div { flex-wrap: wrap; gap: 8px 12px; }
+.register-body .registration-summary :is(code, strong) { min-width: 0; overflow-wrap: anywhere; }
+html[data-dashboard-theme="light"] body.register-body .registration-summary {
+    color: #202938;
+    background: #f5f7fa;
+    border-color: #d9dee7;
+}
+html[data-dashboard-theme="light"] body.register-body .registration-summary code { color: #9b2020 !important; }
+html[data-dashboard-theme="light"] body.register-body .registration-summary .badge-status.reserved {
+    color: #735900;
+    background: #fff0bf;
+}
 html[data-dashboard-theme="light"] body.register-body .modal-content .modal-sub { color: #586579; }
 html[data-dashboard-theme="light"] body.register-body .auth-theme-toggle { color: #344257; background: #fff; border-color: #bdc8d6; }
 html[data-dashboard-theme="light"] body.login-body .auth-page-footer { color: #536178; }

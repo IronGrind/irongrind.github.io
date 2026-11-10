@@ -1,0 +1,38 @@
+{
+  "checkedAt": "2026-11-10T15:14:22.465Z",
+  "scope": "Local browser preview with synthetic data; no form submission or deployment.",
+  "results": [
+    {
+      "theme": "light",
+      "mobile": false,
+      "background": "rgb(245, 247, 250)",
+      "color": "rgb(32, 41, 56)",
+      "overflow": false,
+      "panelOverflow": false
+    },
+    {
+      "theme": "dark",
+      "mobile": false,
+      "background": "rgb(13, 18, 25)",
+      "color": "rgb(232, 237, 245)",
+      "overflow": false,
+      "panelOverflow": false
+    },
+    {
+      "theme": "light",
+      "mobile": true,
+      "background": "rgb(245, 247, 250)",
+      "color": "rgb(32, 41, 56)",
+      "overflow": false,
+      "panelOverflow": false
+    },
+    {
+      "theme": "dark",
+      "mobile": true,
+      "background": "rgb(13, 18, 25)",
+      "color": "rgb(232, 237, 245)",
+      "overflow": false,
+      "panelOverflow": false
+    }
+  ]
+}

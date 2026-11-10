@@ -394,7 +394,7 @@ function showSuccessModal(app, confirmationRequired = false, emailJustConfirmed 
                 : emailJustConfirmed
                     ? `Your application has been sent to the gym for review, ${app.fullName}, and is awaiting approval.`
                     : `Thank you, <strong>${app.fullName}</strong>. Your application is now pending staff or administrator approval.`}</p>
-            <div style="background:#0d1219; border:1px solid #1e2533; border-radius:16px; padding:16px; text-align:left; font-size:0.85rem;">
+            <div class="registration-summary">
                 ${confirmationRequired && !applicationAlreadySubmitted ? '' : `<div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:#8b95a9;">Application ID:</span><code style="color:#ff6b2b;">${app.id}</code></div>`}
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:#8b95a9;">Plan:</span><strong>${app.plan}</strong></div>
                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;"><span style="color:#8b95a9;">Amount:</span><strong>₱${app.planPrice.toLocaleString()}</strong></div>

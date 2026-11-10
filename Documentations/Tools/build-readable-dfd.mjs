@@ -6,6 +6,20 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../Chap
 const readJson = file => JSON.parse(fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, ''));
 const processes = readJson(path.join(root, '03-gane-sarson-flows.json'));
 const actorFlows = readJson(path.join(root, '_Sources/dfd-actor-flows.json'));
+// Action labels preserve the nine established functional boundaries.
+const processLabels = [
+ 'Verify login and authorize access',
+ 'Submit and review applications',
+ 'Manage profiles and member accounts',
+ 'Submit and review renewal requests',
+ 'Record QR scans and retrieve visits',
+ 'Update stock and retrieve products',
+ 'Record sales and sale items',
+ 'Compile and export selected reports',
+ 'Filter and view activity records'
+];
+processes.forEach((process, index) => { process.Name = processLabels[index]; });
+
 
 // Do not group report stores into a range; each store gets its own symbol and flow.
 const reportStores = [
@@ -72,6 +86,16 @@ const arrow = (x1, y, x2, label, direction = 'right') => {
   return `<path d="M${x1} ${y}H${x2}" class="flow" marker-end="url(#arrow-end)"/><rect x="${mid - labelWidth / 2}" y="${y - 20}" width="${labelWidth}" height="17" rx="7" class="label-bg"/>${text(mid, y - 7, label, 'flow-label', 'middle', 62)}`;
 };
 
+// A single connector per pair; labels state both destinations explicitly.
+const pairedFlow = (left, y, right, toRight, toLeft) => {
+ const mid = (left + right) / 2;
+ const markers = (toRight ? ' marker-end="url(#arrow-end)"' : '') + (toLeft ? ' marker-start="url(#arrow-start)"' : '');
+ const label = (value, target, baseline) => value ? text(mid, baseline, target + ': ' + value, 'flow-label', 'middle', 90) : '';
+ return '<path d="M' + left + ' ' + y + 'H' + right + '" class="flow"' + markers + '/>'
+  + label(toRight, 'To ' + (left === actorX + actorW ? 'process' : 'store'), y - 10)
+  + label(toLeft, 'To ' + (left === actorX + actorW ? 'entity' : 'process'), y + 23);
+};
+
 let cursorY = 320;
 const panels = [];
 const panelGap = 44;
@@ -93,8 +117,7 @@ for (let i = 0; i < processes.length; i++) {
     const y = 76 + index * 142;
     body += box(actorX, y, actorW, 104, 12, 'entity');
     body += text(actorX + actorW / 2, y + 31, actor[0], 'entity-title', 'middle', 34);
-    body += arrow(actorX + actorW, y + 53, actorFlowEnd, actor[1]);
-    body += arrow(actorX + actorW, y + 91, actorFlowEnd, actor[2], 'left');
+    body += pairedFlow(actorX + actorW, y + 66, actorFlowEnd, actor[1], actor[2]);
   });
 
   const processY = 60;
@@ -102,15 +125,12 @@ for (let i = 0; i < processes.length; i++) {
   body += box(processX, processY, processW, processH, 18, 'process');
   body += `<path d="M${processX} ${processY + 48}H${processX + processW}" class="process-separator"/>`;
   body += text(processX + processW / 2, processY + 33, process.Id, 'process-number');
-  const nameLines = wrap(process.Name, 28);
-  const nameStart = processY + processH / 2 - ((nameLines.length - 1) * 16);
-  body += `<text x="${processX + processW / 2}" y="${nameStart}" class="process-name" text-anchor="middle">${nameLines.map((line, j) => `<tspan x="${processX + processW / 2}" dy="${j ? 32 : 0}">${esc(line)}</tspan>`).join('')}</text>`;
+  body += `<text x="${processX + processW / 2}" y="${processY + processH / 2}" class="process-name" text-anchor="middle">${esc(process.Name)}</text>`;
   process.Stores.forEach((store, index) => {
     const y = 68 + index * 116;
     const storeH = 76;
     body += dataStore(storeX, y, storeW, storeH, store[0], store[1]);
-    if (store[2]) body += arrow(processStoreStart, y + 26, storeFlowEnd, store[2]);
-    if (store[3]) body += arrow(storeFlowEnd, y + 56, processStoreStart, store[3], 'left');
+    body += pairedFlow(processStoreStart, y + 38, storeFlowEnd, store[2], store[3]);
   });
   body += `</g>`;
   panels.push(body);
@@ -125,10 +145,10 @@ const header = `<g><text x="80" y="82" class="title">Iron Grind Fitness Gym — 
 ${box(350, 0, 300, 58, 14, 'process')}<text x="500" y="36" class="legend">Process</text>
 <path d="M740 0h310 M740 0v58 M740 58h310 M810 0v58" class="store"/><text x="900" y="36" class="legend">Data store</text>
 <path d="M1140 30h310" class="flow" marker-end="url(#arrow-end)"/><text x="1295" y="18" class="legend">Data flow</text></g>
-<text x="80" y="250" class="note">Each data store uses its database table name. Repeated D identifiers refer to the same table; no placeholder stores are included.</text>
+<text x="80" y="250" class="note">Each data store uses its database table name. Repeated D identifiers refer to the same table; one connector per pair; arrowheads and destination labels show flow direction.</text>
 <text x="80" y="276" class="note">Table names match the documented pgAdmin baseline and migrations through 20261110000004; this is not fresh live-schema introspection.</text></g>`;
 const style = `<style>
- text{font-family:Arial,sans-serif;fill:#172235}.title{font-size:38px;font-weight:700}.subtitle{font-size:22px;fill:#536274}.panel-title{font-size:25px;font-weight:700}.note{font-size:17px;fill:#536274}.legend{font-size:18px;font-weight:600;text-anchor:middle}.panel{fill:#fff;stroke:#d1d9e3;stroke-width:2}.entity{fill:#fff;stroke:#40516a;stroke-width:2.5}.entity-title{font-size:20px;font-weight:700}.process{fill:#e1ebf8;stroke:#244a78;stroke-width:3}.process-separator{stroke:#244a78;stroke-width:2}.process-number{font-size:21px;font-weight:700}.process-name{font-size:26px;font-weight:700}.store{fill:none;stroke:#40516a;stroke-width:2.5}.store-id{font-size:18px;font-weight:700}.store-name{font-size:17px}.flow{fill:none;stroke:#34445a;stroke-width:2}.flow-label{font-size:14px;fill:#26364a}.label-bg{fill:#fff;stroke:#e1e6ed;stroke-width:1}.page{fill:#f6f8fb}
+ text{font-family:Arial,sans-serif;fill:#172235}.title{font-size:38px;font-weight:700}.subtitle{font-size:22px;fill:#536274}.panel-title{font-size:25px;font-weight:700}.note{font-size:17px;fill:#536274}.legend{font-size:18px;font-weight:600;text-anchor:middle}.panel{fill:#fff;stroke:#d1d9e3;stroke-width:2}.entity{fill:#fff;stroke:#40516a;stroke-width:2.5}.entity-title{font-size:20px;font-weight:700}.process{fill:#e1ebf8;stroke:#244a78;stroke-width:3}.process-separator{stroke:#244a78;stroke-width:2}.process-number{font-size:21px;font-weight:700}.process-name{font-size:22px;font-weight:700}.store{fill:none;stroke:#40516a;stroke-width:2.5}.store-id{font-size:18px;font-weight:700}.store-name{font-size:17px}.flow{fill:none;stroke:#34445a;stroke-width:2}.flow-label{font-size:14px;fill:#26364a}.label-bg{fill:#fff;stroke:#e1e6ed;stroke-width:1}.page{fill:#f6f8fb}
 </style>`;
-const svg = `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="title desc"><title id="title">Iron Grind Fitness Gym — Complete Level 1 DFD</title><desc id="desc">Nine process panels in Gane–Sarson notation, with external entities, separately identified data stores, and labeled data flows.</desc><defs><marker id="arrow-end" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#34445a"/></marker></defs>${style}<rect class="page" width="100%" height="100%"/>${header}${panels.join('')}<text x="80" y="${height - 42}" class="note">Source: Chapter 3 Level 1 process/actor-flow model and User Login security-store supplement. Standalone complete Level 1 DFD. The Word chapter presents the same model in five panels (Figures 3a-e); Figure 3f isolates the administrator security stores.</text></svg>`;
+const svg = `<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="title desc"><title id="title">Iron Grind Fitness Gym — Complete Level 1 DFD</title><desc id="desc">Nine process panels in Gane–Sarson notation, with external entities, separately identified data stores, and labeled data flows.</desc><defs><marker id="arrow-start" markerWidth="9" markerHeight="9" refX="1" refY="4.5" orient="auto"><path d="M9 0L0 4.5L9 9Z" fill="#34445a"/></marker><marker id="arrow-end" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M0 0L9 4.5L0 9Z" fill="#34445a"/></marker></defs>${style}<rect class="page" width="100%" height="100%"/>${header}${panels.join('')}<text x="80" y="${height - 42}" class="note">Source: Chapter 3 Level 1 process/actor-flow model and User Login security-store supplement. Standalone complete Level 1 DFD. The Word chapter presents the same model in five panels (Figures 3a-e); Figure 3f isolates the administrator security stores.</text></svg>`;
 fs.writeFileSync(path.join(root, '03-dfd-complete-gane-sarson.svg'), svg, 'utf8');
