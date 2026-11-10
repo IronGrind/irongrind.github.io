@@ -8,6 +8,7 @@ function setup(rows) {
         if (!elements.has(id)) elements.set(id, { value: '', disabled: false, innerHTML: '', textContent: '', append() {}, addEventListener() {}, setAttribute() {}, removeAttribute() {} });
         return elements.get(id);
     };
+    element('activityFilters').querySelectorAll = () => [];
     const query = {};
     for (const method of ['select','order','eq','in','ilike','gte','lt']) query[method] = (...args) => { calls.push([method, ...args]); return query; };
     query.range = async () => ({ data: rows, count: rows.length });

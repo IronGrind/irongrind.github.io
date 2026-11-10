@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { isValidDateOnly, validateStaffMembershipTerms } from './validation.js';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -61,16 +62,15 @@ Deno.serve(async (request) => {
     return response({ error: 'Use 8–128 characters with uppercase and lowercase letters, a number, and a symbol.' }, 400);
   }
   if (!email || password.length < 8 || !validPersonName(fullName) || !validPersonName(emergencyName) || !mobile || !plan
-    || !Number.isFinite(price) || price <= 0 || !startDate || !expiryDate) {
+    || !Number.isFinite(price) || price <= 0 || !isValidDateOnly(startDate) || !isValidDateOnly(expiryDate) || expiryDate < startDate) {
     return response({ error: 'Required member or membership details are missing, or a name contains numbers or invalid characters.' }, 400);
   }
   if (!/^09\d{9}$/.test(mobile) || !/^09\d{9}$/.test(emergencyContact)) {
     return response({ error: 'Mobile and emergency contact numbers must each be 11 digits and start with 09.' }, 400);
   }
   if (profile.role === 'staff') {
-    const standardPlans: Record<string, number> = { Monthly: 800, 'Half Month': 400, 'Walk-in': 80 };
-    if (body.staffWalkinRegistration !== true || standardPlans[plan] !== price) {
-      return response({ error: 'Staff may register walk-in members only with the standard plans and prices.' }, 403);
+    if (body.staffWalkinRegistration !== true || !validateStaffMembershipTerms({ plan, price, startDate, expiryDate })) {
+      return response({ error: 'Staff registrations must use a standard plan, its exact price and duration, and today’s Philippine date.' }, 403);
     }
     if (typeof body.signatureData !== 'string' || !body.signatureData.startsWith('data:image/png;base64,')) {
       return response({ error: 'The member signature is required.' }, 400);
