@@ -1,8 +1,9 @@
-const CACHE_NAME = 'iron-grind-attendance-shell-v19';
+const CACHE_NAME = 'iron-grind-attendance-shell-v20';
 const APP_SHELL = [
     './attendance-phone.html',
     './attendance-app.webmanifest',
     './assets/js/attendance-phone.js',
+    './assets/js/admin-mfa.js',
     './assets/js/supabase-client.js',
     './assets/css/style.css',
     './assets/images/iron-grind-mark.png',

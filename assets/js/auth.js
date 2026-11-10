@@ -213,6 +213,12 @@ async function handleLogin(event) {
         const { data, error } = result;
 
         if (!error && data.user) {
+            try { await window.requireAdminMfa(supabaseClient); }
+            catch (mfaError) {
+                await supabaseClient.auth.signOut({ scope: 'local' });
+                showError(mfaError.message || 'Administrator verification is required.');
+                return;
+            }
             const { error: sessionError } = await supabaseClient.rpc('activate_account_session');
             if (sessionError) {
                 await supabaseClient.auth.signOut({ scope: 'local' });

@@ -2051,6 +2051,16 @@ html[data-dashboard-theme="light"] .product-photo-dialog.photo-bubble .photo-lig
 @keyframes photo-bubble-enter { from { opacity: 0; transform: scale(.95) translateY(8px); } to { opacity: 1; transform: none; } }
 @media (prefers-reduced-motion: reduce) { .product-photo-dialog.photo-bubble { animation: none; } }
 .password-strength-meter { display:block; width:100%; height:12px; margin:8px 0 4px; }
+.admin-mfa-dialog { width:min(440px,calc(100vw - 32px)); max-height:calc(100dvh - 32px); overflow:auto; margin:auto; padding:24px; border:1px solid #8885; border-radius:18px; background:#17191e; color:#f1f3f7; }
+.admin-mfa-dialog::backdrop { background:#0009; backdrop-filter:blur(4px); }
+.admin-mfa-dialog h2 { font-size:1.2rem; margin-bottom:12px; }
+.admin-mfa-dialog p, .admin-mfa-dialog small { font-size:.85rem; line-height:1.6; }
+.admin-mfa-dialog label { display:block; margin:14px 0 6px; font-size:.85rem; }
+.admin-mfa-dialog input { width:100%; padding:12px; border:1px solid #8886; border-radius:10px; background:#101010; color:#fff; font-size:16px; }
+.admin-mfa-enrollment img { display:block; width:200px; margin:16px auto; background:#fff; padding:8px; }
+.admin-mfa-status { min-height:24px; margin-top:10px; }
+html[data-dashboard-theme="light"] .admin-mfa-dialog { background:#fff; color:#202938; }
+html[data-dashboard-theme="light"] .admin-mfa-dialog input { background:#fafafa; color:#202938; }
 /* Shared dashboard interaction and narrow-screen form refinements. */
 body.dashboard-body :is(button, a, summary, input, select, textarea):focus-visible {
     outline:3px solid #d44b4b; outline-offset:3px;

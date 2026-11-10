@@ -32,6 +32,8 @@ async function signInPhoneOperator(event) {
         if (!data?.session) throw new Error(data?.error || 'Sign-in failed.');
         const { error: sessionError } = await phoneOperatorClient.auth.setSession(data.session);
         if (sessionError) throw sessionError;
+        try { await window.requireAdminMfa(phoneOperatorClient); }
+        catch (error) { await phoneOperatorClient.auth.signOut({ scope: 'local' }); throw error; }
         const { error: activationError } = await phoneOperatorClient.rpc('activate_attendance_session');
         if (activationError) throw new Error('Could not secure your sign-in session. Sign in again.');
         window.monitorAccountSession(phoneOperatorClient, async reason => {

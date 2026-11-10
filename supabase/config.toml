@@ -8,3 +8,7 @@ verify_jwt = false
 minimum_password_length = 8
 password_requirements = "lower_upper_letters_digits_symbols"
 
+[auth.mfa.totp]
+enroll_enabled = true
+verify_enabled = true
+
