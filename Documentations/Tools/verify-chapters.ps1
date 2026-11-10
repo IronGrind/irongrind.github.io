@@ -71,6 +71,8 @@ foreach($chapter in $Chapters){
    if(-not $all.Contains('Figure 5d. Administrator Security Schema Supplement')){throw 'The administrator security-schema supplement was not retained as Figure 5d.'}
    $securitySchemaImage=@($doc.SelectNodes('//wp:docPr',$ns)|Where-Object {$_.GetAttribute('name') -eq 'Figure 5d. Administrator Security Schema Supplement'})
    if($securitySchemaImage.Count -ne 1){throw 'Expected one administrator security-schema figure in Chapter 3.'}
+   $memberImage=@($doc.SelectNodes('//wp:docPr',$ns)|Where-Object {$_.GetAttribute('name') -eq 'Figure 5e. Member Security Schema Supplement'})
+   if($memberImage.Count -ne 1 -or -not $all.Contains('Figure 5e shows the three member-security tables')){throw 'Missing member security-schema figure or explanation.'}
    $schema=Get-Content -Raw -LiteralPath (Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3 Diagrams/schema-visualizer.json')|ConvertFrom-Json
    $order=@('public.profiles','public.members','public.membership_applications','public.attendance','public.products','public.sales','public.sale_items','public.membership_history','public.activity_logs','public.mobile_attendance_pairing_policy','public.mobile_attendance_scan_sessions','public.mobile_attendance_scan_events','private.attendance_scan_requests','private.admin_login_attempts','private.account_sessions','private.admin_login_approvals','private.admin_trusted_devices','private.admin_device_sessions','private.member_trusted_devices','private.member_device_sessions','private.member_device_approvals')
    $verifiedFKs=0;$verifiedUnique=0

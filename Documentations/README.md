@@ -24,3 +24,5 @@ From the project root, verify the chapters with:
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File 'Documentations/Tools/verify-chapters.ps1'
 ```
+
+The latest schema revision adds the three private member browser-security tables from migration 20261110000006 to Chapter 3 as Figure 5e and Tables 24–26. Current totals are 21 application-owned tables (12 public, 9 private), 224 fields and 33 declared foreign keys. The new editable figure is `Chapter 3 Diagrams/05b-member-security-schema.drawio`, with matching SVG/PNG. Chapters 1 and 2 retain their existing structure and add the corresponding scope/synthesis passages. These totals supersede the eighteen-table totals in the earlier revision description. Validation covers package structure and dictionary consistency; desktop Word pagination and controlled member browser acceptance remain pending. This documentation update does not deploy application changes.
