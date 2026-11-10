@@ -1,0 +1,659 @@
+{
+  "processes": 9,
+  "uniqueStores": 17,
+  "uniqueActors": 3,
+  "flows": 108,
+  "crossings": 74,
+  "jumps": 74,
+  "unrelatedOverlaps": 0,
+  "mapping": [
+    {
+      "process": "1.0",
+      "source": "actor:Member / Applicant",
+      "destination": "process:1.0",
+      "name": "Credentials / session"
+    },
+    {
+      "process": "1.0",
+      "source": "process:1.0",
+      "destination": "actor:Member / Applicant",
+      "name": "Own access result"
+    },
+    {
+      "process": "1.0",
+      "source": "actor:Administrator",
+      "destination": "process:1.0",
+      "name": "Credentials / session"
+    },
+    {
+      "process": "1.0",
+      "source": "process:1.0",
+      "destination": "actor:Administrator",
+      "name": "Administrator access"
+    },
+    {
+      "process": "1.0",
+      "source": "actor:Authorized Staff",
+      "destination": "process:1.0",
+      "name": "Credentials / session"
+    },
+    {
+      "process": "1.0",
+      "source": "process:1.0",
+      "destination": "actor:Authorized Staff",
+      "name": "Staff access"
+    },
+    {
+      "process": "1.0",
+      "source": "process:1.0",
+      "destination": "store:D0",
+      "name": "Account / session data"
+    },
+    {
+      "process": "1.0",
+      "source": "store:D0",
+      "destination": "process:1.0",
+      "name": "Identity / session state"
+    },
+    {
+      "process": "1.0",
+      "source": "store:D1",
+      "destination": "process:1.0",
+      "name": "Role and active status"
+    },
+    {
+      "process": "1.0",
+      "source": "process:1.0",
+      "destination": "store:D14",
+      "name": "Selected session scope"
+    },
+    {
+      "process": "1.0",
+      "source": "store:D14",
+      "destination": "process:1.0",
+      "name": "Session ownership"
+    },
+    {
+      "process": "1.0",
+      "source": "process:1.0",
+      "destination": "store:D9",
+      "name": "Session event"
+    },
+    {
+      "process": "1.0",
+      "source": "process:1.0",
+      "destination": "store:D15",
+      "name": "Approval request / decision"
+    },
+    {
+      "process": "1.0",
+      "source": "store:D15",
+      "destination": "process:1.0",
+      "name": "Pending approval details"
+    },
+    {
+      "process": "1.0",
+      "source": "process:1.0",
+      "destination": "store:D16",
+      "name": "Trusted public key"
+    },
+    {
+      "process": "1.0",
+      "source": "store:D16",
+      "destination": "process:1.0",
+      "name": "Trust state"
+    },
+    {
+      "process": "1.0",
+      "source": "process:1.0",
+      "destination": "store:D17",
+      "name": "Challenge / authorization"
+    },
+    {
+      "process": "1.0",
+      "source": "store:D17",
+      "destination": "process:1.0",
+      "name": "Authorized session boundary"
+    },
+    {
+      "process": "2.0",
+      "source": "actor:Member / Applicant",
+      "destination": "process:2.0",
+      "name": "Registration details"
+    },
+    {
+      "process": "2.0",
+      "source": "process:2.0",
+      "destination": "actor:Member / Applicant",
+      "name": "Application status"
+    },
+    {
+      "process": "2.0",
+      "source": "actor:Administrator",
+      "destination": "process:2.0",
+      "name": "Review decision"
+    },
+    {
+      "process": "2.0",
+      "source": "process:2.0",
+      "destination": "actor:Administrator",
+      "name": "Application / result"
+    },
+    {
+      "process": "2.0",
+      "source": "actor:Authorized Staff",
+      "destination": "process:2.0",
+      "name": "Review decision"
+    },
+    {
+      "process": "2.0",
+      "source": "process:2.0",
+      "destination": "actor:Authorized Staff",
+      "name": "Limited request / result"
+    },
+    {
+      "process": "2.0",
+      "source": "process:2.0",
+      "destination": "store:D2",
+      "name": "Application / review status"
+    },
+    {
+      "process": "2.0",
+      "source": "store:D2",
+      "destination": "process:2.0",
+      "name": "Submitted application"
+    },
+    {
+      "process": "2.0",
+      "source": "process:2.0",
+      "destination": "store:D3",
+      "name": "Approved member record"
+    },
+    {
+      "process": "2.0",
+      "source": "store:D1",
+      "destination": "process:2.0",
+      "name": "Reviewer role / active status"
+    },
+    {
+      "process": "2.0",
+      "source": "process:2.0",
+      "destination": "store:D6",
+      "name": "Membership transaction"
+    },
+    {
+      "process": "2.0",
+      "source": "process:2.0",
+      "destination": "store:D7",
+      "name": "Membership charge"
+    },
+    {
+      "process": "2.0",
+      "source": "process:2.0",
+      "destination": "store:D9",
+      "name": "Review / change event"
+    },
+    {
+      "process": "3.0",
+      "source": "actor:Administrator",
+      "destination": "process:3.0",
+      "name": "Profile query; counter / staff controls"
+    },
+    {
+      "process": "3.0",
+      "source": "process:3.0",
+      "destination": "actor:Administrator",
+      "name": "Read-only profile; operation result"
+    },
+    {
+      "process": "3.0",
+      "source": "actor:Authorized Staff",
+      "destination": "process:3.0",
+      "name": "Walk-in; renewal; plan change"
+    },
+    {
+      "process": "3.0",
+      "source": "process:3.0",
+      "destination": "actor:Authorized Staff",
+      "name": "Limited lookup; counter result"
+    },
+    {
+      "process": "3.0",
+      "source": "actor:Member / Applicant",
+      "destination": "process:3.0",
+      "name": "Own profile query / changes"
+    },
+    {
+      "process": "3.0",
+      "source": "process:3.0",
+      "destination": "actor:Member / Applicant",
+      "name": "Own personal details"
+    },
+    {
+      "process": "3.0",
+      "source": "process:3.0",
+      "destination": "store:D0",
+      "name": "New member / staff account"
+    },
+    {
+      "process": "3.0",
+      "source": "process:3.0",
+      "destination": "store:D1",
+      "name": "Own name / account provisioning"
+    },
+    {
+      "process": "3.0",
+      "source": "store:D1",
+      "destination": "process:3.0",
+      "name": "Own / permitted account"
+    },
+    {
+      "process": "3.0",
+      "source": "process:3.0",
+      "destination": "store:D3",
+      "name": "Own edits / membership operations"
+    },
+    {
+      "process": "3.0",
+      "source": "store:D3",
+      "destination": "process:3.0",
+      "name": "Own record / limited lookup"
+    },
+    {
+      "process": "3.0",
+      "source": "process:3.0",
+      "destination": "store:D8",
+      "name": "Renewal / plan-change event"
+    },
+    {
+      "process": "3.0",
+      "source": "process:3.0",
+      "destination": "store:D6",
+      "name": "Membership transaction"
+    },
+    {
+      "process": "3.0",
+      "source": "process:3.0",
+      "destination": "store:D7",
+      "name": "Membership charge"
+    },
+    {
+      "process": "3.0",
+      "source": "process:3.0",
+      "destination": "store:D9",
+      "name": "Operator change event"
+    },
+    {
+      "process": "4.0",
+      "source": "actor:Member / Applicant",
+      "destination": "process:4.0",
+      "name": "Renewal request"
+    },
+    {
+      "process": "4.0",
+      "source": "process:4.0",
+      "destination": "actor:Member / Applicant",
+      "name": "Own renewal status"
+    },
+    {
+      "process": "4.0",
+      "source": "actor:Administrator",
+      "destination": "process:4.0",
+      "name": "Renewal decision"
+    },
+    {
+      "process": "4.0",
+      "source": "process:4.0",
+      "destination": "actor:Administrator",
+      "name": "Pending request / result"
+    },
+    {
+      "process": "4.0",
+      "source": "actor:Authorized Staff",
+      "destination": "process:4.0",
+      "name": "Renewal decision"
+    },
+    {
+      "process": "4.0",
+      "source": "process:4.0",
+      "destination": "actor:Authorized Staff",
+      "name": "Limited request / result"
+    },
+    {
+      "process": "4.0",
+      "source": "process:4.0",
+      "destination": "store:D2",
+      "name": "Renewal / review status"
+    },
+    {
+      "process": "4.0",
+      "source": "store:D2",
+      "destination": "process:4.0",
+      "name": "Renewal request"
+    },
+    {
+      "process": "4.0",
+      "source": "process:4.0",
+      "destination": "store:D3",
+      "name": "Renewed membership"
+    },
+    {
+      "process": "4.0",
+      "source": "store:D3",
+      "destination": "process:4.0",
+      "name": "Current dates and status"
+    },
+    {
+      "process": "4.0",
+      "source": "process:4.0",
+      "destination": "store:D8",
+      "name": "Renewal event"
+    },
+    {
+      "process": "4.0",
+      "source": "process:4.0",
+      "destination": "store:D6",
+      "name": "Membership transaction"
+    },
+    {
+      "process": "4.0",
+      "source": "process:4.0",
+      "destination": "store:D7",
+      "name": "Membership charge"
+    },
+    {
+      "process": "4.0",
+      "source": "process:4.0",
+      "destination": "store:D9",
+      "name": "Review / renewal event"
+    },
+    {
+      "process": "5.0",
+      "source": "actor:Administrator",
+      "destination": "process:5.0",
+      "name": "QR; visit query; pairing controls"
+    },
+    {
+      "process": "5.0",
+      "source": "process:5.0",
+      "destination": "actor:Administrator",
+      "name": "Visits; pairing / scan results"
+    },
+    {
+      "process": "5.0",
+      "source": "actor:Authorized Staff",
+      "destination": "process:5.0",
+      "name": "QR / permitted visit query"
+    },
+    {
+      "process": "5.0",
+      "source": "process:5.0",
+      "destination": "actor:Authorized Staff",
+      "name": "Permitted visits / scan result"
+    },
+    {
+      "process": "5.0",
+      "source": "actor:Member / Applicant",
+      "destination": "process:5.0",
+      "name": "Own attendance query"
+    },
+    {
+      "process": "5.0",
+      "source": "process:5.0",
+      "destination": "actor:Member / Applicant",
+      "name": "Own visit history"
+    },
+    {
+      "process": "5.0",
+      "source": "store:D3",
+      "destination": "process:5.0",
+      "name": "Member and status"
+    },
+    {
+      "process": "5.0",
+      "source": "process:5.0",
+      "destination": "store:D4",
+      "name": "Visit and operator timestamps"
+    },
+    {
+      "process": "5.0",
+      "source": "store:D4",
+      "destination": "process:5.0",
+      "name": "Open visit"
+    },
+    {
+      "process": "5.0",
+      "source": "process:5.0",
+      "destination": "store:D10",
+      "name": "Admin pairing settings"
+    },
+    {
+      "process": "5.0",
+      "source": "store:D10",
+      "destination": "process:5.0",
+      "name": "Phone-pairing policy"
+    },
+    {
+      "process": "5.0",
+      "source": "process:5.0",
+      "destination": "store:D11",
+      "name": "Paired-device details"
+    },
+    {
+      "process": "5.0",
+      "source": "store:D11",
+      "destination": "process:5.0",
+      "name": "Paired phone authorization"
+    },
+    {
+      "process": "5.0",
+      "source": "process:5.0",
+      "destination": "store:D13",
+      "name": "Processed scan result"
+    },
+    {
+      "process": "5.0",
+      "source": "store:D13",
+      "destination": "process:5.0",
+      "name": "Previous request result"
+    },
+    {
+      "process": "5.0",
+      "source": "process:5.0",
+      "destination": "store:D9",
+      "name": "Attendance event"
+    },
+    {
+      "process": "6.0",
+      "source": "actor:Administrator",
+      "destination": "process:6.0",
+      "name": "Product / stock changes"
+    },
+    {
+      "process": "6.0",
+      "source": "process:6.0",
+      "destination": "actor:Administrator",
+      "name": "Catalog; stock / alerts"
+    },
+    {
+      "process": "6.0",
+      "source": "actor:Authorized Staff",
+      "destination": "process:6.0",
+      "name": "Sales catalog query"
+    },
+    {
+      "process": "6.0",
+      "source": "process:6.0",
+      "destination": "actor:Authorized Staff",
+      "name": "Permitted product catalog"
+    },
+    {
+      "process": "6.0",
+      "source": "actor:Member / Applicant",
+      "destination": "process:6.0",
+      "name": "Active catalog query"
+    },
+    {
+      "process": "6.0",
+      "source": "process:6.0",
+      "destination": "actor:Member / Applicant",
+      "name": "Active product catalog"
+    },
+    {
+      "process": "6.0",
+      "source": "process:6.0",
+      "destination": "store:D5",
+      "name": "Admin product / stock update"
+    },
+    {
+      "process": "6.0",
+      "source": "store:D5",
+      "destination": "process:6.0",
+      "name": "Permitted catalog / stock"
+    },
+    {
+      "process": "6.0",
+      "source": "process:6.0",
+      "destination": "store:D9",
+      "name": "Product mutation event"
+    },
+    {
+      "process": "7.0",
+      "source": "actor:Administrator",
+      "destination": "process:7.0",
+      "name": "Sale details / transaction query"
+    },
+    {
+      "process": "7.0",
+      "source": "process:7.0",
+      "destination": "actor:Administrator",
+      "name": "Transaction / result"
+    },
+    {
+      "process": "7.0",
+      "source": "actor:Authorized Staff",
+      "destination": "process:7.0",
+      "name": "Sale details / own sales query"
+    },
+    {
+      "process": "7.0",
+      "source": "process:7.0",
+      "destination": "actor:Authorized Staff",
+      "name": "Sale result / own sales"
+    },
+    {
+      "process": "7.0",
+      "source": "process:7.0",
+      "destination": "store:D5",
+      "name": "Deducted stock"
+    },
+    {
+      "process": "7.0",
+      "source": "store:D5",
+      "destination": "process:7.0",
+      "name": "Products, units and prices"
+    },
+    {
+      "process": "7.0",
+      "source": "process:7.0",
+      "destination": "store:D6",
+      "name": "Product transaction"
+    },
+    {
+      "process": "7.0",
+      "source": "store:D6",
+      "destination": "process:7.0",
+      "name": "Permitted transaction records"
+    },
+    {
+      "process": "7.0",
+      "source": "process:7.0",
+      "destination": "store:D7",
+      "name": "Item quantities and amounts"
+    },
+    {
+      "process": "7.0",
+      "source": "store:D7",
+      "destination": "process:7.0",
+      "name": "Permitted line items"
+    },
+    {
+      "process": "7.0",
+      "source": "process:7.0",
+      "destination": "store:D9",
+      "name": "Sale event"
+    },
+    {
+      "process": "8.0",
+      "source": "actor:Administrator",
+      "destination": "process:8.0",
+      "name": "Report type / period"
+    },
+    {
+      "process": "8.0",
+      "source": "process:8.0",
+      "destination": "actor:Administrator",
+      "name": "Report preview / export"
+    },
+    {
+      "process": "8.0",
+      "source": "store:D2",
+      "destination": "process:8.0",
+      "name": "Application report records"
+    },
+    {
+      "process": "8.0",
+      "source": "store:D3",
+      "destination": "process:8.0",
+      "name": "Member report records"
+    },
+    {
+      "process": "8.0",
+      "source": "store:D4",
+      "destination": "process:8.0",
+      "name": "Attendance report records"
+    },
+    {
+      "process": "8.0",
+      "source": "store:D5",
+      "destination": "process:8.0",
+      "name": "Product report records"
+    },
+    {
+      "process": "8.0",
+      "source": "store:D6",
+      "destination": "process:8.0",
+      "name": "Sales report records"
+    },
+    {
+      "process": "8.0",
+      "source": "store:D7",
+      "destination": "process:8.0",
+      "name": "Sale item report records"
+    },
+    {
+      "process": "8.0",
+      "source": "store:D8",
+      "destination": "process:8.0",
+      "name": "Membership history records"
+    },
+    {
+      "process": "9.0",
+      "source": "actor:Administrator",
+      "destination": "process:9.0",
+      "name": "Activity filters / page query"
+    },
+    {
+      "process": "9.0",
+      "source": "process:9.0",
+      "destination": "actor:Administrator",
+      "name": "Filtered activity records"
+    },
+    {
+      "process": "9.0",
+      "source": "store:D9",
+      "destination": "process:9.0",
+      "name": "Filtered activity records"
+    }
+  ]
+}

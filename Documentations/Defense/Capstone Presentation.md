@@ -266,3 +266,12 @@ Speaker notes: Consolidated categories include activity events, sales transactio
 - Curved jumps distinguish all 763 detected crossings.
 
 Speaker notes: Labels such as Permitted member data and Member and membership updates summarize detailed payloads at Level 1. Each process uses role-scoped request/result categories. A parent category does not mean every role can perform every included action; original actor permissions and endpoint relationships remain. The routing audit maps every detailed original label to its displayed category. All nine processes, seventeen baseline stores and three actors remain together. Generation, syntax, XML/group coverage and the 108-entry audit passed; the complete browser preview was visually inspected. Zero unrelated collinear overlaps were detected. Final print/adviser review remains pending. This changes the standalone diagram and defense source materials, not Word figures or deployed application/database behavior.
+
+## Complete DFD with local repeated references
+
+- One sheet contains all nine processes in three rows.
+- Nearby store/entity references shorten routes; matching IDs/names identify the same objects.
+- All 108 detailed flows remain; crossings fall from 763 to 74.
+- Every detected crossing has a curved jump; no unrelated collinear overlaps were found.
+
+Speaker notes: This is the user-authorized repeated-reference layout trial. The complete standalone SVG explains that repeated D-numbers/table names and actor names represent the same logical stores/entities. Read processes left to right, then top to bottom. The nine processes, seventeen unique baseline stores and three unique entities remain. Exact original source/destination/payload triples were independently compared against the preceding audit and all 108 match. The generator, syntax and XML checks passed; a browser-rendered first-process detail was visually inspected. The previous shared-routing version is preserved as 03-dfd-shared-routing-comparison.svg under _Sources. Current generator is build-dfd-local-references.mjs. Full print-size legibility and adviser acceptance of repeated references remain pending. Word figures and deployed application/database behavior are unchanged.
