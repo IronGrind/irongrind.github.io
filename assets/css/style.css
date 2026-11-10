@@ -408,7 +408,14 @@ label:has(input[name="wiPlan"]:checked) {
 .qr-camera-modal { text-align: center; }
 .qr-camera-modal > h3 { justify-content: center; }
 .qr-camera-modal > label { display: block; margin: 14px 0 6px; color: #d6dae2; font-size: 0.85rem; text-align: left; }
-.qr-camera-modal > input { display: block; width: 100%; padding: 12px 14px; background: #101010; border: 1px solid #393939; border-radius: 10px; color: #f1f3f7; font: inherit; }
+.qr-camera-modal .password-visibility-wrapper { display: block; width: 100%; min-width: 0; }
+.qr-camera-modal > input,
+.qr-camera-modal .password-visibility-wrapper > input { display: block; box-sizing: border-box; width: 100%; min-width: 0; min-height: 46px; padding: 12px 50px 12px 14px; background: #101010; border: 1px solid #393939; border-radius: 10px; color: #f1f3f7; font: inherit; outline: none; }
+.qr-camera-modal .password-visibility-wrapper > input:focus { border-color: #b54a51; outline: none; box-shadow: 0 0 0 3px rgba(152,21,30,.12); }
+.qr-camera-modal .password-visibility-wrapper .toggle-password { right: 6px; width: 38px; height: 38px; color: #697386; opacity: .9; }
+.qr-camera-modal .password-visibility-wrapper .toggle-password:hover { color: #354156; background: rgba(100,112,132,.1); }
+.qr-camera-modal .modal-actions { align-items: center; gap: 12px; margin-top: 18px; }
+.qr-camera-modal .modal-actions > button { min-height: 42px; }
 .qr-reader-frame { position: relative; width: 100%; max-width: 420px; margin: 0 auto; overflow: hidden; border: 1px solid #393939; border-radius: 16px; background: #05070a; }
 .qr-reader { width: 100%; overflow: hidden; background: #05070a; }
 .qr-reader video { border-radius: 14px; object-fit: cover; }
@@ -1660,6 +1667,7 @@ html[data-dashboard-theme="light"] body.admin-dashboard .paired-phone-meta stron
 html[data-dashboard-theme="light"] body.admin-dashboard .sale-total-preview strong,
 html[data-dashboard-theme="light"] body.admin-dashboard .member-detail-field strong { color: #243044 !important; }
 html[data-dashboard-theme="light"] body.admin-dashboard .qr-camera-modal > input,
+html[data-dashboard-theme="light"] body.admin-dashboard .qr-camera-modal .password-visibility-wrapper > input,
 html[data-dashboard-theme="light"] body.admin-dashboard .attendance-date-filter input,
 html[data-dashboard-theme="light"] body.admin-dashboard .walkin-date-filter input {
     color: #202a3a !important; background: #fff !important; border-color: #bdc8d6 !important; color-scheme: light;
@@ -2202,7 +2210,7 @@ html[data-dashboard-theme="light"] body.dashboard-body :is(
     .report-export-controls input, .report-export-controls select,
     .membership-sales-period-controls input, .membership-sales-period-controls select,
     .sales-product-filter select, .attendance-date-filter input,
-    .walkin-date-filter input, .qr-camera-modal > input,
+    .walkin-date-filter input, .qr-camera-modal > input, .qr-camera-modal .password-visibility-wrapper > input,
     .password-input-group input, .membership-controls .search input,
     .form-group input, .form-group select, .form-group textarea
 ) {
