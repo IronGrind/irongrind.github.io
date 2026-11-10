@@ -1,3 +1,3 @@
-﻿Chapter 3: four-column dictionary with 201 descriptions and declared types; 27 FK targets/actions, five individually unique fields, approval composite UQ, identity generation and composite PK verified; public ERD landscape section retained.
+﻿Chapter 3: four-column dictionary with 201 descriptions and declared types; 27 FK targets/actions, five individually unique fields, approval composite UQ, identity generation and composite PK verified; simplified public-schema ERD omitted and administrator security-schema supplement retained as Figure 5.
 Chapter 3: one complete nine-process Level 1 DFD and security supplement captions verified; 12 public and 6 private dictionary tables, 201 fields, and 23 total tables verified. Security supplements retain nine main functions and distinguish live acceptance tests from deployment output.
 Chapter 3: XML opens; no unexpected body/data-row bold, stale approval wording, garbled punctuation, or missing figure links detected.

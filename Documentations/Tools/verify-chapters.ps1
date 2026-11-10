@@ -8,7 +8,7 @@ foreach($chapter in $Chapters){
  $zip=[IO.Compression.ZipFile]::OpenRead($chapterPath)
  try{
   $reader=[IO.StreamReader]::new($zip.GetEntry('word/document.xml').Open());[xml]$doc=$reader.ReadToEnd();$reader.Dispose()
-  $ns=[Xml.XmlNamespaceManager]::new($doc.NameTable);$ns.AddNamespace('w','http://schemas.openxmlformats.org/wordprocessingml/2006/main');$ns.AddNamespace('a','http://schemas.openxmlformats.org/drawingml/2006/main');$ns.AddNamespace('r','http://schemas.openxmlformats.org/officeDocument/2006/relationships')
+  $ns=[Xml.XmlNamespaceManager]::new($doc.NameTable);$ns.AddNamespace('w','http://schemas.openxmlformats.org/wordprocessingml/2006/main');$ns.AddNamespace('a','http://schemas.openxmlformats.org/drawingml/2006/main');$ns.AddNamespace('r','http://schemas.openxmlformats.org/officeDocument/2006/relationships');$ns.AddNamespace('wp','http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing')
   $all=(@($doc.SelectNodes('//w:p',$ns)|ForEach-Object {($_.SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join ''})) -join ' '
   if($all -match 'Only administrators review online|do not grant staff permission to review online|sent to the Admin for review|awaits administrator review|two private supporting tables'){throw "Chapter $chapter contains an outdated permission or schema statement."}
   $garbled=[string][char]0xE2+[char]0x20AC
@@ -67,12 +67,10 @@ foreach($chapter in $Chapters){
    $columns=0;foreach($table in $dictionary){$columns+=$table.SelectNodes('w:tr',$ns).Count-1}
    if($columns -ne 201){throw "Expected 201 documented fields, found $columns"}
    if(([regex]::Matches($all,'The eighteen application-owned tables comprise')).Count -ne 1){throw 'Duplicate or missing schema-count explanation.'}
-   if(-not $all.Contains('Figure 5. Public-Schema Entity Relationship Diagram') -or -not $all.Contains('all twelve public tables and their eighteen foreign-key relationships')){throw 'Chapter 3 is missing the twelve-table public-schema ERD scope.'}
-   $erdHeading=@($doc.SelectNodes('//w:body/w:p',$ns)|Where-Object {(($_.SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim() -eq 'Entity Relationship Diagram'})
-   if($erdHeading.Count -ne 1){throw 'Expected one ERD section heading.'};$erdImages=0;$erdNode=$erdHeading[0].NextSibling
-   while($erdNode -and ((($erdNode.SelectNodes('.//w:t',$ns)|ForEach-Object InnerText)-join '').Trim() -notmatch '^Figure 5\.')){if($erdNode.SelectSingleNode('.//a:blip',$ns)){$erdImages++};$erdNode=$erdNode.NextSibling}
-   if($erdImages -ne 1 -or -not $erdNode){throw 'Expected one complete ERD image before its caption.'}
-   if(-not $erdHeading[0].PreviousSibling.SelectSingleNode('w:bookmarkStart[@w:name="_PublicERDSection"]',$ns) -or $erdNode.SelectSingleNode('w:pPr/w:sectPr/w:pgSz',$ns).GetAttribute('orient',$ns.LookupNamespace('w')) -ne 'landscape' -or $erdNode.SelectSingleNode('w:pPr/w:keepNext',$ns)){throw 'Public ERD is not isolated in its landscape figure section.'}
+   if($all.Contains('Figure 5. Public-Schema Entity Relationship Diagram') -or $all.Contains('public-schema ERD in Figure 5')){throw 'The simplified public-schema ERD should not appear in the paper.'}
+   if(-not $all.Contains('Figure 5. Administrator Security Schema Supplement')){throw 'The administrator security-schema supplement was not retained as Figure 5.'}
+   $securitySchemaImage=@($doc.SelectNodes('//wp:docPr',$ns)|Where-Object {$_.GetAttribute('name') -eq 'Figure 5. Administrator Security Schema Supplement'})
+   if($securitySchemaImage.Count -ne 1){throw 'Expected one administrator security-schema figure in Chapter 3.'}
    $schema=Get-Content -Raw -LiteralPath (Join-Path (Split-Path $PSScriptRoot -Parent) 'Chapter 3 Diagrams/schema-visualizer.json')|ConvertFrom-Json
    $order=@('public.profiles','public.members','public.membership_applications','public.attendance','public.products','public.sales','public.sale_items','public.membership_history','public.activity_logs','public.mobile_attendance_pairing_policy','public.mobile_attendance_scan_sessions','public.mobile_attendance_scan_events','private.attendance_scan_requests','private.admin_login_attempts','private.account_sessions','private.admin_login_approvals','private.admin_trusted_devices','private.admin_device_sessions')
    $verifiedFKs=0;$verifiedUnique=0
@@ -106,7 +104,7 @@ foreach($chapter in $Chapters){
    if(([regex]::Matches($all,'Figure 3a\. Complete Level 1 DFD - All Nine Processes')).Count -ne 1){throw 'Chapter 3 must contain exactly one complete Level 1 DFD caption.'}
    foreach($letter in 'c','d','e','f','g','h','i','j'){if($all.Contains("Figure 3$letter. Level 1 DFD - Process")){throw "Obsolete split DFD caption remains: Figure 3$letter."}}
    foreach($phrase in @('No new application table or column is introduced','Current-device approval and push notifications are not included in this increment','complete fifteen-table, 174-field','All fifteen application tables and twenty-one foreign keys')){if($all.Contains($phrase)){throw "Superseded security documentation: $phrase"}}
-   $results.Add('Chapter 3: four-column dictionary with 201 descriptions and declared types; 27 FK targets/actions, five individually unique fields, approval composite UQ, identity generation and composite PK verified; public ERD landscape section retained.')
+   $results.Add('Chapter 3: four-column dictionary with 201 descriptions and declared types; 27 FK targets/actions, five individually unique fields, approval composite UQ, identity generation and composite PK verified; simplified public-schema ERD omitted and administrator security-schema supplement retained as Figure 5.')
    $results.Add('Chapter 3: one complete nine-process Level 1 DFD and security supplement captions verified; 12 public and 6 private dictionary tables, 201 fields, and 23 total tables verified. Security supplements retain nine main functions and distinguish live acceptance tests from deployment output.')
   }
   $results.Add("Chapter ${chapter}: XML opens; no unexpected body/data-row bold, stale approval wording, garbled punctuation, or missing figure links detected.")
