@@ -268,3 +268,7 @@ A screenshot showed the Store password field overlapping its submit button. The 
 ### Activity Logs role filter
 
 The Activity Logs panel now includes an Account type selector for all users, members, staff and administrators. It filters the existing `activity_logs.actor_role` column alongside the account-name, category, action and date filters, preserving server-side pagination and the existing RLS-protected query. Dropdown/date changes apply immediately; account-name typing is debounced. The redundant Apply filters button was removed; Reset filters remains. No schema change is needed. Source inspection and `git diff --check` passed; browser validation and website deployment remain pending.
+
+### Scanner pairing across operator sign-in
+
+User-supplied phone screenshots showed “Saved pairing found” before operator sign-in and “Phone not paired” afterward. The pairing token is held in browser storage scoped to the browser profile and site origin; it is not bound to the physical phone alone. The cause of the reported transition is not confirmed. The scanner now snapshots any locally saved pairing before password/MFA requests, uses that snapshot after sign-in, validates it with Supabase, and persists it again only after validation succeeds. Invalid/expired pairings still clear and require a new pairing. The scanner script URL and service-worker shell cache version were bumped. Source inspection and `git diff --check` are local checks; actual phone/PWA validation and website deployment remain pending.

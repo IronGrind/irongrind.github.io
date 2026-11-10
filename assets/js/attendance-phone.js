@@ -16,6 +16,9 @@ function requirePhoneOperator() {
 }
 async function signInPhoneOperator(event) {
     event.preventDefault();
+    // Hold the pairing found on page load through password/MFA network requests.
+    // Browser storage can be unavailable or cleared while sign-in is in progress.
+    const pairingAtSignIn = readPhonePairing();
     const button = document.getElementById('phoneOperatorSignIn');
     button.disabled = true;
     try {
@@ -55,7 +58,7 @@ async function signInPhoneOperator(event) {
         document.getElementById('phoneOperatorIdentity').hidden = false;
         document.getElementById('phoneOperatorName').textContent = 'Operator: ' + phoneOperator.name;
         setPhoneCameraButton(false);
-        const pairing = readPhonePairing();
+        const pairing = pairingAtSignIn || readPhonePairing();
         if (pairing) await startPhoneMemberScanner(pairing.sessionId, pairing.token, false);
         else setPhoneAttendanceStatus('Phone not paired. You need to pair this phone before scanning attendance. Tap Open camera and scan the pairing QR from the administrator’s Attendance → Phone Camera page. Pairing lasts 30 days.');
     } catch (error) { setPhoneAttendanceStatus(error.message || 'Could not sign in.', true); }
@@ -445,6 +448,7 @@ async function startPhoneMemberScanner(sessionId, token, openCamera = true) {
             : 'Phone not paired. The previous pairing expired or was removed. You need to pair again: scan a fresh QR from the administrator’s Attendance → Phone Camera page.');
         return;
     }
+    savePhonePairing(sessionId, token, true, readPhonePairing()?.expiresAt || '');
     const { error: deviceError, deviceLabel } = await registerPhoneAttendanceDevice(sessionId, token);
     if (deviceError) {
         if (/already assigned to another phone/i.test(deviceError.message || '')) {

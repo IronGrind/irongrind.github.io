@@ -82,6 +82,8 @@ The administrator account menu also has a local update showing the registered br
 
 Store unlock UI follow-up: fixed flex sizing for the password-visibility wrapper so the password field no longer intrudes into the Open Store button. Source inspection passed; browser visual validation and website deployment remain pending.
 
+Scanner follow-up: screenshots showed a pairing recognized before sign-in but missing afterward. Pairing credentials are browser-profile and origin storage, not physical-device identity. The exact cause is unconfirmed. The local scanner now holds a pairing snapshot through password/MFA requests, server-validates it after sign-in, and saves it again after validation. Expired/revoked pairings still require pairing again. Real phone/PWA validation and website deployment remain pending.
+
 ## Slide 11 — Inventory and sales
 - Stock quantity, stock unit and selling price are displayed separately
 - Pounds/ounces convert to base units before comparison or deduction
