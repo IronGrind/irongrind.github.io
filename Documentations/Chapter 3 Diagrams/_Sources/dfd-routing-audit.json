@@ -1,0 +1,660 @@
+{
+  "processes": 9,
+  "stores": 17,
+  "entities": 3,
+  "representedFlows": 108,
+  "connectorGroups": 52,
+  "crossings": 763,
+  "bridges": 763,
+  "overlaps": 0,
+  "flowMapping": [
+    {
+      "source": "actor:Member / Applicant",
+      "destination": "process:1.0",
+      "originalName": "Credentials / session",
+      "displayName": "Sign-in details"
+    },
+    {
+      "source": "process:1.0",
+      "destination": "actor:Member / Applicant",
+      "originalName": "Own access result",
+      "displayName": "Role-specific access results"
+    },
+    {
+      "source": "actor:Administrator",
+      "destination": "process:1.0",
+      "originalName": "Credentials / session",
+      "displayName": "Sign-in details"
+    },
+    {
+      "source": "process:1.0",
+      "destination": "actor:Administrator",
+      "originalName": "Administrator access",
+      "displayName": "Role-specific access results"
+    },
+    {
+      "source": "actor:Authorized Staff",
+      "destination": "process:1.0",
+      "originalName": "Credentials / session",
+      "displayName": "Sign-in details"
+    },
+    {
+      "source": "process:1.0",
+      "destination": "actor:Authorized Staff",
+      "originalName": "Staff access",
+      "displayName": "Role-specific access results"
+    },
+    {
+      "source": "process:1.0",
+      "destination": "store:D0",
+      "originalName": "Account / session data",
+      "displayName": "Account and session updates"
+    },
+    {
+      "source": "store:D0",
+      "destination": "process:1.0",
+      "originalName": "Identity / session state",
+      "displayName": "Identity and session data"
+    },
+    {
+      "source": "store:D1",
+      "destination": "process:1.0",
+      "originalName": "Role and active status",
+      "displayName": "Permitted profile and role data"
+    },
+    {
+      "source": "process:1.0",
+      "destination": "store:D14",
+      "originalName": "Selected session scope",
+      "displayName": "Session scope updates"
+    },
+    {
+      "source": "store:D14",
+      "destination": "process:1.0",
+      "originalName": "Session ownership",
+      "displayName": "Session ownership data"
+    },
+    {
+      "source": "process:1.0",
+      "destination": "store:D9",
+      "originalName": "Session event",
+      "displayName": "Activity events"
+    },
+    {
+      "source": "process:1.0",
+      "destination": "store:D15",
+      "originalName": "Approval request / decision",
+      "displayName": "Login approval updates"
+    },
+    {
+      "source": "store:D15",
+      "destination": "process:1.0",
+      "originalName": "Pending approval details",
+      "displayName": "Pending login approvals"
+    },
+    {
+      "source": "process:1.0",
+      "destination": "store:D16",
+      "originalName": "Trusted public key",
+      "displayName": "Trusted public keys"
+    },
+    {
+      "source": "store:D16",
+      "destination": "process:1.0",
+      "originalName": "Trust state",
+      "displayName": "Device trust state"
+    },
+    {
+      "source": "process:1.0",
+      "destination": "store:D17",
+      "originalName": "Challenge / authorization",
+      "displayName": "Device session updates"
+    },
+    {
+      "source": "store:D17",
+      "destination": "process:1.0",
+      "originalName": "Authorized session boundary",
+      "displayName": "Authorized device sessions"
+    },
+    {
+      "source": "actor:Member / Applicant",
+      "destination": "process:2.0",
+      "originalName": "Registration details",
+      "displayName": "Application submissions and decisions"
+    },
+    {
+      "source": "process:2.0",
+      "destination": "actor:Member / Applicant",
+      "originalName": "Application status",
+      "displayName": "Role-scoped application results"
+    },
+    {
+      "source": "actor:Administrator",
+      "destination": "process:2.0",
+      "originalName": "Review decision",
+      "displayName": "Application submissions and decisions"
+    },
+    {
+      "source": "process:2.0",
+      "destination": "actor:Administrator",
+      "originalName": "Application / result",
+      "displayName": "Role-scoped application results"
+    },
+    {
+      "source": "actor:Authorized Staff",
+      "destination": "process:2.0",
+      "originalName": "Review decision",
+      "displayName": "Application submissions and decisions"
+    },
+    {
+      "source": "process:2.0",
+      "destination": "actor:Authorized Staff",
+      "originalName": "Limited request / result",
+      "displayName": "Role-scoped application results"
+    },
+    {
+      "source": "process:2.0",
+      "destination": "store:D2",
+      "originalName": "Application / review status",
+      "displayName": "Application and renewal updates"
+    },
+    {
+      "source": "store:D2",
+      "destination": "process:2.0",
+      "originalName": "Submitted application",
+      "displayName": "Application and renewal records"
+    },
+    {
+      "source": "process:2.0",
+      "destination": "store:D3",
+      "originalName": "Approved member record",
+      "displayName": "Member and membership updates"
+    },
+    {
+      "source": "store:D1",
+      "destination": "process:2.0",
+      "originalName": "Reviewer role / active status",
+      "displayName": "Permitted profile and role data"
+    },
+    {
+      "source": "process:2.0",
+      "destination": "store:D6",
+      "originalName": "Membership transaction",
+      "displayName": "Sales transactions"
+    },
+    {
+      "source": "process:2.0",
+      "destination": "store:D7",
+      "originalName": "Membership charge",
+      "displayName": "Sale-item records"
+    },
+    {
+      "source": "process:2.0",
+      "destination": "store:D9",
+      "originalName": "Review / change event",
+      "displayName": "Activity events"
+    },
+    {
+      "source": "actor:Administrator",
+      "destination": "process:3.0",
+      "originalName": "Profile query; counter / staff controls",
+      "displayName": "Permitted account operations"
+    },
+    {
+      "source": "process:3.0",
+      "destination": "actor:Administrator",
+      "originalName": "Read-only profile; operation result",
+      "displayName": "Role-scoped account results"
+    },
+    {
+      "source": "actor:Authorized Staff",
+      "destination": "process:3.0",
+      "originalName": "Walk-in; renewal; plan change",
+      "displayName": "Permitted account operations"
+    },
+    {
+      "source": "process:3.0",
+      "destination": "actor:Authorized Staff",
+      "originalName": "Limited lookup; counter result",
+      "displayName": "Role-scoped account results"
+    },
+    {
+      "source": "actor:Member / Applicant",
+      "destination": "process:3.0",
+      "originalName": "Own profile query / changes",
+      "displayName": "Permitted account operations"
+    },
+    {
+      "source": "process:3.0",
+      "destination": "actor:Member / Applicant",
+      "originalName": "Own personal details",
+      "displayName": "Role-scoped account results"
+    },
+    {
+      "source": "process:3.0",
+      "destination": "store:D0",
+      "originalName": "New member / staff account",
+      "displayName": "Account and session updates"
+    },
+    {
+      "source": "process:3.0",
+      "destination": "store:D1",
+      "originalName": "Own name / account provisioning",
+      "displayName": "Profile updates"
+    },
+    {
+      "source": "store:D1",
+      "destination": "process:3.0",
+      "originalName": "Own / permitted account",
+      "displayName": "Permitted profile and role data"
+    },
+    {
+      "source": "process:3.0",
+      "destination": "store:D3",
+      "originalName": "Own edits / membership operations",
+      "displayName": "Member and membership updates"
+    },
+    {
+      "source": "store:D3",
+      "destination": "process:3.0",
+      "originalName": "Own record / limited lookup",
+      "displayName": "Permitted member data"
+    },
+    {
+      "source": "process:3.0",
+      "destination": "store:D8",
+      "originalName": "Renewal / plan-change event",
+      "displayName": "Membership change events"
+    },
+    {
+      "source": "process:3.0",
+      "destination": "store:D6",
+      "originalName": "Membership transaction",
+      "displayName": "Sales transactions"
+    },
+    {
+      "source": "process:3.0",
+      "destination": "store:D7",
+      "originalName": "Membership charge",
+      "displayName": "Sale-item records"
+    },
+    {
+      "source": "process:3.0",
+      "destination": "store:D9",
+      "originalName": "Operator change event",
+      "displayName": "Activity events"
+    },
+    {
+      "source": "actor:Member / Applicant",
+      "destination": "process:4.0",
+      "originalName": "Renewal request",
+      "displayName": "Renewal submissions and decisions"
+    },
+    {
+      "source": "process:4.0",
+      "destination": "actor:Member / Applicant",
+      "originalName": "Own renewal status",
+      "displayName": "Role-scoped renewal results"
+    },
+    {
+      "source": "actor:Administrator",
+      "destination": "process:4.0",
+      "originalName": "Renewal decision",
+      "displayName": "Renewal submissions and decisions"
+    },
+    {
+      "source": "process:4.0",
+      "destination": "actor:Administrator",
+      "originalName": "Pending request / result",
+      "displayName": "Role-scoped renewal results"
+    },
+    {
+      "source": "actor:Authorized Staff",
+      "destination": "process:4.0",
+      "originalName": "Renewal decision",
+      "displayName": "Renewal submissions and decisions"
+    },
+    {
+      "source": "process:4.0",
+      "destination": "actor:Authorized Staff",
+      "originalName": "Limited request / result",
+      "displayName": "Role-scoped renewal results"
+    },
+    {
+      "source": "process:4.0",
+      "destination": "store:D2",
+      "originalName": "Renewal / review status",
+      "displayName": "Application and renewal updates"
+    },
+    {
+      "source": "store:D2",
+      "destination": "process:4.0",
+      "originalName": "Renewal request",
+      "displayName": "Application and renewal records"
+    },
+    {
+      "source": "process:4.0",
+      "destination": "store:D3",
+      "originalName": "Renewed membership",
+      "displayName": "Member and membership updates"
+    },
+    {
+      "source": "store:D3",
+      "destination": "process:4.0",
+      "originalName": "Current dates and status",
+      "displayName": "Permitted member data"
+    },
+    {
+      "source": "process:4.0",
+      "destination": "store:D8",
+      "originalName": "Renewal event",
+      "displayName": "Membership change events"
+    },
+    {
+      "source": "process:4.0",
+      "destination": "store:D6",
+      "originalName": "Membership transaction",
+      "displayName": "Sales transactions"
+    },
+    {
+      "source": "process:4.0",
+      "destination": "store:D7",
+      "originalName": "Membership charge",
+      "displayName": "Sale-item records"
+    },
+    {
+      "source": "process:4.0",
+      "destination": "store:D9",
+      "originalName": "Review / renewal event",
+      "displayName": "Activity events"
+    },
+    {
+      "source": "actor:Administrator",
+      "destination": "process:5.0",
+      "originalName": "QR; visit query; pairing controls",
+      "displayName": "Permitted attendance requests"
+    },
+    {
+      "source": "process:5.0",
+      "destination": "actor:Administrator",
+      "originalName": "Visits; pairing / scan results",
+      "displayName": "Role-scoped attendance results"
+    },
+    {
+      "source": "actor:Authorized Staff",
+      "destination": "process:5.0",
+      "originalName": "QR / permitted visit query",
+      "displayName": "Permitted attendance requests"
+    },
+    {
+      "source": "process:5.0",
+      "destination": "actor:Authorized Staff",
+      "originalName": "Permitted visits / scan result",
+      "displayName": "Role-scoped attendance results"
+    },
+    {
+      "source": "actor:Member / Applicant",
+      "destination": "process:5.0",
+      "originalName": "Own attendance query",
+      "displayName": "Permitted attendance requests"
+    },
+    {
+      "source": "process:5.0",
+      "destination": "actor:Member / Applicant",
+      "originalName": "Own visit history",
+      "displayName": "Role-scoped attendance results"
+    },
+    {
+      "source": "store:D3",
+      "destination": "process:5.0",
+      "originalName": "Member and status",
+      "displayName": "Permitted member data"
+    },
+    {
+      "source": "process:5.0",
+      "destination": "store:D4",
+      "originalName": "Visit and operator timestamps",
+      "displayName": "Attendance updates"
+    },
+    {
+      "source": "store:D4",
+      "destination": "process:5.0",
+      "originalName": "Open visit",
+      "displayName": "Permitted attendance records"
+    },
+    {
+      "source": "process:5.0",
+      "destination": "store:D10",
+      "originalName": "Admin pairing settings",
+      "displayName": "Pairing policy updates"
+    },
+    {
+      "source": "store:D10",
+      "destination": "process:5.0",
+      "originalName": "Phone-pairing policy",
+      "displayName": "Pairing policy data"
+    },
+    {
+      "source": "process:5.0",
+      "destination": "store:D11",
+      "originalName": "Paired-device details",
+      "displayName": "Paired-device updates"
+    },
+    {
+      "source": "store:D11",
+      "destination": "process:5.0",
+      "originalName": "Paired phone authorization",
+      "displayName": "Paired-device authorization"
+    },
+    {
+      "source": "process:5.0",
+      "destination": "store:D13",
+      "originalName": "Processed scan result",
+      "displayName": "Scan results"
+    },
+    {
+      "source": "store:D13",
+      "destination": "process:5.0",
+      "originalName": "Previous request result",
+      "displayName": "Previous scan results"
+    },
+    {
+      "source": "process:5.0",
+      "destination": "store:D9",
+      "originalName": "Attendance event",
+      "displayName": "Activity events"
+    },
+    {
+      "source": "actor:Administrator",
+      "destination": "process:6.0",
+      "originalName": "Product / stock changes",
+      "displayName": "Permitted product requests"
+    },
+    {
+      "source": "process:6.0",
+      "destination": "actor:Administrator",
+      "originalName": "Catalog; stock / alerts",
+      "displayName": "Role-scoped product results"
+    },
+    {
+      "source": "actor:Authorized Staff",
+      "destination": "process:6.0",
+      "originalName": "Sales catalog query",
+      "displayName": "Permitted product requests"
+    },
+    {
+      "source": "process:6.0",
+      "destination": "actor:Authorized Staff",
+      "originalName": "Permitted product catalog",
+      "displayName": "Role-scoped product results"
+    },
+    {
+      "source": "actor:Member / Applicant",
+      "destination": "process:6.0",
+      "originalName": "Active catalog query",
+      "displayName": "Permitted product requests"
+    },
+    {
+      "source": "process:6.0",
+      "destination": "actor:Member / Applicant",
+      "originalName": "Active product catalog",
+      "displayName": "Role-scoped product results"
+    },
+    {
+      "source": "process:6.0",
+      "destination": "store:D5",
+      "originalName": "Admin product / stock update",
+      "displayName": "Product and stock updates"
+    },
+    {
+      "source": "store:D5",
+      "destination": "process:6.0",
+      "originalName": "Permitted catalog / stock",
+      "displayName": "Permitted product data"
+    },
+    {
+      "source": "process:6.0",
+      "destination": "store:D9",
+      "originalName": "Product mutation event",
+      "displayName": "Activity events"
+    },
+    {
+      "source": "actor:Administrator",
+      "destination": "process:7.0",
+      "originalName": "Sale details / transaction query",
+      "displayName": "Permitted sales requests"
+    },
+    {
+      "source": "process:7.0",
+      "destination": "actor:Administrator",
+      "originalName": "Transaction / result",
+      "displayName": "Role-scoped sales results"
+    },
+    {
+      "source": "actor:Authorized Staff",
+      "destination": "process:7.0",
+      "originalName": "Sale details / own sales query",
+      "displayName": "Permitted sales requests"
+    },
+    {
+      "source": "process:7.0",
+      "destination": "actor:Authorized Staff",
+      "originalName": "Sale result / own sales",
+      "displayName": "Role-scoped sales results"
+    },
+    {
+      "source": "process:7.0",
+      "destination": "store:D5",
+      "originalName": "Deducted stock",
+      "displayName": "Product and stock updates"
+    },
+    {
+      "source": "store:D5",
+      "destination": "process:7.0",
+      "originalName": "Products, units and prices",
+      "displayName": "Permitted product data"
+    },
+    {
+      "source": "process:7.0",
+      "destination": "store:D6",
+      "originalName": "Product transaction",
+      "displayName": "Sales transactions"
+    },
+    {
+      "source": "store:D6",
+      "destination": "process:7.0",
+      "originalName": "Permitted transaction records",
+      "displayName": "Permitted sales records"
+    },
+    {
+      "source": "process:7.0",
+      "destination": "store:D7",
+      "originalName": "Item quantities and amounts",
+      "displayName": "Sale-item records"
+    },
+    {
+      "source": "store:D7",
+      "destination": "process:7.0",
+      "originalName": "Permitted line items",
+      "displayName": "Permitted sale-item data"
+    },
+    {
+      "source": "process:7.0",
+      "destination": "store:D9",
+      "originalName": "Sale event",
+      "displayName": "Activity events"
+    },
+    {
+      "source": "actor:Administrator",
+      "destination": "process:8.0",
+      "originalName": "Report type / period",
+      "displayName": "Report criteria"
+    },
+    {
+      "source": "process:8.0",
+      "destination": "actor:Administrator",
+      "originalName": "Report preview / export",
+      "displayName": "Report preview and export"
+    },
+    {
+      "source": "store:D2",
+      "destination": "process:8.0",
+      "originalName": "Application report records",
+      "displayName": "Application and renewal records"
+    },
+    {
+      "source": "store:D3",
+      "destination": "process:8.0",
+      "originalName": "Member report records",
+      "displayName": "Permitted member data"
+    },
+    {
+      "source": "store:D4",
+      "destination": "process:8.0",
+      "originalName": "Attendance report records",
+      "displayName": "Permitted attendance records"
+    },
+    {
+      "source": "store:D5",
+      "destination": "process:8.0",
+      "originalName": "Product report records",
+      "displayName": "Permitted product data"
+    },
+    {
+      "source": "store:D6",
+      "destination": "process:8.0",
+      "originalName": "Sales report records",
+      "displayName": "Permitted sales records"
+    },
+    {
+      "source": "store:D7",
+      "destination": "process:8.0",
+      "originalName": "Sale item report records",
+      "displayName": "Permitted sale-item data"
+    },
+    {
+      "source": "store:D8",
+      "destination": "process:8.0",
+      "originalName": "Membership history records",
+      "displayName": "Membership history data"
+    },
+    {
+      "source": "actor:Administrator",
+      "destination": "process:9.0",
+      "originalName": "Activity filters / page query",
+      "displayName": "Activity filters"
+    },
+    {
+      "source": "process:9.0",
+      "destination": "actor:Administrator",
+      "originalName": "Filtered activity records",
+      "displayName": "Filtered activity results"
+    },
+    {
+      "source": "store:D9",
+      "destination": "process:9.0",
+      "originalName": "Filtered activity records",
+      "displayName": "Filtered activity records"
+    }
+  ]
+}

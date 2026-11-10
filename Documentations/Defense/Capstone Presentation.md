@@ -231,3 +231,38 @@ Speaker notes: This replaces the standalone SVG panel layout to match how connec
 - 68 represented source connections now use 60 connector groups.
 
 Speaker notes: Five compatible same-name groups were merged while retaining every connection represented by the prior simplified view. Different names and destinations remain separate. A shared arrow describes only its stated receiving direction; omitted reverse flows remain in the source model. Generation, syntax and XML checks passed; full visual/adviser review remains pending. Word figures and deployed application/database behavior are unchanged.
+
+## Complete DFD on one sheet
+
+- All nine processes, three shared entities and seventeen source-model stores remain together.
+- All 108 documented directional flows are represented in 98 connector groups.
+- Wider routing lanes and spaced ports reduce congestion; compatible same-name flows share trunks.
+
+Speaker notes: This supersedes the simplified one-arrow-per-pair view and restores return directions required for complete source-model coverage. Individual arrows remain single-headed. Dots mark branch joins and gaps distinguish unrelated crossings. The SVG uses a 6600-by-5300 canvas for zoom or large-sheet printing. Generation checks all nonempty input/output entries; syntax and XML parsing passed, and a complete browser preview was visually inspected. Complete means the documented DFD baseline; newer member-device stores are not added by this layout change. Word replacement, adviser review and final print sizing remain pending. No application/database deployment occurred.
+
+## DFD line jumps and spacing
+
+- Connection-span routing reduces crossing events by about 18 percent.
+- Curved bridge jumps mark all 1,172 detected crossings.
+- Geometry checks find zero unrelated collinear overlaps.
+- The single-sheet diagram retains all 108 documented directional flows.
+
+Speaker notes: Curved jumps mean lines cross without joining; filled dots identify actual shared-flow branches. The SVG includes real curve geometry, so these jumps do not depend on an editor setting. All nine processes, three entities, seventeen source-model stores and 98 connector groups remain. Generation, syntax, XML parsing and a dense browser-rendered detail were checked; a final small continuity adjustment extends bridge tails. The routing audit is saved as dfd-routing-audit.json. This does not establish final label-collision, print-size or panel acceptance; review the vector at the intended display/print size. No Word replacement, application/schema change or deployment occurred.
+
+## DFD fewer shared data lines
+
+- Equivalent categories share a trunk with source or destination branches.
+- All 108 documented connections remain in 86 connector groups, reduced from 98.
+- Crossings fall to 1,006; every detected crossing retains a jump.
+- Zero unrelated collinear overlaps in the geometry audit.
+
+Speaker notes: Consolidated categories include activity events, sales transactions, sale-item records, membership changes, role/active-status reads and role-specific access results. Each original endpoint and original label is recorded beside its displayed category in the routing audit. Branches retain the original receiving arrows; role-specific results are routed to the appropriate role and do not imply shared user sessions or identical permissions. Source-model flow coverage, generator syntax and SVG XML/group counts passed; a browser-rendered detail was inspected. Full print/adviser review remains pending. This is a standalone diagram/documentation update; Word figures and deployed application/database behavior are unchanged.
+
+## Simpler complete Level 1 DFD
+
+- Broad data categories reduce connector groups from 86 to 52.
+- All 108 source connections remain represented through branches.
+- Reads and writes retain separate directions and individual stores.
+- Curved jumps distinguish all 763 detected crossings.
+
+Speaker notes: Labels such as Permitted member data and Member and membership updates summarize detailed payloads at Level 1. Each process uses role-scoped request/result categories. A parent category does not mean every role can perform every included action; original actor permissions and endpoint relationships remain. The routing audit maps every detailed original label to its displayed category. All nine processes, seventeen baseline stores and three actors remain together. Generation, syntax, XML/group coverage and the 108-entry audit passed; the complete browser preview was visually inspected. Zero unrelated collinear overlaps were detected. Final print/adviser review remains pending. This changes the standalone diagram and defense source materials, not Word figures or deployed application/database behavior.
