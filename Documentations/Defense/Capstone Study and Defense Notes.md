@@ -6,6 +6,10 @@ Maintained baseline: November 10, 2026 (Asia/Manila). Read alongside the source 
 
 The latest local increment supersedes the earlier session-only MFA/approval descriptions below. One browser-held, non-extractable ECDSA signing key is trusted per administrator account for 30 days. Repeat password logins from that browser prove possession of the key without another code. A new browser requires current-device approval plus a fresh authenticator verification before an atomic trust transfer; the previous device stays trusted if verification fails or is cancelled. Ordinary logout preserves trust; Log out and forget this device revokes it. When no eligible live approver exists, fresh MFA is the recovery route. A trusted page heartbeat is considered recent for two minutes; hidden/offline pages may stop heartbeat updates. This is browser/origin trust, not hardware attestation or a permanent login token. User-supplied CLI output confirms migration 20261110000004 and the admin-device-trust Edge Function deployed successfully. Matching website revision and physical/browser validation remain unverified.
 
+## Local member-device approval increment
+
+The November 10 local revision adds browser-key registration for approved members without adding an authenticator factor or code to member sign-in. The first eligible sign-in enrolls that browser. A later sign-in from another browser waits for approval from the currently trusted member dashboard; the dashboard displays “Is this you?” with the reported browser and Approve/Deny. Approval transfers the single member dashboard session. Denial or the two-minute request expiry keeps the new browser out. If there is no active trusted member session to approve, password sign-in can enroll a replacement; this is not a second factor. The new migration, Edge Function and matching website are local and not deployed or hosted-device tested. See `Member Device Approval Guide.md` for the exact rollout and limitations.
+
 ## 1. Explain the project in one minute
 
 IronGrind: A Fitness Gym Membership and Operations Management System is a web application for Iron Grind Fitness Gym. It brings membership applications, membership periods, attendance, inventory, sales, reports and operational accountability into one system. Applicants submit requests; authorized staff or administrators verify the transaction at the gym before approval. Members access their own information. Operators record attendance and in-person transactions. The administrator supervises inventory, staff accounts, reports and logs. Supabase supplies authentication and PostgreSQL services, while the web client is hosted through Vercel. A phone attendance scanner can be installed as a Progressive Web App (PWA).
@@ -27,6 +31,7 @@ The available conversation, repository history, migration files, review evidence
 | November 10 interface work | Split admin member names, inventory thresholds/unit displays, staff catalog form sections and name/Gmail attendance lookup | Current source and focused tests; not proof of production rollout |
 | November 10 audit extension | Server-audited rejected login attempts, password changes/recovery requests, sessions and export requests | Security migration, authentication functions and audit tests; deployment/configuration required |
 | Current admin MFA increment | Authenticator enrollment/challenge plus server-side administrator access enforcement | `admin-mfa.js`, MFA migration and tests; hosted setup and physical authenticator validation pending |
+| November 10 local member-device increment | Member browser signing-key enrollment and “Is this you?” transfer approval from the current member device; no member TOTP | Migration 20261110000006, `member-device-trust`, member login and dashboard notification code; deployment and hosted browser validation pending |
 
 Use `git log --date=short` for actual repository commit dates. A commit date is evidence of a recorded revision, not automatically the date of an interview, implementation start or production launch.
 
@@ -52,7 +57,7 @@ Use `git log --date=short` for actual repository commit dates. A commit date is 
 
 | Function | Member / applicant | Staff | Administrator |
 |---|---|---|---|
-| User Login | Email/password | Assigned username/password | Password plus trusted-browser proof, or approval and fresh TOTP for a browser transfer after deployment |
+| User Login | Email/password plus member-browser proof; current member device approves a new browser when available | Assigned username/password | Password plus trusted-browser proof, or approval and fresh TOTP for administrator browser transfer |
 | Membership Application | Submit own request / view own state | Review authorized pending requests | Review authorized pending requests |
 | User Management | Update own permitted information | Counter creation and limited operational lookup | Read member profiles; administer staff access; no member-personal-detail edit |
 | Renewals | Request renewal | Direct renewal and active-plan changes | Membership operations and request review |
@@ -101,6 +106,8 @@ Package declarations, CDN script URLs and test imports describe different depend
 | Module | What it does / key reasoning |
 |---|---|
 | auth.js | Parses email versus assigned username; obtains an Auth session through the applicable login function; now runs administrator device approval or the MFA fallback before session activation; verifies profile/membership state and routes to a role-specific page |
+| member-device-approval.js | Stores the member browser's non-extractable signing key, waits for current-device approval on a new browser, and polls the member dashboard for approval requests; no authenticator UI |
+| member-device-trust Edge Function | Validates the member Auth session and ECDSA proof before service-only registration/approval completion calls |
 | admin-device-trust.js | Stores a non-extractable browser signing key in IndexedDB; gets and signs session-bound challenges; coordinates trusted reuse, approval, fresh MFA and server registration; forget control revokes server trust |
 | admin-device-approval.js | Requests session-bound approval, polls the waiting state, displays Approve/Deny on an active administrator device and cancels pending requests before the authenticator fallback |
 | admin-mfa.js | Queries own MFA requirement, checks assurance level, lists factors, enrolls TOTP if needed and presents QR/manual key; challengeAndVerify must succeed before resolving the login gate; cancelling rejects login |
@@ -124,7 +131,7 @@ Important code patterns: `async/await` orders dependent work; `try/catch/finally
 
 ## 7. Database explanation
 
-The documented physical schema contains twelve public tables and three private supporting tables. `auth.users` is a managed reference, not another public application table. The deployed MFA baseline added functions/guards without an application table. The subsequent local device-approval increment adds private.admin_login_approvals; its schema supplement distinguishes that pending migration from the deployed baseline.
+The documented deployed schema baseline has twelve public and six private application tables. `auth.users` is a managed reference, not another public application table. The member-device increment is a separate local target: it adds three private tables, bringing the source-defined target to 21 application-owned tables (12 public, 9 private), 225 fields and 33 declared foreign keys. This is a source/migration count, not a live deployed-schema introspection; the migration is not reported deployed.
 
 | Table | Purpose / scenario |
 |---|---|
@@ -215,6 +222,7 @@ Context: one system boundary and external actors, no internal tables. DFD: nine 
 - Login and phone scanner call MFA before activation; CSS/dialog and service-worker shell updated.
 - Security-event deployment prerequisites from the previous increment remain applicable.
 - Latest local trust increment: migration 20261110000004_admin_trusted_device.sql adds two private supporting tables and a trusted-device snapshot column on approval requests. It adds the admin-device-trust Edge Function; this function must deploy with the migration and matching website. See Trusted Administrator Device Guide.md.
+- Latest local member-device increment: migration 20261110000006_member_device_approval.sql adds three private tables (24 fields and six declared foreign keys), server-side member session activation enforcement, and approval RPCs. `member-device-trust` verifies browser signatures. The matching member login/dashboard code and `supabase/config.toml` function entry are local. No SQL push, Edge Function deployment, website deployment or hosted/browser validation is claimed. Follow `Member Device Approval Guide.md` before deployment.
 - Existing project title and nine functions retained.
 - Latest local increment: private.admin_login_approvals and request/list/decision/cancel RPCs implement in-website approval. The user supplied successful linked push output for 20261110000003_admin_device_approval.sql. Matching client deployment and two-device approval/denial tests still require confirmation. See Device Approval Schema Supplement.md and the approval deployment section of the guide.
 - Old Word prototype captures remain historical until refreshed. Chapter MFA addendum records the revision; no revised screenshot is fabricated.

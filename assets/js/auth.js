@@ -218,6 +218,14 @@ async function handleLogin(event) {
         const { data, error } = result;
 
         if (!error && data.user) {
+            if (loginMode === 'member') {
+                try { await window.requireMemberDeviceApproval(supabaseClient); }
+                catch (deviceError) {
+                    await supabaseClient.auth.signOut({ scope: 'local' });
+                    showError(deviceError.message || 'Member device approval is required.');
+                    return;
+                }
+            }
             try { await window.requireAdminMfa(supabaseClient); }
             catch (mfaError) {
                 await supabaseClient.auth.signOut({ scope: 'local' });

@@ -29,6 +29,7 @@ window.ironGrindSupabase = window.supabase.createClient(
 // A guard verifies the server-issued session; page reloads never reclaim a session.
 window.stopAccountSessionMonitor = client => {
     window.stopAdminApprovalNotifications?.(client);
+    window.stopMemberDeviceApprovalNotifications?.(client);
     client?.__stopAccountSessionMonitor?.();
 };
 window.monitorAccountSession = (client, onReplaced) => {
@@ -57,6 +58,7 @@ window.monitorAccountSession = (client, onReplaced) => {
             if (['ADMIN_MFA_REQUIRED', 'ADMIN_APPROVAL_REQUIRED', 'ADMIN_DEVICE_REQUIRED'].includes(error?.message)) {
                 stopping = true; client.__accountSessionMonitor = false;
                 window.stopAdminApprovalNotifications?.(client);
+                window.stopMemberDeviceApprovalNotifications?.(client);
                 await client.auth.signOut({ scope: 'local' });
                 await onReplaced(error.message === 'ADMIN_DEVICE_REQUIRED' ? 'device' : 'expired'); return;
             }
@@ -64,6 +66,7 @@ window.monitorAccountSession = (client, onReplaced) => {
                 stopping = true;
                 client.__accountSessionMonitor = false;
                 window.stopAdminApprovalNotifications?.(client);
+                window.stopMemberDeviceApprovalNotifications?.(client);
                 await client.auth.signOut({ scope: 'local' });
                 await onReplaced();
             }

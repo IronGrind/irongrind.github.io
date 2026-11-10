@@ -12,6 +12,8 @@
     Object.assign(actions, {
         admin_device_registered: 'Administrator device registered', admin_device_forgotten: 'Administrator device trust revoked',
         admin_login_approval_requested: 'Device sign-in requested', admin_login_approved: 'Device sign-in approved', admin_login_denied: 'Device sign-in denied',
+        member_device_registered: 'Member browser registered', member_device_approval_requested: 'Member browser approval requested',
+        member_device_approved: 'Member browser approved', member_device_denied: 'Member browser denied',
         username_sign_in_failed: 'Username sign-in failed', member_sign_in_failed: 'Member sign-in failed',
         sign_in_throttled: 'Sign-in rate limit reached', password_updated: 'Password updated',
         password_reset_requested: 'Password reset requested', member_signed_in: 'Member signed in',

@@ -990,6 +990,7 @@ function populateMemberSettings(member) {
 
 // ===== INIT =====
 document.addEventListener('DOMContentLoaded', () => {
+    window.startMemberDeviceApprovalNotifications?.(window.ironGrindSupabase);
     document.addEventListener('click', event => {
         if (!event.target.closest('.member-account-menu-wrap')) closeMemberAccountMenu();
     });
