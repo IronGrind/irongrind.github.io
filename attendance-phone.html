@@ -17,18 +17,26 @@
         [hidden] { display: none !important; }
         body.phone-scanner-page { margin: 0; font-size: 16px; line-height: 1.45; }
         button, input { font: inherit; }
-        body.phone-scanner-page { min-height: 100svh; display: grid; place-items: start center; padding: max(16px, env(safe-area-inset-top)) 16px max(20px, env(safe-area-inset-bottom)); background: #090909; color: #f3f4f6; }
-        .phone-scanner-card { width: min(100%, 480px); margin: 0 auto; padding: clamp(16px, 4vw, 22px); background: #15171c; border: 1px solid #343943; border-radius: 18px; }
-        .phone-scanner-card h1 { margin: 0 0 6px; font-size: clamp(1.2rem, 4.5vw, 1.4rem); }
-        .phone-scanner-card > p { color: #aeb7c7; line-height: 1.45; font-size: .92rem; }
-        #phoneQrReader { position: relative; width: 100%; height: clamp(240px, 42svh, 520px); overflow: hidden; border-radius: 14px; background: #050505; }
+        body.phone-scanner-page { min-height: 100svh; display: grid; place-items: center; padding: max(22px, env(safe-area-inset-top)) 16px max(24px, env(safe-area-inset-bottom)); background: radial-gradient(ellipse at 50% -10%, rgba(120,0,0,.25), transparent 55%), #090a0c; color: #e8edf5; }
+        .phone-scanner-card { position:relative; width: min(100%, 480px); margin: 0 auto; padding: clamp(20px, 5vw, 28px); background: rgba(17,22,31,.88); border: 1px solid rgba(190,201,220,.14); border-radius: 24px; box-shadow: 0 24px 80px rgba(0,0,0,.38); backdrop-filter: blur(14px); }
+        .phone-brand { display:flex; align-items:center; gap:12px; margin-bottom:24px; padding-bottom:18px; border-bottom:1px solid rgba(190,201,220,.12); }
+        .phone-brand img { width:44px; height:44px; border-radius:13px; object-fit:cover; background:#090909; }
+        .phone-brand strong { display:block; font-size:.94rem; letter-spacing:.01em; }
+        .phone-brand span { display:block; margin-top:3px; color:#8b95a9; font-size:.75rem; }
+        .phone-scanner-heading { display:flex; align-items:center; gap:12px; margin-bottom:6px; }
+        .phone-scanner-heading > i { display:grid; place-items:center; width:42px; height:42px; border-radius:13px; color:#ff7777; background:rgba(120,0,0,.2); border:1px solid rgba(180,35,35,.3); }
+        .phone-scanner-card h1 { margin: 0; font-size: clamp(1.2rem, 4.5vw, 1.45rem); letter-spacing:-.03em; }
+        .phone-scanner-card > p { color: #aeb7c7; line-height: 1.5; font-size: .92rem; }
+        #phoneQrReader { position: relative; width: 100%; height: clamp(240px, 42svh, 520px); margin-top:16px; overflow: hidden; border:1px solid rgba(190,201,220,.16); border-radius: 18px; background: #050505; }
         #phoneQrReader video { display: block; width: 100% !important; height: 100% !important; object-fit: cover; }
-        #phoneQrStatus { min-height: 46px; padding: 12px; border-radius: 10px; background: #202020; color: #f3f4f6; line-height: 1.4; font-size: .94rem !important; }
+        #phoneQrStatus { min-height: 48px; margin-top:16px; padding: 13px 14px; border:1px solid rgba(190,201,220,.12); border-radius: 13px; background: rgba(255,255,255,.035); color: #d7deea; line-height: 1.45; font-size: .9rem !important; }
         #phoneQrStatus.error { color: #fecaca; background: rgba(127,29,29,.35); }
         body:not(.phone-operator-authenticated) #phoneQrReader,
         body:not(.phone-operator-authenticated) #phoneCameraButton,
         body:not(.phone-operator-authenticated) #phoneNextScanButton { display: none !important; }
-        .phone-scanner-button, .phone-install-button, .phone-next-scan-button, .phone-model-save-button { width: 100%; min-height: 48px; margin-top: 10px; padding: 12px 14px; border: 0; border-radius: 10px; background: #760000; color: white; font-size: 1rem; font-weight: 700; }
+        .phone-scanner-button, .phone-install-button, .phone-next-scan-button, .phone-model-save-button { width: 100%; min-height: 50px; margin-top: 10px; padding: 12px 14px; border: 1px solid #8e171d; border-radius: 13px; background: linear-gradient(135deg,#92151d,#69070c); color: white; font-size: .96rem; font-weight: 700; box-shadow:0 7px 20px rgba(105,7,12,.2); cursor:pointer; transition:transform .15s ease, filter .15s ease; }
+        .phone-scanner-button:hover, .phone-model-save-button:hover { filter:brightness(1.12); transform:translateY(-1px); }
+        .phone-scanner-card button:focus-visible, .phone-scanner-card input:focus-visible { outline:2px solid #ff7777; outline-offset:3px; }
         .phone-scanner-button:disabled, .phone-next-scan-button:disabled, .phone-model-save-button:disabled { opacity: .65; }
         .phone-install-button { display: none; border: 1px solid #565656; background: #222; }
         .phone-next-scan-button { border: 1px solid #565656; background: #222; }
@@ -42,7 +50,8 @@
 </head>
 <body class="phone-scanner-page">
     <main class="phone-scanner-card">
-        <h1><i class="fas fa-qrcode"></i> Attendance Scanner</h1>
+        <div class="phone-brand"><img src="assets/images/iron-grind-mark-192.png" alt=""><div><strong>IRON GRIND</strong><span>FITNESS GYM</span></div></div>
+        <div class="phone-scanner-heading"><i class="fas fa-qrcode" aria-hidden="true"></i><h1>Attendance Scanner</h1></div>
         <p id="phoneScannerInstructions">Sign in to scan member QR codes for attendance.</p>
         <form id="phoneOperatorSetup" class="phone-model-setup" onsubmit="signInPhoneOperator(event)">
 <label for="phoneOperatorId">Username</label><input id="phoneOperatorId" autocomplete="username" required maxlength="30" autocapitalize="none" spellcheck="false" placeholder="Enter your username">

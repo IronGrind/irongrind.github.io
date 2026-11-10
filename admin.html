@@ -31,8 +31,9 @@
                     <div class="member-account-menu-label">Appearance</div>
                     <button id="adminThemeLight" class="member-account-menu-item admin-theme-option" type="button" role="menuitemradio" data-dashboard-theme-option="light" aria-checked="false" onclick="setAdminTheme('light')"><i class="fas fa-sun" aria-hidden="true"></i><span>Light mode</span><i class="fas fa-check admin-theme-check" aria-hidden="true"></i></button>
                     <button id="adminThemeDark" class="member-account-menu-item admin-theme-option" type="button" role="menuitemradio" data-dashboard-theme-option="dark" aria-checked="true" onclick="setAdminTheme('dark')"><i class="fas fa-moon" aria-hidden="true"></i><span>Dark mode</span><i class="fas fa-check admin-theme-check" aria-hidden="true"></i></button>
-                    <button class="member-account-menu-item member-account-menu-logout" type="button" role="menuitem" onclick="closeAdminAccountMenu(); logout()"><i class="fas fa-sign-out-alt" aria-hidden="true"></i><span>Logout</span></button>
-                    <button class="member-account-menu-item member-account-menu-logout" type="button" role="menuitem" onclick="closeAdminAccountMenu(); logout(true)"><i class="fas fa-shield-halved" aria-hidden="true"></i><span>Log out and forget this device</span></button>
+                    <div class="admin-trusted-device-info" id="adminTrustedDeviceInfo" role="status" aria-live="polite"><i class="fas fa-shield-halved" aria-hidden="true"></i><span><strong>Trusted browser</strong><small>Loading registered device…</small></span></div>
+                    <button class="member-account-menu-item member-account-menu-logout" type="button" role="menuitem" onclick="closeAdminAccountMenu(); logout()"><i class="fas fa-sign-out-alt" aria-hidden="true"></i><span><strong>Log out</strong><small>Keep this browser trusted</small></span></button>
+                    <button class="member-account-menu-item member-account-menu-logout admin-forget-device-action" type="button" role="menuitem" onclick="closeAdminAccountMenu(); logout(true)"><i class="fas fa-shield-halved" aria-hidden="true"></i><span><strong>Forget this trusted browser</strong><small>Revoke trust and log out. Verification is required next time.</small></span></button>
                 </div>
             </div>
         </div>

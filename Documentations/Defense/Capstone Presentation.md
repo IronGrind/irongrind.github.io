@@ -76,7 +76,7 @@ Speaker notes: Use a prepared test member. Explain that unique identifiers preve
 - Paired phones and pending QRs share the configured capacity
 - Direct scanner link supports reinstalling without a new QR when saved pairing survives
 
-Speaker notes: Show the scanner install button and distinguish member QR from pairing QR. If browser storage is cleared or a pairing expires, recovery/new pairing may be necessary. Cached shell does not provide offline attendance writes. Administrator scanner operators also complete MFA after deployment.
+Speaker notes: Show the scanner install button and distinguish member QR from pairing QR. The scanner page has a local visual refresh aligned with the app's dark navy and red styling; it does not change its workflow. If browser storage is cleared or a pairing expires, recovery/new pairing may be necessary. Cached shell does not provide offline attendance writes. Administrator scanner operators also complete MFA after deployment. The updated page has not been device/browser reviewed or deployed, so capture replacement slides only after that review.
 
 ## Slide 11 — Inventory and sales
 - Stock quantity, stock unit and selling price are displayed separately
