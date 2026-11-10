@@ -67,3 +67,28 @@ window.forgetAdminDevice = async client => {
     const { error } = await client.rpc('forget_admin_trusted_device');
     if (error) throw new Error('Could not revoke device trust. Check your connection and try again.');
 };
+
+window.loadAdminTrustedDeviceInfo = async () => {
+    const target = document.getElementById('adminTrustedDeviceInfo');
+    if (!target || !window.ironGrindSupabase) return;
+    const detail = target.querySelector('small');
+    if (detail) detail.textContent = 'Checking registered browser…';
+    let result;
+    try { result = await window.ironGrindSupabase.rpc('get_admin_trusted_device'); }
+    catch { result = { error: true }; }
+    const { data, error } = result;
+    if (!target.isConnected) return;
+    if (error) {
+        if (detail) detail.textContent = 'Device details are unavailable.';
+        return;
+    }
+    const device = Array.isArray(data) ? data[0] : data;
+    if (!device?.device_label) {
+        if (detail) detail.textContent = 'No trusted browser is currently registered.';
+        return;
+    }
+    const ua = device.device_label;
+    const browser = /Edg\//.test(ua) ? 'Microsoft Edge' : /Firefox\//.test(ua) ? 'Firefox' : /Chrome\//.test(ua) ? 'Chrome' : /Safari\//.test(ua) ? 'Safari' : 'Browser';
+    const platform = /Android/i.test(ua) ? 'Android' : /iPhone|iPad|iPod/i.test(ua) ? 'iPhone/iPad' : /Windows/i.test(ua) ? 'Windows' : /Macintosh|Mac OS/i.test(ua) ? 'Mac' : /Linux/i.test(ua) ? 'Linux' : 'device';
+    if (detail) detail.textContent = `${browser} on ${platform} · registered browser`;
+};

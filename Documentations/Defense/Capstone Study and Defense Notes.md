@@ -256,3 +256,7 @@ Validation: manuscript package/relationship checks, exact field/type/key/nullabi
 ### Scanner interface refresh
 
 The phone attendance scanner page now follows the app's dark navy and Iron Grind red visual language, with a branded header, clearer scan heading, updated status panel and controls, and visible keyboard focus. This presentation-only change is in `attendance-phone.html`; authentication, pairing, camera, scan submission and offline behavior are unchanged. Review was limited to source inspection; no device/browser validation was performed. The revision is local and has not been deployed. Refresh scanner screenshots after browser review.
+
+### Trusted browser display and logout wording
+
+The administrator account menu now displays the registered browser's browser/platform name and clarifies that ordinary logout preserves trust while “Forget this trusted browser” revokes trust and signs out. The label is derived from the user-agent string already stored at device registration. A new authenticated, admin/session-scoped read function exposes only the label and registration/expiry metadata; the private key is never exposed. A new migration, `20261110000005_admin_trusted_device_label.sql`, is required before the menu can show registered-device details. The dashboard UI, function and migration are local and not deployed; visual and live database validation remain pending. A missing/expired registration is displayed as no trusted browser.

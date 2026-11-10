@@ -389,7 +389,9 @@ function toggleAdminAccountMenu(event) {
     event?.stopPropagation();
     const menu = document.getElementById('adminAccountMenu');
     if (!menu) return;
-    setAdminAccountMenu(menu.hidden);
+    const opening = menu.hidden;
+    setAdminAccountMenu(opening);
+    if (opening) window.loadAdminTrustedDeviceInfo?.();
 }
 function closeAdminAccountMenu() { setAdminAccountMenu(false); }
 function openActivityLogsFromMenu() {
@@ -446,7 +448,7 @@ function switchApprovalType(type) {
 }
 
 function logout(forgetDevice = false) {
-    askConfirmation(forgetDevice ? 'Forget this device and log out?' : 'Log out?', forgetDevice ? 'This revokes administrator trust and ends this device’s dashboard and scanner sessions. Your next sign-in will require verification.' : 'Are you sure you want to log out?', 'Log out', async () => {
+    askConfirmation(forgetDevice ? 'Forget this trusted browser?' : 'Log out?', forgetDevice ? 'This revokes this browser’s administrator trust and ends its dashboard and scanner sessions. You will need to verify again the next time you sign in here.' : 'Your browser will stay trusted, so the next sign-in here will not need a new verification code.', forgetDevice ? 'Forget browser and log out' : 'Log out', async () => {
         window.stopAccountSessionMonitor?.(window.ironGrindSupabase);
         if (forgetDevice) {
             try { await window.forgetAdminDevice(window.ironGrindSupabase); }
