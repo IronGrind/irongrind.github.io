@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 const dir=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../Chapter 3 Diagrams');
+const ganttOnly=process.argv.includes('--gantt-only');
 const esc=s=>s.replaceAll('&','&amp;').replaceAll('<','&lt;');
 const text=(x,y,lines,size=28,anchor='start',bold=false)=>`<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="Arial" font-size="${size}" font-weight="${bold?700:400}" fill="#182536">${lines.map((s,i)=>`<tspan x="${x}" dy="${i?size*1.25:0}">${esc(s)}</tspan>`).join('')}</text>`;
 const box=(x,y,w,h,lines)=>`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="#d8e4f5" stroke="#40546c" stroke-width="3"/>${text(x+w/2,y+h/2-(lines.length-1)*19+10,lines,36,'middle',true)}`;
@@ -23,14 +24,14 @@ context+='<path d="M 2040 785 H 1510 V 620 H 1460" stroke="#40546c" stroke-width
 context+=text(1515,700,['Credentials; counter membership details;','request-review decisions; QR / attendance','identifiers; product-sale entries'],27);
 context+=text(1515,970,['Access and task results; permitted attendance','records and the operator\'s own product sales'],27);
 context+=text(35,1030,['Walk-in customers transact through an operator. Payments are recorded at the gym.','The system boundary includes authentication and storage; this view shows external information exchange.'],26);
-fs.writeFileSync(path.join(dir,'02-context.svg'),svg(2400,1100,context));
+if(!ganttOnly) fs.writeFileSync(path.join(dir,'02-context.svg'),svg(2400,1100,context));
 
 // Preserve all ten original date ranges and activity descriptions; omit tiny day-by-day ticks.
 const rows=[
- ['Planning','Aug 24–28','Plan the project and identify a potential client.'],
- ['Planning','Sep 2–4','Conduct the first client interview and identify needs and desired features.'],
- ['Planning','Sep 7–11','Present the draft proposal and gather client feedback.'],
- ['Planning','Sep 14–18','Confirm requirements with the client and finalize development features.'],
+ ['Planning','Aug 24–28','Identifying a potential client.'],
+ ['Planning','Sep 2–4','First client interview and identification of problems and needs.'],
+ ['Planning','Sep 7–11','Project conceptualization.'],
+ ['Planning','Sep 14–18','Drafting the proposal.'],
  ['Design','Sep 21–25','Create the initial interface design and start Chapter 1.'],
  ['Design','Sep 28–Oct 2','Develop prototypes and provide progress updates to the client.'],
  ['Design','Oct 5–9','Improve the interface using client feedback.'],
@@ -49,12 +50,12 @@ gantt+=text(45,1650,['Original planning evidence; later revisions and deployment
 fs.writeFileSync(path.join(dir,'33-gantt.svg'),svg(2400,1720,gantt));
 
 // Change only the visibility of managed-Auth relationships; preserve their geometry and cardinality.
-for(const name of ['05-gym-erd-editable.svg','05-gym-erd-editable.drawio']){
+for(const name of (ganttOnly?[]:['05-gym-erd-editable.svg','05-gym-erd-editable.drawio'])){
  const file=path.join(dir,name);let source=fs.readFileSync(file,'utf8');
  source=source.replaceAll('#aab2bd','#52657c').replaceAll('#c0c8d4','#52657c');
  fs.writeFileSync(file,source);
 }
-for(const name of ['02-context','05-gym-erd-editable','33-gantt']) {
+for(const name of (ganttOnly?['33-gantt']:['02-context','05-gym-erd-editable','33-gantt'])) {
  const source=fs.readFileSync(path.join(dir,name+'.svg'),'utf8');
  fs.writeFileSync(path.join(dir,'_Sources',name+'-print.html'),'<!doctype html><meta charset="utf-8"><style>html,body{margin:0;overflow:hidden}svg{display:block}</style>'+source);
 }
