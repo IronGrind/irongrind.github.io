@@ -260,9 +260,10 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-product-card:hove
 .staff-member-status.active { background: rgba(37,174,104,.15); color: #65d49a; }
 .staff-member-status.expired, .staff-member-status.inactive { background: rgba(220,60,60,.14); color: #ef8989; }
 .staff-selected-member { display: flex; justify-content: space-between; gap: 10px; margin: 12px 0; padding: 13px 15px; border: 1px solid rgba(45,180,116,.35); border-radius: 12px; background: rgba(37,174,104,.09); color: #e8f4ed; }
+.staff-selected-member[hidden] { display:none !important; }
 .staff-selected-member span { color: #aeb7c7; font-size: .8rem; }
 .staff-member-action-form { align-items: end; }
-.staff-member-action-form .btn-primary { min-height: 48px; }
+.staff-member-action-form .btn-primary { justify-self:start; width:max-content; min-width:190px; min-height:44px; padding:0 18px; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-membership-tabs { border-color: #cbd3df; background: #e4e8ef; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-membership-tab { color: #3e4858; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-membership-tab:hover { background: #d6dde7; color: #202a39; }
@@ -277,7 +278,7 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-status { b
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-selected-member { background: #e5f3eb; border-color: #b7ddc8; color: #233d2d; }
 @media (max-width: 700px) { .staff-catalog-heading { align-items: flex-start; flex-direction: column; gap: 5px; } .staff-plan-choice-wrap { grid-template-columns: 1fr; } .staff-form-section { padding: 15px; } }
 @media (max-width: 650px) { .staff-member-name-grid { grid-template-columns: 1fr; } }
-@media (max-width: 600px) { .staff-membership-tabs { display: grid; grid-template-columns: 1fr; } .staff-membership-tab { justify-content: flex-start; } .staff-member-action-form { grid-template-columns: 1fr; } .staff-selected-member { flex-direction: column; } }
+@media (max-width: 600px) { .staff-membership-tabs { display: grid; grid-template-columns: 1fr; } .staff-membership-tab { justify-content: flex-start; } .staff-member-action-form { grid-template-columns: 1fr; } .staff-member-action-form .btn-primary { grid-column:1; } .staff-selected-member { flex-direction: column; } }
 .staff-member-search { gap: 9px; margin: 18px 0 16px; }
 .staff-member-search > label { color: #d6dce7; font-size: .76rem; font-weight: 750; letter-spacing: .035em; }
 .staff-member-search > div { position: relative; display: flex; align-items: center; gap: 6px; padding: 5px; border: 1px solid #3a404d; border-radius: 15px; background: #101318; box-shadow: inset 0 1px 2px rgba(0,0,0,.22); transition: border-color .18s ease, box-shadow .18s ease, background .18s ease; }

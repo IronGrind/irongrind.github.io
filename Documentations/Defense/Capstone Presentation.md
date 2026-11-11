@@ -511,3 +511,7 @@ Staff inventory view: The live catalog now uses compact responsive rows with pro
 Staff inventory controls: A compact overview shows product-variant availability counts, and category filters let staff focus on all products, supplements or merchandise. These combine with search and the Available only filter. Counts refer to variants, not summed stock units. No inventory or checkout behavior changed; JavaScript syntax and whitespace checks passed. Browser review and deployment remain pending.
 
 Staff inventory filter simplification: Replaced multiple summary tiles/category buttons with a search, one category dropdown, Available only checkbox and inline matching/in-stock count. Filters combine; no stock or checkout behavior changed. JavaScript syntax and whitespace checks passed; browser review and deployment remain pending.
+
+Staff member selection spacing: Hidden member-summary panels now stay hidden until a member is selected, removing an empty bar from renewal and plan-change forms. No membership behavior changed. Whitespace check passed; browser review and deployment remain pending.
+
+Staff membership form refinement: Complete Renewal and Save plan change buttons now use compact content-sized widths and consistent touch sizing. No membership behavior changed. Whitespace check passed; browser review and deployment remain pending.
