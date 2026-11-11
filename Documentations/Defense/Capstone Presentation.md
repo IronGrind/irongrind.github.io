@@ -426,3 +426,25 @@ Speaker notes: The reported lockout followed a refresh. The old scanner kept Aut
 - Ask the admin to inspect the pairing before ending it or issuing another QR.
 
 Speaker notes: The user reported that the admin listed the Reno phone as paired while the phone scanner said it was not paired. The pairing ID/token is saved in browser storage and validated separately against the server; the exact cause on the reported device is unconfirmed. The scanner's missing-local-connection status now explains this distinction and avoids claiming that the server pairing is absent. A truly expired or revoked saved connection still uses the existing re-pair flow. The scanner script URL and service-worker shell advance to v30. No schema or server state changed. Source inspection and whitespace validation only; automated and physical-device checks, frontend deployment, and reproduction remain pending.
+
+## Activity Logs in split view
+
+- At narrow viewport widths, each event uses a readable card layout.
+- Expanded event details span the full card width.
+
+Speaker notes: A user screenshot showed Activity Logs details squeezed into a narrow table column in an IDE split view. The container-based responsive breakpoint did not reliably follow the visible pane, leaving the desktop table active. A viewport breakpoint now switches to two-column event cards through 1024px and one-column cards through 560px; details span the card. The stylesheet cache version was refreshed. No data or schema changed. Source inspection only; browser review, deployment, and production behavior remain unverified.
+
+## Recover when no scanner is in use
+
+- A recorded scanner session does not prove a phone is currently in use.
+- Try Recover inactive session immediately when nobody is using another scanner.
+- The server blocks recovery if the previous scanner recently reported activity.
+
+Speaker notes: A staff sign-in remained waiting although the user reported no other scanner in use. The status reflects a recorded server session, not proof of a person currently signed in. The dialog now offers immediate recovery; the server still requires two minutes without heartbeat and rejects a recent heartbeat. Approval and recovery policy/database behavior are unchanged. Frontend script and service-worker shell advance to recovery guidance/shell v31. No schema change. Source inspection only; physical-device reproduction and deployment remain pending.
+
+## Improve admin toast contrast
+
+- Admin success and error toast messages use readable light text on the dark toast surface.
+- Registration approval and payment behavior are unchanged.
+
+Speaker notes: The user screenshot showed the registration approval success toast with dark text on a dark background. The shared toast rule now sets an explicit light text color so it remains readable when the page uses the light theme. The admin stylesheet cache version was refreshed. No workflow or data changes. Source inspection only; browser verification and deployment remain pending.

@@ -583,3 +583,21 @@ Affected modules: scanner JavaScript and approval dialog, phone HTML and service
 The user reported that the admin listed the Reno phone as paired while that same phone's scanner said it was not paired. Repository code stores the pairing ID/token in browser storage and separately verifies the pairing against the server. The admin's device label and active server record do not prove that the current app/browser still has the matching saved token; the exact cause on the phone has not been confirmed.
 
 The signed-in scanner's missing-local-connection status now explains that the admin may still list an active pairing, asks the operator to reopen the app in the same browser used to pair it, and tells them to have the admin inspect the pairing before ending it or issuing another QR. This prevents the status from asserting that the server pairing is absent or immediately recommending re-pairing. A genuinely invalid or expired saved token still follows the existing re-pair flow. Affected modules: assets/js/attendance-phone.js, attendance-phone.html script version, and attendance-phone-sw.js shell cache v30. No schema, account, credential, authenticator, or pairing records were changed. Validation: source inspection and git diff --check; no automated or physical-device test was run. The revised frontend has not been deployed, and reproduction on the Reno phone remains pending.
+
+## Activity Logs in split-screen layouts - November 11, 2026
+
+A user screenshot showed expanded Activity Logs details squeezed into a very narrow column in an IDE split view. The activity panel used container queries for its compact layout; the visible pane did not reliably trigger those queries, so the table remained in desktop columns.
+
+Added a viewport breakpoint at 1024px that renders each event as a two-column card and makes the Details cell span the full card width. At 560px and below, cards use one column. The admin stylesheet URL now has a fresh cache version. Affected modules: assets/css/style.css and admin.html. No data/schema/workflow changes. Validation: source inspection and git diff --check only; browser/split-view review and deployment remain pending.
+
+## Explain immediate scanner recovery - November 11, 2026
+
+The user tested a staff sign-in and saw it waiting for another scanner even though nobody was using one. This state means an attendance session remains on record; it does not prove another phone is currently being used. The existing server recovery RPC permits takeover only when the previous scanner has reported no activity for at least two minutes, and refuses recovery if its heartbeat is recent.
+
+The sign-in dialog now tells the operator to try Recover inactive session immediately when no other scanner is in use. The server remains the authority: a recent heartbeat keeps the old scanner protected and the UI explains that condition. This is a guidance-only frontend change; approval, recovery, timeout and database behavior are unchanged. Affected modules: scanner-login-approval.js, attendance-phone.html script version, attendance-phone-sw.js shell v31. No schema change. Source inspection and git diff --check only; device repro and frontend deployment remain pending.
+
+## Make admin toast text readable in light theme - November 11, 2026
+
+A user screenshot after approving a registration showed a success toast with a dark background and nearly black text. The toast style set its background but left text color inherited from the light-theme page, reducing contrast.
+
+The shared toast rule now sets an explicit light text color, preserving the dark toast surface and colored success/error border. The admin stylesheet URL receives a new cache version. Affected modules: assets/css/style.css and admin.html. Approval/payment behavior is unchanged; the screenshot indicates the success path completed. Validation: source inspection and git diff --check only; visual browser verification and deployment remain pending.

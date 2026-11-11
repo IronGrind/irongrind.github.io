@@ -524,6 +524,20 @@ label:has(input[name="wiPlan"]:checked) {
 .activity-table th:nth-child(3) { width:20%; }
 .activity-table th:nth-child(5) { width:20%; }
 .activity-table th:nth-child(6) { width:12%; }
+/* Split-screen widths can keep the panel container wider than the visible pane.
+   Use the viewport breakpoint too, so expanded event details get a full row. */
+@media (max-width:1024px) {
+    .activity-table table, .activity-table tbody { display:block; width:100%; }
+    .activity-table thead { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+    .activity-table tbody tr { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px 16px; padding:16px; border-bottom:1px solid rgba(190,201,220,.12); }
+    .activity-table tbody tr:last-child { border-bottom:0; }
+    .activity-table tbody td { display:block; min-width:0; max-width:none; padding:0; border:0; font-size:.82rem; }
+    .activity-table tbody td::before { content:attr(data-label); display:block; margin-bottom:5px; color:#8b95a9; font-size:.65rem; font-weight:600; letter-spacing:.04em; text-transform:uppercase; }
+    .activity-table td[data-label="Details"] { grid-column:1 / -1; }
+}
+@media (max-width:560px) {
+    .activity-table tbody tr { grid-template-columns:minmax(0,1fr); }
+}
 @container activity (max-width:850px) {
     .activity-filters { grid-template-columns:repeat(2,minmax(0,1fr)); }
     .activity-filter-actions { align-self:end; }
@@ -596,7 +610,7 @@ label:has(input[name="wiPlan"]:checked) {
 .onboarding-actions button { min-width: 132px; justify-content: center; }
 
 /* ========== TOAST ========== */
-.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #202020; border: 1px solid #393939; border-left: 4px solid #8b0000; padding: 14px 22px; border-radius: 14px; font-size: 0.9rem; font-weight: 500; z-index: 2000; box-shadow: 0 10px 40px rgba(0,0,0,0.5); max-width: 90%; }
+.toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #202020; color: #f1f3f7; border: 1px solid #393939; border-left: 4px solid #8b0000; padding: 14px 22px; border-radius: 14px; font-size: 0.9rem; font-weight: 500; z-index: 2000; box-shadow: 0 10px 40px rgba(0,0,0,0.5); max-width: 90%; }
 .toast.success { border-left-color: #2ecc71; }
 .toast.error { border-left-color: #8b0000; }
 

@@ -11,7 +11,7 @@ window.waitForScannerLoginApproval = async client => {
         const dialog = document.createElement('dialog');
         dialog.className = 'admin-mfa-dialog';
         dialog.setAttribute('aria-label', 'Scanner sign-in approval');
-        dialog.innerHTML = '<h2>Waiting for your other scanner</h2><p>Keep your first phone open and choose Approve or Deny there. If no scanner is open, wait two minutes, then choose Recover inactive session.</p><p role="status" aria-live="polite">Waiting for approval…</p><button type="button" class="btn-sm" data-action="cancel">Cancel sign-in</button><button type="button" class="btn-primary" data-action="recover">Recover inactive session</button>';
+        dialog.innerHTML = '<h2>Another scanner session is on record</h2><p>If that scanner is open, choose Approve or Deny on it. If nobody is using another scanner, tap Recover inactive session now. The server checks recent activity and will keep a recently active scanner protected.</p><p role="status" aria-live="polite">Waiting for approval or inactive-session recovery…</p><button type="button" class="btn-sm" data-action="cancel">Cancel sign-in</button><button type="button" class="btn-primary" data-action="recover">Recover inactive session</button>';
         document.body.append(dialog);
         let done = false, busy = false;
         const expires = Date.parse(first.data.expires_at);
