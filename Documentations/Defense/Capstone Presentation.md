@@ -489,3 +489,13 @@ Speaker notes: Staff could already search and record attendance after a selectio
 Staff fallback guidance: If a member has no QR or the camera cannot scan it, staff can search by name or Gmail and record attendance from the matching member result. Existing server authorization, membership checks and attendance logic apply. Copy-only follow-up; no schema change. Browser acceptance and deployment remain pending.
 
 Staff attendance UI polish: The attendance area distinguishes QR scanning from name/Gmail fallback with a clear heading and supporting instruction; each matching member retains a Record attendance action. Dark and light theme styles were added for the section headings and divider. No workflow/schema change. Source inspection only; browser review and deployment remain pending.
+
+## Keep prior incomplete visits intact
+
+- A missing checkout from a previous Manila calendar day stays Incomplete.
+- A returning member gets a new check-in; the old record is not closed by that scan.
+- Same-day checkout and existing duplicate, expiry and authorization checks remain.
+
+Speaker notes: The old attendance function checked out any latest open row, even when it was from an earlier day. Migration 20261111000004 limits checkout to an open visit whose check-in is today in Manila; otherwise an eligible return creates a new visit. Migration has been applied to linked project nttsrdassmzvtaamyogi as recorded below; physical attendance acceptance remains pending.
+
+Deployment status update - November 11, 2026: The linked dry-run for nttsrdassmzvtaamyogi listed only migration 20261111000004_preserve_incomplete_attendance.sql, and the linked push reported it applied successfully without an interactive prompt. The database rule is deployed; physical attendance acceptance remains pending.
