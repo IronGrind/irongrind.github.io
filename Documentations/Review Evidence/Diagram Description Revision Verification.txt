@@ -1,0 +1,4 @@
+﻿PASS: Chapter 3 - 11 diagram-description paragraphs updated.
+PASS: Combined Chapters 1-3 - 11 diagram-description paragraphs updated.
+PASS: Prose explains how to read each diagram, distinguishes logical diagrams from authorization enforcement, and separates website administrator authentication from password-based attendance-scanner sessions.
+Backup: C:\Users\mycah\OneDrive\Desktop\CAPSTONE\v1\Documentations\Review Backups\diagram-descriptions-20261111-203030
