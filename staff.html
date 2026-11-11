@@ -5,7 +5,7 @@
 <title>IronGrind - Staff Dashboard</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 <link rel="stylesheet" href="assets/css/style.css?v=20261110-light-phone-prefix">
-<link rel="stylesheet" href="assets/css/staff.css?v=20261110-light-theme-completion">
+<link rel="stylesheet" href="assets/css/staff.css?v=20261111-attendance-methods">
 <script src="assets/js/theme.js?v=20261105-login-toggle"></script>
 </head>
 <body class="dashboard-body staff-dashboard"><div id="page-loader" class="page-loader" aria-label="Loading dashboard" role="status"><div class="loader-content"><img class="loader-full-logo" src="assets/images/iron-grind-logo.jpg" alt="Iron Grind Fitness Gym"><img class="loader-mark" src="assets/images/iron-grind-mark.png" alt=""><div class="loader-brand">Iron<span>Grind</span></div><div class="loader-track"><span></span></div></div></div><div class="app">
@@ -23,11 +23,12 @@
 <div class="staff-view" id="staffAttendanceView"><div class="staff-workspace">
 <section class="panel staff-checkin" aria-labelledby="staffCheckinTitle">
 <div class="panel-header"><h2 id="staffCheckinTitle"><i class="fas fa-qrcode" aria-hidden="true"></i> Check-in / check-out</h2></div>
-<p class="staff-help">Scan a member QR code to check them in. Scan it again when they leave to check them out.</p>
+<p class="staff-help">Choose either option to record a member visit.</p>
+<div class="staff-method-heading"><div><h3>Scan a member QR</h3><p>Use the camera to scan their membership QR.</p></div></div>
 <div class="staff-camera-area"><div class="staff-camera-icon"><i class="fas fa-qrcode" aria-hidden="true"></i></div><button id="startStaffCamera" class="btn-primary" type="button"><i class="fas fa-camera" aria-hidden="true"></i> Scan QR with camera</button></div>
+<div class="staff-method-heading staff-search-intro"><div><h3>No QR or camera issue?</h3><p>Search by member name or Gmail, then record attendance from the matching result.</p></div></div>
 <form id="staffScanForm"><div class="form-group"><label for="staffIdentifier">Member QR, name, or Gmail</label><input id="staffIdentifier" required autocomplete="off" placeholder="Scan QR or search by name / Gmail" aria-controls="staffAttendanceResults"></div><button id="staffAttendanceSubmit" class="btn-primary" type="submit">Find member</button></form>
 <div id="staffAttendanceResults" class="staff-member-results" aria-live="polite"></div>
-<div id="staffAttendanceSelected" class="staff-selected-member" hidden></div>
 <p id="staffStatus" class="staff-status" role="status" aria-live="polite"></p>
 </section>
 <section class="panel staff-history" aria-labelledby="staffHistoryTitle"><div class="panel-header"><h2 id="staffHistoryTitle"><i class="fas fa-clock" aria-hidden="true"></i> Attendance history</h2><button id="refreshStaffAttendance" class="btn-logout" type="button"><i class="fas fa-rotate" aria-hidden="true"></i> Refresh</button></div>
@@ -60,5 +61,5 @@
 <div class="modal-actions"><button id="closeStaffCamera" class="btn-sm" type="button" onclick="closeStaffCameraModal()">Cancel</button></div>
 </div></div></div>
 <script src="assets/js/ui-improvements.js?v=20261108-names-member-email"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/supabase-client.js?v=20261108-remember-identifier"></script><script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script><script src="assets/js/signature.js"></script><script src="assets/js/staff.js?v=20261108-staff-member-name-fields"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="assets/js/supabase-client.js?v=20261108-remember-identifier"></script><script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script><script src="assets/js/signature.js"></script><script src="assets/js/staff.js?v=20261111-attendance-search-action"></script>
 </body></html>

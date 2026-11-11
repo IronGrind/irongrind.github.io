@@ -477,3 +477,15 @@ Theme follow-up: Member notifications use the same shared toast stylesheet; the 
 Inventory toggle follow-up: The earlier adjustment did not remove the visible overlap; the global focus-visible halo extended beyond the eye button. The eye control now sits farther inside the field with a compact focus outline and wider separation from Open Inventory. Admin stylesheet cache version refreshed. Source inspection only; visual browser confirmation and deployment remain pending.
 
 Inventory password toggle correction: The reveal button is disabled only for the Inventory unlock field to eliminate the persistent overlap; other password fields keep their reveal controls. The input and submit button use a direct responsive layout. Store password behavior is unchanged. JavaScript syntax and whitespace checks passed; visual confirmation and deployment remain pending.
+
+## Staff attendance from member search
+
+- Search by name or Gmail and choose Record attendance on the matching member.
+- The existing server flow decides check-in or check-out from the member's latest visit.
+- Attendance retains staff attribution and existing duplicate, expiry and retry protections.
+
+Speaker notes: Staff could already search and record attendance after a selection, but the result row lacked a clear action. Each result now has a visible Record attendance control that calls the existing server attendance RPC using the member UUID. No schema change. JavaScript syntax and whitespace checks passed; automated and hosted/physical acceptance remain pending.
+
+Staff fallback guidance: If a member has no QR or the camera cannot scan it, staff can search by name or Gmail and record attendance from the matching member result. Existing server authorization, membership checks and attendance logic apply. Copy-only follow-up; no schema change. Browser acceptance and deployment remain pending.
+
+Staff attendance UI polish: The attendance area distinguishes QR scanning from name/Gmail fallback with a clear heading and supporting instruction; each matching member retains a Record attendance action. Dark and light theme styles were added for the section headings and divider. No workflow/schema change. Source inspection only; browser review and deployment remain pending.

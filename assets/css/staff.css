@@ -77,6 +77,10 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-registration-form
 #staffSalesTitle i { color: #dc3434; }
 .staff-checkin .staff-help { margin: 0; }
 .staff-camera-area { min-height: 200px; justify-content: center; gap: 14px; padding: 24px; border-style: solid; border-color: #2d323d; background: #15181e; }
+.staff-method-heading { display:flex; align-items:center; gap:12px; margin:18px 0 10px; }
+.staff-method-heading h3 { margin:0; color:#e9edf4; font-size:.95rem; }
+.staff-method-heading p { margin:4px 0 0; color:#a4adc2; font-size:.8rem; line-height:1.5; }
+.staff-search-intro { margin-top:22px; padding-top:18px; border-top:1px solid #2d323d; }
 .staff-camera-icon { display: grid; place-items: center; width: 68px; height: 68px; border: 1px solid rgba(231,65,65,.28); border-radius: 20px; background: rgba(169,0,0,.16); color: #f25c5c; font-size: 1.7rem; }
 .staff-camera-area .btn-primary { min-height: 44px; }
 #staffScanForm { padding: 18px; border: 1px solid #292e38; border-radius: 15px; background: #14171c; }
@@ -214,6 +218,8 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-product-card:hove
 .staff-member-result:hover, .staff-member-result.is-selected { border-color: #b93434; background: rgba(169,0,0,.12); }
 .staff-member-result > span:first-child { display: grid; gap: 4px; min-width: 0; }
 .staff-member-result small { overflow-wrap: anywhere; color: #aeb7c7; }
+.staff-member-result-copy { min-width:0; overflow-wrap:anywhere; }
+.staff-member-result-action { flex:0 0 auto; padding:8px 11px; border:1px solid #c22b2b; border-radius:9px; background:#a90000; color:#fff; font-size:.76rem; font-weight:700; white-space:nowrap; }
 .staff-member-status { flex: 0 0 auto; padding: 5px 9px; border-radius: 20px; background: #292e37; color: #d4dbe7; font-size: .7rem; font-weight: 700; text-transform: capitalize; }
 .staff-member-status.active { background: rgba(37,174,104,.15); color: #65d49a; }
 .staff-member-status.expired, .staff-member-status.inactive { background: rgba(220,60,60,.14); color: #ef8989; }
@@ -230,6 +236,7 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-result:hov
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-result.is-selected { background: #f6e6e6; border-color: #d99b9b; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-result small,
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-selected-member span { color: #465267; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-result-action { border-color:#900000; background:#a90000; color:#fff; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-status { background: #e2e7ee; color: #354052; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-selected-member { background: #e5f3eb; border-color: #b7ddc8; color: #233d2d; }
 @media (max-width: 700px) { .staff-catalog-heading { align-items: flex-start; flex-direction: column; gap: 5px; } .staff-plan-choice-wrap { grid-template-columns: 1fr; } .staff-form-section { padding: 15px; } }
@@ -251,6 +258,7 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-search inp
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-search input::placeholder { color: #7a8596; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-member-search > div::before { color: #6a778a; }
 @media (max-width: 480px) { .staff-member-search > div { gap: 3px; padding: 4px; } .staff-member-search .btn-logout { min-height: 41px; padding: 0 11px; font-size: .78rem; } .staff-member-search input { min-width: 0; font-size: .86rem; } }
+@media (max-width: 520px) { .staff-member-result { align-items:flex-start; flex-wrap:wrap; } .staff-member-result-action { margin-left:auto; } }
 
 /* Warm, more expressive light theme for the staff workspace. */
 body.staff-dashboard::after { background: none !important; }
@@ -293,6 +301,9 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-camera-area {
   border-color: #e6cfd1;
   background: #f7eeee;
 }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-method-heading h3 { color:#202a39; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-method-heading p { color:#586579; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-search-intro { border-color:#e5dadd; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-product-card:hover {
   border-color: #d8aeb1;
   box-shadow: 0 13px 28px rgba(91,39,44,.10);

@@ -452,7 +452,7 @@ async function refreshStaffAttendance() {
     }
 }
 async function recordStaffAttendance(value) {
-    if (staffBusy || !staffUser) return;
+    if (staffBusy || !staffUser) return false;
     staffBusy = true;
     try {
         const identifier = value.trim();
@@ -468,15 +468,17 @@ async function recordStaffAttendance(value) {
         const scanTime = new Date().toLocaleTimeString('en-PH', { timeZone: 'Asia/Manila', hour: 'numeric', minute: '2-digit' });
         staffStatus.textContent = data.member_name + (data.action === 'duplicate' ? ' — Already scanned just now' : data.action === 'check_out' ? ' — Checked out' : ' — Checked in') + ` · ${scanTime}`;
         document.getElementById('staffIdentifier').value = '';
-        await refreshStaffAttendance();
-    } catch (error) { staffStatus.classList.remove('staff-scan-result'); staffStatus.classList.add('error'); staffStatus.textContent = error.message; }
+        staffSelectedAttendanceMember = null;
+        document.getElementById('staffAttendanceSubmit').textContent = 'Find member';
+        await refreshStaffAttendance().catch(error => console.warn('Attendance was recorded, but history did not refresh:', error));
+        return true;
+    } catch (error) { staffStatus.classList.remove('staff-scan-result'); staffStatus.classList.add('error'); staffStatus.textContent = error.message; return false; }
     finally { staffBusy = false; }
 }
 function clearStaffAttendanceSelection() {
     staffSelectedAttendanceMember = null;
     staffAttendanceSearchRevision++;
     document.getElementById('staffAttendanceResults').replaceChildren();
-    document.getElementById('staffAttendanceSelected').hidden = true;
     const value = document.getElementById('staffIdentifier').value.trim();
     document.getElementById('staffAttendanceSubmit').textContent = /^IRONGRIND\|/i.test(value) || /^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(value)
         ? 'Record attendance' : 'Find member';
@@ -505,14 +507,23 @@ async function submitStaffAttendanceLookup(event) {
         for (const member of data) {
             const button = document.createElement('button');
             button.type = 'button'; button.className = 'staff-member-result';
-            button.textContent = `${member.full_name} · ${member.email || 'No email'} · ${member.plan || 'No plan'} · ${member.status || 'Unknown'}`;
-            button.addEventListener('click', () => {
-                staffSelectedAttendanceMember = member;
-                const selected = document.getElementById('staffAttendanceSelected');
-                selected.textContent = `${member.full_name} · ${member.email || 'No email'}`;
-                selected.hidden = false;
-                results.replaceChildren();
-                document.getElementById('staffAttendanceSubmit').textContent = 'Record attendance';
+            const details = document.createElement('span');
+            details.className = 'staff-member-result-copy';
+            details.textContent = `${member.full_name} · ${member.email || 'No email'} · ${member.plan || 'No plan'} · ${member.status || 'Unknown'}`;
+            const action = document.createElement('span');
+            action.className = 'staff-member-result-action';
+            action.textContent = 'Record attendance';
+            button.append(details, action);
+            button.addEventListener('click', async () => {
+                if (staffBusy) return;
+                button.disabled = true;
+                action.textContent = 'Recording…';
+                const recorded = await recordStaffAttendance(member.id);
+                if (recorded) results.replaceChildren();
+                else {
+                    button.disabled = false;
+                    action.textContent = pendingStaffScan?.identifier === member.id ? 'Retry attendance' : 'Record attendance';
+                }
             });
             results.append(button);
         }
