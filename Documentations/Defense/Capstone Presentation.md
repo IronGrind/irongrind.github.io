@@ -562,3 +562,6 @@ Speaker notes: The local template at `supabase/templates/reset-password.html` us
 - Added the two scanner private tables to the dictionary, reconciling it with the 23-table migration model.
 
 Speaker notes: Explain that a website browser-trust transfer and an attendance-scanner handoff are different security workflows. The first protects website administrator access; the second requires the active scanner to approve or deny a different scanner for the same authorized operator. `session_scope` belongs in the shared account-session model, not `attendance_operator_sessions`. The revision improves traceability between requirements, workflows, the data dictionary, and migrations. It does not claim a new release, physical-device test, or evaluation result.
+## Main manuscript synchronization
+
+Speaker notes: The single designated overall manuscript is now `Chapters 1-3 (MAO NA JUD NI).docx`. It contains the verified Chapter 3 consistency corrections. The previous version is retained only as a review backup, not as an additional working manuscript. No implementation or deployment changed.
