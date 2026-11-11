@@ -555,3 +555,10 @@ Speaker notes: Describe the figures as complementary views: Context identifies e
 - Hosted Auth template and fresh email verification pending
 
 Speaker notes: The local template at `supabase/templates/reset-password.html` uses Supabase's `{{ .ConfirmationURL }}` for both links so Supabase token verification and the requested redirect are preserved. It includes a branded reset button and explains that an unrequested message can be ignored. This is a local HTML artifact intended for Supabase Auth email-template settings; it has not been applied to the hosted dashboard. No schema or runtime code changed. A fresh email and completed password recovery remain unverified. The existing reset page and redirect target are already in the local/deployed client as described in the recovery notes; do not describe the email design as deployed.
+## Chapter 3 consistency correction
+
+- Revised opening deployment and verification wording to separate recorded evidence from later pending acceptance checks.
+- Separated website administrator trusted-browser/TOTP from attendance-scanner password sessions, scanner handoff approval, and recovery.
+- Added the two scanner private tables to the dictionary, reconciling it with the 23-table migration model.
+
+Speaker notes: Explain that a website browser-trust transfer and an attendance-scanner handoff are different security workflows. The first protects website administrator access; the second requires the active scanner to approve or deny a different scanner for the same authorized operator. `session_scope` belongs in the shared account-session model, not `attendance_operator_sessions`. The revision improves traceability between requirements, workflows, the data dictionary, and migrations. It does not claim a new release, physical-device test, or evaluation result.
