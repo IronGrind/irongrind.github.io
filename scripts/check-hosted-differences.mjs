@@ -1,5 +1,5 @@
 import fs from 'node:fs';
-const base='https://irongrind-github-io.vercel.app';
+const base='https://irongrind.vercel.app';
 const report=JSON.parse(fs.readFileSync('Documentations/Review Evidence/Hosted Readiness Results.json','utf8'));
 const normalize=s=>s.replace(/^\uFEFF/,'').replaceAll('\r\n','\n').trimEnd();
 for(const entry of report.assets.filter(a=>!a.matchesLocal)){

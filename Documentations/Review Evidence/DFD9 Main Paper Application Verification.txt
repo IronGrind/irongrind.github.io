@@ -1,0 +1,8 @@
+﻿PASS: DOCX package and Word document XML open successfully.
+PASS: DFD9 SVG bytes and PNG fallback exactly match the selected source files.
+PASS: Figure 3 keeps landscape layout and proportional sizing; explanation immediately follows its caption.
+PASS: DFD descriptions cover arrow direction, D1-D12 scope, D9 event routing, role-limited operations, and the read-only distinction between reports and Activity Logs.
+PASS: Previous sentence asking readers to re-check supplied event routing has been removed.
+Backup folder: 
+C:\Users\mycah\OneDrive\Desktop\CAPSTONE\v1\Documentations\Review Backups\dfd9-application-20261112-032257
+PASS: Compared with the pre-edit backup, only document.xml and the DFD9 SVG/PNG media differ; paragraph count is unchanged and exactly five DFD explanation paragraphs were revised.

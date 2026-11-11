@@ -94,7 +94,7 @@ async function sendPasswordReset(event) {
         // Supabase allows the production recovery route, but local/preview
         // origins fall back to the Site URL (the login page). Always use the
         // allowlisted recovery page so the email works from every app origin.
-        const redirectTo = 'https://irongrind-github-io.vercel.app/reset-password.html';
+        const redirectTo = 'https://irongrind.vercel.app/reset-password.html';
         const { error } = await client.auth.resetPasswordForEmail(email, { redirectTo });
         if (error) throw error;
         status.classList.remove('hidden');

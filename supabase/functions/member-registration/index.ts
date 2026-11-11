@@ -108,7 +108,7 @@ Deno.serve(async request => {
       password,
       options: {
         data: { full_name: app.fullName },
-        emailRedirectTo: 'https://irongrind-github-io.vercel.app/register.html?completeApplication=1',
+        emailRedirectTo: 'https://irongrind.vercel.app/register.html?completeApplication=1',
       },
     });
     if (signupError || !signup.user || (Array.isArray(signup.user.identities) && signup.user.identities.length === 0)) {

@@ -229,7 +229,7 @@ async function resumeExistingAccountRegistration(email, password, application) {
             const { error: resendError } = await client.auth.resend({
                 type: 'signup',
                 email,
-                options: { emailRedirectTo: 'https://irongrind-github-io.vercel.app/register.html?completeApplication=1' }
+                options: { emailRedirectTo: 'https://irongrind.vercel.app/register.html?completeApplication=1' }
             });
             if (resendError) {
                 console.error('Could not resend registration confirmation:', resendError);

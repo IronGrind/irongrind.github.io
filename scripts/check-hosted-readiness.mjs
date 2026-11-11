@@ -4,7 +4,7 @@ import path from 'node:path';
 import os from 'node:os';
 import {spawn} from 'node:child_process';
 import {createHash} from 'node:crypto';
-const base='https://irongrind-github-io.vercel.app';
+const base='https://irongrind.vercel.app';
 const folder='Documentations/Review Evidence';
 fs.mkdirSync(folder,{recursive:true});
 const report={completedAt:null,base,scope:'Unauthenticated hosted page, asset, browser and API checks; no account or operational writes.',assets:[],pages:[],api:[]};
