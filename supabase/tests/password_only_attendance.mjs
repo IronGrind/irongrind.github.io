@@ -23,7 +23,7 @@ try {
  create function public.record_attendance_scan(text,uuid,uuid,text) returns jsonb language plpgsql as $$begin
  if $3 is distinct from '${device}'::uuid or $4 is distinct from 'valid-pairing' then raise exception 'Phone pairing is invalid or expired'; end if;
  return '{"action":"check_in"}'::jsonb;end$$;`);
- for(const file of ['20261108000003_single_account_session.sql','20261108000004_anonymous_session_guard.sql','20261108000006_separate_attendance_sessions.sql','20261110000002_admin_mfa.sql','20261110000003_admin_device_approval.sql','20261110000004_admin_trusted_device.sql','20261111000001_password_only_attendance_operator.sql'])await db.exec(fs.readFileSync('supabase/migrations/'+file,'utf8'));
+ for(const file of ['20261108000003_single_account_session.sql','20261108000004_anonymous_session_guard.sql','20261108000006_separate_attendance_sessions.sql','20261110000002_admin_mfa.sql','20261110000003_admin_device_approval.sql','20261110000004_admin_trusted_device.sql','20261111000001_password_only_attendance_operator.sql','20261111000002_scanner_login_approval.sql'])await db.exec(fs.readFileSync('supabase/migrations/'+file,'utf8'));
  async function login(uid,sid,aal='aal1') {
   await db.exec('reset role');await db.query("select set_config('request.jwt.claims',$1,false)",[JSON.stringify({role:'authenticated',sub:uid,session_id:sid,aal})]);await db.exec('set role authenticated');
  }
@@ -45,10 +45,47 @@ try {
  await login(admin,web,'aal2');await request('/protected_records','select * from protected_records');
  assert.equal((await db.query('select private.is_admin() allowed')).rows[0].allowed,true);
  await assert.rejects(request('/rpc/activate_attendance_session','select activate_attendance_session()'),/separate sign-in/);
+ await login(admin,next);
+ await assert.rejects(request('/rpc/activate_attendance_session','select activate_attendance_session()'),/SCANNER_APPROVAL_REQUIRED/);
+ assert.equal((await request('/rpc/request_scanner_login_approval',"select request_scanner_login_approval('Second phone') result")).rows[0].result.status,'pending');
+ await assert.rejects(request('/rpc/activate_attendance_session','select activate_attendance_session()'),/SCANNER_APPROVAL_REQUIRED/);
+ await login(admin,phone);
+ assert.equal((await request('/rpc/current_attendance_session_is_active','select current_attendance_session_is_active() active')).rows[0].active,true,'Pending request leaves original scanner active');
+ let approvals=(await request('/rpc/list_scanner_login_approvals','select list_scanner_login_approvals() result')).rows[0].result;
+ assert.equal(approvals.length,1);assert.equal(approvals[0].device_label,'Second phone');
+ await request('/rpc/decide_scanner_login_approval','select decide_scanner_login_approval($1,true)',[approvals[0].id]);
+ assert.equal((await db.query('select current_attendance_session_is_active() active')).rows[0].active,true,'Approval alone does not log out original');
  await login(admin,next);await request('/rpc/activate_attendance_session','select activate_attendance_session()');
+ await request('/rpc/activate_attendance_session','select activate_attendance_session()');
  await login(admin,phone);assert.equal((await request('/rpc/current_attendance_session_is_active','select current_attendance_session_is_active() active')).rows[0].active,false);
  await assert.rejects(request('/rpc/get_attendance_operator','select get_attendance_operator()'),/Active scanner session required/);
  await assert.rejects(request('/rpc/activate_attendance_session','select activate_attendance_session()'),/ACCOUNT_SESSION_REPLACED/);
+ await request('/rpc/end_attendance_session','select end_attendance_session()');
+ await login(admin,next);assert.equal((await db.query('select current_attendance_session_is_active() active')).rows[0].active,true,'Replaced phone cannot end current scanner');
+ await db.exec('reset role');
+ await db.query("select set_config('request.jwt.claims',$1,false)",[JSON.stringify({role:'service_role'})]);
+ await db.exec('set role service_role');
+ const key={kty:'EC',crv:'P-256',x:'a'.repeat(43),y:'b'.repeat(43)};
+ await assert.rejects(db.query("select create_admin_device_challenge($1,$2,$3,'attendance',$4)",[admin,phone,device,key]),/Invalid device key/);
+ await db.exec('reset role');
+ await db.query("insert into private.admin_device_sessions(session_id,user_id,device_id,session_scope,public_key,challenge,challenge_expires_at) values($1,$2,$3,'attendance','{}','legacy',now()+interval '5 minutes')",[phone,admin,device]);
+ await db.query("select set_config('request.jwt.claims',$1,false)",[JSON.stringify({role:'service_role'})]);await db.exec('set role service_role');
+ await assert.rejects(db.query('select finish_admin_device_login($1,$2,$3,true,$4)',[admin,phone,'legacy','Legacy app']),/Reload the attendance app/);
+ // Denied, cancelled and expired attempts never evict the approved scanner.
+ for(const decision of ['deny','cancel','expire']) {
+  const sid=crypto.randomUUID();
+  await db.exec('reset role');await db.query('insert into auth.sessions values($1,$2,now()+interval \'1 minute\',null,\'aal1\')',[sid,admin]);
+  await login(admin,sid);
+  assert.equal((await request('/rpc/request_scanner_login_approval',"select request_scanner_login_approval('Rejected phone') result")).rows[0].result.status,'pending');
+  if(decision==='cancel') await request('/rpc/cancel_scanner_login_approval','select cancel_scanner_login_approval()');
+  else if(decision==='deny') {
+   await login(admin,next);
+   approvals=(await request('/rpc/list_scanner_login_approvals','select list_scanner_login_approvals() result')).rows[0].result;
+   await request('/rpc/decide_scanner_login_approval','select decide_scanner_login_approval($1,false)',[approvals[0].id]);
+  } else {await db.exec('reset role');await db.query("update private.scanner_login_approvals set expires_at=now()-interval '1 second' where requesting_session_id=$1",[sid]);}
+  await login(admin,sid);await assert.rejects(request('/rpc/activate_attendance_session','select activate_attendance_session()'),/SCANNER_APPROVAL_EXPIRED/);
+  await login(admin,next);assert.equal((await request('/rpc/current_attendance_session_is_active','select current_attendance_session_is_active() active')).rows[0].active,true,decision+' preserves original scanner');
+ }
  await login(staff,staffPhone);await request('/rpc/activate_attendance_session','select activate_attendance_session()');
  assert.equal((await db.query('select * from protected_records')).rows.length,0,'Staff scanner RLS also denies website records');
  await assert.rejects(request('/rpc/record_walk_in_sale','select 1'),/SCANNER_ACCESS_ONLY/);
@@ -56,5 +93,5 @@ try {
  await login(admin,next);assert.equal((await request('/rpc/current_attendance_session_is_active','select current_attendance_session_is_active() active')).rows[0].active,true,'Website forget preserves scanner');
  await db.exec('reset role');await db.exec(`update profiles set is_active=false where id='${admin}'`);
  await login(admin,next);assert.equal((await request('/rpc/current_attendance_session_is_active','select current_attendance_session_is_active() active')).rows[0].active,false);
- console.log('Passed: password-only admin/staff scanner, website coexistence, website MFA retained, RLS and RPC isolation, mandatory pairing, restricted audit, replacement, website forget isolation and inactive-account rejection.');
+ console.log('Passed: password-only admin/staff scanner, website coexistence and MFA, RLS/RPC isolation, pairing, scanner approval notification/list, pending protection, approval-bound activation, idempotent activation, denied/cancelled/expired protection, replacement, website forget isolation and inactive-account rejection.');
 } finally {await db.close();}

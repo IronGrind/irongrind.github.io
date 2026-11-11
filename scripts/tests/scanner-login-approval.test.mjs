@@ -1,0 +1,72 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import vm from 'node:vm';
+import test from 'node:test';
+function fixture(rpc) {
+    const intervals = new Map(), appended = [];
+    let next = 0;
+    function element() {
+        const children = new Map();
+        const buttons = [{ dataset: { decision: 'deny' } }, { dataset: { decision: 'approve' } }];
+        return { dataset: {}, setAttribute() {}, addEventListener() {}, showModal() {}, close() {}, remove() { this.removed = true; },
+            querySelector(selector) { if (!children.has(selector)) children.set(selector, { textContent: '' }); return children.get(selector); },
+            querySelectorAll() { return buttons; } };
+    }
+    const window = { addEventListener() {}, removeEventListener() {} };
+    const document = { hidden: false, createElement: element, body: { append: item => appended.push(item) }, addEventListener() {}, removeEventListener() {} };
+    vm.runInNewContext(fs.readFileSync('assets/js/scanner-login-approval.js', 'utf8'), {
+        window, document, navigator: { userAgent: 'Test phone', onLine: true },
+        setInterval: fn => { intervals.set(++next, fn); return next; }, clearInterval: id => intervals.delete(id), Date
+    });
+    return { window, client: { rpc }, appended, tick: async () => { for (const fn of [...intervals.values()]) await fn(); }, intervals };
+}
+test('first scanner needs no handoff approval or dialog', async () => {
+    const f = fixture(async () => ({ data: { status: 'ready' } }));
+    await f.window.waitForScannerLoginApproval(f.client);
+    assert.equal(f.appended.length, 0);
+});
+test('incoming scanner waits for approval and disposes its dialog and timer', async () => {
+    let count = 0;
+    const f = fixture(async () => ({ data: { status: ++count === 1 ? 'pending' : 'approved', expires_at: '2099-01-01' } }));
+    const waiting = f.window.waitForScannerLoginApproval(f.client);
+    await new Promise(setImmediate);
+    assert.equal(f.appended.length, 1);
+    await f.tick(); await waiting;
+    assert.equal(f.appended[0].removed, true);
+    assert.equal(f.intervals.size, 0);
+});
+test('denial rejects the incoming scanner without activating a session', async () => {
+    const calls = [];
+    const f = fixture(async name => { calls.push(name); return { data: { status: 'denied' } }; });
+    await assert.rejects(f.window.waitForScannerLoginApproval(f.client), /denied/);
+    assert.deepEqual(calls, ['request_scanner_login_approval']);
+});
+test('current scanner displays requester as text and submits an explicit approval', async () => {
+    const calls = [];
+    const f = fixture(async (name, args) => {
+        calls.push([name, args]);
+        return name === 'list_scanner_login_approvals' ? { data: [{ id: 'request', device_label: '<untrusted label>' }] } : {};
+    });
+    f.window.startScannerApprovalNotifications(f.client);
+    await new Promise(setImmediate);
+    const panel = f.appended[0];
+    assert.equal(panel.querySelector('.approval-device').textContent, '<untrusted label>');
+    await panel.querySelectorAll()[1].onclick();
+    assert.equal(calls[1][0], 'decide_scanner_login_approval');
+    assert.equal(calls[1][1].p_approve, true);
+    assert.equal(panel.removed, true);
+    f.window.stopScannerApprovalNotifications(f.client);
+    assert.equal(f.intervals.size, 0);
+});
+test('failed decision leaves the current scanner notification available to retry', async () => {
+    const f = fixture(async name => name === 'list_scanner_login_approvals'
+        ? { data: [{ id: 'request', device_label: 'Phone' }] } : { error: { message: 'Offline' } });
+    f.window.startScannerApprovalNotifications(f.client);
+    await new Promise(setImmediate);
+    const panel = f.appended[0];
+    await panel.querySelectorAll()[0].onclick();
+    assert.equal(panel.removed, undefined);
+    assert.match(panel.querySelector('.approval-result').textContent, /stays signed in/);
+    assert.ok(panel.querySelectorAll().every(button => !button.disabled));
+    f.window.stopScannerApprovalNotifications(f.client);
+});

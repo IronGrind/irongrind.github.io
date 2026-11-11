@@ -37,12 +37,13 @@ test('scanner signs in with website credentials without MFA or website device tr
         auth:{setSession:async()=>({}),startAutoRefresh(){},signOut:async()=>({})},
         rpc:async(name)=>{calls.push([name]);return name==='get_attendance_operator'?{data:{id:'owner',full_name:'Owner'}}:{};}};
         window.requireAdminMfa=()=>{throw Error('Scanner must not request MFA');};
+        window.waitForScannerLoginApproval=async()=>{calls.push(['scanner-approval']);};
         window.monitorAccountSession=(_,callback,rpc)=>{calls.push([rpc]);};`);
     await fixture.run('signInPhoneOperator({preventDefault(){}})');
     assert.equal(fixture.run('phoneOperator.id'), 'owner');
     assert.equal(fixture.run('calls[0][1].username'), 'owner');
     assert.equal(fixture.run('calls[0][1].password'), 'password');
-    assert.equal(fixture.run("calls.map(item=>item[0]).join(',')"), 'admin-username-login,activate_attendance_session,current_attendance_session_is_active,get_attendance_operator,log_scanner_activity');
+    assert.equal(fixture.run("calls.map(item=>item[0]).join(',')"), 'admin-username-login,scanner-approval,activate_attendance_session,current_attendance_session_is_active,get_attendance_operator,log_scanner_activity');
     assert.equal(fixture.element('phoneOperatorPassword').value, '');
 });
 

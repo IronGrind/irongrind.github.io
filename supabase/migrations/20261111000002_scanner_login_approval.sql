@@ -85,6 +85,20 @@ begin
  if position('insert into private.attendance_operator_sessions' in definition)=0 then raise exception 'Unexpected scanner activation'; end if;
  definition:=replace(definition,'insert into private.attendance_operator_sessions',
    E'if exists(select 1 from private.scanner_login_approvals where requesting_session_id=target.id and (status in (''denied'',''cancelled'',''consumed'') or expires_at<=now())) then raise exception ''SCANNER_APPROVAL_EXPIRED''; end if;\n if active.session_id is not null and active.session_id<>target.id and exists(select 1 from auth.sessions where id=active.session_id and (not_after is null or not_after>now())) and not exists(select 1 from private.scanner_login_approvals where user_id=target.user_id and requesting_session_id=target.id and approver_session_id=active.session_id and status=''approved'' and expires_at>now()) then raise exception ''SCANNER_APPROVAL_REQUIRED''; end if;\n update private.scanner_login_approvals set status=''consumed'' where requesting_session_id=target.id and status=''approved'';\n insert into private.attendance_operator_sessions');
+ definition:=replace(definition,'if exists(select 1 from private.scanner_login_approvals where requesting_session_id=target.id',
+   'if active.session_id=target.id and private.attendance_operator_is_current() then return; end if; if exists(select 1 from private.scanner_login_approvals where requesting_session_id=target.id');
+ execute definition;
+ -- Retire the legacy administrator-trust route into attendance sessions too.
+ -- Otherwise an old cached scanner could bypass the new handoff guard.
+ definition:=pg_get_functiondef('public.create_admin_device_challenge(uuid,uuid,uuid,text,jsonb)'::regprocedure);
+ if position('p_scope not in (''dashboard'',''attendance'')' in definition)=0 then raise exception 'Unexpected device challenge scope guard'; end if;
+ definition:=replace(definition,'p_scope is null or p_scope not in (''dashboard'',''attendance'')',
+   'p_scope is distinct from ''dashboard''');
+ execute definition;
+ definition:=pg_get_functiondef('public.finish_admin_device_login(uuid,uuid,text,boolean,text)'::regprocedure);
+ if position('if not reusable then' in definition)=0 then raise exception 'Unexpected device completion'; end if;
+ definition:=replace(definition,'if not reusable then',
+   'if candidate.session_scope is distinct from ''dashboard'' then raise exception ''Reload the attendance app for scanner sign-in''; end if; if not reusable then');
  execute definition;
  definition:=pg_get_functiondef('public.enforce_account_session()'::regprocedure);
  if position('''/rpc/log_scanner_activity''' in definition)=0 then raise exception 'Unexpected scanner pre-request guard'; end if;
