@@ -1,0 +1,5 @@
+﻿PASS: 5 preliminary sections use blank footers; remaining 10 sections use centered PAGE fields for default, first and even pages.
+PASS: numbering starts at 1 in the first preliminary section and continues without restart through all subsequent sections.
+PASS: original body content, tables, TOC fields, section layouts, styles and media preserved; all XML parts parse.
+LIMIT: desktop Word pagination, rendered footer placement and TOC refresh remain pending. No numeric page count or first chapter page number is assumed.
+Backup: C:\Users\mycah\OneDrive\Desktop\CAPSTONE\v1\Documentations\Review Backups\page-numbering-20261111-114412
