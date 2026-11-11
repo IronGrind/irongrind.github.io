@@ -341,3 +341,19 @@ Speaker notes: These four activities follow the proponents' November 11 clarific
 - Local CSS fix; browser visual verification and deployment pending.
 
 Speaker notes: The November 11 source correction adds an explicit closed-dialog display rule because the custom flex layout overrode the browser's default hiding. This explains the settings panel appearing near the bottom without a modal backdrop. The customer stylesheet cache version was updated. Affected modules are customer.html and assets/css/style.css. The diff whitespace check and existing UI improvement checks passed; showModal()/close() handlers were inspected. No database or setup change was required, and no hosted deployment or browser visual acceptance is claimed.
+
+## Combined manuscript pagination
+
+- Preliminary pages count toward the continuous page sequence while their numbers stay hidden.
+- Centered page numbers appear from Chapter 1 onward, including landscape sections.
+- The contents must be refreshed in Word after pagination.
+
+Speaker notes: The November 11 update modifies only the combined Chapters 1-3 Word manuscript, using blank footers for five preliminary sections and live PAGE fields for the following ten sections. Page 1 belongs to the beginning of the document; Chapter 1 continues that count. No chapter restart is configured. The package preservation check passed for original content, tables, TOC fields, styles, media and section layouts. Backups and a verification report are retained. Final rendered pagination, footer placement and contents page references require desktop Word review; no exact first chapter page number or page total is asserted. No application, schema, setup or deployment changes occurred.
+
+## Contents page references refreshed
+
+- All 39 contents entries now use page references calculated by Microsoft Word.
+- Chapter 1: page 7; Chapter 2: page 22; Chapter 3: page 29.
+- Preliminary pages remain counted with their footer numbers hidden.
+
+Speaker notes: Word successfully repaginated the combined manuscript and reported 150 pages. The earlier all-page-1 contents cache was replaced with the actual refreshed reference values. Preservation checks verified heading order, bookmark destinations and unchanged body content, tables, styles, media, footer numbering and section layouts. Only 39 cached reference values changed in the final manuscript package. This resolves the earlier pending contents refresh; final visual print-layout review remains separate. Backups and a verification report are retained. No application, schema, setup or deployment change occurred.

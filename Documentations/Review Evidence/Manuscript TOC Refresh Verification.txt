@@ -1,0 +1,44 @@
+﻿PASS: 39 TOC page references refreshed from desktop Word pagination; heading order and bookmark targets verified.
+PASS: only cached page numbers changed. Body text, tables, styles, TOC formatting/fields, margins, section numbering, blank preliminary footers and media are preserved.
+Chapter 1 : 7
+Background of the Study : 7
+Statement of the Problem : 10
+Objectives : 12
+Scope and Delimitation : 13
+Significance of the Study : 17
+Definition of Terms : 17
+Chapter 2 : 22
+Related Literature : 22
+Related Applications : 23
+Related Studies : 24
+Synthesis : 25
+REFERENCES : 27
+Chapter 3 : 29
+System Development Methodology : 29
+Requirements Planning : 30
+User Design : 30
+Prototype : 31
+Construction : 31
+Implementation : 31
+Verification and Evaluation : 32
+Requirement Specifications : 33
+Functionality Requirements : 33
+Data Process Modeling : 41
+Diagrams : 42
+Context Diagram : 44
+Data Flow Diagram : 48
+Use Case Diagram : 57
+Entity Relationship Diagram : 69
+Data Dictionary : 71
+Forms : 109
+Prototype : 110
+Access and Online Registration : 111
+Administrator Interface : 116
+Authorized Staff Workspace : 135
+Member Portal : 142
+Session Confirmation : 145
+Gantt Chart : 146
+REFERENCES : 150
+Word refresh reported 150 pages. Chapter 1 begins at 7, Chapter 2 at 22, Chapter 3 at 29. Final visual print-layout review remains separate.
+Backup: C:\Users\mycah\OneDrive\Desktop\CAPSTONE\v1\Documentations\Review Backups\toc-refresh-20261111-115112
+Saved manuscript: C:\Users\mycah\OneDrive\Desktop\CAPSTONE\v1\Documentations\Chapters 1-3 with Table of Contents.docx
