@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="1050" viewBox="0 0 1280 1050">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#26734d"/>
+    </marker>
+    <marker id="bluearr" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#365f91"/>
+    </marker>
+    <style>
+      text { font-family: Arial, sans-serif; fill: #1d2733; }
+      .title { font-size: 27px; font-weight: 700; }
+      .head { font-size: 19px; font-weight: 700; }
+      .label { font-size: 16px; }
+      .small { font-size: 14px; }
+      .proc { fill: #dae8fc; stroke: #6c8ebf; stroke-width: 2; rx: 10; }
+      .store { fill: #d5e8d4; stroke: #82b366; stroke-width: 2; }
+      .actor { fill: #fff2cc; stroke: #d6b656; stroke-width: 2; rx: 16; }
+      .write { fill: none; stroke: #26734d; stroke-width: 2.6; marker-end: url(#arr); }
+      .read { fill: none; stroke: #365f91; stroke-width: 3; marker-end: url(#bluearr); }
+    </style>
+  </defs>
+  <rect width="1280" height="1050" fill="#fff"/>
+  <text x="48" y="50" class="title">DFD 6 — Activity log arrows only</text>
+  <text x="48" y="80" class="small">Each action process writes its own event to D9; no process-to-process “Activity logs” chain.</text>
+
+  <rect x="55" y="125" width="430" height="575" rx="14" fill="#f7fbff" stroke="#b8cce2"/>
+  <text x="80" y="160" class="head">Action processes</text>
+
+  <rect x="80" y="185" width="270" height="54" class="proc"/><text x="215" y="219" text-anchor="middle" class="label">2.0 Membership Application</text>
+  <rect x="80" y="265" width="270" height="54" class="proc"/><text x="215" y="299" text-anchor="middle" class="label">3.0 User Management</text>
+  <rect x="80" y="345" width="270" height="54" class="proc"/><text x="215" y="379" text-anchor="middle" class="label">4.0 Renewals</text>
+  <rect x="80" y="425" width="270" height="54" class="proc"/><text x="215" y="459" text-anchor="middle" class="label">5.0 QR Attendance</text>
+  <rect x="80" y="505" width="270" height="54" class="proc"/><text x="215" y="539" text-anchor="middle" class="label">6.0 Products &amp; Inventory</text>
+  <rect x="80" y="585" width="270" height="54" class="proc"/><text x="215" y="619" text-anchor="middle" class="label">7.0 Sales</text>
+
+  <rect x="880" y="185" width="330" height="455" class="store"/>
+  <text x="1045" y="225" text-anchor="middle" class="head">D9: activity_logs</text>
+  <text x="1045" y="252" text-anchor="middle" class="small">Audit event records</text>
+
+  <path d="M350 212 H880" class="write"/><text x="615" y="202" text-anchor="middle" class="label">Application review event</text>
+  <path d="M350 292 H880" class="write"/><text x="615" y="282" text-anchor="middle" class="label">Profile / user-management event</text>
+  <path d="M350 372 H880" class="write"/><text x="615" y="362" text-anchor="middle" class="label">Renewal decision event</text>
+  <path d="M350 452 H880" class="write"/><text x="615" y="442" text-anchor="middle" class="label">Attendance scan event</text>
+  <path d="M350 532 H880" class="write"/><text x="615" y="522" text-anchor="middle" class="label">Product / stock change event</text>
+  <path d="M350 612 H880" class="write"/><text x="615" y="602" text-anchor="middle" class="label">Sales transaction event</text>
+
+  <rect x="55" y="730" width="1155" height="265" rx="14" fill="#f7fbf8" stroke="#a6c9b4"/>
+  <text x="80" y="770" class="head">Admin reads the stored activity records</text>
+  <rect x="100" y="835" width="180" height="65" class="actor"/><text x="190" y="875" text-anchor="middle" class="head">Admin</text>
+  <rect x="470" y="825" width="230" height="85" class="proc"/><text x="585" y="860" text-anchor="middle" class="head">9.0 Activity Logs</text><text x="585" y="887" text-anchor="middle" class="small">Read and filter records</text>
+  <rect x="900" y="825" width="245" height="85" class="store"/><text x="1022" y="860" text-anchor="middle" class="head">D9: activity_logs</text><text x="1022" y="887" text-anchor="middle" class="small">Stored audit records</text>
+
+  <path d="M900 850 H700" class="read"/><text x="800" y="832" text-anchor="middle" class="small">Activity log records</text>
+  <path d="M470 850 H280" class="read"/><text x="375" y="832" text-anchor="middle" class="small">Filtered activity records</text>
+  <path d="M280 890 H470" class="read"/><text x="375" y="930" text-anchor="middle" class="small">Filters / page query</text>
+
+  <text x="80" y="970" class="small">Optional: add 8.0 Generate Reports → D9 “Report generation event” only if report generation is actually audited.</text>
+</svg>

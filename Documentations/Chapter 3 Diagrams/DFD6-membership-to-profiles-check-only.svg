@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="620" viewBox="0 0 1120 620">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#26734d"/>
+    </marker>
+    <style>
+      text { font-family: Arial, sans-serif; fill: #1d2733; }
+      .title { font-size: 26px; font-weight: 700; }
+      .head { font-size: 20px; font-weight: 700; }
+      .label { font-size: 16px; }
+      .small { font-size: 14px; }
+      .proc { fill: #dae8fc; stroke: #6c8ebf; stroke-width: 2; rx: 12; }
+      .store { fill: #d5e8d4; stroke: #82b366; stroke-width: 2; }
+      .note { fill: #fff8e6; stroke: #d6b656; stroke-width: 2; rx: 12; }
+      .flow { fill: none; stroke: #26734d; stroke-width: 3; marker-end: url(#arr); }
+    </style>
+  </defs>
+  <rect width="1120" height="620" fill="#fff"/>
+  <text x="45" y="50" class="title">DFD 6 — Membership Application to Profiles check</text>
+  <text x="45" y="80" class="small">Focused view only; no changes to the rest of the DFD.</text>
+
+  <rect x="55" y="205" width="275" height="100" class="proc"/>
+  <text x="192" y="245" text-anchor="middle" class="head">2.0 Membership</text>
+  <text x="192" y="273" text-anchor="middle" class="head">Application</text>
+
+  <ellipse cx="570" cy="255" rx="140" ry="58" class="store"/>
+  <text x="570" y="250" text-anchor="middle" class="head">D2</text>
+  <text x="570" y="276" text-anchor="middle" class="label">Applications</text>
+  <path d="M330 255 H430" class="flow"/>
+  <text x="380" y="235" text-anchor="middle" class="small">Application status / decision</text>
+
+  <ellipse cx="930" cy="255" rx="140" ry="58" class="store"/>
+  <text x="930" y="250" text-anchor="middle" class="head">D3</text>
+  <text x="930" y="276" text-anchor="middle" class="label">Members</text>
+  <path d="M330 285 H755" class="flow"/>
+  <text x="540" y="318" text-anchor="middle" class="small">Approved member record (only after approval)</text>
+
+  <rect x="410" y="420" width="320" height="125" rx="12" fill="#f7fbf8" stroke="#a6c9b4" stroke-width="2"/>
+  <text x="570" y="457" text-anchor="middle" class="head">D1: profiles</text>
+  <text x="570" y="487" text-anchor="middle" class="label">Account profile created on Auth signup</text>
+  <text x="570" y="516" text-anchor="middle" class="small">Separate from membership approval</text>
+
+  <path d="M330 205 C365 145, 760 145, 815 205" fill="none" stroke="#9aa6b2" stroke-width="2" stroke-dasharray="8 7"/>
+  <line x1="558" y1="137" x2="588" y2="167" stroke="#b42318" stroke-width="4"/>
+  <line x1="588" y1="137" x2="558" y2="167" stroke="#b42318" stroke-width="4"/>
+  <text x="573" y="125" text-anchor="middle" class="small" fill="#8b1e16">No 2.0 → D1 arrow for approval</text>
+</svg>
