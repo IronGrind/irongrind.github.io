@@ -16,7 +16,7 @@ function requirePhoneOperator() {
 }
 async function signInPhoneOperator(event) {
     event.preventDefault();
-    // Hold the pairing found on page load through password/MFA network requests.
+    // Hold the pairing found on page load through sign-in network requests.
     // Browser storage can be unavailable or cleared while sign-in is in progress.
     const pairingAtSignIn = readPhonePairing();
     const button = document.getElementById('phoneOperatorSignIn');
@@ -35,23 +35,17 @@ async function signInPhoneOperator(event) {
         if (!data?.session) throw new Error(data?.error || 'Sign-in failed.');
         const { error: sessionError } = await phoneOperatorClient.auth.setSession(data.session);
         if (sessionError) throw sessionError;
-        try { await window.requireAdminMfa(phoneOperatorClient, 'attendance'); }
-        catch (error) { await phoneOperatorClient.auth.signOut({ scope: 'local' }); throw error; }
         const { error: activationError } = await phoneOperatorClient.rpc('activate_attendance_session');
         if (activationError) throw new Error('Could not secure your sign-in session. Sign in again.');
         window.monitorAccountSession(phoneOperatorClient, async reason => {
             await changePhoneOperator(false);
             setPhoneAttendanceStatus(reason === 'device' ? 'This browser’s administrator trust ended. Sign in and verify again.' : reason === 'expired' ? 'Your session ended. Sign in again to scan.' : 'Another attendance scanner signed in with this account. Sign in again to scan.', true);
-        });
-        const { data: { user }, error: userError } = await phoneOperatorClient.auth.getUser();
-        if (userError || !user) throw new Error('Could not verify your sign-in.');
-        const { data: profile, error: profileError } = await phoneOperatorClient.from('profiles').select('role,full_name,is_active').eq('id', user.id).single();
-        if (profileError || !profile?.is_active || !['staff', 'admin'].includes(profile.role)) throw new Error('Active staff or admin account required.');
+        }, 'current_attendance_session_is_active');
+        const { data: profile, error: profileError } = await phoneOperatorClient.rpc('get_attendance_operator');
+        if (profileError || !profile?.id) throw new Error('Active staff or admin account required.');
         phoneOperatorClient.auth.startAutoRefresh();
-        phoneOperator = { id: user.id, name: profile.full_name || username };
-        document.getElementById('phoneForgetAdminDevice').hidden = profile.role !== 'admin';
-        if (profile.role === 'admin') window.startAdminApprovalNotifications?.(phoneOperatorClient);
-        const { error: auditError } = await phoneOperatorClient.rpc('log_account_activity', { p_event: 'scanner_signed_in' });
+        phoneOperator = { id: profile.id, name: profile.full_name || username };
+        const { error: auditError } = await phoneOperatorClient.rpc('log_scanner_activity', { p_event: 'scanner_signed_in' });
         if (auditError) console.error('Could not log scanner sign-in:', auditError);
         document.body.classList.add('phone-operator-authenticated');
         document.getElementById('phoneOperatorSetup').hidden = true;
@@ -61,25 +55,19 @@ async function signInPhoneOperator(event) {
         const pairing = pairingAtSignIn || readPhonePairing();
         if (pairing) await startPhoneMemberScanner(pairing.sessionId, pairing.token, false);
         else setPhoneAttendanceStatus('Phone not paired. You need to pair this phone before scanning attendance. Tap Open camera and scan the pairing QR from the administrator’s Attendance → Phone Camera page. Pairing lasts 30 days.');
-    } catch (error) { setPhoneAttendanceStatus(error.message || 'Could not sign in.', true); }
+    } catch (error) {
+        window.stopAccountSessionMonitor?.(phoneOperatorClient);
+        await phoneOperatorClient?.auth.signOut({ scope: 'local' });
+        phoneOperator = null;
+        setPhoneAttendanceStatus(error.message || 'Could not sign in.', true);
+    }
     finally { document.getElementById('phoneOperatorPassword').value = ''; button.disabled = false; }
 }
-async function forgetPhoneAdminDevice() {
-    if (!phoneOperator || !window.confirm('Revoke this administrator device’s trust and log out?')) return;
-    window.stopAccountSessionMonitor?.(phoneOperatorClient);
-    try { await window.forgetAdminDevice(phoneOperatorClient); await changePhoneOperator(false); }
-    catch (error) {
-        window.monitorAccountSession(phoneOperatorClient, async () => { await changePhoneOperator(false); });
-        window.startAdminApprovalNotifications?.(phoneOperatorClient);
-        setPhoneAttendanceStatus(error.message || 'Could not revoke device trust.', true);
-    }
-}
 async function changePhoneOperator(logEvent = true) {
-    window.stopAdminApprovalNotifications?.(phoneOperatorClient);
     await stopPhoneAttendanceScanner();
     if (logEvent && phoneOperator) {
         try {
-            const { error } = await phoneOperatorClient.rpc('log_account_activity', { p_event: 'scanner_sign_out_requested' });
+            const { error } = await phoneOperatorClient.rpc('log_scanner_activity', { p_event: 'scanner_sign_out_requested' });
             if (error) console.error('Could not log scanner sign-out:', error);
         } catch (error) { console.error('Could not log scanner sign-out:', error); }
     }
@@ -500,7 +488,7 @@ async function submitPhoneMemberScan(decodedText, scanner, session) {
         const payload = decodedText.trim();
         if (pendingPhoneScan && pendingPhoneScan.payload !== payload) throw new Error('The previous scan has not been confirmed. Scan that member again to retry safely.');
         pendingPhoneScan ||= { payload, requestId: crypto.randomUUID() };
-        const { data, error } = await phoneOperatorClient.rpc('record_attendance_scan', {
+        const { data, error } = await phoneOperatorClient.rpc('record_scanner_attendance', {
             p_identifier: payload, p_request_id: pendingPhoneScan.requestId,
             p_session_id: session.sessionId, p_token: session.token
         });

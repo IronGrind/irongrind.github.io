@@ -365,3 +365,11 @@ Speaker notes: Word successfully repaginated the combined manuscript and reporte
 - The Gantt chart is retained as Figure 63.
 
 Speaker notes: The November 11 documentation revision replaces the earlier prototype captures in Chapter 3 and the combined manuscript. It covers recovery, browser approval, session conflicts, trusted-browser logout, attendance lookup, sales and report filters, and member self-service. Images are reproduced in full as supplied, including supplied details. Source matching, captions, relationships and preserved tables are checked separately from the older chapter validator, which still expects an obsolete schema-count sentence. Pagination and contents page references require Word refresh after replacement. No application or schema deployment results from this update; screenshots show interface states and do not establish formal evaluation results.
+
+## Phone scanner approval timing repair
+
+- Recheck device approval after authenticator verification when initial approval was unavailable.
+- Show a reload instruction if the approval script fails to load.
+- Local regression checks: 14 passed; deployment and physical two-device verification pending.
+
+Speaker notes: A phone scanner screenshot showed an approval-required rejection without a notification. Code inspection reproduced a timing gap in which a trusted browser resumes during MFA after the first approval check returned mfa_required. The shared trust helper now asks again before completing device registration. This explains a possible failure path; the original device's server state has not been inspected. Login, administrator and scanner references use a new script version and the phone shell cache advances to v25. Server security requirements are retained; no database migration or setup change is involved. Automated trust and scanner tests passed all 14 cases. These are local changes, not evidence of hosted deployment or a completed physical two-device test.

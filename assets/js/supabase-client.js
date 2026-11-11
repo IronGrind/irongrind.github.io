@@ -32,7 +32,7 @@ window.stopAccountSessionMonitor = client => {
     window.stopMemberDeviceApprovalNotifications?.(client);
     client?.__stopAccountSessionMonitor?.();
 };
-window.monitorAccountSession = (client, onReplaced) => {
+window.monitorAccountSession = (client, onReplaced, statusRpc = 'current_account_session_is_active') => {
     if (client.__accountSessionMonitor) return;
     client.__accountSessionMonitor = true;
     let busy = false;
@@ -50,7 +50,7 @@ window.monitorAccountSession = (client, onReplaced) => {
             }
             hadSession = true;
             const token = session.access_token;
-            const { data, error } = await client.rpc('current_account_session_is_active');
+            const { data, error } = await client.rpc(statusRpc);
             const { data: latest } = await client.auth.getSession();
             if (stopping) return;
             // Ignore an in-flight check belonging to credentials that have changed.
