@@ -35,8 +35,15 @@ async function signInPhoneOperator(event) {
         if (!data?.session) throw new Error(data?.error || 'Sign-in failed.');
         const { error: sessionError } = await phoneOperatorClient.auth.setSession(data.session);
         if (sessionError) throw sessionError;
-        const { error: activationError } = await phoneOperatorClient.rpc('activate_attendance_session');
-        if (activationError) throw new Error('Could not secure your sign-in session. Sign in again.');
+        if (!window.waitForScannerLoginApproval) throw new Error('Scanner sign-in could not load. Reload the app and try again.');
+        await window.waitForScannerLoginApproval(phoneOperatorClient);
+        let { error: activationError } = await phoneOperatorClient.rpc('activate_attendance_session');
+        // Another scanner may activate between the initial check and activation.
+        if (activationError?.message === 'SCANNER_APPROVAL_REQUIRED') {
+            await window.waitForScannerLoginApproval(phoneOperatorClient);
+            ({ error: activationError } = await phoneOperatorClient.rpc('activate_attendance_session'));
+        }
+        if (activationError) throw new Error('Could not complete scanner sign-in. Your other scanner was not replaced by this request. Sign in again.');
         window.monitorAccountSession(phoneOperatorClient, async reason => {
             await changePhoneOperator(false);
             setPhoneAttendanceStatus(reason === 'expired' ? 'Your session ended. Sign in again to scan.' : 'Another attendance scanner signed in with this account, or your account is inactive. Sign in again to scan.', true);
@@ -45,6 +52,7 @@ async function signInPhoneOperator(event) {
         if (profileError || !profile?.id) throw new Error('Active staff or admin account required.');
         phoneOperatorClient.auth.startAutoRefresh();
         phoneOperator = { id: profile.id, name: profile.full_name || username };
+        window.startScannerApprovalNotifications?.(phoneOperatorClient);
         const { error: auditError } = await phoneOperatorClient.rpc('log_scanner_activity', { p_event: 'scanner_signed_in' });
         if (auditError) console.error('Could not log scanner sign-in:', auditError);
         document.body.classList.add('phone-operator-authenticated');
@@ -56,6 +64,7 @@ async function signInPhoneOperator(event) {
         if (pairing) await startPhoneMemberScanner(pairing.sessionId, pairing.token, false);
         else setPhoneAttendanceStatus('Phone not paired. You need to pair this phone before scanning attendance. Tap Open camera and scan the pairing QR from the administrator’s Attendance → Phone Camera page. Pairing lasts 30 days.');
     } catch (error) {
+        window.stopScannerApprovalNotifications?.(phoneOperatorClient);
         window.stopAccountSessionMonitor?.(phoneOperatorClient);
         await phoneOperatorClient?.auth.signOut({ scope: 'local' });
         phoneOperator = null;
@@ -64,6 +73,7 @@ async function signInPhoneOperator(event) {
     finally { document.getElementById('phoneOperatorPassword').value = ''; button.disabled = false; }
 }
 async function changePhoneOperator(logEvent = true) {
+    window.stopScannerApprovalNotifications?.(phoneOperatorClient);
     await stopPhoneAttendanceScanner();
     if (logEvent && phoneOperator) {
         try {
@@ -72,6 +82,15 @@ async function changePhoneOperator(logEvent = true) {
         } catch (error) { console.error('Could not log scanner sign-out:', error); }
     }
     window.stopAccountSessionMonitor?.(phoneOperatorClient);
+    if (logEvent && phoneOperator) {
+        const { error } = await phoneOperatorClient.rpc('end_attendance_session');
+        if (error) {
+            window.monitorAccountSession(phoneOperatorClient, async () => { await changePhoneOperator(false); }, 'current_attendance_session_is_active');
+            window.startScannerApprovalNotifications?.(phoneOperatorClient);
+            setPhoneAttendanceStatus('Could not end your scanner session. Check the connection and try again.', true);
+            return;
+        }
+    }
     await phoneOperatorClient?.auth.signOut({ scope: 'local' });
     phoneOperator = null;
     pendingPhoneScan = null;
@@ -614,6 +633,7 @@ function configurePhoneAppInstall() {
 }
 
 window.addEventListener('pagehide', () => {
+    window.stopScannerApprovalNotifications?.(phoneOperatorClient);
     phoneOperator = null;
     document.body.classList.remove('phone-operator-authenticated');
     phoneOperatorClient?.auth.stopAutoRefresh();
