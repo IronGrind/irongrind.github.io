@@ -186,19 +186,27 @@ function renderStaffProductCatalog() {
     target.replaceChildren();
     const query = (document.getElementById('staffInventorySearch')?.value || '').trim().toLowerCase();
     const availableOnly = Boolean(document.getElementById('staffAvailableOnly')?.checked);
+    const selectedCategory = document.getElementById('staffInventoryCategory').value;
     const visibleGroups = staffProductGroups.map(group => ({
         ...group,
         variants: group.variants.filter(product => {
+            if (selectedCategory !== 'all' && group.category !== selectedCategory) return false;
             if (availableOnly && !staffProductAvailable(product)) return false;
             if (!query) return true;
             return [group.name, group.category, product.size, product.supplement_type, product.supplement_form]
                 .some(value => String(value || '').toLowerCase().includes(query));
         })
     })).filter(group => group.variants.length);
+    const visibleProducts = visibleGroups.reduce((total, group) => total + group.variants.length, 0);
+    const visibleAvailable = visibleGroups.reduce((total, group) => total + group.variants.filter(staffProductAvailable).length, 0);
+    document.getElementById('staffInventoryResultCount').textContent =
+        `Showing ${visibleProducts} of ${staffProducts.length} product variants · ${visibleAvailable} in stock`;
     if (!visibleGroups.length) {
         const empty = document.createElement('p');
         empty.className = 'staff-empty-catalog';
-        empty.textContent = query || availableOnly ? 'No available products match these filters.' : 'No active products are listed.';
+        empty.textContent = query || availableOnly || selectedCategory !== 'all'
+            ? 'No products match these filters. Try another category or clear a filter.'
+            : 'No active products are listed.';
         target.append(empty);
         return;
     }
@@ -208,7 +216,8 @@ function renderStaffProductCatalog() {
         const section = document.createElement('section'); section.className = 'staff-catalog-section';
         const title = document.createElement('div'); title.className = 'staff-catalog-section-title';
         const label = document.createElement('h4'); label.textContent = heading;
-        const count = document.createElement('span'); count.textContent = `${items.length} ${items.length === 1 ? 'item' : 'items'}`;
+        const itemCount = items.reduce((total, group) => total + group.variants.length, 0);
+        const count = document.createElement('span'); count.textContent = `${itemCount} ${itemCount === 1 ? 'variant' : 'variants'}`;
         title.append(label, count); section.append(title);
         const forms = category === 'supplement'
             ? [['powder', 'Powders'], ['capsule', 'Capsules'], ['tablet', 'Tablets'], ['drinkable', 'Liquids / drinks'], ['other', 'Other supplements']]
@@ -775,6 +784,7 @@ document.getElementById('refreshStaffRequests').addEventListener('click', loadSt
 document.getElementById('staffSaleProduct').addEventListener('change', updateStaffSaleUnits);
 document.getElementById('staffInventorySearch').addEventListener('input', renderStaffProductCatalog);
 document.getElementById('staffAvailableOnly').addEventListener('change', renderStaffProductCatalog);
+document.getElementById('staffInventoryCategory').addEventListener('change', renderStaffProductCatalog);
 document.getElementById('staffSaleSize').addEventListener('change', updateStaffSaleSummary);
 document.getElementById('staffSaleQuantity').addEventListener('input', updateStaffSaleSummary);
 document.getElementById('staffSaleUnit').addEventListener('change', updateStaffSaleSummary);
