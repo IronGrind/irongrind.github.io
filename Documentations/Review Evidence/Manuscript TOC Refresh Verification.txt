@@ -25,19 +25,20 @@ Requirement Specifications : 33
 Functionality Requirements : 33
 Data Process Modeling : 41
 Diagrams : 42
-Context Diagram : 44
-Data Flow Diagram : 48
-Use Case Diagram : 53
-Entity Relationship Diagram : 65
-Data Dictionary : 67
-Forms : 105
-Prototype : 105
-Access and Registration : 107
-Administrator Interfaces : 112
-Staff Interfaces : 138
-Member Interfaces : 149
-Gantt Chart : 164
-REFERENCES : 168
-Word refresh reported 168 pages. Final visual print-layout review remains separate.
-Backup: C:\Users\mycah\OneDrive\Desktop\CAPSTONE\v1\Documentations\Review Backups\toc-refresh-20261111-175930
-Saved manuscript: C:\Users\mycah\OneDrive\Desktop\CAPSTONE\v1\Documentations\Chapters 1-3 with Table of Contents.docx
+Context Diagram : 43
+Data Flow Diagram : 47
+Use Case Diagram : 52
+Entity Relationship Diagram : 64
+Data Dictionary : 66
+Forms : 104
+Prototype : 104
+Access and Registration : 106
+Administrator Interfaces : 111
+Staff Interfaces : 137
+Member Interfaces : 148
+Gantt Chart : 163
+REFERENCES : 167
+Original manuscript is locked by another process; corrected manuscript saved separately.
+Word refresh reported 167 pages. Final visual print-layout review remains separate.
+Backup: C:\Users\mycah\OneDrive\Desktop\CAPSTONE\v1\Documentations\Review Backups\toc-refresh-20261111-182040
+Saved manuscript: C:\Users\mycah\OneDrive\Desktop\CAPSTONE\v1\Documentations\Chapters 1-3 with Updated Table of Contents.docx

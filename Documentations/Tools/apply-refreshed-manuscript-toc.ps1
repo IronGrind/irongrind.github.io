@@ -1,5 +1,10 @@
 $ErrorActionPreference = 'Stop'
 Add-Type -AssemblyName System.IO.Compression.FileSystem
+function SharedFileHash($path) {
+    $stream = [IO.File]::Open($path, [IO.FileMode]::Open, [IO.FileAccess]::Read, ([IO.FileShare]::ReadWrite -bor [IO.FileShare]::Delete))
+    $sha = [Security.Cryptography.SHA256]::Create()
+    try { return ([BitConverter]::ToString($sha.ComputeHash($stream))).Replace('-', '') } finally { $stream.Dispose(); $sha.Dispose() }
+}
 $root = Split-Path $PSScriptRoot -Parent
 $backup = Get-ChildItem (Join-Path $root 'Review Backups') -Directory -Filter 'toc-refresh-*' | Sort-Object Name -Descending | Select-Object -First 1
 if (-not $backup) { throw 'Missing Word refresh backup.' }
@@ -7,7 +12,7 @@ $source = Join-Path $root 'Chapters 1-3 with Table of Contents.docx'
 $original = Join-Path $backup.FullName 'Original.docx'
 $refreshed = Join-Path $backup.FullName 'Refreshed.docx'
 $stage = Join-Path $backup.FullName 'Verified.docx'
-if ((Get-FileHash -LiteralPath $source).Hash -ne (Get-FileHash -LiteralPath $original).Hash) { throw 'Manuscript changed since Word refresh.' }
+if ((SharedFileHash $source) -ne (SharedFileHash $original)) { throw 'Manuscript changed since Word refresh.' }
 Copy-Item -LiteralPath $original -Destination $stage
 function ReadXml($zip, $name) {
     $reader = [IO.StreamReader]::new($zip.GetEntry($name).Open())
@@ -61,7 +66,7 @@ try {
     $pageReader = [IO.StreamReader]::new($wordZip.GetEntry('docProps/app.xml').Open())
     try { $paginationProperties = [xml]$pageReader.ReadToEnd(); $wordPageCount = $paginationProperties.Properties.Pages } finally { $pageReader.Dispose() }
 } finally { $zip.Dispose(); $wordZip.Dispose(); $oldZip.Dispose() }
-if ((Get-FileHash -LiteralPath $source).Hash -ne (Get-FileHash -LiteralPath $original).Hash) { throw 'Manuscript changed during verification.' }
+if ((SharedFileHash $source) -ne (SharedFileHash $original)) { throw 'Manuscript changed during verification.' }
 $replacement = Join-Path $backup.FullName ('Replacement-' + [guid]::NewGuid().ToString('N') + '.docx')
 Copy-Item -LiteralPath $stage -Destination $replacement
 try {
@@ -72,7 +77,7 @@ try {
     Copy-Item -LiteralPath $stage -Destination $output -Force
     $report.Add('Original manuscript is locked by another process; corrected manuscript saved separately.')
 }
-if ((Get-FileHash -LiteralPath $output).Hash -ne (Get-FileHash -LiteralPath $stage).Hash) { throw 'Saved manuscript does not match verified output.' }
+if ((SharedFileHash $output) -ne (SharedFileHash $stage)) { throw 'Saved manuscript does not match verified output.' }
 $report.Insert(0, "PASS: $($entries.Count) TOC page references refreshed from desktop Word pagination; heading order and bookmark targets verified.")
 $report.Insert(1, 'PASS: only cached page numbers changed. Body text, tables, styles, TOC formatting/fields, margins, section numbering, blank preliminary footers and media are preserved.')
 $report.Add("Word refresh reported $wordPageCount pages. Final visual print-layout review remains separate.")

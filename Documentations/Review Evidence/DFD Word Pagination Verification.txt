@@ -1,0 +1,2 @@
+﻿PASS Chapter 3 : DFD and caption share page 20 (landscape); explanation starts page 21 (portrait); image is 10 inches wide; document has 142 pages.
+PASS Chapters 1-3 with Table of Contents : DFD and caption share page 47 (landscape); explanation starts page 48 (portrait); image is 10 inches wide; document has 167 pages.
