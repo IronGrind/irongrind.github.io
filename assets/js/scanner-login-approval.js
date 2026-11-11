@@ -51,19 +51,32 @@ window.stopScannerApprovalNotifications = client => client?.__stopScannerApprova
 window.startScannerApprovalNotifications = client => {
     if (!client || client.__stopScannerApprovals) return;
     let stopped = false, busy = false, panel;
+    function report(message) {
+        const target = document.getElementById('phoneApprovalStatus');
+        if (target) target.textContent = message;
+    }
     async function refresh() {
         if (stopped || busy || document.hidden || navigator.onLine === false) return;
         busy = true;
         try {
             const { data, error } = await client.rpc('list_scanner_login_approvals');
-            if (stopped || error) return;
-            if (!data?.length) { panel?.remove(); panel = null; return; }
+            if (stopped) return;
+            if (error) {
+                const code = /^[A-Z0-9_]{1,30}$/.test(error.code || '') ? ` (${error.code})` : '';
+                report(error.message === 'Active scanner session required'
+                    ? 'This scanner session is no longer active. Use Change operator, then sign in again.'
+                    : `Sign-in request checks failed${code}. Check your connection, then tap Check sign-in requests.`);
+                return;
+            }
+            report('Listening for sign-in requests while this scanner is open.');
+            if (!data?.length) { panel?.close(); panel?.remove(); panel = null; return; }
             const request = data[0];
             if (panel?.dataset.requestId === request.id) return;
-            panel?.remove();
-            panel = document.createElement('section'); panel.className = 'admin-login-notification';
+            panel?.close(); panel?.remove();
+            panel = document.createElement('dialog'); panel.className = 'admin-mfa-dialog';
             panel.dataset.requestId = request.id;
-            panel.setAttribute('role', 'region'); panel.setAttribute('aria-label', 'Another scanner wants to sign in'); panel.setAttribute('aria-live', 'polite');
+            panel.setAttribute('aria-label', 'Another scanner wants to sign in'); panel.setAttribute('aria-live', 'polite');
+            panel.addEventListener('cancel', event => event.preventDefault());
             panel.innerHTML = '<h3>Allow another scanner?</h3><p>Another phone is signing in with your account. Approving lets it replace this scanner when its sign-in completes.</p><p class="approval-device"></p><small>Approve only a sign-in you started. Browser details are reported by the requesting phone.</small><p class="approval-result" role="status" aria-live="polite"></p><div class="modal-actions"><button type="button" class="btn-danger" data-decision="deny">Deny</button><button type="button" class="btn-primary" data-decision="approve">Approve</button></div>';
             panel.querySelector('.approval-device').textContent = request.device_label;
             for (const button of panel.querySelectorAll('[data-decision]')) {
@@ -74,7 +87,7 @@ window.startScannerApprovalNotifications = client => {
                     try {
                         const { error } = await client.rpc('decide_scanner_login_approval', { p_request_id: request.id, p_approve: button.dataset.decision === 'approve' });
                         if (error) throw error;
-                        current.remove(); if (panel === current) panel = null;
+                        current.close(); current.remove(); if (panel === current) panel = null;
                     } catch {
                         current.querySelector('.approval-result').textContent = 'Could not save the decision. Your scanner stays signed in. Try again.';
                         buttons.forEach(item => { item.disabled = false; });
@@ -82,16 +95,21 @@ window.startScannerApprovalNotifications = client => {
                 };
             }
             document.body.append(panel);
+            panel.showModal();
+        } catch {
+            report('Sign-in request checks failed. Check your connection, then tap Check sign-in requests.');
         } finally { busy = false; }
     }
     const wake = () => refresh().catch(() => {});
     const timer = setInterval(wake, 3000);
+    client.__refreshScannerApprovals = wake;
     window.addEventListener('focus', wake); window.addEventListener('online', wake);
     document.addEventListener('visibilitychange', wake);
     client.__stopScannerApprovals = () => {
-        stopped = true; clearInterval(timer); panel?.remove();
+        stopped = true; clearInterval(timer); panel?.close(); panel?.remove();
         window.removeEventListener('focus', wake); window.removeEventListener('online', wake);
         document.removeEventListener('visibilitychange', wake); client.__stopScannerApprovals = null;
+        client.__refreshScannerApprovals = null;
     };
     wake();
 };

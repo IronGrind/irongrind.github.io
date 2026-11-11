@@ -57,7 +57,7 @@
 <label for="phoneOperatorId">Username</label><input id="phoneOperatorId" autocomplete="username" required maxlength="30" autocapitalize="none" spellcheck="false" placeholder="Enter your username">
 <label for="phoneOperatorPassword" style="margin-top:12px">Password</label><input id="phoneOperatorPassword" type="password" autocomplete="current-password" required>
 <button id="phoneOperatorSignIn" class="phone-model-save-button" type="submit">Sign in to scan</button></form>
-<div id="phoneOperatorIdentity" class="phone-model-setup" hidden><p id="phoneOperatorName"></p><button type="button" class="phone-next-scan-button" onclick="changePhoneOperator()">Change operator</button></div>
+<div id="phoneOperatorIdentity" class="phone-model-setup" hidden><p id="phoneOperatorName"></p><button type="button" class="phone-next-scan-button" onclick="changePhoneOperator()">Change operator</button><p id="phoneApprovalStatus" role="status" aria-live="polite">Checking sign-in requests…</p><button type="button" class="phone-next-scan-button" onclick="phoneOperatorClient?.__refreshScannerApprovals?.()">Check sign-in requests</button></div>
 <div id="phoneQrReader" hidden></div>
         <p id="phoneQrStatus" role="status" aria-live="polite">Preparing your attendance scanner…</p>
         <button id="phoneInstallButton" class="phone-install-button" type="button" onclick="installPhoneAttendanceApp()">Install attendance app</button>
@@ -74,7 +74,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/supabase-client.js?v=20261111-scanner-session"></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-    <script src="assets/js/scanner-login-approval.js?v=20261111-scanner-handoff"></script>
+    <script src="assets/js/scanner-login-approval.js?v=20261111-visible-approval"></script>
     <script src="assets/js/attendance-phone.js?v=20261111-scanner-handoff"></script>
 </body>
 </html>

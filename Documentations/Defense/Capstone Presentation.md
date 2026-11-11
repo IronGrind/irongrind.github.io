@@ -393,3 +393,19 @@ Speaker notes — completed verification: Verification completion: Desktop Word 
 - Scanner stays password-only; website authenticator and device trust remain separate.
 
 Speaker notes: The user identified the first scanner as the device that unexpectedly logged out and selected first-phone approval as the desired behavior. The original password-only scanner implementation immediately replaced its attendance session. The new scanner-specific approval table/RPCs bind the decision to the requesting and approving Auth sessions, with a two-minute request expiry. The first phone polls every three seconds while open and online; failed decisions remain retryable. Timeout does not grant access. Change operator explicitly releases the caller's scanner session. Legacy administrator-trust attendance login paths are blocked so old clients cannot bypass the handoff. Scanner UI/worker versions advance to handoff and shell v27. Twenty browser/Edge tests and the expanded scanner SQL integration suite passed locally. Linked terminal dry runs reviewed only migration 20261111000002; push successfully applied it to nttsrdassmzvtaamyogi without an interactive prompt. Matching frontend delivery and physical two-phone notification/handoff testing remain unverified. The earlier hosted HTML check confirmed the password-scanner revision, not this new handoff revision. No authenticator factors, credentials or phone pairings were reset.
+
+## Clear recovery for expired pairing references
+
+- Expired or ended pairing references stop polling and are removed from the admin browser list.
+- Other pairings remain intact; connection errors retain saved references.
+- The admin no longer incorrectly instructs users to apply an archived migration.
+
+Speaker notes: The reported screenshot came from the admin phone status check. Its RPC uses an inactive/expired error for a missing, expired or differently owned pairing reference, while the UI previously appended migration advice to every error. The new frontend handler cleans up only the stale local reference and directs the operator to Phone Camera to inspect paired phones or create a QR. It does not delete database pairings or reset phone storage, credentials or authenticators. JavaScript syntax and four admin attendance tests passed. Affected modules are the admin JavaScript, HTML version reference and tests. No schema/setup change or database push is needed. Matching frontend deployment and physical reproduction remain unverified; the screenshot alone does not establish the exact server record state.
+
+## Make scanner approval visible and diagnosable
+
+- Approve/Deny opens as a modal above the camera.
+- The signed-in scanner shows request-check status and an immediate retry button.
+- Check failures remain visible; they do not approve or replace a session.
+
+Speaker notes: The user reported a waiting incoming phone and an open, signed-in first phone without a visible approval. Earlier notification polling silently discarded RPC errors and used a page panel. The revised scanner uses a modal dialog plus listening/failure status, sanitized error codes, and Check sign-in requests. Local tests cover dialog opening, approval and retry after polling failure; all 14 scanner/notification tests passed. Versions advance to visible-approval and shell v28. This is a frontend change, with no database migration or website MFA change. Matching frontend deployment, physical-device confirmation and the exact cause on the originally reporting first phone remain unverified. This update does not prove that the original issue was only camera stacking or caching.

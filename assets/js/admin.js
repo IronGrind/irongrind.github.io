@@ -2160,9 +2160,28 @@ async function refreshAttendancePhoneStatus(sessionId) {
         p_session_id: sessionId
     });
     refreshPairedAttendancePhones();
+    if (error?.message === 'Phone scanner session is inactive or expired') {
+        // Forget only the stale local reference; other phone pairings stay intact.
+        mobileAttendanceSessionIds.delete(sessionId);
+        mobileAttendanceSessionPersistence.delete(sessionId);
+        mobileAttendancePollBusy.delete(sessionId);
+        savePersistentMobileAttendanceSessions();
+        if (sessionId === activeMobileAttendanceSessionId) {
+            activeMobileAttendancePairingUrl = null;
+            activeMobileAttendanceSessionId = mobileAttendanceSessionIds.values().next().value || null;
+            activeMobileAttendancePersistent = Boolean(activeMobileAttendanceSessionId && mobileAttendanceSessionPersistence.get(activeMobileAttendanceSessionId));
+            setAttendancePhoneStatus('This pairing QR expired or was ended. Open Phone Camera to check paired phones or create a new QR.');
+            if (activeMobileAttendanceSessionId) refreshAttendancePhoneStatus(activeMobileAttendanceSessionId);
+        }
+        if (!mobileAttendanceSessionIds.size) {
+            clearInterval(mobileAttendancePollTimer);
+            mobileAttendancePollTimer = null;
+        }
+        return;
+    }
     if (sessionId !== activeMobileAttendanceSessionId) return;
     if (error) {
-        setAttendancePhoneStatus(`Phone pairing status unavailable: ${error.message}. Apply migration 20261104000011.`);
+        setAttendancePhoneStatus('Could not check phone pairing status. Check your connection and try again; saved pairings were kept.');
         return;
     }
     if (!data?.paired) {

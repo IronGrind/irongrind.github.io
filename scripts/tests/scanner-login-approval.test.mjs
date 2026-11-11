@@ -8,17 +8,18 @@ function fixture(rpc) {
     function element() {
         const children = new Map();
         const buttons = [{ dataset: { decision: 'deny' } }, { dataset: { decision: 'approve' } }];
-        return { dataset: {}, setAttribute() {}, addEventListener() {}, showModal() {}, close() {}, remove() { this.removed = true; },
+        return { dataset: {}, setAttribute() {}, addEventListener() {}, showModal() { this.modalOpened = true; }, close() {}, remove() { this.removed = true; },
             querySelector(selector) { if (!children.has(selector)) children.set(selector, { textContent: '' }); return children.get(selector); },
             querySelectorAll() { return buttons; } };
     }
     const window = { addEventListener() {}, removeEventListener() {} };
-    const document = { hidden: false, createElement: element, body: { append: item => appended.push(item) }, addEventListener() {}, removeEventListener() {} };
+    const status = { textContent: '' };
+    const document = { hidden: false, getElementById: () => status, createElement: element, body: { append: item => appended.push(item) }, addEventListener() {}, removeEventListener() {} };
     vm.runInNewContext(fs.readFileSync('assets/js/scanner-login-approval.js', 'utf8'), {
         window, document, navigator: { userAgent: 'Test phone', onLine: true },
         setInterval: fn => { intervals.set(++next, fn); return next; }, clearInterval: id => intervals.delete(id), Date
     });
-    return { window, client: { rpc }, appended, tick: async () => { for (const fn of [...intervals.values()]) await fn(); }, intervals };
+    return { window, client: { rpc }, appended, status, tick: async () => { for (const fn of [...intervals.values()]) await fn(); }, intervals };
 }
 test('first scanner needs no handoff approval or dialog', async () => {
     const f = fixture(async () => ({ data: { status: 'ready' } }));
@@ -50,6 +51,7 @@ test('current scanner displays requester as text and submits an explicit approva
     f.window.startScannerApprovalNotifications(f.client);
     await new Promise(setImmediate);
     const panel = f.appended[0];
+    assert.equal(panel.modalOpened, true);
     assert.equal(panel.querySelector('.approval-device').textContent, '<untrusted label>');
     await panel.querySelectorAll()[1].onclick();
     assert.equal(calls[1][0], 'decide_scanner_login_approval');
@@ -69,4 +71,20 @@ test('failed decision leaves the current scanner notification available to retry
     assert.match(panel.querySelector('.approval-result').textContent, /stays signed in/);
     assert.ok(panel.querySelectorAll().every(button => !button.disabled));
     f.window.stopScannerApprovalNotifications(f.client);
+});
+
+test('polling failure is visible and manual retry opens the approval dialog', async () => {
+    let fail = true;
+    const f = fixture(async () => fail ? { error: { code: 'PGRST202' } }
+        : { data: [{ id: 'request', device_label: 'Phone' }] });
+    f.window.startScannerApprovalNotifications(f.client);
+    await new Promise(setImmediate);
+    assert.match(f.status.textContent, /failed \(PGRST202\)/);
+    assert.equal(f.appended.length, 0);
+    fail = false;
+    f.client.__refreshScannerApprovals();
+    await new Promise(setImmediate);
+    assert.equal(f.appended[0].modalOpened, true);
+    f.window.stopScannerApprovalNotifications(f.client);
+    assert.equal(f.client.__refreshScannerApprovals, null);
 });
