@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IronGrind · Admin Dashboard</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css?v=20261111-inventory-toggle-focus">
+    <link rel="stylesheet" href="assets/css/style.css?v=20261111-inventory-password-cleanup">
     <script src="assets/js/theme.js?v=20261105-login-toggle"></script>
 </head>
 <body class="dashboard-body admin-dashboard admin-auth-pending">
@@ -226,7 +226,7 @@
                     <h3>Inventory is Locked</h3>
                     <p>Enter the inventory password once for this sign-in. Inventory stays unlocked until you log out.</p>
                     <form class="password-input-group" onsubmit="event.preventDefault(); runWithButtonLoading(this.querySelector('button[type=submit]'), unlockStore, 'Checking…');">
-                        <input type="password" id="storeAccessPassword" placeholder="Inventory password" autocomplete="current-password" aria-label="Inventory password" required>
+                        <input type="password" id="storeAccessPassword" placeholder="Inventory password" autocomplete="current-password" aria-label="Inventory password" data-no-password-visibility="true" required>
                         <button type="submit" class="btn-primary"><i class="fas fa-unlock"></i> Open Inventory</button>
                     </form>
                     <p id="storeAccessStatus" class="store-access-status" role="status" aria-live="polite"></p>
@@ -327,7 +327,7 @@
 </div>
 <div id="toast" class="toast hidden"></div>
 
-<script src="assets/js/ui-improvements.js?v=20261108-names-member-email"></script>
+<script src="assets/js/ui-improvements.js?v=20261111-inventory-password-cleanup"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/supabase-client.js?v=20261108-remember-identifier"></script>
 <script src="assets/js/admin-device-approval.js?v=20261110-device-approval"></script>

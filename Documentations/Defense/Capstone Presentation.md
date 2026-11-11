@@ -475,3 +475,5 @@ Speaker notes: The registration success toast remained dark in light mode becaus
 Theme follow-up: Member notifications use the same shared toast stylesheet; the member page cache version was refreshed too. The source review checked common shared popup surfaces, but does not establish visual acceptance across every page.
 
 Inventory toggle follow-up: The earlier adjustment did not remove the visible overlap; the global focus-visible halo extended beyond the eye button. The eye control now sits farther inside the field with a compact focus outline and wider separation from Open Inventory. Admin stylesheet cache version refreshed. Source inspection only; visual browser confirmation and deployment remain pending.
+
+Inventory password toggle correction: The reveal button is disabled only for the Inventory unlock field to eliminate the persistent overlap; other password fields keep their reveal controls. The input and submit button use a direct responsive layout. Store password behavior is unchanged. JavaScript syntax and whitespace checks passed; visual confirmation and deployment remain pending.

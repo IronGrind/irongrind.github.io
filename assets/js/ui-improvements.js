@@ -136,6 +136,7 @@
     }
     function attachPasswordVisibility(input) {
         if (input.type !== 'password' || input.dataset.visibilityReady) return;
+        if (input.dataset.noPasswordVisibility === 'true') return;
         input.dataset.visibilityReady = 'true';
         let wrapper = input.closest('.password-wrapper');
         if (wrapper?.querySelector('.toggle-password')) return;
