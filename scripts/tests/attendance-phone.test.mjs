@@ -43,8 +43,28 @@ test('scanner signs in with website credentials without MFA or website device tr
     assert.equal(fixture.run('phoneOperator.id'), 'owner');
     assert.equal(fixture.run('calls[0][1].username'), 'owner');
     assert.equal(fixture.run('calls[0][1].password'), 'password');
-    assert.equal(fixture.run("calls.map(item=>item[0]).join(',')"), 'admin-username-login,scanner-approval,activate_attendance_session,current_attendance_session_is_active,get_attendance_operator,log_scanner_activity');
+    assert.equal(fixture.run("calls.map(item=>item[0]).join(',')"), 'admin-username-login,scanner-approval,activate_attendance_session,get_attendance_operator,current_attendance_session_is_active,log_scanner_activity');
     assert.equal(fixture.element('phoneOperatorPassword').value, '');
+});
+
+test('refresh restores the existing scanner without a new sign-in or approval', async () => {
+    const fixture = app();
+    fixture.run(`globalThis.calls=[];
+        phoneOperatorClient={auth:{getSession:async()=>({data:{session:{access_token:'same-session'}}}),startAutoRefresh(){}},
+        rpc:async name=>{calls.push(name);return name==='current_attendance_session_is_active'?{data:true}:{data:{id:'owner',full_name:'Owner'}};}};
+        window.monitorAccountSession=()=>{};window.startScannerApprovalNotifications=()=>{};`);
+    assert.equal(await fixture.run('restorePhoneOperatorSession()'), true);
+    assert.equal(fixture.run('phoneOperator.id'), 'owner');
+    assert.equal(fixture.run("calls.join(',')"), 'current_attendance_session_is_active,get_attendance_operator');
+    assert.equal(fixture.element('phoneOperatorSetup').hidden, true);
+});
+
+test('refresh with a transient status failure retains the saved scanner session', async () => {
+    const fixture = app();
+    fixture.run(`globalThis.signedOut=false;phoneOperatorClient={auth:{getSession:async()=>({data:{session:{}}}),signOut:async()=>{signedOut=true;}},rpc:async()=>({error:{message:'Offline'}})};`);
+    assert.equal(await fixture.run('restorePhoneOperatorSession()'), true);
+    assert.equal(fixture.run('signedOut'), false);
+    assert.match(fixture.element('phoneQrStatus').textContent, /saved session was kept/);
 });
 
 test('opening another QR to reinstall preserves the existing pairing and token', () => {

@@ -88,3 +88,27 @@ test('polling failure is visible and manual retry opens the approval dialog', as
     f.window.stopScannerApprovalNotifications(f.client);
     assert.equal(f.client.__refreshScannerApprovals, null);
 });
+
+test('recovery requires a server-confirmed inactive scanner and is explicitly requested', async () => {
+    let active = true, recoveries = 0;
+    const f = fixture(async name => {
+        if (name === 'request_scanner_login_approval') return { data: { status: 'pending', expires_at: '2099-01-01' } };
+        if (name === 'recover_inactive_attendance_session') {
+            recoveries++;
+            return active ? { error: { message: 'SCANNER_STILL_ACTIVE' } } : {};
+        }
+        throw Error('Unexpected call');
+    });
+    const waiting = f.window.waitForScannerLoginApproval(f.client);
+    await new Promise(setImmediate);
+    assert.equal(recoveries, 0);
+    const dialog = f.appended[0];
+    await dialog.querySelector('[data-action="recover"]').onclick();
+    assert.equal(dialog.removed, undefined);
+    assert.match(dialog.querySelector('[role="status"]').textContent, /active within the last two minutes/);
+    active = false;
+    await dialog.querySelector('[data-action="recover"]').onclick();
+    await waiting;
+    assert.equal(recoveries, 2);
+    assert.equal(dialog.removed, true);
+});

@@ -409,3 +409,12 @@ Speaker notes: The reported screenshot came from the admin phone status check. I
 - Check failures remain visible; they do not approve or replace a session.
 
 Speaker notes: The user reported a waiting incoming phone and an open, signed-in first phone without a visible approval. Earlier notification polling silently discarded RPC errors and used a page panel. The revised scanner uses a modal dialog plus listening/failure status, sanitized error codes, and Check sign-in requests. Local tests cover dialog opening, approval and retry after polling failure; all 14 scanner/notification tests passed. Versions advance to visible-approval and shell v28. This is a frontend change, with no database migration or website MFA change. Matching frontend deployment, physical-device confirmation and the exact cause on the originally reporting first phone remain unverified. This update does not prove that the original issue was only camera stacking or caching.
+
+## Refresh without requesting approval again
+
+- Refresh restores the same tab-scoped scanner session after server validation.
+- Replaced sessions remain blocked; passwords are not stored.
+- Recover inactive session is explicit and requires two minutes without scanner activity.
+- Active scanners still require Approve/Deny; request expiry alone grants no access.
+
+Speaker notes: The reported lockout followed a refresh. The old scanner kept Auth only in memory while its server attendance session survived, leaving a ghost approver. The new sessionStorage client restores the same scanner without new activation or approval, restarts its monitor/listener, and retains the session on transient network failures. Closing the tab/app or clearing storage is separate from refresh. Migration 20261111000003 adds last-seen heartbeat timestamps and atomic, audited recovery for an explicitly requested replacement after two minutes of inactivity; a backgrounded phone may become inactive under this rule. Denied/cancelled/consumed requests cannot use recovery in the same requester session. This extends the earlier no-offline-recovery design while keeping website MFA and phone pairing separate. Twenty-four browser/Edge tests and the expanded scanner SQL suite passed locally. The linked terminal dry run listed only migration 03 and push reported successful application to nttsrdassmzvtaamyogi without an interactive prompt. Frontend versions are session-recovery and shell v29. Hosted delivery and physical-device refresh/recovery testing remain unverified.

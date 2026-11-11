@@ -11,7 +11,7 @@ window.waitForScannerLoginApproval = async client => {
         const dialog = document.createElement('dialog');
         dialog.className = 'admin-mfa-dialog';
         dialog.setAttribute('aria-label', 'Scanner sign-in approval');
-        dialog.innerHTML = '<h2>Waiting for your other scanner</h2><p>Keep your first phone open and choose Approve or Deny there. It stays signed in until you approve and this phone completes sign-in.</p><p role="status" aria-live="polite">Waiting for approval…</p><button type="button" class="btn-sm">Cancel sign-in</button>';
+        dialog.innerHTML = '<h2>Waiting for your other scanner</h2><p>Keep your first phone open and choose Approve or Deny there. If no scanner is open, wait two minutes, then choose Recover inactive session.</p><p role="status" aria-live="polite">Waiting for approval…</p><button type="button" class="btn-sm" data-action="cancel">Cancel sign-in</button><button type="button" class="btn-primary" data-action="recover">Recover inactive session</button>';
         document.body.append(dialog);
         let done = false, busy = false;
         const expires = Date.parse(first.data.expires_at);
@@ -28,13 +28,31 @@ window.waitForScannerLoginApproval = async client => {
                 finish(new Error('Scanner sign-in cancelled. Your other scanner stays signed in.'));
             } catch { status.textContent = 'Could not cancel the request. Check your connection and try again.'; }
         }
-        dialog.querySelector('button').onclick = cancel;
+        dialog.querySelector('[data-action="cancel"]').onclick = cancel;
+        dialog.querySelector('[data-action="recover"]').onclick = async () => {
+            if (done || busy) return;
+            busy = true;
+            try {
+                const { error } = await client.rpc('recover_inactive_attendance_session');
+                if (error) {
+                    status.textContent = error.message === 'SCANNER_STILL_ACTIVE'
+                        ? 'The other scanner was active within the last two minutes. Keep it open to approve, or wait until it is inactive for two minutes.'
+                        : 'Could not recover the scanner session. Cancel and sign in again, or check your connection.';
+                    return;
+                }
+                finish();
+            } catch { status.textContent = 'Could not confirm recovery. Check the connection and try again.'; }
+            finally { busy = false; }
+        };
         dialog.addEventListener('cancel', event => { event.preventDefault(); cancel(); });
         const timer = setInterval(async () => {
             if (done || busy) return;
             busy = true;
             try {
-                if (Number.isFinite(expires) && Date.now() >= expires) { finish(new Error('Scanner approval expired. Your other scanner stays signed in. Sign in again.')); return; }
+                if (Number.isFinite(expires) && Date.now() >= expires) {
+                    status.textContent = 'Approval expired. Cancel and sign in again, or choose Recover inactive session if no other scanner is open.';
+                    return;
+                }
                 const { data, error } = await request();
                 if (done) return;
                 if (error) { status.textContent = 'Connection interrupted. Your other scanner stays signed in. Retrying…'; return; }

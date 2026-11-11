@@ -23,7 +23,7 @@ try {
  create function public.record_attendance_scan(text,uuid,uuid,text) returns jsonb language plpgsql as $$begin
  if $3 is distinct from '${device}'::uuid or $4 is distinct from 'valid-pairing' then raise exception 'Phone pairing is invalid or expired'; end if;
  return '{"action":"check_in"}'::jsonb;end$$;`);
- for(const file of ['20261108000003_single_account_session.sql','20261108000004_anonymous_session_guard.sql','20261108000006_separate_attendance_sessions.sql','20261110000002_admin_mfa.sql','20261110000003_admin_device_approval.sql','20261110000004_admin_trusted_device.sql','20261111000001_password_only_attendance_operator.sql','20261111000002_scanner_login_approval.sql'])await db.exec(fs.readFileSync('supabase/migrations/'+file,'utf8'));
+ for(const file of ['20261108000003_single_account_session.sql','20261108000004_anonymous_session_guard.sql','20261108000006_separate_attendance_sessions.sql','20261110000002_admin_mfa.sql','20261110000003_admin_device_approval.sql','20261110000004_admin_trusted_device.sql','20261111000001_password_only_attendance_operator.sql','20261111000002_scanner_login_approval.sql','20261111000003_scanner_session_recovery.sql'])await db.exec(fs.readFileSync('supabase/migrations/'+file,'utf8'));
  async function login(uid,sid,aal='aal1') {
   await db.exec('reset role');await db.query("select set_config('request.jwt.claims',$1,false)",[JSON.stringify({role:'authenticated',sub:uid,session_id:sid,aal})]);await db.exec('set role authenticated');
  }
@@ -91,7 +91,16 @@ try {
  await assert.rejects(request('/rpc/record_walk_in_sale','select 1'),/SCANNER_ACCESS_ONLY/);
  await login(admin,web,'aal2');await request('/rpc/forget_admin_trusted_device','select forget_admin_trusted_device()');
  await login(admin,next);assert.equal((await request('/rpc/current_attendance_session_is_active','select current_attendance_session_is_active() active')).rows[0].active,true,'Website forget preserves scanner');
+ const recovered=crypto.randomUUID();
+ await db.exec('reset role');await db.query("insert into auth.sessions values($1,$2,now()+interval '2 minutes',null,'aal1')",[recovered,admin]);
+ await login(admin,recovered);
+ await request('/rpc/request_scanner_login_approval',"select request_scanner_login_approval('Recovery phone')");
+ await assert.rejects(request('/rpc/recover_inactive_attendance_session','select recover_inactive_attendance_session()'),/SCANNER_STILL_ACTIVE/);
+ await db.exec('reset role');await db.query("update private.attendance_operator_sessions set last_seen_at=now()-interval '3 minutes' where session_id=$1",[next]);
+ await login(admin,recovered);await request('/rpc/recover_inactive_attendance_session','select recover_inactive_attendance_session()');
+ assert.equal((await db.query('select current_attendance_session_is_active() active')).rows[0].active,true,'Explicit recovery replaces only inactive scanner');
+ await login(admin,next);assert.equal((await db.query('select current_attendance_session_is_active() active')).rows[0].active,false);
  await db.exec('reset role');await db.exec(`update profiles set is_active=false where id='${admin}'`);
- await login(admin,next);assert.equal((await request('/rpc/current_attendance_session_is_active','select current_attendance_session_is_active() active')).rows[0].active,false);
+ await login(admin,recovered);assert.equal((await request('/rpc/current_attendance_session_is_active','select current_attendance_session_is_active() active')).rows[0].active,false);
  console.log('Passed: password-only admin/staff scanner, website coexistence and MFA, RLS/RPC isolation, pairing, scanner approval notification/list, pending protection, approval-bound activation, idempotent activation, denied/cancelled/expired protection, replacement, website forget isolation and inactive-account rejection.');
 } finally {await db.close();}

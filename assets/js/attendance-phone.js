@@ -3,6 +3,12 @@ const phonePairingClient = window.supabase?.createClient(IRON_GRIND_SUPABASE_URL
 let phoneOperator = null;
 let phoneOperatorClient = null;
 let pendingPhoneScan = null;
+function getPhoneOperatorClient() {
+    phoneOperatorClient ||= window.supabase.createClient(IRON_GRIND_SUPABASE_URL, IRON_GRIND_SUPABASE_PUBLISHABLE_KEY, {
+        auth: { persistSession: true, storage: sessionStorage, detectSessionInUrl: false, autoRefreshToken: true, storageKey: 'ig_phone_operator_session' }
+    });
+    return phoneOperatorClient;
+}
 function requirePhoneOperator() {
     if (phoneOperator) return true;
     document.body.classList.remove('phone-operator-authenticated');
@@ -22,9 +28,7 @@ async function signInPhoneOperator(event) {
     const button = document.getElementById('phoneOperatorSignIn');
     button.disabled = true;
     try {
-        phoneOperatorClient ||= window.supabase.createClient(IRON_GRIND_SUPABASE_URL, IRON_GRIND_SUPABASE_PUBLISHABLE_KEY, {
-            auth: { persistSession: false, detectSessionInUrl: false, autoRefreshToken: true, storageKey: 'ig_phone_operator_memory' }
-        });
+        getPhoneOperatorClient();
         const username = document.getElementById('phoneOperatorId').value.trim();
         const password = document.getElementById('phoneOperatorPassword').value;
         const { data, error } = await phoneOperatorClient.functions.invoke('admin-username-login', { body: { username, password } });
@@ -44,25 +48,9 @@ async function signInPhoneOperator(event) {
             ({ error: activationError } = await phoneOperatorClient.rpc('activate_attendance_session'));
         }
         if (activationError) throw new Error('Could not complete scanner sign-in. Your other scanner was not replaced by this request. Sign in again.');
-        window.monitorAccountSession(phoneOperatorClient, async reason => {
-            await changePhoneOperator(false);
-            setPhoneAttendanceStatus(reason === 'expired' ? 'Your session ended. Sign in again to scan.' : 'Another attendance scanner signed in with this account, or your account is inactive. Sign in again to scan.', true);
-        }, 'current_attendance_session_is_active');
         const { data: profile, error: profileError } = await phoneOperatorClient.rpc('get_attendance_operator');
         if (profileError || !profile?.id) throw new Error('Active staff or admin account required.');
-        phoneOperatorClient.auth.startAutoRefresh();
-        phoneOperator = { id: profile.id, name: profile.full_name || username };
-        window.startScannerApprovalNotifications?.(phoneOperatorClient);
-        const { error: auditError } = await phoneOperatorClient.rpc('log_scanner_activity', { p_event: 'scanner_signed_in' });
-        if (auditError) console.error('Could not log scanner sign-in:', auditError);
-        document.body.classList.add('phone-operator-authenticated');
-        document.getElementById('phoneOperatorSetup').hidden = true;
-        document.getElementById('phoneOperatorIdentity').hidden = false;
-        document.getElementById('phoneOperatorName').textContent = 'Operator: ' + phoneOperator.name;
-        setPhoneCameraButton(false);
-        const pairing = pairingAtSignIn || readPhonePairing();
-        if (pairing) await startPhoneMemberScanner(pairing.sessionId, pairing.token, false);
-        else setPhoneAttendanceStatus('Phone not paired. You need to pair this phone before scanning attendance. Tap Open camera and scan the pairing QR from the administrator’s Attendance → Phone Camera page. Pairing lasts 30 days.');
+        await showPhoneOperatorSession(profile, username, pairingAtSignIn || readPhonePairing(), true);
     } catch (error) {
         window.stopScannerApprovalNotifications?.(phoneOperatorClient);
         window.stopAccountSessionMonitor?.(phoneOperatorClient);
@@ -71,6 +59,46 @@ async function signInPhoneOperator(event) {
         setPhoneAttendanceStatus(error.message || 'Could not sign in.', true);
     }
     finally { document.getElementById('phoneOperatorPassword').value = ''; button.disabled = false; }
+}
+
+async function showPhoneOperatorSession(profile, username, pairing, logSignIn = false) {
+        window.monitorAccountSession(phoneOperatorClient, async reason => {
+            await changePhoneOperator(false);
+            setPhoneAttendanceStatus(reason === 'expired' ? 'Your session ended. Sign in again to scan.' : 'Another attendance scanner signed in with this account, or your account is inactive. Sign in again to scan.', true);
+        }, 'current_attendance_session_is_active');
+        phoneOperatorClient.auth.startAutoRefresh();
+        phoneOperator = { id: profile.id, name: profile.full_name || username };
+        window.startScannerApprovalNotifications?.(phoneOperatorClient);
+        if (logSignIn) {
+            const { error: auditError } = await phoneOperatorClient.rpc('log_scanner_activity', { p_event: 'scanner_signed_in' });
+            if (auditError) console.error('Could not log scanner sign-in:', auditError);
+        }
+        document.body.classList.add('phone-operator-authenticated');
+        document.getElementById('phoneOperatorSetup').hidden = true;
+        document.getElementById('phoneOperatorIdentity').hidden = false;
+        document.getElementById('phoneOperatorName').textContent = 'Operator: ' + phoneOperator.name;
+        setPhoneCameraButton(false);
+        if (pairing) await startPhoneMemberScanner(pairing.sessionId, pairing.token, false);
+        else setPhoneAttendanceStatus('Phone not paired. You need to pair this phone before scanning attendance. Tap Open camera and scan the pairing QR from the administrator’s Attendance → Phone Camera page. Pairing lasts 30 days.');
+}
+
+async function restorePhoneOperatorSession() {
+    const client = getPhoneOperatorClient();
+    try {
+        const { data, error } = await client.auth.getSession();
+        if (error) throw error;
+        if (!data?.session) return false;
+        const { data: active, error: statusError } = await client.rpc('current_attendance_session_is_active');
+        if (statusError) throw statusError;
+        if (!active) { await client.auth.signOut({ scope: 'local' }); return false; }
+        const { data: profile, error: profileError } = await client.rpc('get_attendance_operator');
+        if (profileError || !profile?.id) throw profileError || new Error('Operator unavailable');
+        await showPhoneOperatorSession(profile, '', readPhonePairing());
+        return true;
+    } catch {
+        setPhoneAttendanceStatus('Could not restore your scanner session. Check the connection and reload; your saved session was kept.', true);
+        return true;
+    }
 }
 async function changePhoneOperator(logEvent = true) {
     window.stopScannerApprovalNotifications?.(phoneOperatorClient);
@@ -633,6 +661,7 @@ function configurePhoneAppInstall() {
 }
 
 window.addEventListener('pagehide', () => {
+    window.stopAccountSessionMonitor?.(phoneOperatorClient);
     window.stopScannerApprovalNotifications?.(phoneOperatorClient);
     phoneOperator = null;
     document.body.classList.remove('phone-operator-authenticated');
@@ -656,7 +685,7 @@ window.addEventListener('pagehide', () => {
 async function startPhoneAttendanceApp() {
     configurePhoneAppInstall();
     if ('serviceWorker' in navigator && window.isSecureContext) {
-    navigator.serviceWorker.register('attendance-phone-sw.js?v=20261111-scanner-handoff').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
+    navigator.serviceWorker.register('attendance-phone-sw.js?v=20261111-session-recovery').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
     }
     if (!window.ironGrindSupabase) {
         setPhoneAttendanceStatus('The attendance service could not load. Check your connection and reload.', true);
@@ -668,11 +697,13 @@ async function startPhoneAttendanceApp() {
     if (sessionId && token) {
         const accepted = acceptPhonePairingLink(sessionId, token, params.get('expires') || '');
         window.history.replaceState(null, '', window.location.pathname);
+        if (await restorePhoneOperatorSession()) return;
         requirePhoneOperator();
         setPhoneAttendanceStatus(accepted
             ? 'Sign in to confirm this phone pairing.'
             : 'Your saved pairing was kept. Sign in to resume scanning. To reinstall, choose Install attendance app below; no new pairing QR is needed.');
     } else {
+        if (await restorePhoneOperatorSession()) return;
         requirePhoneOperator();
         setPhoneCameraButton(false);
         setPhoneAttendanceStatus(readPhonePairing()
@@ -681,11 +712,11 @@ async function startPhoneAttendanceApp() {
     }
 }
 
-window.addEventListener('pageshow', event => {
+window.addEventListener('pageshow', async event => {
     if (event.persisted) {
         phoneScanBusy = false; phoneCameraTransition = false; phoneCameraPausedForNextMember = false;
         setPhoneNextScanButton(false); setPhoneCameraButton(false);
-        requirePhoneOperator();
+        if (!await restorePhoneOperatorSession()) requirePhoneOperator();
     }
 });
 
