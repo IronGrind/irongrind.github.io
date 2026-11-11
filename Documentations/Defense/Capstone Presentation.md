@@ -499,3 +499,5 @@ Staff attendance UI polish: The attendance area distinguishes QR scanning from n
 Speaker notes: The old attendance function checked out any latest open row, even when it was from an earlier day. Migration 20261111000004 limits checkout to an open visit whose check-in is today in Manila; otherwise an eligible return creates a new visit. Migration has been applied to linked project nttsrdassmzvtaamyogi as recorded below; physical attendance acceptance remains pending.
 
 Deployment status update - November 11, 2026: The linked dry-run for nttsrdassmzvtaamyogi listed only migration 20261111000004_preserve_incomplete_attendance.sql, and the linked push reported it applied successfully without an interactive prompt. The database rule is deployed; physical attendance acceptance remains pending.
+
+Staff stock visibility: Product choices show available stock quantity and unit; unavailable products stay disabled. Staff can search the live catalog by product/size and filter to available stock. No sale workflow or schema change. JavaScript syntax and whitespace checks passed; browser review and deployment remain pending.

@@ -127,6 +127,11 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-registration-form
 .staff-sale-entry #staffCompleteSale { box-shadow: 0 8px 18px rgba(169,0,0,.25); }
 .staff-catalog-heading { align-items: center; margin: 28px 0 16px; padding: 0 0 14px; border-bottom: 1px solid #343944; }
 .staff-catalog-heading h3 { font-size: 1.05rem; }
+.staff-catalog-controls { display:grid; grid-template-columns:minmax(0,1fr) auto; align-items:end; gap:12px; margin-bottom:16px; }
+.staff-catalog-controls .form-group { min-width:0; margin:0; }
+.staff-catalog-controls .form-group input { width:100%; min-height:44px; }
+.staff-available-toggle { display:flex; align-items:center; gap:9px; min-height:44px; padding:0 13px; border:1px solid #343944; border-radius:11px; color:#d5dce8; background:#15181e; font-size:.82rem; font-weight:650; cursor:pointer; }
+.staff-available-toggle input { width:18px; height:18px; margin:0; accent-color:#a90000; }
 .staff-product-card { position: relative; overflow: hidden; transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
 .staff-product-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 3px; background: #42bd83; opacity: .9; }
 .staff-product-card.is-unavailable::before { background: #cc5656; }
@@ -158,6 +163,7 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-status.error { co
 #staffAttendanceResults .staff-member-result { width:100%; text-align:left; white-space:normal; line-height:1.6; overflow-wrap:anywhere; }
 .staff-product-card h5, .staff-product-card-bottom { overflow-wrap:anywhere; min-width:0; }
 @media(max-width:400px) { .staff-product-grid { grid-template-columns:minmax(0,1fr); } }
+@media(max-width:520px) { .staff-catalog-controls { grid-template-columns:minmax(0,1fr); } .staff-available-toggle { justify-content:flex-start; } }
 .staff-scan-result { border:1px solid #36865a; border-left:5px solid #36865a; padding:18px; font-size:1.05rem; font-weight:600; line-height:1.6; border-radius:12px; background:#23834718; }
 .staff-tab[aria-current="page"] { box-shadow:inset 0 -3px 0 #d64a4a; }
 @media(max-width:650px) {
@@ -193,6 +199,7 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-form-section-head
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-product-card h5,
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-product-card-bottom strong,
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-form-section-heading h3 { color: #202a39; }
+html[data-dashboard-theme="light"] body.staff-dashboard .staff-available-toggle { border-color:#d2d9e3; color:#354052; background:#fff; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-payment-note { background: #f5e8e8; border-color: #e8c6c6; color: #354052; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-section-kicker { color: #9b1717; }
 html[data-dashboard-theme="light"] body.staff-dashboard .staff-panel-hero { border-color: #e7c4c4; background: #f7eeee; }

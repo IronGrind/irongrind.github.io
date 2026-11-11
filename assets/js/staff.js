@@ -184,8 +184,27 @@ function groupStaffProducts(products) {
 function renderStaffProductCatalog() {
     const target = document.getElementById('staffProductCatalog');
     target.replaceChildren();
+    const query = (document.getElementById('staffInventorySearch')?.value || '').trim().toLowerCase();
+    const availableOnly = Boolean(document.getElementById('staffAvailableOnly')?.checked);
+    const visibleGroups = staffProductGroups.map(group => ({
+        ...group,
+        variants: group.variants.filter(product => {
+            if (availableOnly && !staffProductAvailable(product)) return false;
+            if (!query) return true;
+            return [group.name, group.category, product.size, product.supplement_type, product.supplement_form]
+                .some(value => String(value || '').toLowerCase().includes(query));
+        })
+    })).filter(group => group.variants.length);
+    if (!visibleGroups.length) {
+        const empty = document.createElement('p');
+        empty.className = 'staff-empty-catalog';
+        empty.textContent = query || availableOnly ? 'No available products match these filters.' : 'No active products are listed.';
+        target.append(empty);
+        return;
+    }
     for (const [category, heading] of [['supplement', 'Supplements'], ['merchandise', 'Merchandise']]) {
-        const items = staffProductGroups.filter(group => group.category === category);
+        const items = visibleGroups.filter(group => group.category === category);
+        if (!items.length) continue;
         const section = document.createElement('section'); section.className = 'staff-catalog-section';
         const title = document.createElement('div'); title.className = 'staff-catalog-section-title';
         const label = document.createElement('h4'); label.textContent = heading;
@@ -252,7 +271,10 @@ async function loadStaffProducts() {
     select.replaceChildren(new Option(staffProductGroups.length ? 'Select a product' : 'No active products available', ''));
     staffProductGroups.forEach(group => {
         const available = group.variants.some(staffProductAvailable);
-        const option = new Option(`${group.category === 'supplement' ? 'Supplement' : 'Merchandise'} - ${group.name}${available ? '' : ' - Unavailable'}`, group.key);
+        const totalStock = group.variants.reduce((total, product) => total + Math.max(0, Number(product.stock) || 0), 0);
+        const stockUnit = group.variants[0]?.stock_unit || group.variants[0]?.unit || 'units';
+        const stockLabel = available ? `${totalStock} ${stockUnit} in stock` : 'Out of stock';
+        const option = new Option(`${group.category === 'supplement' ? 'Supplement' : 'Merchandise'} - ${group.name} - ${stockLabel}`, group.key);
         option.disabled = !available;
         select.add(option);
     });
@@ -735,6 +757,8 @@ async function loadStaffRequests() {
 document.getElementById('refreshStaffRequests').addEventListener('click', loadStaffRequests);
 
 document.getElementById('staffSaleProduct').addEventListener('change', updateStaffSaleUnits);
+document.getElementById('staffInventorySearch').addEventListener('input', renderStaffProductCatalog);
+document.getElementById('staffAvailableOnly').addEventListener('change', renderStaffProductCatalog);
 document.getElementById('staffSaleSize').addEventListener('change', updateStaffSaleSummary);
 document.getElementById('staffSaleQuantity').addEventListener('input', updateStaffSaleSummary);
 document.getElementById('staffSaleUnit').addEventListener('change', updateStaffSaleSummary);
