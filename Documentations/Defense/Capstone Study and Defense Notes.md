@@ -601,3 +601,21 @@ The sign-in dialog now tells the operator to try Recover inactive session immedi
 A user screenshot after approving a registration showed a success toast with a dark background and nearly black text. The toast style set its background but left text color inherited from the light-theme page, reducing contrast.
 
 The shared toast rule now sets an explicit light text color, preserving the dark toast surface and colored success/error border. The admin stylesheet URL receives a new cache version. Affected modules: assets/css/style.css and admin.html. Approval/payment behavior is unchanged; the screenshot indicates the success path completed. Validation: source inspection and git diff --check only; visual browser verification and deployment remain pending.
+
+## Prevent Store password control overlap - November 11, 2026
+
+A user screenshot of Store & Inventory in light theme showed the password visibility control overlapping the password field and Open Store button. The shared password enhancer wraps the field and appends an absolutely positioned eye button; the Store form did not explicitly constrain that control inside its flex item.
+
+The Store password field now reserves room for the eye control, positions it within the field with fixed dimensions and transparent background, and keeps the submit button from shrinking into it. At phone-width viewports, the form stacks the field and submit button. The admin stylesheet cache version was refreshed. Affected modules: assets/css/style.css and admin.html. Store authentication behavior is unchanged. Validation: source inspection and git diff --check only; browser layout review and deployment remain pending.
+
+## Rename the admin Store & Inventory labels - November 11, 2026
+
+The admin navigation, locked-state heading and instructions, submit button, and inventory section heading now use Inventory / Open Inventory consistently. The icon changed from a store to stacked boxes. This is a visible-label-only change: the internal section key, existing password check, access scope, and inventory behavior are unchanged. Affected module: admin.html. No schema, setup, or deployment change has been applied. Validation: source inspection and git diff --check only; browser review and deployment remain pending.
+
+## Match admin notifications to the selected theme - November 11, 2026
+
+The user noted that light mode still showed dark popups/pages. Review of shared admin surfaces found that the reusable modal, account menu, approval dialogs, inventory lock and page loader already have light-theme overrides, while the screenshot's success toast had no light-theme surface rule. It therefore kept its charcoal background even after its text contrast was fixed.
+
+Added light-theme toast surfaces: neutral messages use white, success uses a pale green surface, and errors use a pale red surface with matching text and borders. Dark theme retains the existing dark toast palette. Refreshed the admin stylesheet cache version. Affected modules: assets/css/style.css and admin.html. No workflow or data changes. Validation: source review and git diff --check only; browser checks across each popup/page remain pending, and frontend deployment is unverified.
+
+Theme follow-up: Shared toast rules also serve member-dashboard notifications. The admin and member pages now both use the refreshed stylesheet version. Source inspection confirms existing light-theme overrides for the shared modal, account menu, approval dialogs, inventory lock, and page loader; this was not a full browser audit of every screen or popup.

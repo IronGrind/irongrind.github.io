@@ -448,3 +448,28 @@ Speaker notes: A staff sign-in remained waiting although the user reported no ot
 - Registration approval and payment behavior are unchanged.
 
 Speaker notes: The user screenshot showed the registration approval success toast with dark text on a dark background. The shared toast rule now sets an explicit light text color so it remains readable when the page uses the light theme. The admin stylesheet cache version was refreshed. No workflow or data changes. Source inspection only; browser verification and deployment remain pending.
+
+## Keep Store password controls aligned
+
+- The visibility control stays inside the Store password field.
+- The Open Store button keeps its own space; narrow phone layouts stack the controls.
+
+Speaker notes: A screenshot showed the password visibility control overlapping the Store password field and submit button. CSS now reserves input space for the eye control, positions it within the field, prevents submit-button shrinking, and stacks the form at phone widths. Store authentication is unchanged. The admin stylesheet cache version was refreshed. Source inspection only; browser validation and deployment remain pending.
+
+## Inventory section naming
+
+- Admin navigation and lock screen call the section Inventory.
+- The unlock action is labeled Open Inventory.
+- Existing access control and inventory behavior remain unchanged.
+
+Speaker notes: Updated the admin-facing Store & Inventory wording to Inventory for consistency with the section's function. The internal section key and password check remain unchanged. This label-only UI change affects admin.html and does not change data or permissions. Source inspection only; browser review and deployment remain pending.
+
+## Theme-aware admin notifications
+
+- Toasts use dark surfaces in dark mode and light surfaces in light mode.
+- Success and error messages have matching readable text and accent colors.
+- Shared modal and approval surfaces have existing light-theme styles.
+
+Speaker notes: The registration success toast remained dark in light mode because only its text contrast had been corrected. The admin stylesheet now gives neutral, success and error toasts theme-appropriate surfaces and text/accent colors. Existing dark-mode appearance and application workflow are unchanged. Source review only; visual checks across popups/pages and deployment remain pending.
+
+Theme follow-up: Member notifications use the same shared toast stylesheet; the member page cache version was refreshed too. The source review checked common shared popup surfaces, but does not establish visual acceptance across every page.
