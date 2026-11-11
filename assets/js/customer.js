@@ -528,7 +528,26 @@ function renderStore() {
     else suppGrid.innerHTML = supp.map(productCard).join('');
 
     if (merch.length === 0) merchGrid.innerHTML = '<div class="empty-state">No merchandise available.</div>';
-    else merchGrid.innerHTML = merch.map(productCard).join('');
+    else {
+        const sizeGroups = new Map();
+        merch.forEach(product => {
+            const size = product.size || 'One size';
+            if (!sizeGroups.has(size)) sizeGroups.set(size, []);
+            sizeGroups.get(size).push(product);
+        });
+        const preferredSizes = ['XS', 'Small', 'Medium', 'Large', 'XL', 'XXL', 'XXXL', 'One size'];
+        const sortedSizes = [...sizeGroups.keys()].sort((a, b) => {
+            const left = preferredSizes.findIndex(size => size.toLowerCase() === a.toLowerCase());
+            const right = preferredSizes.findIndex(size => size.toLowerCase() === b.toLowerCase());
+            if (left >= 0 || right >= 0) return (left < 0 ? 99 : left) - (right < 0 ? 99 : right);
+            return a.localeCompare(b);
+        });
+        merchGrid.innerHTML = sortedSizes.map(size => `
+            <section class="member-merch-size-section">
+                <div class="member-merch-size-heading"><h4>${escapeHTML(size)}</h4><span>${sizeGroups.get(size).length} ${sizeGroups.get(size).length === 1 ? 'item' : 'items'}</span></div>
+                <div class="product-grid view-only">${sizeGroups.get(size).map(productCard).join('')}</div>
+            </section>`).join('');
+    }
 }
 
 function productCard(p) {

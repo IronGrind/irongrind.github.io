@@ -501,3 +501,5 @@ Speaker notes: The old attendance function checked out any latest open row, even
 Deployment status update - November 11, 2026: The linked dry-run for nttsrdassmzvtaamyogi listed only migration 20261111000004_preserve_incomplete_attendance.sql, and the linked push reported it applied successfully without an interactive prompt. The database rule is deployed; physical attendance acceptance remains pending.
 
 Staff stock visibility: Product choices show available stock quantity and unit; unavailable products stay disabled. Staff can search the live catalog by product/size and filter to available stock. No sale workflow or schema change. JavaScript syntax and whitespace checks passed; browser review and deployment remain pending.
+
+Merchandise catalog organization: Staff and members can browse merchandise in separate size sections, each showing an item count. Staff keeps the product/size search and available-only filter. Inventory records and checkout behavior are unchanged. JavaScript syntax and whitespace checks passed; browser review and deployment remain pending.

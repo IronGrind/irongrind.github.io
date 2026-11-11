@@ -212,14 +212,24 @@ function renderStaffProductCatalog() {
         title.append(label, count); section.append(title);
         const forms = category === 'supplement'
             ? [['powder', 'Powders'], ['capsule', 'Capsules'], ['tablet', 'Tablets'], ['drinkable', 'Liquids / drinks'], ['other', 'Other supplements']]
-            : [['merchandise', 'Merchandise']];
+            : [...new Set(items.flatMap(group => group.variants.map(product => product.size || 'One size')))]
+                .sort((a, b) => {
+                    const preferred = ['XS', 'Small', 'Medium', 'Large', 'XL', 'XXL', 'XXXL', 'One size'];
+                    const left = preferred.findIndex(size => size.toLowerCase() === a.toLowerCase());
+                    const right = preferred.findIndex(size => size.toLowerCase() === b.toLowerCase());
+                    if (left >= 0 || right >= 0) return (left < 0 ? 99 : left) - (right < 0 ? 99 : right);
+                    return a.localeCompare(b);
+                }).map(size => [size, size]);
         for (const [form, formLabel] of forms) {
-        const formItems = category === 'supplement' ? items.filter(group => staffSupplementForm(group.variants[0]) === form) : items;
+        const formItems = category === 'supplement'
+            ? items.filter(group => staffSupplementForm(group.variants[0]) === form)
+            : items.map(group => ({ ...group, variants: group.variants.filter(product => (product.size || 'One size') === form) })).filter(group => group.variants.length);
         if (!formItems.length && items.length) continue;
         if (!formItems.length && form !== forms[0][0]) continue;
-        if (category === 'supplement' && formItems.length) {
+        if (formItems.length) {
             const subheading = document.createElement('h5'); subheading.className = 'staff-catalog-form-title';
-            subheading.textContent = `${formLabel} (${formItems.length})`; section.append(subheading);
+            const variantCount = category === 'merchandise' ? formItems.reduce((total, group) => total + group.variants.length, 0) : formItems.length;
+            subheading.textContent = `${formLabel} (${variantCount})`; section.append(subheading);
         }
         const grid = document.createElement('div'); grid.className = 'staff-product-grid';
         if (!items.length) {

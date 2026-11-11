@@ -1016,6 +1016,10 @@ body.member-dashboard .dashboard-footer { margin-top: 0; }
     border-radius: 10px; padding: 8px; text-align: center;
 }
 .view-only-note i { color: #8b0000; }
+.member-merch-size-section + .member-merch-size-section { margin-top: 22px; }
+.member-merch-size-heading { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:0 0 10px; padding:0 0 8px; border-bottom:1px solid #8884; }
+.member-merch-size-heading h4 { margin:0; font-size:.92rem; }
+.member-merch-size-heading span { color:#8b95a9; font-size:.75rem; }
 
 /* Walk-in product sales report */
 .walkin-sales-summary.stats-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
