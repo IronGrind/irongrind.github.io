@@ -473,3 +473,5 @@ Speaker notes: Updated the admin-facing Store & Inventory wording to Inventory f
 Speaker notes: The registration success toast remained dark in light mode because only its text contrast had been corrected. The admin stylesheet now gives neutral, success and error toasts theme-appropriate surfaces and text/accent colors. Existing dark-mode appearance and application workflow are unchanged. Source review only; visual checks across popups/pages and deployment remain pending.
 
 Theme follow-up: Member notifications use the same shared toast stylesheet; the member page cache version was refreshed too. The source review checked common shared popup surfaces, but does not establish visual acceptance across every page.
+
+Inventory toggle follow-up: The earlier adjustment did not remove the visible overlap; the global focus-visible halo extended beyond the eye button. The eye control now sits farther inside the field with a compact focus outline and wider separation from Open Inventory. Admin stylesheet cache version refreshed. Source inspection only; visual browser confirmation and deployment remain pending.

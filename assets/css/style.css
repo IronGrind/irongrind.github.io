@@ -554,8 +554,10 @@ label:has(input[name="wiPlan"]:checked) {
 .staff-account-details dd { margin:0; font-size:.88rem; overflow-wrap:anywhere; }
 @media(max-width:520px) { .staff-account-details dl { grid-template-columns:minmax(0,1fr); } }
 .password-input-group > .password-visibility-wrapper { flex:1 1 0; width:0; min-width:0; }
-.password-input-group > .password-visibility-wrapper input { display:block; box-sizing:border-box; width:100%; min-width:0; padding-right:48px; }
-.password-input-group > .password-visibility-wrapper > .toggle-password { position:absolute; z-index:1; top:50%; right:6px; transform:translateY(-50%); display:grid; place-items:center; width:36px; min-width:36px; height:36px; min-height:36px; padding:0; border:0; border-radius:50%; background:transparent !important; box-shadow:none; }
+.password-input-group { gap:12px; }
+.password-input-group > .password-visibility-wrapper input { display:block; box-sizing:border-box; width:100%; min-width:0; padding-right:52px; }
+.password-input-group > .password-visibility-wrapper > .toggle-password { position:absolute; z-index:1; top:50%; right:12px; transform:translateY(-50%); display:grid; place-items:center; width:32px; min-width:32px; height:32px; min-height:32px; padding:0; border:0; border-radius:50%; background:transparent !important; box-shadow:none; }
+.password-input-group > .password-visibility-wrapper > .toggle-password:focus-visible { outline:2px solid #d44b4b; outline-offset:0; }
 .password-input-group > button[type="submit"] { flex:0 0 auto; white-space:nowrap; }
 .password-visibility-wrapper .toggle-password { min-height:36px; padding:0; color:inherit; opacity:.75; display:grid; place-items:center; }
 .password-visibility-wrapper .toggle-password:hover { opacity:1; background:#8882; }
