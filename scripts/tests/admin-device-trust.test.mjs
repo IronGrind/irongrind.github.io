@@ -31,6 +31,19 @@ test('failed MFA never attempts registration or transfer',async()=>{
  const f=await browser(false);f.window.verifyAdminAuthenticator=async()=>{throw Error('cancelled');};
  await assert.rejects(f.window.requireAdminMfa(f.client),/cancelled/);assert.deepEqual(f.calls,['challenge','approval']);
 });
+
+test('trusted browser waking during MFA receives an approval request before completion',async()=>{
+ const f=await browser(false);let requests=0;
+ f.window.waitForAdminDeviceApproval=async(_,scope)=>{assert.equal(scope,'attendance');f.calls.push('approval');return ++requests>1;};
+ await f.window.requireAdminMfa(f.client,'attendance');
+ assert.deepEqual(f.calls,['challenge','approval','mfa','approval','complete']);
+});
+
+test('missing approval script fails closed before MFA or registration',async()=>{
+ const f=await browser(false);delete f.window.waitForAdminDeviceApproval;
+ await assert.rejects(f.window.requireAdminMfa(f.client),/Device approval could not load/);
+ assert.deepEqual(f.calls,['challenge']);
+});
 async function edge(signatureValid=true,freshMfa=true){
  const pair=await webcrypto.subtle.generateKey({name:'ECDSA',namedCurve:'P-256'},false,['sign','verify']);
  const message='server-session-bound-random-challenge',now=Math.floor(Date.now()/1000),calls=[];

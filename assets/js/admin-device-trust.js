@@ -57,8 +57,12 @@ window.requireAdminMfa = async (client, scope = 'dashboard') => {
     if (required !== true) return;
     const device = await window.prepareAdminDeviceTrust(client, scope);
     if (!device.reusable) {
-        if (window.waitForAdminDeviceApproval) await window.waitForAdminDeviceApproval(client, scope);
+        if (!window.waitForAdminDeviceApproval) throw new Error('Device approval could not load. Reload the page and sign in again.');
+        const approved = await window.waitForAdminDeviceApproval(client, scope);
         await window.verifyAdminAuthenticator(client, true);
+        // A sleeping trusted browser can resume while the authenticator is open.
+        // Ask again so completion cannot require approval we never requested.
+        if (!approved) await window.waitForAdminDeviceApproval(client, scope);
     }
     await device.complete();
 };
