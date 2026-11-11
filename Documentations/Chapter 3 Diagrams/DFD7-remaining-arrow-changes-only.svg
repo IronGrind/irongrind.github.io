@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="760" viewBox="0 0 1180 760">
+  <defs>
+    <marker id="green" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#26734d"/></marker>
+    <marker id="blue" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#365f91"/></marker>
+    <marker id="red" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#b42318"/></marker>
+    <style>
+      text { font-family: Arial, sans-serif; fill: #1d2733; }
+      .title { font-size: 25px; font-weight: 700; }
+      .head { font-size: 18px; font-weight: 700; }
+      .label { font-size: 15px; }
+      .small { font-size: 13px; }
+      .proc { fill: #dae8fc; stroke: #6c8ebf; stroke-width: 2; rx: 10; }
+      .store { fill: #d5e8d4; stroke: #82b366; stroke-width: 2; }
+      .actor { fill: #fff2cc; stroke: #d6b656; stroke-width: 2; rx: 14; }
+      .add { fill: none; stroke: #26734d; stroke-width: 3; marker-end: url(#green); }
+      .read { fill: none; stroke: #365f91; stroke-width: 3; marker-end: url(#blue); }
+      .remove { fill: none; stroke: #b42318; stroke-width: 2.5; stroke-dasharray: 8 6; marker-end: url(#red); }
+    </style>
+  </defs>
+  <rect width="1180" height="760" fill="#fff"/>
+  <text x="40" y="48" class="title">DFD7 — Remaining arrow changes only</text>
+  <text x="40" y="76" class="small">Focused correction sketch. Keep all other DFD7 processes and flows as they are.</text>
+
+  <!-- Activity log changes -->
+  <rect x="35" y="105" width="1110" height="265" rx="14" fill="#f7fbf8" stroke="#a6c9b4"/>
+  <text x="58" y="137" class="head">1. Add the missing Activity Logs flows</text>
+  <rect x="70" y="175" width="245" height="62" class="proc"/>
+  <text x="192" y="202" text-anchor="middle" class="head">3.0 User Management</text>
+  <text x="192" y="224" text-anchor="middle" class="small">writes profile/user event</text>
+  <path d="M315 206 H500" class="add"/>
+  <text x="407" y="190" text-anchor="middle" class="label">Profile / user-management event</text>
+  <rect x="500" y="175" width="240" height="62" class="store"/>
+  <text x="620" y="202" text-anchor="middle" class="head">D9: activity_logs</text>
+  <text x="620" y="224" text-anchor="middle" class="small">stored audit records</text>
+
+  <path d="M620 237 V285 H825" class="read"/>
+  <text x="710" y="278" text-anchor="middle" class="label">Activity log records</text>
+  <rect x="825" y="255" width="235" height="70" class="proc"/>
+  <text x="942" y="284" text-anchor="middle" class="head">9.0 Activity Logs</text>
+  <text x="942" y="307" text-anchor="middle" class="small">reads and filters D9</text>
+
+  <!-- Membership application correction -->
+  <rect x="35" y="395" width="1110" height="230" rx="14" fill="#f7f9fc" stroke="#b8cce2"/>
+  <text x="58" y="428" class="head">2. Correct the membership approval / status flows</text>
+  <rect x="65" y="485" width="175" height="64" class="proc"/>
+  <text x="152" y="523" text-anchor="middle" class="head">2.0 Application</text>
+  <ellipse cx="495" cy="510" rx="105" ry="48" class="store"/>
+  <text x="495" y="505" text-anchor="middle" class="head">D2</text>
+  <text x="495" y="527" text-anchor="middle" class="small">Applications</text>
+  <ellipse cx="850" cy="510" rx="100" ry="48" class="store"/>
+  <text x="850" y="505" text-anchor="middle" class="head">D3</text>
+  <text x="850" y="527" text-anchor="middle" class="small">Members</text>
+
+  <path d="M240 495 H390" class="add"/>
+  <text x="315" y="478" text-anchor="middle" class="small">Application status / decision</text>
+  <path d="M240 535 H750" class="add"/>
+  <text x="493" y="561" text-anchor="middle" class="small">Approved member record</text>
+  <path d="M390 525 H240" class="read"/>
+  <text x="315" y="584" text-anchor="middle" class="small">Existing application data / status read</text>
+
+  <rect x="35" y="650" width="1110" height="85" rx="12" fill="#fff7f6" stroke="#e5a09b"/>
+  <text x="58" y="680" class="head" fill="#8b1e16">Check the existing D6 → 2.0 “Membership transaction” arrow</text>
+  <text x="58" y="709" class="label">Keep only if 2.0 actually reads a sales transaction from D6; otherwise remove it. D6 remains the sales store.</text>
+</svg>
