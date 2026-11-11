@@ -691,6 +691,7 @@ body.member-dashboard .dashboard-footer { margin-top: 0; }
 .customer-main > * { scroll-margin-top: 20px; }
 .member-insights-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 20px; }
 .member-insights-grid > .panel { height: 100%; }
+.member-attendance-scroll-hint { display:none; }
 .member-tools-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; gap: 16px; }
 .member-collapsible > summary { list-style: none; cursor: pointer; }
 .member-collapsible > summary::-webkit-details-marker { display: none; }
@@ -938,6 +939,14 @@ body.member-dashboard .dashboard-footer { margin-top: 0; }
     .customer-hero { padding: 20px; }
     .customer-hero h2 { font-size: 1.25rem; }
     .supplement-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) {
+    body.member-dashboard .member-attendance-scroll-hint { display:block; margin:0 0 8px; color:#a4adc2; font-size:.72rem; }
+    body.member-dashboard .member-attendance-table-scroll { width:100%; max-width:100%; overflow-x:auto; overscroll-behavior-x:contain; }
+    body.member-dashboard #attendanceHistory .attendance-table { min-width:680px; }
+    body.member-dashboard #attendanceHistory .attendance-table th,
+    body.member-dashboard #attendanceHistory .attendance-table td { white-space:nowrap; }
+    html[data-dashboard-theme="light"] body.member-dashboard .member-attendance-scroll-hint { color:#586579; }
 }
 
 @media (max-width: 700px) {

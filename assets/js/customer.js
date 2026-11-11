@@ -484,7 +484,8 @@ function renderAttendanceHistory() {
     const recent = sorted.slice(0, 15);
 
     el.innerHTML = `
-        <table class="attendance-table">
+        <p class="member-attendance-scroll-hint">Swipe sideways to view all columns.</p>
+        <div class="table-scroll member-attendance-table-scroll"><table class="attendance-table">
             <thead><tr><th>Date</th><th>Time In</th><th>Time Out</th><th>Duration</th><th>Status</th></tr></thead>
             <tbody>
                 ${recent.map(a => {
@@ -502,15 +503,15 @@ function renderAttendanceHistory() {
                         ? '<span class="badge-status out">Completed</span>'
                         : attendanceVisitIncomplete(a.date, a.timeOut) ? '<span class="badge-status incomplete">Incomplete</span>' : '<span class="badge-status in">Inside</span>';
                     return `<tr>
-                        <td>${a.date}</td>
-                        <td>${formatAttendanceClock(a.timeIn)}</td>
-                        <td>${formatAttendanceClock(a.timeOut)}</td>
-                        <td>${duration}</td>
-                        <td>${status}</td>
+                        <td data-label="Date">${a.date}</td>
+                        <td data-label="Time in">${formatAttendanceClock(a.timeIn)}</td>
+                        <td data-label="Time out">${formatAttendanceClock(a.timeOut)}</td>
+                        <td data-label="Duration">${duration}</td>
+                        <td data-label="Status">${status}</td>
                     </tr>`;
                 }).join('')}
             </tbody>
-        </table>
+        </table></div>
         ${all.length > 15 ? `<p style="text-align:center; font-size:0.75rem; color:#6a748b; margin-top:12px;">Showing 15 of ${all.length} visits</p>` : ''}
     `;
 }

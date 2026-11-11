@@ -515,3 +515,7 @@ Staff inventory filter simplification: Replaced multiple summary tiles/category 
 Staff member selection spacing: Hidden member-summary panels now stay hidden until a member is selected, removing an empty bar from renewal and plan-change forms. No membership behavior changed. Whitespace check passed; browser review and deployment remain pending.
 
 Staff membership form refinement: Complete Renewal and Save plan change buttons now use compact content-sized widths and consistent touch sizing. No membership behavior changed. Whitespace check passed; browser review and deployment remain pending.
+
+Member mobile attendance: Narrow layouts show attendance entries as labeled cards for date, check-in/out, duration and status; desktop retains the table. Attendance data and calculation behavior are unchanged. JavaScript syntax and whitespace checks passed; mobile browser review and deployment remain pending.
+
+Member attendance table adjustment: On narrow screens, the member history retains its table and scrolls horizontally like staff attendance, with a swipe hint and non-wrapping date/time cells. No attendance data change. JavaScript syntax and whitespace checks passed; mobile review and deployment remain pending.
