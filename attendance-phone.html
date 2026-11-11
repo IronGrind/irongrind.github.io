@@ -45,6 +45,21 @@
         .phone-model-setup input { width: 100%; min-height: 46px; padding: 10px 12px; border: 1px solid #555; border-radius: 9px; background: #0d0d0d; color: #fff; font: inherit; }
         .phone-model-setup small { display: block; margin-top: 7px; color: #aeb7c7; line-height: 1.4; font-size: .82rem; }
         .phone-install-help { display: none; margin-top: 12px; padding: 12px; border: 1px solid #444; border-radius: 10px; font-size: .9rem; }
+        .phone-operator-bar { display:flex; align-items:center; justify-content:space-between; gap:12px; margin:18px 0 12px; padding:12px 0; border-top:1px solid #ffffff12; border-bottom:1px solid #ffffff12; }
+        .phone-operator-bar p { margin:0; min-width:0; overflow-wrap:anywhere; font-size:.85rem; color:#c7cfdd; }
+        .phone-text-button { min-height:44px; padding:8px 12px; border:0; border-radius:8px; background:transparent; color:#f0b9bb; font-size:.85rem; font-weight:600; cursor:pointer; }
+        #phoneApprovalStatus { margin:8px 0; color:#fecaca; font-size:.82rem; line-height:1.5; }
+        .phone-scanner-options { margin-top:22px; border-top:1px solid #ffffff12; padding-top:6px; }
+        .phone-scanner-options details { padding:10px 0; }
+        .phone-scanner-options summary { min-height:36px; padding:8px 0; color:#aeb7c7; font-size:.85rem; cursor:pointer; }
+        .phone-scanner-options p { color:#aeb7c7; font-size:.82rem; line-height:1.5; margin:8px 0; }
+        .phone-scanner-options .phone-install-button { margin-top:4px; min-height:44px; font-size:.85rem; box-shadow:none; }
+        .phone-model-setup h2 { font-size:1rem; margin:0 0 6px; }
+        .phone-model-setup .phone-setup-description { color:#aeb7c7; font-size:.85rem; margin:0 0 16px; line-height:1.5; }
+        .phone-model-pending #phoneQrStatus:not(.error),
+        .phone-model-pending #phoneCameraButton,
+        .phone-model-pending #phoneNextScanButton,
+        body:not(.phone-operator-authenticated) .phone-session-options { display:none !important; }
         @media (min-height: 850px) and (min-width: 600px) { body.phone-scanner-page { place-items: center; } }
     </style>
 </head>
@@ -57,24 +72,28 @@
 <label for="phoneOperatorId">Username</label><input id="phoneOperatorId" autocomplete="username" required maxlength="30" autocapitalize="none" spellcheck="false" placeholder="Enter your username">
 <label for="phoneOperatorPassword" style="margin-top:12px">Password</label><input id="phoneOperatorPassword" type="password" autocomplete="current-password" required>
 <button id="phoneOperatorSignIn" class="phone-model-save-button" type="submit">Sign in to scan</button></form>
-<div id="phoneOperatorIdentity" class="phone-model-setup" hidden><p id="phoneOperatorName"></p><button type="button" class="phone-next-scan-button" onclick="changePhoneOperator()">Change operator</button><p id="phoneApprovalStatus" role="status" aria-live="polite">Checking sign-in requests…</p><button type="button" class="phone-next-scan-button" onclick="phoneOperatorClient?.__refreshScannerApprovals?.()">Check sign-in requests</button></div>
+<div id="phoneOperatorIdentity" hidden><div class="phone-operator-bar"><p id="phoneOperatorName"></p><button type="button" class="phone-text-button" onclick="changePhoneOperator()" aria-label="Change scanner operator">Change</button></div><p id="phoneApprovalStatus" role="status" aria-live="polite" hidden></p></div>
+        <section id="phoneModelSetup" class="phone-model-setup" hidden aria-labelledby="phoneModelHeading">
+            <h2 id="phoneModelHeading">Finish pairing this phone</h2>
+            <p class="phone-setup-description">Enter a phone name so the administrator can recognize it.</p>
+            <label for="phoneModelInput">Phone model</label>
+            <input id="phoneModelInput" type="text" maxlength="100" autocomplete="off" placeholder="Example: iPhone 11" onkeydown="if(event.key==='Enter'){event.preventDefault();savePhoneModelAndContinue()}">
+            <small>Find the model in your phone’s Settings → About.</small>
+            <button id="phoneModelSaveButton" class="phone-model-save-button" type="button" onclick="savePhoneModelAndContinue()">Save and continue</button>
+        </section>
 <div id="phoneQrReader" hidden></div>
         <p id="phoneQrStatus" role="status" aria-live="polite">Preparing your attendance scanner…</p>
-        <button id="phoneInstallButton" class="phone-install-button" type="button" onclick="installPhoneAttendanceApp()">Install attendance app</button>
-        <p id="phoneInstallHelp" class="phone-install-help">Open your browser menu and choose <strong>Add to Home Screen</strong> or <strong>Install app</strong>.</p>
-        <section id="phoneModelSetup" class="phone-model-setup" hidden>
-            <label for="phoneModelInput">Phone model</label>
-            <input id="phoneModelInput" type="text" maxlength="100" autocomplete="off" placeholder="Example: Samsung Galaxy A15" onkeydown="if(event.key==='Enter'){event.preventDefault();savePhoneModelAndContinue()}">
-            <small>Automatic model detection is unavailable in this browser. Find it in Settings → About phone → Model name or number.</small>
-            <button id="phoneModelSaveButton" class="phone-model-save-button" type="button" onclick="savePhoneModelAndContinue()">Save model and continue</button>
-        </section>
         <button id="phoneNextScanButton" class="phone-next-scan-button" type="button" onclick="resumePhoneAttendanceScanner()" hidden>Scan next member</button>
         <button id="phoneCameraButton" class="phone-scanner-button" type="button" onclick="togglePhoneAttendanceCamera()" hidden>Open camera</button>
+        <footer class="phone-scanner-options">
+            <details class="phone-session-options"><summary>Session options</summary><p>Sign-in requests appear automatically while this scanner is open.</p><button type="button" class="phone-text-button" onclick="phoneOperatorClient?.__refreshScannerApprovals?.()">Check sign-in requests</button></details>
+            <details id="phoneInstallOptions" hidden><summary>Install attendance app</summary><button id="phoneInstallButton" class="phone-install-button" type="button" onclick="installPhoneAttendanceApp()">Install on this phone</button><p id="phoneInstallHelp" class="phone-install-help">Open your browser menu and choose <strong>Add to Home Screen</strong> or <strong>Install app</strong>.</p></details>
+        </footer>
     </main>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="assets/js/supabase-client.js?v=20261111-scanner-session"></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
-    <script src="assets/js/scanner-login-approval.js?v=20261111-session-recovery"></script>
-    <script src="assets/js/attendance-phone.js?v=20261111-session-recovery"></script>
+    <script src="assets/js/scanner-login-approval.js?v=20261111-scanner-layout"></script>
+    <script src="assets/js/attendance-phone.js?v=20261111-pairing-status"></script>
 </body>
 </html>

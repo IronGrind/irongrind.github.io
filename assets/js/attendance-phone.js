@@ -79,7 +79,7 @@ async function showPhoneOperatorSession(profile, username, pairing, logSignIn = 
         document.getElementById('phoneOperatorName').textContent = 'Operator: ' + phoneOperator.name;
         setPhoneCameraButton(false);
         if (pairing) await startPhoneMemberScanner(pairing.sessionId, pairing.token, false);
-        else setPhoneAttendanceStatus('Phone not paired. You need to pair this phone before scanning attendance. Tap Open camera and scan the pairing QR from the administrator’s Attendance → Phone Camera page. Pairing lasts 30 days.');
+        else setPhoneAttendanceStatus('No saved pairing connection was found in this app/browser. The admin may still show an active pairing for this phone, but its label cannot restore the saved connection. Open this app in the same browser where you paired it. If this is already the same browser, ask the admin to check the pairing before ending it or creating a new QR.');
 }
 
 async function restorePhoneOperatorSession() {
@@ -588,7 +588,7 @@ async function stopPhoneAttendanceScanner() {
         ? deviceLabel
             ? `Camera stopped. ${deviceLabel} is still paired. Tap Open camera to continue scanning.`
             : 'Camera stopped. Your pairing is still active. Tap Open camera to continue scanning.'
-        : 'Phone not paired. You need to pair this phone first. Tap Open camera to scan the administrator’s phone-pairing QR. Pairing lasts 30 days.');
+        : 'No saved pairing connection was found in this app/browser. The admin may still show an active pairing for this phone. Open this app in the same browser where you paired it; if the message remains, ask the admin to check the pairing before ending it or creating a new QR.');
 }
 
 async function togglePhoneAttendanceCamera() {
