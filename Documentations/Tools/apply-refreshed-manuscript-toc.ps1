@@ -27,7 +27,7 @@ try {
     $ns = [Xml.XmlNamespaceManager]::new($doc.NameTable); $ns.AddNamespace('w', 'http://schemas.openxmlformats.org/wordprocessingml/2006/main')
     $query = '//w:p[w:pPr/w:pStyle[starts-with(@w:val,"TOC")]]'
     $entries = @($doc.SelectNodes($query, $ns)); $updated = @($wordDoc.SelectNodes($query, $ns))
-    if ($entries.Count -ne 39 -or $updated.Count -ne $entries.Count) { throw 'TOC entry count changed; inspect headings before applying.' }
+    if ($entries.Count -eq 0 -or $updated.Count -ne $entries.Count) { throw 'TOC entry count changed; inspect headings before applying.' }
     $before = $doc.OuterXml
     $priorNumbers = @()
     $lastPage = 0
@@ -45,7 +45,7 @@ try {
         $anchor = $entries[$i].SelectSingleNode('.//w:hyperlink', $ns).GetAttribute('anchor', $ns.LookupNamespace('w'))
         if (-not $doc.SelectSingleNode('//w:bookmarkStart[@w:name="' + $anchor + '"]', $ns)) { throw "Missing destination: $anchor" }
     }
-    # Only the 39 cached page-reference values may change.
+    # Only the existing cached page-reference values may change.
     $comparison = $doc.CloneNode($true)
     $compareEntries = @($comparison.SelectNodes($query, $ns))
     for ($i = 0; $i -lt $compareEntries.Count; $i++) { @($compareEntries[$i].SelectNodes('.//w:t', $ns))[-1].InnerText = $priorNumbers[$i] }
@@ -58,6 +58,8 @@ try {
         if ((HashEntry $entry) -ne (HashEntry $zip.GetEntry($entry.FullName))) { throw ('Unexpected package change: ' + $entry.FullName) }
     }
     $null = ReadXml $zip 'word/document.xml'
+    $pageReader = [IO.StreamReader]::new($wordZip.GetEntry('docProps/app.xml').Open())
+    try { $paginationProperties = [xml]$pageReader.ReadToEnd(); $wordPageCount = $paginationProperties.Properties.Pages } finally { $pageReader.Dispose() }
 } finally { $zip.Dispose(); $wordZip.Dispose(); $oldZip.Dispose() }
 if ((Get-FileHash -LiteralPath $source).Hash -ne (Get-FileHash -LiteralPath $original).Hash) { throw 'Manuscript changed during verification.' }
 $replacement = Join-Path $backup.FullName ('Replacement-' + [guid]::NewGuid().ToString('N') + '.docx')
@@ -71,9 +73,9 @@ try {
     $report.Add('Original manuscript is locked by another process; corrected manuscript saved separately.')
 }
 if ((Get-FileHash -LiteralPath $output).Hash -ne (Get-FileHash -LiteralPath $stage).Hash) { throw 'Saved manuscript does not match verified output.' }
-$report.Insert(0, 'PASS: 39 TOC page references refreshed from desktop Word pagination; heading order and bookmark targets verified.')
+$report.Insert(0, "PASS: $($entries.Count) TOC page references refreshed from desktop Word pagination; heading order and bookmark targets verified.")
 $report.Insert(1, 'PASS: only cached page numbers changed. Body text, tables, styles, TOC formatting/fields, margins, section numbering, blank preliminary footers and media are preserved.')
-$report.Add('Word refresh reported 150 pages. Chapter 1 begins at 7, Chapter 2 at 22, Chapter 3 at 29. Final visual print-layout review remains separate.')
+$report.Add("Word refresh reported $wordPageCount pages. Final visual print-layout review remains separate.")
 $report.Add('Backup: ' + $backup.FullName)
 $report.Add('Saved manuscript: ' + $output)
 $report | Set-Content -Encoding UTF8 (Join-Path $root 'Review Evidence/Manuscript TOC Refresh Verification.txt')

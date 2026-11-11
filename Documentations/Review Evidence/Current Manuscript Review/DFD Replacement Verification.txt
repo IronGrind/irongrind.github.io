@@ -1,0 +1,2 @@
+Chapter 3 : replaced five DFD panels with the supplied SVG plus PNG fallback; updated four DFD paragraphs; all tables preserved; XML parsed; backup C:\Users\mycah\OneDrive\Desktop\CAPSTONE\v1\Documentations\Review Backups\supplied-dfd-20261111-175809
+Chapters 1-3 with Table of Contents : replaced five DFD panels with the supplied SVG plus PNG fallback; updated four DFD paragraphs; all tables preserved; XML parsed; backup C:\Users\mycah\OneDrive\Desktop\CAPSTONE\v1\Documentations\Review Backups\supplied-dfd-20261111-175809

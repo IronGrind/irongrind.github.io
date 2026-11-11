@@ -521,3 +521,12 @@ Member mobile attendance: Narrow layouts show attendance entries as labeled card
 Member attendance table adjustment: On narrow screens, the member history retains its table and scrolls horizontally like staff attendance, with a swipe hint and non-wrapping date/time cells. No attendance data change. JavaScript syntax and whitespace checks passed; mobile review and deployment remain pending.
 
 Admin approvals navigation: Opening Membership > Approvals resets the view to the membership panel header after rendering, avoiding a stale deep scroll position. Approval behavior/data unchanged. JavaScript syntax and whitespace checks passed; browser review and deployment remain pending.
+
+## Scanner layout and manuscript consistency review
+
+- Pairing setup and camera actions take priority; operator and optional controls are compact.
+- The supplied complete DFD replaces the five old panels in Chapter 3 and the combined manuscript.
+- Preserved tables and 57 prototypes; verified and refreshed 38 contents references.
+- Main scope is consistent; security wording, full dictionary and selected DFD flows still need correction.
+
+Speaker notes: The scanner UI cleanup keeps automatic approval dialogs, errors and authorization behavior while reducing repeated status and oversized optional controls. The layout uses scanner-layout script references and shell v32; seventeen scanner/notification tests passed, with physical visual review and hosted delivery unverified. The subsequent user-authorized paper review used the exact supplied SVG, embedded as vector with fallback, and retained backups and an editable source. Chapter 1 and Chapter 2 were not edited. DFD replacement preservation checks and the 57-prototype verifier passed. Desktop Word reported 168 pages and the existing 38 TOC entries retained their heading/bookmark identity; only page-reference cache values were applied. Chapter starts remain 7, 22 and 29. The helper's obsolete 39-entry/150-page assumptions were removed. This is not a claim that every diagram is correct: the review report identifies legacy D12 and log-viewer routing, outdated scanner trust statements, and missing current private scanner tables. Repository-derived totals are 23 tables/235 fields/38 FKs, compared with the paper's old 21/224/33 baseline; no live schema introspection was performed for the review. Final print-layout approval and those content corrections remain pending. No evaluation results, dates of client activities, deployment results or production outcomes were invented.

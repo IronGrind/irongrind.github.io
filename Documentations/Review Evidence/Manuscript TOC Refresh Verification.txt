@@ -1,4 +1,4 @@
-﻿PASS: 39 TOC page references refreshed from desktop Word pagination; heading order and bookmark targets verified.
+﻿PASS: 38 TOC page references refreshed from desktop Word pagination; heading order and bookmark targets verified.
 PASS: only cached page numbers changed. Body text, tables, styles, TOC formatting/fields, margins, section numbering, blank preliminary footers and media are preserved.
 Chapter 1 : 7
 Background of the Study : 7
@@ -27,18 +27,17 @@ Data Process Modeling : 41
 Diagrams : 42
 Context Diagram : 44
 Data Flow Diagram : 48
-Use Case Diagram : 57
-Entity Relationship Diagram : 69
-Data Dictionary : 71
-Forms : 109
-Prototype : 110
-Access and Online Registration : 111
-Administrator Interface : 116
-Authorized Staff Workspace : 135
-Member Portal : 142
-Session Confirmation : 145
-Gantt Chart : 146
-REFERENCES : 150
-Word refresh reported 150 pages. Chapter 1 begins at 7, Chapter 2 at 22, Chapter 3 at 29. Final visual print-layout review remains separate.
-Backup: C:\Users\mycah\OneDrive\Desktop\CAPSTONE\v1\Documentations\Review Backups\toc-refresh-20261111-115112
+Use Case Diagram : 53
+Entity Relationship Diagram : 65
+Data Dictionary : 67
+Forms : 105
+Prototype : 105
+Access and Registration : 107
+Administrator Interfaces : 112
+Staff Interfaces : 138
+Member Interfaces : 149
+Gantt Chart : 164
+REFERENCES : 168
+Word refresh reported 168 pages. Final visual print-layout review remains separate.
+Backup: C:\Users\mycah\OneDrive\Desktop\CAPSTONE\v1\Documentations\Review Backups\toc-refresh-20261111-175930
 Saved manuscript: C:\Users\mycah\OneDrive\Desktop\CAPSTONE\v1\Documentations\Chapters 1-3 with Table of Contents.docx

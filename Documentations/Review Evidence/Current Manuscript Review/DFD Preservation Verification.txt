@@ -1,0 +1,2 @@
+﻿PASS Chapter 3 : body outside the five old/one new DFD pictures and four DFD text paragraphs preserved; unrelated package parts byte-identical; supplied SVG bytes match source.
+PASS Chapters 1-3 with Table of Contents : body outside the five old/one new DFD pictures and four DFD text paragraphs preserved; unrelated package parts byte-identical; supplied SVG bytes match source.
