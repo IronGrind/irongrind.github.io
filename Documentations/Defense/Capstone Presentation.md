@@ -503,3 +503,7 @@ Deployment status update - November 11, 2026: The linked dry-run for nttsrdassmz
 Staff stock visibility: Product choices show available stock quantity and unit; unavailable products stay disabled. Staff can search the live catalog by product/size and filter to available stock. No sale workflow or schema change. JavaScript syntax and whitespace checks passed; browser review and deployment remain pending.
 
 Merchandise catalog organization: Staff and members can browse merchandise in separate size sections, each showing an item count. Staff keeps the product/size search and available-only filter. Inventory records and checkout behavior are unchanged. JavaScript syntax and whitespace checks passed; browser review and deployment remain pending.
+
+Staff catalog readability: The live inventory uses a maximum of four cards per row with responsive narrower layouts, stronger type/size headings, clearer stock text, and a note distinguishing stock browsing from sale entry. No inventory or checkout behavior changed. Whitespace check passed; browser review and deployment remain pending.
+
+Staff inventory view: The live catalog now uses compact responsive rows with product identity, stock quantity/status and price, while keeping search, availability filtering and merchandise size sections. No inventory or checkout behavior changed. JavaScript syntax and whitespace checks passed; browser review and deployment remain pending.

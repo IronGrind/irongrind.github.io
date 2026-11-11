@@ -231,27 +231,33 @@ function renderStaffProductCatalog() {
             const variantCount = category === 'merchandise' ? formItems.reduce((total, group) => total + group.variants.length, 0) : formItems.length;
             subheading.textContent = `${formLabel} (${variantCount})`; section.append(subheading);
         }
-        const grid = document.createElement('div'); grid.className = 'staff-product-grid';
+        const list = document.createElement('div'); list.className = 'staff-inventory-list';
         if (!items.length) {
-            const empty = document.createElement('p'); empty.className = 'staff-empty-catalog'; empty.textContent = `No ${heading.toLowerCase()} are listed.`; grid.append(empty);
+            const empty = document.createElement('p'); empty.className = 'staff-empty-catalog'; empty.textContent = `No ${heading.toLowerCase()} are listed.`; list.append(empty);
         }
         formItems.forEach(group => group.variants.forEach(product => {
             const available = staffProductAvailable(product);
-            const card = document.createElement('article'); card.className = `staff-product-card ${available ? 'is-available' : 'is-unavailable'}`;
-            const top = document.createElement('div'); top.className = 'staff-product-card-top';
-            const icon = document.createElement('span'); icon.className = 'staff-product-icon'; icon.innerHTML = category === 'supplement' ? '<i class="fas fa-capsules" aria-hidden="true"></i>' : '<i class="fas fa-shirt" aria-hidden="true"></i>';
-            const badge = document.createElement('span'); badge.className = `staff-stock-badge ${available ? 'available' : 'unavailable'}`; badge.textContent = available ? 'Available' : 'Unavailable';
+            const row = document.createElement('article'); row.className = `staff-inventory-row ${available ? 'is-available' : 'is-unavailable'}`;
             const imageSource = catalogProductPhoto(product);
-            if (imageSource) { const photo = document.createElement('img'); photo.className = 'staff-product-photo'; photo.src = imageSource; photo.alt = product.name; photo.loading = 'lazy'; card.append(photo); }
-            top.append(icon, badge);
-            const name = document.createElement('h5'); name.textContent = group.name;
-            const details = document.createElement('p'); details.textContent = category === 'merchandise' ? `Size: ${product.size || 'One size'}` : formLabel;
-            const bottom = document.createElement('div'); bottom.className = 'staff-product-card-bottom';
-            const price = document.createElement('strong'); price.textContent = `${formatStaffPeso(productPriceQuote(product.price_per_unit, product.unit).amount)} / ${productPriceQuote(product.price_per_unit, product.unit).quantity} ${productPriceQuote(product.price_per_unit, product.unit).unit}`;
-            const stock = document.createElement('span'); stock.textContent = `${product.stock ?? 0} ${product.stock_unit || product.unit} in stock`;
-            bottom.append(price, stock); card.append(top, name, details, bottom); grid.append(card);
+            const photoWrap = document.createElement('span'); photoWrap.className = 'staff-inventory-photo';
+            if (imageSource) { const photo = document.createElement('img'); photo.src = imageSource; photo.alt = ''; photo.loading = 'lazy'; photoWrap.append(photo); }
+            else photoWrap.innerHTML = category === 'supplement' ? '<i class="fas fa-capsules" aria-hidden="true"></i>' : '<i class="fas fa-shirt" aria-hidden="true"></i>';
+            const identity = document.createElement('div'); identity.className = 'staff-inventory-identity';
+            const name = document.createElement('strong'); name.textContent = group.name;
+            const details = document.createElement('span'); details.textContent = category === 'merchandise' ? '' : formLabel;
+            identity.append(name, details);
+            const stockBlock = document.createElement('div'); stockBlock.className = 'staff-inventory-stock';
+            const stock = document.createElement('strong'); stock.textContent = `${Number(product.stock ?? 0).toLocaleString('en-PH')} ${product.stock_unit || product.unit}`;
+            const badge = document.createElement('span'); badge.className = `staff-stock-badge ${available ? 'available' : 'unavailable'}`; badge.textContent = available ? 'In stock' : 'Out of stock';
+            stockBlock.append(stock, badge);
+            const quote = productPriceQuote(product.price_per_unit, product.unit);
+            const price = document.createElement('div'); price.className = 'staff-inventory-price';
+            const priceLabel = document.createElement('span'); priceLabel.textContent = 'Price';
+            const priceAmount = document.createElement('strong'); priceAmount.textContent = `${formatStaffPeso(quote.amount)} / ${quote.quantity} ${quote.unit}`;
+            price.append(priceLabel, priceAmount);
+            row.append(photoWrap, identity, stockBlock, price); list.append(row);
         }));
-        section.append(grid);
+        section.append(list);
         }
         target.append(section);
     }
