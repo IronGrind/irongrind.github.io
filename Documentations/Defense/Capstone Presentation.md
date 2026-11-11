@@ -549,3 +549,9 @@ Speaker-note completion update: All 38 Word-derived contents entries were refres
 - ERD text identifies the checked-in migration baseline as 23 application tables, 235 fields, and 38 declared foreign keys; this is not represented as a live-database inspection.
 
 Speaker notes: Describe the figures as complementary views: Context identifies external exchanges; DFD follows logical inputs, processes, and stores; Use Case identifies role participation but does not grant every sub-action; ERD identifies declared storage relationships, not access rights; Agile shows a repeatable development cycle; Gantt is an original planned schedule rather than proof of completion. The revised text preserves verified-versus-pending distinctions. Document package checks found the five key explanatory anchors in both delivered documents. No implementation, schema, deployment, physical-device, or evaluation outcome changed.
+## Slide 19 - Password recovery email
+- IronGrind dark and red branded recovery email draft
+- Secure reset link and copyable fallback link
+- Hosted Auth template and fresh email verification pending
+
+Speaker notes: The local template at `supabase/templates/reset-password.html` uses Supabase's `{{ .ConfirmationURL }}` for both links so Supabase token verification and the requested redirect are preserved. It includes a branded reset button and explains that an unrequested message can be ignored. This is a local HTML artifact intended for Supabase Auth email-template settings; it has not been applied to the hosted dashboard. No schema or runtime code changed. A fresh email and completed password recovery remain unverified. The existing reset page and redirect target are already in the local/deployed client as described in the recovery notes; do not describe the email design as deployed.

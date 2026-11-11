@@ -1,0 +1,5 @@
+﻿PASS: Chapter 3 - already contains Tables 27 and 28.
+PASS: Combined Chapters 1-3 - 8 linked descriptions corrected; Tables 27 and 28 added.
+PASS: Website trusted-browser verification and password-based attendance-scanner sessions are documented as separate workflows.
+PASS: Dictionary now reconciles with the stated 23 application tables, 235 fields, and 38 declared foreign keys.
+Backup: C:\Users\mycah\OneDrive\Desktop\CAPSTONE\v1\Documentations\Review Backups\chapter3-consistency-20261112-001058
