@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#365f91"/>
+    </marker>
+    <style>
+      text { font-family: Arial, sans-serif; fill: #1d2733; }
+      .title { font-size: 27px; font-weight: 700; }
+      .proc { fill: #dae8fc; stroke: #6c8ebf; stroke-width: 2; rx: 12; }
+      .store { fill: #d5e8d4; stroke: #82b366; stroke-width: 2; }
+      .head { font-size: 20px; font-weight: 700; }
+      .body { font-size: 16px; }
+      .note { font-size: 14px; fill: #425466; }
+      .flow { fill: none; stroke: #365f91; stroke-width: 3; marker-end: url(#arr); }
+    </style>
+  </defs>
+  <rect width="1200" height="650" fill="#fff"/>
+  <text x="48" y="52" class="title">DFD 6 — D1 Profiles flows only</text>
+  <text x="48" y="82" class="note">Focused view of the proposed D1 connections; keep unrelated DFD elements unchanged.</text>
+
+  <rect x="65" y="170" width="300" height="100" class="proc"/>
+  <text x="215" y="210" text-anchor="middle" class="head">1.0 User Login</text>
+  <text x="215" y="240" text-anchor="middle" class="body">Uses role for access authorization</text>
+
+  <rect x="65" y="410" width="300" height="110" class="proc"/>
+  <text x="215" y="450" text-anchor="middle" class="head">3.0 User Management</text>
+  <text x="215" y="480" text-anchor="middle" class="body">Looks up / edits permitted profile data</text>
+
+  <rect x="735" y="170" width="390" height="350" class="store"/>
+  <text x="930" y="215" text-anchor="middle" class="head">D1: profiles</text>
+  <text x="930" y="250" text-anchor="middle" class="body">id · email · username · full_name · role</text>
+  <text x="930" y="278" text-anchor="middle" class="note">phone_number · gender · created_at</text>
+
+  <path d="M735 220 H365" class="flow"/>
+  <rect x="420" y="180" width="265" height="34" rx="6" fill="#fff"/>
+  <text x="552" y="203" text-anchor="middle" class="body">Account role and profile details</text>
+
+  <path d="M735 430 H365" class="flow"/>
+  <rect x="420" y="390" width="265" height="34" rx="6" fill="#fff"/>
+  <text x="552" y="413" text-anchor="middle" class="body">Authorized account profile details</text>
+
+  <path d="M365 490 H735" class="flow"/>
+  <rect x="420" y="500" width="265" height="48" rx="6" fill="#fff"/>
+  <text x="552" y="521" text-anchor="middle" class="body">Permitted profile updates</text>
+  <text x="552" y="541" text-anchor="middle" class="note">username, full_name</text>
+
+  <rect x="65" y="565" width="1060" height="58" rx="10" fill="#fff8e6" stroke="#d6b656" stroke-width="2"/>
+  <text x="88" y="590" class="body" font-weight="700">Label correction:</text>
+  <text x="220" y="590" class="body">remove “active status”; the profiles table has no active-status column.</text>
+  <text x="88" y="612" class="note">Keep these D1 arrows only where the corresponding profile read/update is part of Process 1.0 or 3.0.</text>
+</svg>
