@@ -1,14 +1,13 @@
-# Prototype screenshots
+﻿# Prototype screenshots
 
-Chapter 3 now uses all 27 captures supplied in `UI AND FEATURRES.zip`.
+The current paper uses all 57 PNG captures supplied in FEATURES.zip as Figures 6–62. The Gantt chart is Figure 63; its chart and schedule content are retained.
 
-- **Originals/** preserves the original PNGs and their supplied folder names.
-- **Figures/** contains eight supplementary enlarged details of three long registration forms. Each form is first shown as a whole screenshot in the manuscript.
-- **Figure Index.md** maps all whole-screenshot figures and their selected enlarged details to the original captures.
-- **_Sources/** contains the figure layout, extraction manifest, and contact sheets used during preparation.
+- Updated FEATURES/ preserves the supplied screenshot folder names and PNGs; contact sheets support review.
+- Figure Index.md maps every caption to its source capture.
+- _Sources/features-manifest.json records the source paths and dimensions.
+- _Sources/prototype-layout.json records the current captions, explanations, and figure layout.
+- Originals/ and Figures/ retain assets from the earlier set for historical reference.
 
-The manuscript contains 27 complete original screenshots as the main Figures 6-32, plus eight supplementary enlarged details. Main figures have no crop settings. Other long screens are shown whole. Superseded crops are archived under `_Sources/Previous cropped presentation/`.
+Every supplied image is shown in full without additional cropping. Several supplied images are focused interface details. Screenshots document captured states, not deployment, physical camera validation, or usability results. Word pagination and contents must be refreshed after replacing the section.
 
-The Gantt chart remains Figure 33; its image, dates, and schedule description were retained for the later schedule review.
-
-The screenshots show captured interface states. They are not a usability study, production-readiness certification, or a physical camera test.
+Reapply with Documentations/Tools/apply-features-prototypes.ps1; verify with Documentations/Tools/verify-features-prototypes.ps1. Historical prototype generators target the previous set and should not be used to regenerate the current figures.

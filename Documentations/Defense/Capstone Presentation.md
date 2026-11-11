@@ -357,3 +357,11 @@ Speaker notes: The November 11 update modifies only the combined Chapters 1-3 Wo
 - Preliminary pages remain counted with their footer numbers hidden.
 
 Speaker notes: Word successfully repaginated the combined manuscript and reported 150 pages. The earlier all-page-1 contents cache was replaced with the actual refreshed reference values. Preservation checks verified heading order, bookmark destinations and unchanged body content, tables, styles, media, footer numbering and section layouts. Only 39 cached reference values changed in the final manuscript package. This resolves the earlier pending contents refresh; final visual print-layout review remains separate. Backups and a verification report are retained. No application, schema, setup or deployment change occurred.
+
+## Updated paper prototype figures
+
+- All 57 FEATURES.zip screenshots appear in Figures 6–62.
+- Access, administrator, staff, and member flows have matching explanations.
+- The Gantt chart is retained as Figure 63.
+
+Speaker notes: The November 11 documentation revision replaces the earlier prototype captures in Chapter 3 and the combined manuscript. It covers recovery, browser approval, session conflicts, trusted-browser logout, attendance lookup, sales and report filters, and member self-service. Images are reproduced in full as supplied, including supplied details. Source matching, captions, relationships and preserved tables are checked separately from the older chapter validator, which still expects an obsolete schema-count sentence. Pagination and contents page references require Word refresh after replacement. No application or schema deployment results from this update; screenshots show interface states and do not establish formal evaluation results.
