@@ -71,7 +71,10 @@ window.startScannerApprovalNotifications = client => {
     let stopped = false, busy = false, panel;
     function report(message) {
         const target = document.getElementById('phoneApprovalStatus');
-        if (target) target.textContent = message;
+        if (target) {
+            target.textContent = message;
+            target.hidden = message === 'Listening for sign-in requests while this scanner is open.';
+        }
     }
     async function refresh() {
         if (stopped || busy || document.hidden || navigator.onLine === false) return;

@@ -256,9 +256,10 @@ function requestPhoneModelSetup(openCamera = true) {
     const input = document.getElementById('phoneModelInput');
     if (input) input.value = localStorage.getItem(PHONE_MODEL_STORAGE_KEY) || '';
     if (setup) setup.hidden = false;
+    document.body.classList.add('phone-model-pending');
     const cameraButton = document.getElementById('phoneCameraButton');
     if (cameraButton && !phoneAttendanceScanner) cameraButton.disabled = true;
-    setPhoneAttendanceStatus('Your browser hides the exact phone model. Enter it below to finish pairing.');
+    setPhoneAttendanceStatus('Enter your phone model to finish pairing.');
     window.setTimeout(() => input?.focus(), 50);
 }
 
@@ -287,6 +288,7 @@ async function savePhoneModelAndContinue() {
         if (error) throw error;
         const setup = document.getElementById('phoneModelSetup');
         if (setup) setup.hidden = true;
+        document.body.classList.remove('phone-model-pending');
         const cameraButton = document.getElementById('phoneCameraButton');
         if (cameraButton) cameraButton.disabled = false;
         if (phoneAttendanceScanner) {
@@ -650,6 +652,7 @@ function configurePhoneAppInstall() {
     const installButton = document.getElementById('phoneInstallButton');
     const standalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
     if (standalone) return;
+    document.getElementById('phoneInstallOptions').hidden = false;
     installButton.style.display = 'block';
     const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
     window.addEventListener('beforeinstallprompt', event => {

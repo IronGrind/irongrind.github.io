@@ -435,7 +435,12 @@ function switchMemberTab(tab) {
     document.getElementById('tab-members').classList.toggle('hidden', tab !== 'members');
     document.getElementById('tab-approvals').classList.toggle('hidden', tab !== 'approvals');
     document.getElementById('tab-expired').classList.toggle('hidden', tab !== 'expired');
-    if (tab === 'approvals') renderApprovals();
+    if (tab === 'approvals') {
+        renderApprovals();
+        requestAnimationFrame(() => {
+            document.querySelector('#section-membership .panel-header')?.scrollIntoView({ block: 'start', behavior: 'auto' });
+        });
+    }
     else if (tab === 'members' || tab === 'expired') renderMembers();
 }
 

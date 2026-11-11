@@ -519,3 +519,5 @@ Staff membership form refinement: Complete Renewal and Save plan change buttons 
 Member mobile attendance: Narrow layouts show attendance entries as labeled cards for date, check-in/out, duration and status; desktop retains the table. Attendance data and calculation behavior are unchanged. JavaScript syntax and whitespace checks passed; mobile browser review and deployment remain pending.
 
 Member attendance table adjustment: On narrow screens, the member history retains its table and scrolls horizontally like staff attendance, with a swipe hint and non-wrapping date/time cells. No attendance data change. JavaScript syntax and whitespace checks passed; mobile review and deployment remain pending.
+
+Admin approvals navigation: Opening Membership > Approvals resets the view to the membership panel header after rendering, avoiding a stale deep scroll position. Approval behavior/data unchanged. JavaScript syntax and whitespace checks passed; browser review and deployment remain pending.

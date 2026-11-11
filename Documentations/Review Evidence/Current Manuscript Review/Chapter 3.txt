@@ -1,0 +1,1472 @@
+P0001: Chapter 3
+P0002: RESEARCH METHODOLOGY
+P0003: This chapter discusses the methodology used to develop IronGrind: A Fitness Gym Membership and Operations Management System for Iron Grind Fitness Gym in Purok Mangga, Sulangon, Dapitan City, Zamboanga del Norte. IronGrind is a web application with an installable attendance-scanner component. This chapter describes the development process, system requirements, design, data organization, and evaluation procedures. The system organizes membership applications and records, membership periods and renewals, attendance, products, sales, reports, and activity review. Its development is organized using Agile, with work planned and delivered incrementally. Proposed evaluation activities are distinguished from results that have not yet been collected.         
+P0004: System Development Methodology
+P0005: Figure 1. Agile
+P0006: Agile is an iterative system-development approach in which requirements guide the work, features are built in manageable increments, and the results of testing and review guide subsequent work. As shown in Figure 1, the process begins by planning IronGrind's workflows and priorities and designing the related pages, forms, data relationships, and access permissions. The team then develops a selected group of features and tests them against their requirements. Deployment in the cycle means preparing and checking an increment in its intended environment; review considers the test findings and any feedback actually collected. Those findings return to planning and help determine what to refine or build next. This cycle applies to the system's membership applications and renewals, attendance, inventory, sales, and reports. The final Launch stage represents release of the approved system for operational use after the required increments have been verified. Figure 1 describes this project's workflow; it does not claim use of a specific Agile framework or a fixed iteration length. Evaluation results are reported only after the planned evaluation activities have been completed.
+P0007: Pavlović (2018) discusses the importance of organizational support, consistent practices, and adequate skills and training when adopting Agile. This perspective informed the choice of approach for the study and supports treating iterative development as a structured process requiring planning and review. The phases shown in Figure 1 organize development tasks for IronGrind, including its membership, attendance, inventory, sales, and reporting features.
+P0008: Requirements Planning
+P0009: Requirements planning identifies separate workflows for applicants, members, administrators, and authorized staff. Requirements cover online applications subject to authorized staff or administrator review, direct counter registration and membership changes, QR attendance, product inventory, transaction recording, reporting, staff accounts, phone pairing, and activity logs. Acceptance criteria include role permissions, required inputs, stock and membership updates, and rejection of unauthorized operations. These criteria guide each development increment.
+P0010: User Design
+P0011: Using the prioritized requirements, the team designs or refines the corresponding user workflows, page layouts, forms, reports, data relationships, and role permissions. For example, the design distinguishes pending applications from approved member records, keeps attendance as a separate operational record, and stores sales with their itemized lines. The architecture, use-case, and data-flow figures in this chapter summarize how these parts fit together. These designs are then represented in prototypes so that the intended workflows can be reviewed before or during construction.
+P0012: Prototype
+P0013: The prototype represents the designed workflows through browser-based pages. Applicants submit registration details, while members view their membership, attendance, QR code, profile, catalog, and renewal requests. Administrators view member profiles without editing personal details, review online requests, perform membership operations, and handle inventory, sales, staff access, phone pairing, activity logs, and reports. Staff use a separate portal for attendance, walk-in registration, direct membership renewals and active-member plan changes, product sales, their own product-sale records, and online registration and renewal request approval. The system records in-person transactions without providing receipts to customers. Supabase Auth, database policies, functions, and authorized Edge Functions support the implemented operations.
+P0014: Construction
+P0015: The team constructs the selected increment using the HTML, CSS, and JavaScript client and Supabase authentication and PostgreSQL services. Database policies and functions support authorization and operational transactions. The completed increment is tested against the acceptance criteria established during planning. If a test identifies an issue, the team corrects it and checks it again; unresolved or newly discovered needs are recorded for prioritization. Once the increment passes the required checks, it can be prepared in the intended environment and reviewed. Test findings and any feedback actually collected inform the next planning cycle, connecting construction to continued refinement.
+P0016: Implementation
+P0017: Implementation prepares verified increments for operational use. The current web client is hosted through Vercel. The project dashboard supplied for this review shows a Production Deployment marked Ready, served at irongrind-github-io.vercel.app and sourced from the main branch. Supabase provides authentication and PostgreSQL services. The Ready label reports Vercel deployment status; by itself, it does not verify every production workflow or establish that staff orientation and formal evaluation are complete. Those results should be reported after the corresponding activities have been performed.
+P0018: Deployment status must be checked separately for subsequent revisions. The November 10, 2026 source review added server-audited member email sign-in, security-event functions and triggers, and corresponding interface changes. Deploy the security-activity migration and both the new member-password-login and updated admin-username-login Edge Functions before releasing the dependent web client. Password-reset-request capture requires database Auth audit storage. These local implementation changes and isolated tests do not establish that the production database, functions, and Vercel client already contain this revision.
+P0019: Verification and Evaluation
+P0020: Recorded verification as of November 8, 2026 comprised forty automated check groups with no failed groups in the saved regression report. A check group may contain multiple assertions. The checks covered JavaScript syntax, local page references and identifiers, form validation, account registration, role authorization, staff operations, session ownership, attendance request handling, phone pairing, and membership-payment updates. Browser logic used simulated document and service responses; selected registration checks used the Supabase browser SDK with mocked Auth responses.
+P0021: Database behavior was tested in isolated PostgreSQL fixtures using PGlite. Scenarios included rejection of unauthorized operations, duplicate requests, transaction rollback, numeric membership-payment updates, separate dashboard and scanner sessions, device-specific pairing records, pairing expiry, and the combined paired-plus-pending slot limit. Functional test writes did not create transactions in the gym's production member records. The linked database lint check reported no errors after the corrections. The saved regression report and database lint result describe the tested code and configuration at that review date.
+P0022: A separate performance evaluation remains necessary. The available regression checks do not establish a maximum number of concurrent users, a load-response-time target, or a throughput guarantee. A controlled staging test should exercise logins, dashboard reads, registrations, and simultaneous attendance scans while recording response-time distributions, error rates, and database behavior. The reported user capacity should be based on those measurements and the actual hosting configuration, consistent with the production-testing guidance discussed in Chapter 2.
+P0023: Successful physical multi-phone operation and complete visual browser behavior require separate recorded validation. The available automated artifacts do not establish completion of that end-to-end validation. The prototype figures document supplied browser-interface captures and role-specific controls; they do not, by themselves, establish the current production deployment state, successful physical camera operation, or measured usability. Formal usability or stakeholder-evaluation results should be reported only after the corresponding evaluation has been conducted and documented.
+P0024: Prototype currency note. The updated prototype section reproduces all 57 supplied FEATURES.zip captures. These show the visible interface states, including browser approval, attendance lookup, catalog controls and activity filters. Screenshots alone do not establish deployment of every source revision or completion of end-to-end acceptance testing.
+P0025: Requirement Specifications
+P0026: This section outlines all the requirements needed for the IronGrind System. These requirements serve as the foundation for the system's design and validation. The requirements are divided into several categories: functional requirements, input requirements, output requirements, software requirements, and hardware requirements. Each category plays an important role in making sure the system is complete, efficient, and meets the needs of its users.
+P0027: Functionality Requirements
+P0028: Functional requirements distinguish applicants and members from administrators and authorized staff. Authorized staff and administrators can approve or reject online registration and renewal requests. Staff have assigned counter and attendance operations, while stock maintenance, staff account controls, phone pairing administration, activity-log review, and reports remain administrator functions.
+P0029: Table 1. Functional Requirements
+P0030: This section describes the main operations such as managing memberships, processing applications, recording attendance via QR, managing inventory, and generating reports. These functions ensure accurate record-keeping, efficient administration, and secure system operation.
+P0031: Functional Requirements
+P0032: Description
+P0033: User Login
+P0034: Authenticate administrators, staff and members; enforce role-based access. Administrator login additionally verifies trusted-browser proof, TOTP registration/replacement and eligible current-session approval before activating protected access.
+P0035: Membership Applications
+P0036: Applicants submit registration requests; authorized staff and administrators review and approve or reject them.
+P0037: User Management
+P0038: Administrators view member profiles without editing personal details and control staff-account access. Members alone update their own permitted personal profile details. Staff register walk-ins and process direct renewals or active-plan changes using limited lookup details; they cannot view or edit member profiles.
+P0039: Renewals
+P0040: Members request renewal; authorized staff and administrators review online requests. Direct staff counter renewals are covered under User Management.
+P0042: QR Attendance
+P0043: Authorized operators record check-in/out through QR scanning or staff name/Gmail lookup followed by explicit member selection; members read only their own visits. Administrators manage pairing. Scanner installation is separate from pairing and operator sign-in.
+P0044: Products & Inventory
+P0045: Administrators maintain products, prices, units, stock and active state. Inventory cards separate selling price, stock on hand and unit-converted low-stock thresholds, with product search and status filters. Members browse active products. Staff read a sales catalog grouped into supplement forms and merchandise without inventory-maintenance access.
+P0046: Sales
+P0047: Authorized operators record in-person product sales and stock deductions. Staff review only their own product sales. Transactions are recorded without providing receipts.
+P0049: Generate Reports
+P0050: Administrators generate membership, attendance, inventory, sales and renewal reports with supported preview and export options.
+P0051: Activity Logs
+P0052: Administrators review operational and configured security events using account, category, action and date filters. Clear action labels and category badges summarize events; expandable Details contains descriptions, identifiers and changed fields. This read-only function does not perform logged operations.
+P0054: Table 2. Input Requirements
+P0055: Input requirements are the essential data and information that the IronGrind system needs to function properly. By ensuring that all required inputs are complete and accurate, the system can deliver reliable outputs and support effective decision-making.
+P0056: Input Requirements
+P0057: Description
+P0058: User Login
+P0059: Credentials and session details.
+P0060: Membership Applications
+P0061: Registration and health details from applicants; active staff or administrator review decisions.
+P0062: User Management
+P0063: Administrator profile-view queries, membership operations and staff-account controls; member own-profile queries or permitted edits; staff walk-in details, limited searches, direct renewal or active-plan selections.
+P0064: Renewals
+P0065: Member renewal request; active staff or administrator review decision.
+P0066: QR Attendance
+P0067: Operator QR or staff name/Gmail search, explicit matched-member selection and attendance query; member own-history query; administrator pairing setup, settings or removal request.
+P0068: Products & Inventory
+P0069: Administrator product/stock inputs; member active-catalog query; staff sales-catalog query.
+P0070: Sales
+P0071: Customer name, selected product, quantity, and sale unit; total and internal transaction reference are generated by the sale function.
+P0072: Generate Reports
+P0073: Administrator report type and reporting period.
+P0074: Activity Logs
+P0075: Administrator filters for date, account name, action and area, plus pagination requests.
+P0077: Table 3. Output Requirements
+P0078: These are the main results or information that the system produces after processing the input data:
+P0079: Output Requirements
+P0080: Description
+P0081: User Login
+P0082: Authentication result and permitted dashboard.
+P0083: Membership Applications
+P0084: Applicant: own application status. Authorized staff and administrators: pending request summaries and review results within their role permissions.
+P0085: User Management
+P0086: Role-permitted user records and confirmations. Member: own profile. Staff: limited counter lookup and operation result only. Administrator: read-only member profiles, membership-operation results and staff-account states.
+P0087: Renewals
+P0088: Request status and updated membership dates following approval.
+P0089: QR Attendance
+P0090: Attendance confirmation/history appropriate to the role; administrator pairing states and settings.
+P0091: Products & Inventory
+P0092: Active/permitted catalog; administrator stock levels, product state and alerts.
+P0093: Sales
+P0094: Saved transaction and stock deduction; staff own product-sale records. No issued receipt.
+P0095: Generate Reports
+P0096: Report preview, print layout, PDF output or combined ZIP export.
+P0097: Activity Logs
+P0098: Filtered events showing Philippine date/time, actor, readable action, category and affected record; expandable descriptions, record/account identifiers and changed fields; paging and reset controls.
+P0100: Table 4. Software Requirements
+P0101: The following software components are essential for both the development and deployment of the IronGrind System. These tools ensure that the system operates smoothly, meets all technical requirements, and delivers the necessary functionality.
+P0102: Development
+P0103: Description
+P0104: Visual Studio Code
+P0105: For coding and development.
+P0106: HTML, CSS, JavaScript
+P0107: For frontend design and user interface.
+P0108: Supabase /PostgreSQL
+P0109: For backend services, authentication, and PostgreSQL database management.
+P0110: PgAdmin
+P0111: Used to inspect and manage the Postgre SQL database and execute queries during development.
+P0112: Git / GitHub
+P0113: For version control and code repository.
+P0114: Vercel
+P0115: Hosts and deploys the web client through the connected Git repository.
+P0116: Google Chrome or Microsoft Edge
+P0117: For accessing and testing the system interface.
+P0119: Table 5. Hardware Requirements
+P0120: The hardware requirements describe practical development and operating equipment rather than benchmarked minimum performance. A browser-capable computer and stable internet connection support the main system; a supported camera-enabled phone or computer supports QR attendance. Printing is optional for operational reports. A dedicated POS terminal or receipt printer is not required.
+P0121: Component
+P0122: Practical baseline (indicative)
+P0123: Higher-capacity example
+P0124: Purpose and limitations
+P0125: Local storage
+P0126: 500 GB available
+P0127: 500 GB SSD or higher
+P0128: For local development files and browser operations; no storage minimum has been benchmarked.
+P0129: Memory (RAM)
+P0130: 8 GB RAM (example)
+P0131: 16 GB RAM or higher (example)
+P0132: Example workstation capacities only; no minimum client-memory requirement has been measured.
+P0133: Processor (CPU)
+P0134: Intel Core i3-class (example)
+P0135: Intel Core i5-class or equivalent (example)
+P0136: Example workstation processors only; system performance has not been benchmarked on these configurations.
+P0137: Operator computer
+P0138: Browser-capable computer
+P0139: Camera-capable computer
+P0140: Used for browser-based member and administrative workflows; no hardware performance threshold has been established.
+P0141: Front-desk Device
+P0142: Browser-capable computer
+P0143: Computer with supported camera
+P0144: Supports counter entry and QR attendance; dedicated POS hardware is not required.
+P0145: Printer
+P0146: Optional
+P0147: Available office printer
+P0148: Optional printing of operational reports; receipt printing is not a requirement.
+P0149: Operating System
+P0150: Currently supported OS
+P0151: Currently supported OS with security updates
+P0152: Use an operating system and browser that still receive vendor security updates; Windows 10 Home and Pro are no longer in general support.
+P0153: Camera/Scanner
+P0154: Supported camera-enabled device
+P0155: Camera with clear focus and current browser support
+P0156: Camera access requires browser permission and a secure browser context. Phone attendance also requires an administrator-managed pairing.
+P0157: Internet Connection
+P0158: Internet access
+P0159: Stable broadband connection
+P0160: The web app uses cloud-hosted Supabase services; no minimum bandwidth has been measured.
+P0161: Data Process Modeling
+P0162: The data-process model follows information from an actor, through an authorized system function, to the records it reads or changes. Applicant registration and renewal requests are reviewed before they create or update member and payment records. Attendance scans are checked against the member and any open visit before timestamps and operator identities are stored. Product sales read catalog and stock data, then save transaction lines and deduct stock. Reports and activity logs are separate read operations with different access rules.
+P0163: Diagrams
+P0164: The diagrams answer different design questions: the context diagram shows the system boundary and its actors; the Level 1 DFD traces actor inputs through processes to data stores; the use-case diagram summarizes role permissions; and the physical ERD shows declared table relationships. Interface figures are prototypes, while the Gantt chart records a planned schedule. No one diagram replaces the implementation or its authorization rules.
+P0165: Read the diagrams together to follow the same operation at different levels. For example, a member renewal begins as an authenticated request, enters the pending-request review process, and on approval updates the application, member dates, history, and transaction records. The diagrams describe the documented design; the workflow explanations and data dictionary identify its implementation boundaries and current limits.
+P0166:             Figure 2 is the context diagram. It contains one process, numbered 0, representing IronGrind and three external actor groups: Member / Applicant, Administrator, and Authorized Staff. Databases, authentication services, and phone-pairing storage remain internal to the system boundary.
+P0167: The Member/Applicant provides inputs such as sign-in credentials, registration details, membership applications, renewal requests, and profile updates. In return, the system provides outputs including authentication results, application statuses, membership details, attendance history, the active product catalog, and account information.
+P0168: The Administrator provides application review decisions, membership and inventory updates, sales entries, staff account controls, phone-pairing administration, and report or activity-log queries.
+P0169: The system returns the corresponding records, status confirmations, account information, activity logs, and reports. Authorized staff provide attendance scans, walk-in registration details, direct renewal and plan-change inputs, online request decisions, and product sales entries; they receive only the confirmations and records permitted for their role.
+P0171: Context Diagram
+P0173: Figure 2. Context - Gane-Sarson
+P0175:              Figure 2 defines the external boundary of the IronGrind Membership and Operations Management System using a Gane-Sarson context diagram. Process 0 represents the system as a single unit, while the rectangles identify its three external user groups: Member / Applicant, Administrator, and Authorized Staff. Each directed arrow describes information entering or leaving the system. An arrow pointing toward Process 0 represents submitted data or a request; an arrow pointing toward an external entity represents information or a result returned to that user group. The diagram provides an overview of responsibilities and information exchange, rather than the sequence of screens, database operations, or implementation steps.                  
+P0176:             The Member / Applicant entity combines two stages of the customer relationship: a person applying for membership and an existing member using personal account services. Its incoming flow consists of credentials, registration details, renewal requests, and permitted profile changes. Registration details describe the information submitted for review; submission alone does not mean that membership has been approved. A renewal request concerns an existing membership and must be reviewed before its result is applied. Permitted profile changes concern the signed-in member's own editable personal information and do not include authority to approve requests, alter product stock, record sales, or modify another member's account.                  
+P0177:            The corresponding outgoing flow returns sign-in and application results, the member's own membership information and QR code, attendance history, and the active product catalog. Access results indicate whether account access is permitted, while application results communicate the recorded review status. Membership information enables the member to check the plan, status, and applicable membership dates. The QR code supports identification during an authorized operator's attendance scan; showing the QR code does not give the member attendance-recording privileges. Attendance history is limited to the member's own visits. The catalog allows products to be viewed, while product-sale entries are handled through the administrator or authorized staff workflow rather than through a member checkout process.                  
+P0178: The Administrator entity submits credentials, application and renewal review decisions, membership operations, product and stock updates, product-sale entries, staff and device instructions, and report or activity-log queries. These inputs represent separate authorized requests rather than one combined transaction. Membership operations include supported counter registration, renewal, and plan changes. Staff controls concern staff accounts, while device controls concern the supported scanner and trusted-browser arrangements. Queries retrieve information; they do not themselves change the underlying business records.
+P0179: The system returns administrator access results, operation confirmations, member and staff information, device states, reports, and recorded activity. The return flow lets the administrator confirm a submitted operation or inspect information within the permitted scope. Viewing an existing member personal profile remains read-only. Membership approval, renewal, and plan changes are operational responsibilities and do not authorize editing that member personal profile.
+P0180:          The Authorized Staff entity exchanges credentials, counter details, request-review decisions, QR scans, and product-sale entries. After staff identity and active-account status have been verified, the permitted tasks include walk-in member registration, limited member lookup for counter transactions, direct renewal, active-member plan changes, review of online registration and renewal requests, attendance scanning, and product-sale recording. A member lookup supplies the limited details needed to select the correct person for an authorized transaction; it is not general access to the member's personal profile. Staff review decisions are based on the request information made available by the staff interface. The QR scan flow submits a member identifier for the system to validate and record the applicable attendance result.                  
+P0181:           The system returns staff access results, pending-request information or status, counter-operation results, scan results, permitted attendance records, and the staff operator's own product-sale records. These outputs support the assigned task and allow its result to be checked. Staff access does not include viewing or editing existing member profiles, maintaining inventory, administering staff accounts or phone pairings, or opening administrator reports and activity logs. The narrower staff outputs distinguish the staff workspace from the administrator workspace even when both roles can initiate a supported membership or attendance operation. The diagram represents these information exchanges; authentication, role checks, database policies, and authorized functions enforce the access boundaries in the implementation.                  
+P0182:         Walk-in customers are not drawn as a separate direct system user because an administrator or authorized staff operator enters their counter transactions. The customer supplies the relevant details to that operator, who submits the supported system entry and receives its confirmation. A saved sale or membership transaction is an internal operational record; the confirmation does not establish that the system issues a customer receipt. Likewise, the context diagram's arrows represent information exchange rather than a physical payment channel, an online payment gateway, or the transfer of goods.                  
+P0183: Figures 3a-e expand the system into nine processes. The DFD data-store symbols identify public application tables only; authentication records and private security stores are outside this view.
+P0185: Data Flow Diagram
+P0191: Figure 3a-e. Level 1 Data Flow - Gane-Sarson
+P0192: Figure 3a-e expands the context process into nine functional processes using Gane-Sarson notation. The five panels continue one Level 1 model. Rectangles identify external actors, rounded boxes identify numbered processes, and divided symbols identify individually named public application tables. Every arrow is directional and labeled. Authentication and private security records support implementation workflows but are intentionally omitted from the DFD data-store symbols.
+P0193: Store identifiers remain consistent across the panels. D0 represents managed Auth accounts; D1 profiles; D2 membership applications; D3 members; D4 attendance; D5 products; D6 sales; D7 sale items; D8 membership history; D9 activity logs; D10 mobile attendance pairing policy; D11 mobile attendance scan sessions; D13 private attendance scan requests; D14 private account sessions; and D15-D17 administrator approval, trusted-device, and device-session stores. D12 identifies the retained mobile scan-event table and is not shown as an active frontend dependency. Report inputs from D2, D3, D4, D5, D6, D7, and D8 are drawn separately.
+P0194: The actor-specific arrows are essential to interpreting User Management and attendance correctly. An administrator's profile-view query returns a read-only member profile. A member's personal-change request affects only their own permitted personal details. Staff arrows identify counter and attendance operations and do not include a profile query or personal-detail edit. Internal writes caused by registration, renewal, or server-side account provisioning describe the effects of an authorized operation; they are not a grant of general editing access to the underlying table. Authentication, role checks, database policies, and authorized functions support these boundaries even when different operations use the same data store.
+P0195: Processes 8.0 and 9.0 have distinct outputs. Generate Reports reads operational records to produce the selected report and its supported preview or export. Activity Logs reads previously recorded events and returns the administrator's filtered results. Staff-account changes occur under User Management, and phone-pairing changes occur under QR Attendance administration. Their events may appear in the log, but the log viewer does not perform those changes. This separation prevents the model from treating monitoring an operation as permission to execute it.
+P0196: 1.0 Authenticate and Authorize
+P0197: Supabase Auth verifies credentials and establishes the user session. The system reads the profile role and active-account state to route the account to the administrator, staff, or member interface. Authorization is enforced through database policies, role-checked functions, and Edge Functions, rather than relying on page visibility alone.
+P0198: 2.0 Review Online Applications. Applicants submit registration details and health declarations to membership_applications. Authorized staff and administrators review online requests and approve or reject them. Approval creates or links the member record, updates the application status, and records the applicable membership payment through sales and sale_items. Direct walk-in registration follows process 3.0 as a separate counter operation.
+P0199: 3.0 User Management. Administrators can view member profiles but cannot edit their personal information. They perform authorized membership operations and create or activate/deactivate staff accounts through authorized services. Members can retrieve and update only their own permitted personal details. Staff have a separate labeled counter flow: walk-in registration, limited member lookup, direct renewal, and active-member plan change. Staff cannot view or edit existing member profiles. Account rows created by the registration service describe backend storage, not profile-editing permission granted to staff. Membership changes record applicable member, history, sales, and sale-item updates.
+P0200: 4.0 Review Online Renewals. Members submit renewal requests to membership_applications. Authorized staff and administrators approve or reject these requests. An approved renewal preserves unused time by extending an active membership from its current expiry date; an expired membership restarts on approval. Approval updates the member, history, application status, and membership transaction records. Direct counter renewals by an administrator or staff operator belong to process 3.0 and are separate from the online Requests approval workflow.
+P0201: 5.0 Record and View Attendance. An authorized administrator or staff operator scans a member QR code with a supported computer or phone camera. The database validates the operator and member, checks for an open visit, and records check-in or check-out in attendance. recorded_by and checked_out_by identify the operators for each event. Private attendance_scan_requests records support duplicate-request protection. Paired phones additionally use administrator-managed pairing sessions and policy; pairing does not replace operator authentication. Members can read their own attendance history. Authorized staff and administrators read attendance within their permitted scope. Administrator-only phone-pairing creation, settings and removal belong to this attendance workflow. Staff and members do not receive those administration controls. A phone without an active pairing displays Phone not paired and must scan an administrator-generated pairing QR before member attendance scanning. The setup QR expires after ten minutes; successful pairing lasts thirty days from pairing time unless removed earlier. Reopening the camera does not renew that period. Missing check-outs from a previous Philippine calendar date are labeled Incomplete; current-day open visits remain checked in. The display does not invent a check-out time.
+P0202: Phone pairing capacity counts both paired devices and unexpired pending QR reservations. At the initial two-slot limit, the permitted combinations are two paired phones, one paired phone plus one pending QR, or two pending QRs. Scanning a reserved QR completes that reservation without allocating another slot. Creating a further QR is blocked at capacity, while an existing pending QR remains available to scan. Each browser installation has its own identifier; another installation cannot take over an assigned QR. The device label is descriptive information and does not provide hardware attestation. An expired, removed, or unsuccessful pairing is not counted as a completed device connection.
+P0203: 6.0 Manage Inventory and Catalog. Administrators maintain product details, prices, stock, product forms, and active or archived state. Powder supplements support weight units; drinkable supplements support volume units; capsules and tablets use pieces or boxes; other supplements and merchandise use items. Sale processing converts compatible quantities and deducts stock using the configured inventory units. Members browse active products, and staff obtain the permitted catalog needed for sales; these read operations do not grant inventory-maintenance permission.
+P0204: 7.0 Sales
+P0205: Administrators and staff record in-person product purchases for members or walk-in customers. The sale operation validates quantities and product status, writes sales and sale_items, and deducts product stock. Membership charges are recorded through the membership operations in processes 2.0 to 4.0. The database retains the existing receipt_number field as an internal transaction identifier. The documented operating process does not provide customers with receipts.
+P0206: 8.0 Generate Reports
+P0207: Administrators select a report type and period to retrieve the relevant operational records. Supported outputs include preview, print layout, individual PDFs, and combined ZIP export. This reporting process does not manage staff access, phone pairings, or activity-log filters.
+P0208: 9.0 Activity Logs. 
+P0209:             Administrators review database-recorded actions using date, account, action, and area filters and pagination. Logs include recorded staff-account changes and phone-pairing events. The interface reads activity_logs; it does not create staff accounts, alter pairing settings, or modify the recorded events. Those operations occur in User Management or QR Attendance and produce their own log entries.
+P0210: Use Case Diagram
+P0212: Figure 4. Use Case Diagram
+P0213: Figure 4 summarizes actor participation in the nine main functional areas of IronGrind: User Login, Membership Application, User Management, Renewals, QR Attendance, Product & Inventory, Sales, Generate Reports, and Activity Logs. The rectangle identifies the system boundary, the ovals identify function-level capabilities, and the labeled external icons identify Member / Applicant, Authorized Staff, and Administrator. An association indicates that an actor participates in a functional area; the accompanying role descriptions specify the actions available within it. The figure therefore provides an overview of responsibilities without granting every connected actor the same permissions.
+P0214:            The diagram contains twenty-two solid actor-to-use-case associations: six for Member / Applicant, seven for Authorized Staff, and nine for Administrator. These plain lines indicate participation; they do not show data movement, screen navigation, or the chronological order of operations. Crossings do not create additional relationships. No include, extend, or actor-generalization relationship is asserted. Because the nine ovals are broad functions, an association does not give an actor every action within that function. User Management is the clearest example: all three actors participate, but they perform different operations on different permitted information.
+P0215:              Member / Applicant represents a prospective applicant and an existing member at their respective stages of interaction with the gym. This actor is associated with User Login, Membership Application, User Management, Renewals, QR Attendance, and Product & Inventory. Application submission and application-status information relate to the registration stage, whereas the registered member uses personal membership and self-service features. Access to protected member information remains subject to the implemented account and membership checks. The actor is not associated with Sales, Generate Reports, or Activity Logs, because these are operator or administrator functions rather than member purchasing or oversight privileges.
+P0216:             Authorized Staff participates in User Login, Membership Application, User Management, Renewals, QR Attendance, Product & Inventory, and Sales. These associations cover authorized request review, attendance handling, supported counter membership services, access to the sales catalog, product-sale recording, and review of the operator's own product sales. They do not give staff general access to member profiles, inventory maintenance, staff-account administration, phone-pairing administration, administrator reports, or activity logs. Administrator is associated with all nine functions and performs the operational and supervisory actions permitted by the administrator workflow. Its broader participation still respects the implemented restriction that member personal profiles are viewed without editing their personal details.
+P0217: User Login verifies an account and establishes access for its role and active-account state. All three actors participate. For administrators, this function also covers trusted-browser proof, initial TOTP registration, a replacement-browser approval request, approval or denial by the eligible active session, fresh TOTP before transfer, and explicit trust revocation. These are scenarios within the existing login capability, so Figure 4 retains nine function-level ovals. Both approving and requesting sessions represent the same Administrator actor; they do not create new organizational roles. User Management retains its existing profile and staff-account scope. Staff participation in that oval remains limited to authorized counter tasks and does not grant general personal-profile editing or staff-account administration.
+P0218:           Membership Application covers online registration submission and its review. The applicant supplies the required registration information and receives the recorded application status. An authorized staff member or administrator reviews the limited pending-request details and records an approval or rejection. Approval is performed through an authorized server-side operation that rechecks the operator and pending state, prevents repeat processing, and creates or links the appropriate member and membership transaction records. The applicant's association represents submitting and checking the request, while the operator associations represent review and processing. They are different responsibilities within one functional area, not interchangeable permissions.
+P0219:           User Management includes role-specific account, personal-profile, and counter membership responsibilities. Administrators view member profiles without editing their personal details and control supported staff-account access. Members alone update their own permitted personal-profile details. Staff register walk-in members and process direct renewals or active-plan changes using limited lookup information. Those counter operations create or update the records required for the authorized membership transaction; they do not provide a general member-profile viewer or an existing-profile editing function. All three User Management associations are therefore intentional and match the functional requirement. The administrator and member associations must not be interpreted as granting the same personal-information editing rights.
+P0220:          Renewals allows a member to submit an online renewal request and obtain its status, while authorized staff and administrators review and approve or reject the request. Approval updates the linked membership, records the applicable renewal history and transaction, and saves the review decision. The online request workflow is distinct from a direct counter renewal, which is described under the operator responsibilities of User Management. Both workflows concern membership continuation, but the broad Renewals association does not let a member approve a request or directly change the recorded membership dates.
+P0221: QR Attendance has different member and operator uses. Members display their own QR code and view their own attendance history. Authorized operators scan member QRs, while staff may alternatively search by name or Gmail, select the correct matching member and explicitly record attendance. The selected unique member identifier is submitted to the attendance service, avoiding reliance on potentially shared names. A search does not itself record a visit or grant profile-viewing rights. The service checks the member and current visit state before recording a check-in or check-out with its timestamp and operator. Staff feedback identifies the member, outcome and Philippine display time; the database timestamp remains the saved event time. Administrator-managed phone pairing is separate from operator sign-in and installation of the scanner PWA. Members cannot record their own attendance.
+P0222:            Product & Inventory combines product viewing with administrator maintenance. Members browse the active product catalog, and staff read the product information permitted for their sales tasks. Administrators maintain supported product details, prices, units, stock, and active state. All three actors are connected because they participate in this functional area, but only the administrator maintains inventory. Catalog access does not establish an online member checkout, authorize a stock adjustment, or permit a staff member to change product information.
+P0223:            Sales is associated with Administrator and Authorized Staff. Authorized operators enter the relevant customer and product-sale details, while the system validates the item, sale unit, quantity, price, and available stock, records the sale and line items, and applies the corresponding stock deduction. Staff may review their own product-sale records; the association does not imply unrestricted access to other operators' sales. Members are not connected to Sales because the implemented workflow records transactions through an operator. A saved system transaction or its internal receipt_number reference does not establish that the system issues a customer receipt.
+P0224:            Generate Reports and Activity Logs are administrator-only use cases. Generate Reports retrieves supported operational information for the selected report and its available preview or export. Activity Logs retrieves recorded events using the supported filters and paging controls. Neither function is associated with Member / Applicant or Authorized Staff. Reading an event in the log is also distinct from performing the action described by that event; the log viewer does not execute membership changes, inventory changes, account changes, or pairing controls.
+P0225: The use-case diagram and the DFD describe complementary aspects of the same nine-function system. Figure 4 identifies actor participation and functional scope, while the DFD identifies the information exchanged with processes and stores. The data dictionary and relationship descriptions document the persistent records affected by the authorized operations. Their shared function names support consistency across the chapter, but a diagram association is not an access-control mechanism. Database policies, active-role checks, authorized functions, and server-side services enforce the restrictions described here. The system-flow discussion that follows explains how these responsibilities operate together in the implemented workflows.
+P0226: End-to-end system flow. Each protected operation begins with authentication and an active-role check. Page visibility alone does not authorize a database change; database policies, role-checked functions, or authorized server-side services validate privileged operations.
+P0227: 1. Applicant account and request. A prospective member creates an account with email and password through Supabase Auth before the online application is reviewed. The application is stored separately with its applicant account link and a pending status. Submission alone does not create an approved member record or active membership.
+P0228: 2. Review and membership activation. Authorized staff or an administrator loads limited pending-request details, confirms that payment was received at the gym, and chooses approve or reject. The server rechecks the active role, locks the pending request, and prevents a second review. Rejection records the decision. Approval of registration creates the member record linked to the existing Auth account; approval of renewal updates the membership dates. Approved requests also record the membership transaction, and renewals add a membership-history event.
+P0229: 3. Member self-service. A member signs in with email to view their own membership, progress, QR code, attendance history, and active catalog. They may update permitted personal details and submit a renewal request. A member can access only their own records; administrator profile viewing is read-only, and staff have no member-profile viewing or editing permission.
+P0230: 4. Counter and attendance operations. Administrator and staff walk-in registration collect first name, optional middle initial and last name, combine them into the existing full-name value, and submit the membership details to an authorized service. Direct renewal and active-plan change use limited lookup rather than a profile screen; staff confirm the selected member, current plan, payment amount and replacement dates before saving. Attendance uses a member QR or staff name/Gmail lookup with explicit selection. The service checks the member and open visit before recording check-in/out and the responsible operator. An earlier-date visit without check-out is shown as Incomplete without inventing an exit time. Phone pairing, operator authentication and PWA installation are separate steps.
+P0231: 5. Products, sales, and oversight. Administrators maintain the catalog, prices, product units, stock, and active state. Members and staff read only the catalog permitted for their role. When an operator records an in-person product sale, the service validates the item, unit, and available stock, saves the sale and line item, and deducts the quantity. IronGrind records payment at the gym but does not issue a customer receipt. Staff may review their own product sales. Administrators separately generate reports and read filtered activity logs; the log viewer does not perform the logged operations.
+P0232: 1. Authenticate Account
+P0233: Supabase Auth verifies credentials. Members sign in with the email address on their account; staff and administrators use their assigned usernames. Member registration collects an email and password, not a separate username, and the member dashboard displays the member's full name. The profile role and active-account state determine administrator, staff, or member access, with protected operations checked by server-side authorization. New member registration uses a visible password-strength indicator and blocks passwords that do not meet the Strong requirements: 8 to 128 characters, uppercase and lowercase letters, at least one digit, and at least one symbol. Confirmation must match the selected password. Auth and the member-creation service enforce the password policy on the server; staff-account creation uses a minimum of 12 characters with the same character requirements. Existing sign-in forms continue to accept account credentials without imposing registration validation on login.
+P0234: Administrator device authorization is part of User Login rather than an additional main function. Password authentication establishes an Auth session but does not by itself authorize an administrator dashboard or scanner session. The server checks the active role, application scope, current trusted public key and authorized session mapping. A session may access protected operations only after the applicable device-verification workflow completes. Staff and member login retain their role-specific checks.         
+P0235: First registration and return visits. The genuine administrator privately enrolls a TOTP authenticator when required and verifies a fresh code to register the first trusted browser. The browser creates an ECDSA P-256 key pair and retains a non-extractable private CryptoKey in IndexedDB; the server stores the public JWK. Trust lasts thirty days from registration. A later password login in the same browser and origin proves possession of that key automatically, without requesting a code on every login. Routine reuse does not extend the trust period. This is browser-profile trust, not a hardware identity: a different browser, origin, cleared storage or unavailable key can require registration again.         
+P0236: Replacement while another trusted session is active. A different browser submits a session-bound approval request after password verification. The currently active trusted browser receives an in-website notification and may approve or deny it. The requesting browser must then complete fresh TOTP verification and sign its server-issued challenge. Approval alone does not authorize access. A successful server transaction replaces the trusted key and revokes the previous dashboard and attendance scopes; cancellation, denial or failed verification preserves the previous trust. Requests expire after two minutes, and signing challenges after ten minutes.         
+P0237: Availability, logout and recovery. The application polls for approval notifications while the trusted page is active; a heartbeat within two minutes determines whether an eligible approving session is recently active. This is not SMS, operating-system push, or proof that a physical device is online. When no eligible approving session is available, fresh authenticator verification provides the implemented replacement path. Normal logout retains browser trust, while Log out and forget this device revokes it. Lost authenticator access requires verified project-owner recovery. There is no password-only bypass or custom backup-code recovery. Device-signature authorization does not itself change the Auth JWT assurance level to AAL2.         
+P0238: Implementation and evidence. admin-device-trust.js coordinates browser-key proof, admin-device-approval.js handles approval notifications, and admin-mfa.js performs enrollment and fresh authenticator verification. The admin-device-trust Edge Function validates the signed-in account and session, verifies the signature and fresh TOTP evidence, and calls service-only completion functions. Database policies and session guards enforce the result independently of visible dialogs. User-supplied CLI output confirms application of migrations through 20261110000004 and deployment of admin-device-trust. These outputs do not establish successful physical two-browser transfer, authenticator use or matching Vercel frontend deployment; those remain acceptance checks.         
+P0239: Usernames and email addresses are checked for duplicates without regard to capitalization or surrounding spaces. Registration shows availability feedback and rejects identifiers already in use; server checks support this validation. Dashboard and attendance-scanner sessions are tracked as separate scopes. Ordinary replacement affects its own scope, while successful administrator trusted-browser transfer explicitly revokes both old scopes. Online pages check ownership about every five seconds and return to sign-in when replaced; offline or suspended pages check on resumption or reconnection. Trust transfer and explicit forget-device revocation are additional administrator security controls, not ordinary scope-only replacement.
+P0240: 2. Register and Submit Membership Application. An applicant creates an account using an email address and password, then submits personal and health information for review by authorized staff or the administrator. Name fields accept names containing letters and reject numeric characters.
+P0241: 3. Review Membership Applications. Authorized staff and the administrator review pending application summaries and approve or reject requests according to the gym's criteria, confirming in-person payment before approval.
+P0242: 4. Create or Link Member Account. Approval by an authorized staff member or administrator links an online application to the approved member record. Direct walk-in registration by an authorized administrator or staff operator uses a server-side Edge Function to create the appropriate Auth, profile, member, and payment records.
+P0243: 5. View Application status at Login. The User can check the current status of their membership application when signing in to see if it is pending, approved, or rejected.
+P0244: 6. View Membership Dashboard. This function allows the User to access their personalized dashboard, displaying their active membership plan, time-based progress, and their unique QR code.
+P0245: 7. User Management. The administrator can view member profiles but cannot update their personal details. Only members update their own permitted personal profile fields. Administrator membership operations, staff-account controls, and membership-history review are separate from personal-profile editing. Staff have no member-profile viewing or editing function.
+P0246: 8. Record Membership Attendance. An administrator or authorized staff operator scans a member QR using a supported camera. Staff can also search by member name or Gmail, select the matching member and record attendance. The service validates the supplied member identifier and visit state, records check-in/out and the responsible operator, and returns the result.
+P0247: 9. View Personal Attendance History. A member can view their own visit dates and recorded check-in and check-out times. A visit without a recorded check-out does not display an invented exit time.
+P0248: 10. View and Update Own Profile. A member can view their own profile and update permitted personal details. The administrator may view member profiles but cannot edit them. Staff have no access to member profile viewing or editing.
+P0249: 11. Browse Active Product Catalog. The User can view the available supplements and merchandise sold by the gym.
+P0250: 12. Manage Products and Inventory. The Admin can add, update, and monitor the product catalog, ensuring that merchandise stock quantities and supplement details are accurate.
+P0251: Low-stock policy and catalog organization. The administrator inventory view separates selling price from stock on hand and shows low-stock alerts in the configured stock unit. Powder alerts use 1,000 g for protein; 250 g for creatine, pre-workout, amino-acid and vitamin powders; and 500 g for other powders. Liquid alerts use 1,000 ml; individually sold capsules/tablets use 30 pieces; boxed supplements use four boxes; other supplement items use ten items; and merchandise uses four items per product/size. Product form and sale unit take precedence over supplement type. Pounds and ounces are converted before comparison, so the same physical quantity has the same alert status regardless of entry unit. Values at or below the threshold trigger an alert; zero stock is distinguished as unavailable. Thresholds are starting policy values in application code, not stored threshold columns or demand-based reorder forecasts. Staff catalog sections separate Supplements into Powders, Capsules, Tablets, Liquids/drinks and Other, with Merchandise separately. Saved form metadata determines grouping; legacy gram or milliliter products can use a unit-based fallback, while an unidentified form remains Other.                           
+P0252: 13. Record Product Sale. An administrator or staff operator records an in-person product purchase, with validated quantities, saved sales and line items, and corresponding stock deduction. Staff can review their own product-sale records. No receipt provision is included in the documented operating process.
+P0253: 14. Submit Membership Renewal Request. This function allows a member to submit a renewal request at any time, subject to approval by authorized staff or the administrator. If approved while the membership is active, the new membership duration is added after the current expiry date. If approved after expiration, the renewed period begins on the approval date.
+P0254: 15. View Dashboard and Operational Reports. The Admin can view a summarized dashboard showing active members, daily sales, and attendance, as well as access specific operational reports.
+P0255: 16. Export Reports. This function allows the Admin to generate, download, or print detailed reports for record-keeping and business analysis.
+P0256: 17. Activity Logs and Related Administration. The administrator reviews recorded activity through the Activity Logs use case. Staff-account changes are performed under User Management; phone-pairing changes are performed under QR Attendance administration. These operations generate log entries but are not performed inside the read-only log viewer. Business approval or expiry email notifications are not included as implemented use cases.
+P0257: Expanded audit coverage and presentation. Operational writes continue to generate database audit events. The security extension adds server-recorded failed credential attempts and rate-limit rejections, member and scanner session events, successful password updates, recovery requests and report-export requests. Failed attempts are attributed to an unverified visitor rather than assumed to be the account owner. Password-change events identify the affected account without storing its password or hash in the activity log; the authenticated actor is used when available, otherwise the authentication service is shown. Recovery requests do not prove that the requester owns an account or that an email was delivered. Report export means a request, not verified browser-download completion. The administrator viewer keeps action labels distinct from descriptions and places technical identifiers and changed-field names inside expandable Details. Account, grouped category, action and Philippine date-range filters operate with server-side pagination. Searches and routine page views are not comprehensively logged. Database and Edge Function deployment, plus enabled Auth database audit storage for recovery requests, are required for this expanded coverage.
+P0259: Entity Relationship Diagram
+P0261: Figure 5. Public-schema Entity Relationship Diagram
+P0263: Figure 5 presents the public-schema relationship overview for IronGrind. It contains twelve public application tables and the eighteen foreign-key relationships declared on those tables. The auth.users card represents a referenced Supabase-managed identity table and is not counted as an application-owned public table. Selected key and descriptive attributes are shown to keep the overview manageable; the data dictionary that follows provides the complete documented field definitions.
+P0264: The central membership records connect account identity, applications, current membership, visits, transactions, and membership history. A membership application can refer to an existing member when the request concerns that member. Conversely, the optional unique members.application_id identifies the application from which a member record originated. These are separate foreign keys with different purposes: one member may have multiple requests, while a particular source application can be linked to at most one member through the unique source-application field. Walk-in members do not require an online source application.
+P0265: Attendance records belong to members and retain the identities of the operators who recorded check-in and check-out. Sales headers may refer to members and identify the processing account, while sale_items provides the itemized lines of a sale and any associated product reference. Membership history preserves recorded membership changes. Scanner-session and scan-event tables describe paired attendance communication, and the pairing-policy table records the configured capacity policy. The activity_logs table is shown without an invented foreign-key relationship: an actor identifier recorded in a log is not, by itself, evidence of a declared database constraint.
+P0266: PK identifies a primary key, FK a foreign key, and UQ an individually unique key. In crow-foot notation, a circle means zero is permitted, a bar denotes one, and the fork denotes many; the endpoint symbols must be read together. Solid connectors link the public application tables. Dashed blue-gray connectors identify references to managed authentication identities; this line style is a visual grouping choice and does not imply weaker referential enforcement. A line crossing does not create a relationship.
+P0267: This figure intentionally covers the public schema rather than the entire application-owned database. The documented full model contains twenty-one application tables, 224 fields, and thirty-three declared foreign keys: twelve public tables and nine private supporting tables. The private structures support attendance requests, login attempts, scoped account sessions, and administrator/member device authorization. Their definitions remain in the data dictionary and separate security reference materials. The overview describes stored relationships, not role permissions or proof of production deployment; its schema baseline comes from the supplied export and checked-in migrations rather than a new live-database inspection.
+P0268: Data Dictionary
+P0269: The data dictionary uses five columns: Field Name, Field Type, Length / Precision / Scale, Key, and Description and Validation Details. Declared character limits and numeric precision and scale are reported separately from the base type. Not declared identifies text, array, or JSON types without a declared character maximum; N/A identifies types without a length parameter. PK, FK, and UQ identify primary, foreign, and individually unique keys. Descriptions retain nullability, referenced keys, referential actions, composite constraints, defaults, identity generation, and relevant checks. These definitions describe the documented migration model rather than a new live-database inspection.
+P0270: Legacy identifier fields. Members sign in using their email address. New member records do not receive a username; members sign in using email. Current member registration uses email and does not collect a username. The nullable username columns in members and membership_applications remain for compatibility. The profiles.username field supports assigned staff and administrator identifiers. Their presence in the schema does not mean that member registration collects a username.
+P0271: Table 6: profiles
+P0272: Stores account-facing profile details, administrator/staff/member roles, account status, active-account controls, contact details, and timestamps.
+P0273: Field Name
+P0274: Field Type
+P0275: Length / Precision / Scale
+P0276: Key
+P0277: Description and Validation Details
+P0278: id
+P0279: uuid
+P0280: N/A
+P0281: PK, FK
+P0282: Uniquely identifies this record so that the system can retrieve it and relate it to other operational information without relying on a person or product name. NOT NULL. References auth.users(id); ON DELETE CASCADE; ON UPDATE NO ACTION.
+P0283: username
+P0284: character varying
+P0285: 30
+P0286: UQ
+P0287: Stores the optional sign-in username for staff and administrator accounts. Members sign in using their email address. Nullable at column level. Non-NULL values must be unique.
+P0288: full_name
+P0289: character varying
+P0290: 150
+P0292: Stores the complete name submitted for the account, application, or member. NOT NULL.
+P0293: role
+P0294: character varying
+P0295: 20
+P0297: Identifies the account role as admin, staff, or member. NOT NULL. CHECK: admin, staff, or member.
+P0298: account_status
+P0299: text
+P0300: Not declared
+P0302: Stores the account-state value as pending, active, or disabled according to its database check constraint. NOT NULL. CHECK: pending, active, or disabled.
+P0303: created_at
+P0304: timestamptz
+P0305: N/A
+P0307: Records when the database record was created. NOT NULL.
+P0308: updated_at
+P0309: timestamptz
+P0310: N/A
+P0312: Records the timestamp used to identify the latest update to the record. NOT NULL.
+P0313: email
+P0314: character varying
+P0315: 254
+P0316: UQ
+P0317: Stores the email address associated with the account or submitted record. Nullable at column level. Non-NULL values must be unique.
+P0318: is_active
+P0319: boolean
+P0320: N/A
+P0322: Indicates whether the account or catalog record is enabled for its applicable workflow. NOT NULL.
+P0323: phone_number
+P0324: text
+P0325: Not declared
+P0327: Stores contact information for the account. Nullable at column level.
+P0328: gender
+P0329: text
+P0330: Not declared
+P0332: Stores the gender value supplied for an account through the supported form. Nullable at column level.
+P0334: Table 7: members
+P0335: Stores each gym member's current personal details and membership information. Previous membership changes are recorded separately in membership_history.
+P0336: Field Name
+P0337: Field Type
+P0338: Length / Precision / Scale
+P0339: Key
+P0340: Description and Validation Details
+P0341: id
+P0342: uuid
+P0343: N/A
+P0344: PK
+P0345: Uniquely identifies this record so that the system can retrieve it and relate it to other operational information without relying on a person or product name. NOT NULL.
+P0346: application_id
+P0347: uuid
+P0348: N/A
+P0349: FK, UQ
+P0350: Links a member record to the associated registration application when one exists. Nullable at column level. References public.membership_applications(id); ON DELETE SET NULL; ON UPDATE NO ACTION. Non-NULL values must be unique.
+P0351: full_name
+P0352: character varying
+P0353: 150
+P0355: Stores the complete name submitted for the account, application, or member. NOT NULL.
+P0356: mobile
+P0357: character varying
+P0358: 11
+P0360: Stores a Philippine mobile contact number for the member or applicant. Nullable at column level.
+P0361: plan
+P0362: character varying
+P0363: 30
+P0365: Stores the name of the membership plan associated with the record. NOT NULL.
+P0366: start_date
+P0367: date
+P0368: N/A
+P0370: Records the starting calendar date of the requested or current membership period. Nullable at column level.
+P0371: end_date
+P0372: date
+P0373: N/A
+P0375: Stores the membership end date retained by current and compatibility operations. Nullable at column level.
+P0376: status
+P0377: character varying
+P0378: 20
+P0380: Stores the lifecycle or transaction state of the record. NOT NULL. CHECK: active, expired, suspended, or inactive.
+P0381: paid
+P0382: numeric
+P0383: 10,2
+P0385: Stores the recorded membership payment amount as a number. NOT NULL. CHECK: at least 0.
+P0386: fitness_goals
+P0387: text[]
+P0388: Not declared
+P0390: Stores the selected fitness-goal entries as an array of text values. NOT NULL.
+P0391: height
+P0392: numeric
+P0393: 6,2
+P0395: Stores the submitted height measurement as a decimal number. Nullable at column level.
+P0396: height_unit
+P0397: character varying
+P0398: 3
+P0400: Identifies the unit associated with the height measurement. Nullable at column level. CHECK: cm, in, or ft when not NULL.
+P0401: weight
+P0402: numeric
+P0403: 6,2
+P0405: Retains a compatibility weight measurement used by earlier or supporting data paths. Nullable at column level.
+P0406: health_conditions
+P0407: text[]
+P0408: Not declared
+P0410: Stores declared health-condition entries as an array of text values. NOT NULL.
+P0411: other_medical_conditions
+P0412: text
+P0413: Not declared
+P0415: Stores additional health-condition details supplied by the person. Nullable at column level.
+P0416: signature_data
+P0417: text
+P0418: Not declared
+P0420: Retains signature data submitted through the registration workflow. Nullable at column level.
+P0421: created_at
+P0422: timestamptz
+P0423: N/A
+P0425: Records when the database record was created. NOT NULL.
+P0426: auth_user_id
+P0427: uuid
+P0428: N/A
+P0429: FK, UQ
+P0430: Links the record to a managed Supabase Auth account. Nullable at column level. References auth.users(id); ON DELETE SET NULL; ON UPDATE NO ACTION. Non-NULL values must be unique.
+P0431: email
+P0432: character varying
+P0433: 254
+P0435: Stores the email address associated with the account or submitted record. Nullable at column level.
+P0436: username
+P0437: character varying
+P0438: 30
+P0440: Retains a legacy username value for compatibility with older member records and lookups. New member records do not receive a username; members sign in using email. Nullable at column level.
+P0441: date_of_birth
+P0442: date
+P0443: N/A
+P0445: Records the person's birth date for registration and personal-information records. Nullable at column level.
+P0446: age
+P0447: smallint
+P0448: N/A
+P0450: Stores the recorded age value associated with the person. Nullable at column level.
+P0451: sex
+P0452: character varying
+P0453: 30
+P0455: Stores the sex value submitted in the member or application form. Nullable at column level.
+P0456: weight_kg
+P0457: numeric
+P0458: 7,2
+P0460: Stores the person's weight in kilograms as a decimal measurement. Nullable at column level.
+P0461: emergency_contact
+P0462: jsonb
+P0463: Not declared
+P0465: Stores emergency-contact information. NOT NULL.
+P0466: plan_price
+P0467: numeric
+P0468: 12,2
+P0470: Stores the monetary amount associated with the selected membership plan. NOT NULL.
+P0471: expiry_date
+P0472: date
+P0473: N/A
+P0475: Stores the explicit expiration date of the member's recorded membership period. Nullable at column level.
+P0476: registration_source
+P0477: character varying
+P0478: 40
+P0480: Identifies the workflow through which the member record was created, such as online application or an authorized counter registration. NOT NULL.
+P0481: signature_path
+P0482: text
+P0483: Not declared
+P0485: Stores a signature reference or payload used by the applicable workflow. Nullable at column level.
+P0486: updated_at
+P0487: timestamptz
+P0488: N/A
+P0490: Records the timestamp used to identify the latest update to the record. NOT NULL.
+P0492: Table 8: membership_applications
+P0493: Stores submitted registration and renewal requests with the information provided by the applicant. Review status, reviewer, and timestamps track each request through processing.
+P0494: Field Name
+P0495: Field Type
+P0496: Length / Precision / Scale
+P0497: Key
+P0498: Description and Validation Details
+P0499: id
+P0500: uuid
+P0501: N/A
+P0502: PK
+P0503: Uniquely identifies this record so that the system can retrieve it and relate it to other operational information without relying on a person or product name. NOT NULL.
+P0504: full_name
+P0505: character varying
+P0506: 150
+P0508: Stores the complete name submitted for the account, application, or member. NOT NULL.
+P0509: date_of_birth
+P0510: date
+P0511: N/A
+P0513: Records the person's birth date for registration and personal-information records. Nullable at column level.
+P0514: age
+P0515: integer
+P0516: N/A
+P0518: Stores the recorded age value associated with the person. Nullable at column level. CHECK: 1-120 when not NULL.
+P0519: sex
+P0520: character varying
+P0521: 30
+P0523: Stores the sex value submitted in the member or application form. Nullable at column level.
+P0524: mobile
+P0525: character varying
+P0526: 11
+P0528: Stores a Philippine mobile contact number for the member or applicant. Nullable at column level.
+P0529: height
+P0530: numeric
+P0531: 6,2
+P0533: Stores the submitted height measurement as a decimal number. Nullable at column level.
+P0534: height_unit
+P0535: character varying
+P0536: 3
+P0538: Identifies the unit associated with the height measurement. Nullable at column level. CHECK: cm, in, or ft when not NULL.
+P0539: weight
+P0540: numeric
+P0541: 6,2
+P0543: Retains a compatibility weight measurement used by earlier or supporting data paths. Nullable at column level.
+P0544: emergency_name
+P0545: text
+P0546: Not declared
+P0548: Retains the emergency contact person's name submitted with an application. Nullable at column level.
+P0549: emergency_relationship
+P0550: text
+P0551: Not declared
+P0553: Retains the applicant's relationship to the emergency contact person. Nullable at column level.
+P0554: emergency_contact
+P0555: text
+P0556: Not declared
+P0558: Stores emergency-contact information. Nullable at column level.
+P0559: plan
+P0560: character varying
+P0561: 30
+P0563: Stores the name of the membership plan associated with the record. NOT NULL.
+P0564: plan_price
+P0565: numeric
+P0566: 10,2
+P0568: Stores the monetary amount associated with the selected membership plan. NOT NULL. CHECK: at least 0.
+P0569: start_date
+P0570: date
+P0571: N/A
+P0573: Records the starting calendar date of the requested or current membership period. Nullable at column level.
+P0574: end_date
+P0575: date
+P0576: N/A
+P0578: Stores the membership end date retained by current and compatibility operations. Nullable at column level.
+P0579: health_conditions
+P0580: text[]
+P0581: Not declared
+P0583: Stores declared health-condition entries as an array of text values. NOT NULL.
+P0584: other_medical_conditions
+P0585: text
+P0586: Not declared
+P0588: Stores additional health-condition details supplied by the person. Nullable at column level.
+P0589: fitness_goals
+P0590: text[]
+P0591: Not declared
+P0593: Stores the selected fitness-goal entries as an array of text values. NOT NULL.
+P0594: signature_data
+P0595: text
+P0596: Not declared
+P0598: Retains signature data submitted through the registration workflow. Nullable at column level.
+P0599: status
+P0600: character varying
+P0601: 20
+P0603: Stores the lifecycle or transaction state of the record. NOT NULL. CHECK: pending, approved, or rejected.
+P0604: reviewed_by
+P0605: uuid
+P0606: N/A
+P0607: FK
+P0608: Identifies the profile of the staff member or administrator who reviewed the application. Nullable at column level. References public.profiles(id); ON DELETE NO ACTION; ON UPDATE NO ACTION.
+P0609: reviewed_at
+P0610: timestamptz
+P0611: N/A
+P0613: Records when the staff member or administrator reviewed the request. Nullable at column level.
+P0614: created_at
+P0615: timestamptz
+P0616: N/A
+P0618: Records when the database record was created. NOT NULL.
+P0619: auth_user_id
+P0620: uuid
+P0621: N/A
+P0622: FK
+P0623: Links the record to a managed Supabase Auth account. Nullable at column level. References auth.users(id); ON DELETE CASCADE; ON UPDATE NO ACTION.
+P0624: member_id
+P0625: uuid
+P0626: N/A
+P0627: FK
+P0628: Identifies the member related to this operational record. Nullable at column level. References public.members(id); ON DELETE SET NULL; ON UPDATE NO ACTION.
+P0629: application_type
+P0630: character varying
+P0631: 20
+P0633: Distinguishes an initial registration application from a membership renewal request. NOT NULL. CHECK: registration or renewal.
+P0634: submitted_at
+P0635: timestamptz
+P0636: N/A
+P0638: Records the submission timestamp associated with an application. NOT NULL.
+P0639: email
+P0640: character varying
+P0641: 254
+P0643: Stores the email address associated with the account or submitted record. Nullable at column level.
+P0644: username
+P0645: character varying
+P0646: 30
+P0648: Retains a legacy username value on older application records. Current member registration uses email and does not collect a username. Nullable at column level.
+P0649: emergency_contact_data
+P0650: jsonb
+P0651: Not declared
+P0653: Stores the structured emergency-contact payload associated with an application. NOT NULL.
+P0654: weight_kg
+P0655: numeric
+P0656: 7,2
+P0658: Stores the person's weight in kilograms as a decimal measurement. Nullable at column level.
+P0659: signature_path
+P0660: text
+P0661: Not declared
+P0663: Stores a signature reference or payload used by the applicable workflow. Nullable at column level.
+P0665: Table 9: attendance
+P0666: Stores one record for each member visit to the gym. Check-in and optional check-out timestamps support attendance history and visit tracking.
+P0667: Field Name
+P0668: Field Type
+P0669: Length / Precision / Scale
+P0670: Key
+P0671: Description and Validation Details
+P0672: id
+P0673: uuid
+P0674: N/A
+P0675: PK
+P0676: Uniquely identifies this record so that the system can retrieve it and relate it to other operational information without relying on a person or product name. NOT NULL.
+P0677: member_id
+P0678: uuid
+P0679: N/A
+P0680: FK
+P0681: Identifies the member related to this operational record. NOT NULL. References public.members(id); ON DELETE CASCADE; ON UPDATE NO ACTION.
+P0682: date
+P0683: date
+P0684: N/A
+P0686: Stores the date associated with the attendance row. NOT NULL.
+P0687: time_in
+P0688: timestamptz
+P0689: N/A
+P0691: Records when the visit began. NOT NULL.
+P0692: time_out
+P0693: timestamptz
+P0694: N/A
+P0696: Records when the visit ended. Nullable at column level.
+P0697: created_at
+P0698: timestamptz
+P0699: N/A
+P0701: Records when the database record was created. NOT NULL.
+P0702: recorded_by
+P0703: uuid
+P0704: N/A
+P0705: FK
+P0706: Identifies the Auth account responsible for recording the attendance or history event. Nullable at column level. References auth.users(id); ON DELETE SET NULL; ON UPDATE NO ACTION.
+P0707: checked_out_by
+P0708: uuid
+P0709: N/A
+P0710: FK
+P0711: Identifies the Auth account that recorded check-out. Nullable at column level. References auth.users(id); ON DELETE SET NULL; ON UPDATE NO ACTION.
+P0713: Table 10: products
+P0714: Stores products offered for sale, including prices, units, and inventory information. Active and archived product records support catalog management and sales history.
+P0715: Field Name
+P0716: Field Type
+P0717: Length / Precision / Scale
+P0718: Key
+P0719: Description and Validation Details
+P0720: id
+P0721: uuid
+P0722: N/A
+P0723: PK
+P0724: Uniquely identifies this record so that the system can retrieve it and relate it to other operational information without relying on a person or product name. NOT NULL.
+P0725: name
+P0726: character varying
+P0727: 120
+P0729: Stores the product's catalog name used in inventory and product selection. NOT NULL.
+P0730: category
+P0731: character varying
+P0732: 20
+P0734: Classifies the product or sale line for the appropriate operational behavior. NOT NULL. CHECK: supplement or merchandise.
+P0735: price
+P0736: numeric
+P0737: 10,2
+P0739: Retains the product price field declared in the physical schema. NOT NULL. CHECK: at least 0.
+P0740: stock
+P0741: numeric
+P0742: 14,6
+P0744: Stores the available product quantity using the configured inventory unit. NOT NULL. CHECK: at least 0.
+P0745: size
+P0746: character varying
+P0747: 30
+P0749: Stores an optional size or package description used to distinguish applicable merchandise or products. Nullable at column level.
+P0750: created_at
+P0751: timestamptz
+P0752: N/A
+P0754: Records when the database record was created. NOT NULL.
+P0755: updated_at
+P0756: timestamptz
+P0757: N/A
+P0759: Records the timestamp used to identify the latest update to the record. NOT NULL.
+P0760: is_active
+P0761: boolean
+P0762: N/A
+P0764: Indicates whether the account or catalog record is enabled for its applicable workflow. NOT NULL.
+P0765: archived_at
+P0766: timestamptz
+P0767: N/A
+P0769: Records when a product was archived, when applicable. Nullable at column level.
+P0770: image_path
+P0771: text
+P0772: Not declared
+P0774: Stores the catalog image reference associated with the product. Nullable at column level.
+P0775: price_per_unit
+P0776: numeric
+P0777: 12,2
+P0779: Stores the product price for the configured pricing unit. NOT NULL.
+P0780: unit
+P0781: character varying
+P0782: 12
+P0784: Identifies the unit associated with a product price or sale-line quantity. NOT NULL. CHECK: gram for powder, milliliter for drinkable, piece/box matching stock_unit for capsule/tablet, and item for other supplements or merchandise.
+P0785: stock_unit
+P0786: text
+P0787: Not declared
+P0789: Identifies the unit in which inventory quantities are recorded. NOT NULL. CHECK: gram/kilogram/ounce/pound for powder; milliliter/liter/fluid_ounce for drinkable; piece/box for capsule/tablet; item for other supplements or merchandise.
+P0790: merch_type
+P0791: text
+P0792: Not declared
+P0794: Identifies the merchandise classification, such as apparel, accessories, drinkware, gym_gear, or other. Nullable at column level. CHECK: when supplied for merchandise, apparel, accessories, drinkware, gym_gear, or other; must be NULL for supplements.
+P0795: supplement_form
+P0796: text
+P0797: Not declared
+P0799: Identifies the supplement form as powder, drinkable, capsule, tablet, or other where applicable. Nullable at column level. CHECK: required for supplements with powder, drinkable, capsule, tablet, or other; must be NULL for merchandise.
+P0800: supplement_type
+P0801: text
+P0802: Not declared
+P0804: Classifies a supplement as protein, creatine, pre_workout, vitamins, amino_acids, or other. Nullable at column level. CHECK: when supplied for supplements, protein, creatine, pre_workout, vitamins, amino_acids, or other; must be NULL for merchandise.
+P0806: Table 11: sales
+P0807: Stores one transaction header with customer details, amount, status, optional member reference, internal transaction identifier, and processing operator.
+P0808: Field Name
+P0809: Field Type
+P0810: Length / Precision / Scale
+P0811: Key
+P0812: Description and Validation Details
+P0813: id
+P0814: uuid
+P0815: N/A
+P0816: PK
+P0817: Uniquely identifies this record so that the system can retrieve it and relate it to other operational information without relying on a person or product name. NOT NULL.
+P0818: member_id
+P0819: uuid
+P0820: N/A
+P0821: FK
+P0822: Identifies the member related to this operational record. Nullable at column level. References public.members(id); ON DELETE SET NULL; ON UPDATE NO ACTION.
+P0823: customer_name
+P0824: character varying
+P0825: 150
+P0827: Preserves the customer name supplied for the transaction. NOT NULL.
+P0828: items
+P0829: jsonb
+P0830: Not declared
+P0832: Retains a JSON transaction-item payload in the sales header. NOT NULL.
+P0833: total
+P0834: numeric
+P0835: 10,2
+P0837: Stores the complete transaction amount in the sale header. NOT NULL. CHECK: at least 0.
+P0838: status
+P0839: character varying
+P0840: 12
+P0842: Stores the lifecycle or transaction state of the record. NOT NULL. CHECK: nonempty normalized lowercase text (trimmed); no fixed status enumeration is declared.
+P0843: sold_at
+P0844: timestamptz
+P0845: N/A
+P0847: Records the transaction timestamp. NOT NULL.
+P0848: receipt_number
+P0849: character varying
+P0850: 64
+P0851: UQ
+P0852: Stores the existing internal transaction reference under its retained database column name. NOT NULL. Values must be unique.
+P0853: customer_type
+P0854: character varying
+P0855: 15
+P0857: Stores the customer classification recorded for the sale. NOT NULL.
+P0858: processed_by
+P0859: uuid
+P0860: N/A
+P0861: FK
+P0862: Identifies the Auth account of the authorized operator who recorded the transaction. Nullable at column level. References auth.users(id); ON DELETE SET NULL; ON UPDATE NO ACTION.
+P0863: Table 12: sale_items
+P0864: Stores each product or membership charge associated with a sale. Item name and price are retained as a transaction snapshot if the catalog record later changes or is removed.
+P0865: Field Name
+P0866: Field Type
+P0867: Length / Precision / Scale
+P0868: Key
+P0869: Description and Validation Details
+P0870: id
+P0871: uuid
+P0872: N/A
+P0873: PK
+P0874: Uniquely identifies this record so that the system can retrieve it and relate it to other operational information without relying on a person or product name. NOT NULL.
+P0875: sale_id
+P0876: uuid
+P0877: N/A
+P0878: FK
+P0879: Links each sale line to its transaction header. NOT NULL. References public.sales(id); ON DELETE CASCADE; ON UPDATE NO ACTION.
+P0880: product_id
+P0881: uuid
+P0882: N/A
+P0883: FK
+P0884: Links a sale line to its catalog product when applicable. Nullable at column level. References public.products(id); ON DELETE SET NULL; ON UPDATE NO ACTION.
+P0885: item_name
+P0886: character varying
+P0887: 150
+P0889: Preserves the product or membership label as it was recorded for the transaction line. NOT NULL.
+P0890: category
+P0891: character varying
+P0892: 20
+P0894: Classifies the product or sale line for the appropriate operational behavior. NOT NULL. CHECK: supplement, merchandise, or membership.
+P0895: quantity
+P0896: numeric
+P0897: 12,3
+P0899: Stores the quantity charged for a sale line, including fractional amounts where supported. NOT NULL. CHECK: greater than 0.
+P0900: unit
+P0901: character varying
+P0902: 12
+P0904: Identifies the unit associated with a product price or sale-line quantity. NOT NULL. CHECK: gram, kilogram, ounce, pound, milliliter, liter, fluid_ounce, item, piece, box, or membership.
+P0905: unit_price
+P0906: numeric
+P0907: 12,2
+P0909: Stores the price charged per recorded sale unit. NOT NULL. CHECK: at least 0.
+P0910: line_total
+P0911: numeric
+P0912: 12,2
+P0914: Stores the amount charged for an individual sale line. NOT NULL. CHECK: at least 0.
+P0916: Table 13: membership_history
+P0917: Stores membership lifecycle events and the relevant membership values before and after each event. These records support administrative review and reporting without replacing the member's current details.
+P0918: Field Name
+P0919: Field Type
+P0920: Length / Precision / Scale
+P0921: Key
+P0922: Description and Validation Details
+P0923: id
+P0924: uuid
+P0925: N/A
+P0926: PK
+P0927: Uniquely identifies this record so that the system can retrieve it and relate it to other operational information without relying on a person or product name. NOT NULL.
+P0928: member_id
+P0929: uuid
+P0930: N/A
+P0931: FK
+P0932: Identifies the member related to this operational record. NOT NULL. References public.members(id); ON DELETE RESTRICT; ON UPDATE NO ACTION.
+P0933: event_type
+P0934: character varying
+P0935: 30
+P0937: Identifies the membership-history event as expired, renewal, or plan_change. NOT NULL. CHECK: expired, renewal, or plan_change.
+P0938: previous_plan
+P0939: character varying
+P0940: 30
+P0942: Records the plan before the membership-history event. Nullable at column level.
+P0943: new_plan
+P0944: character varying
+P0945: 30
+P0947: Records the plan associated with the membership after the recorded event. Nullable at column level.
+P0948: previous_price
+P0949: numeric
+P0950: 12,2
+P0952: Stores the membership price before the recorded event. Nullable at column level. CHECK: at least 0 when not NULL.
+P0953: new_price
+P0954: numeric
+P0955: 12,2
+P0957: Stores the membership price after the recorded event. Nullable at column level. CHECK: at least 0 when not NULL.
+P0958: previous_start_date
+P0959: date
+P0960: N/A
+P0962: Preserves the membership start date before the history event. Nullable at column level.
+P0963: previous_expiry_date
+P0964: date
+P0965: N/A
+P0967: Preserves the membership expiry date before the history event. Nullable at column level.
+P0968: new_start_date
+P0969: date
+P0970: N/A
+P0972: Records the start date after the membership-history event. Nullable at column level.
+P0973: new_expiry_date
+P0974: date
+P0975: N/A
+P0977: Records the expiry date after the membership-history event. Nullable at column level.
+P0978: notes
+P0979: text
+P0980: Not declared
+P0982: Stores supporting context about the membership-history event. NOT NULL.
+P0983: recorded_at
+P0984: timestamptz
+P0985: N/A
+P0987: Records when the membership-history event was saved. NOT NULL.
+P0988: recorded_by
+P0989: uuid
+P0990: N/A
+P0991: FK
+P0992: Identifies the Auth account responsible for recording the attendance or history event. Nullable at column level. References auth.users(id); ON DELETE SET NULL; ON UPDATE NO ACTION.
+P0994: Table 14: public.activity_logs
+P0995: Field Name
+P0996: Field Type
+P0997: Length / Precision / Scale
+P0998: Key
+P0999: Description and Validation Details
+P1000: id
+P1001: bigint
+P1002: N/A
+P1003: PK
+P1004: Uniquely identifies this record so that the system can retrieve it and relate it to other operational information without relying on a person or product name. Identity (GENERATED ALWAYS). NOT NULL.
+P1005: occurred_at
+P1006: timestamptz
+P1007: N/A
+P1009: Records when the activity entry was captured. NOT NULL.
+P1010: actor_id
+P1011: uuid
+P1012: N/A
+P1014: Retains the identifier of the account responsible for the logged operation. Nullable at column level. No foreign key is declared on this UUID column.
+P1015: actor_name
+P1016: text
+P1017: Not declared
+P1019: Preserves the actor name captured with the activity entry. NOT NULL.
+P1020: actor_role
+P1021: text
+P1022: Not declared
+P1024: Preserves the role captured when the activity was recorded. NOT NULL.
+P1025: action
+P1026: text
+P1027: Not declared
+P1029: Identifies the recorded action, such as creation, update, approval, check-in, or a phone-pairing event. NOT NULL.
+P1030: entity_type
+P1031: text
+P1032: Not declared
+P1034: Identifies the system area or table associated with the logged action. NOT NULL.
+P1035: entity_id
+P1036: text
+P1037: Not declared
+P1039: Stores the identifier of the affected record when one is available. Nullable at column level.
+P1040: record_label
+P1041: text
+P1042: Not declared
+P1044: Stores a readable label for the affected record. NOT NULL.
+P1045: changed_fields
+P1046: text[]
+P1047: Not declared
+P1049: Stores the field names associated with a recorded change as a text array. NOT NULL.
+P1050: details
+P1051: text
+P1052: Not declared
+P1054: Stores a descriptive account of the logged action. NOT NULL.
+P1056: Table 15: public.mobile_attendance_pairing_policy
+P1057: Field Name
+P1058: Field Type
+P1059: Length / Precision / Scale
+P1060: Key
+P1061: Description and Validation Details
+P1062: singleton
+P1063: boolean
+P1064: N/A
+P1065: PK
+P1066: Identifies the single configuration row for the phone-pairing policy. NOT NULL. CHECK: true; the primary key permits only one policy row.
+P1067: max_pairs
+P1068: integer
+P1069: N/A
+P1071: Limits paired phones plus unexpired pending QR reservations. NOT NULL. CHECK: 2-50.
+P1072: updated_at
+P1073: timestamptz
+P1074: N/A
+P1076: Records the timestamp used to identify the latest update to the record. NOT NULL.
+P1077: updated_by
+P1078: uuid
+P1079: N/A
+P1080: FK
+P1081: Identifies the Auth account responsible for the recorded policy update. Nullable at column level. References auth.users(id); ON DELETE NO ACTION; ON UPDATE NO ACTION.
+P1082: pairing_password_hash
+P1083: text
+P1084: Not declared
+P1086: Stores the hashed pairing password used by the authorized phone-pairing workflow. Nullable at column level.
+P1087: pairing_removal_pin_hash
+P1088: text
+P1089: Not declared
+P1091: Stores the hashed PIN used to authorize pairing removal. Nullable at column level.
+P1093: Table 16: public.mobile_attendance_scan_sessions
+P1094: Field Name
+P1095: Field Type
+P1096: Length / Precision / Scale
+P1097: Key
+P1098: Description and Validation Details
+P1099: id
+P1100: uuid
+P1101: N/A
+P1102: PK
+P1103: Uniquely identifies this record so that the system can retrieve it and relate it to other operational information without relying on a person or product name. NOT NULL.
+P1104: token_hash
+P1105: text
+P1106: Not declared
+P1108: Stores the hashed pairing token associated with the phone session. NOT NULL.
+P1109: created_by
+P1110: uuid
+P1111: N/A
+P1112: FK
+P1113: Identifies the Auth account of the administrator who created the phone-pairing session. NOT NULL. References auth.users(id); ON DELETE CASCADE; ON UPDATE NO ACTION.
+P1114: created_at
+P1115: timestamptz
+P1116: N/A
+P1118: Records when the database record was created. NOT NULL.
+P1119: expires_at
+P1120: timestamptz
+P1121: N/A
+P1123: Records when the pairing session expires. NOT NULL.
+P1124: paired_device
+P1125: text
+P1126: Not declared
+P1128: Stores the descriptive label of the paired phone. Nullable at column level.
+P1129: paired_at
+P1130: timestamptz
+P1131: N/A
+P1133: Records when the phone was paired. Nullable at column level.
+P1134: remember_phone
+P1135: boolean
+P1136: N/A
+P1138: Retains the original remembered-phone preference. Current successful pairings last thirty days. NOT NULL.
+P1139: paired_device_id
+P1140: uuid
+P1141: N/A
+P1143: Identifies the browser installation assigned to the pairing. Nullable for legacy pairings. Nullable at column level. No foreign key is declared on this UUID column.
+P1145: Table 17: public.mobile_attendance_scan_events
+P1146: Field Name
+P1147: Field Type
+P1148: Length / Precision / Scale
+P1149: Key
+P1150: Description and Validation Details
+P1151: id
+P1152: uuid
+P1153: N/A
+P1154: PK
+P1155: Uniquely identifies this record so that the system can retrieve it and relate it to other operational information without relying on a person or product name. NOT NULL.
+P1156: session_id
+P1157: uuid
+P1158: N/A
+P1159: FK
+P1160: Links a retained scan-event record to its associated phone-pairing session. NOT NULL. References public.mobile_attendance_scan_sessions(id); ON DELETE CASCADE; ON UPDATE NO ACTION.
+P1161: qr_payload
+P1162: text
+P1163: Not declared
+P1165: Stores the QR payload retained in the scan-event table. NOT NULL. CHECK: length 1-500 characters.
+P1166: created_at
+P1167: timestamptz
+P1168: N/A
+P1170: Records when the database record was created. NOT NULL.
+P1172: Table 18: private.attendance_scan_requests
+P1173: Field Name
+P1174: Field Type
+P1175: Length / Precision / Scale
+P1176: Key
+P1177: Description and Validation Details
+P1178: request_id
+P1179: uuid
+P1180: N/A
+P1181: PK
+P1182: Stores the unique request identifier used for duplicate attendance-request protection. NOT NULL.
+P1183: operator_id
+P1184: uuid
+P1185: N/A
+P1186: FK
+P1187: Identifies the Auth account that submitted the attendance request. NOT NULL. References auth.users(id); ON DELETE CASCADE; ON UPDATE NO ACTION.
+P1188: member_id
+P1189: uuid
+P1190: N/A
+P1191: FK
+P1192: Identifies the member related to this operational record. NOT NULL. References public.members(id); ON DELETE CASCADE; ON UPDATE NO ACTION.
+P1193: result
+P1194: jsonb
+P1195: Not declared
+P1197: Stores the saved attendance-processing result as structured JSON. NOT NULL.
+P1198: created_at
+P1199: timestamptz
+P1200: N/A
+P1202: Records when the database record was created. NOT NULL.
+P1204: Table 19: private.admin_login_attempts
+P1205: Field Name
+P1206: Field Type
+P1207: Length / Precision / Scale
+P1208: Key
+P1209: Description and Validation Details
+P1210: bucket
+P1211: text
+P1212: Not declared
+P1213: PK
+P1214: Identifies the grouping used by the private administrator-login attempt tracker. NOT NULL.
+P1215: window_start
+P1216: timestamptz
+P1217: N/A
+P1219: Records the beginning of the attempt-tracking window. NOT NULL.
+P1220: attempts
+P1221: integer
+P1222: N/A
+P1224: Stores the number of attempts recorded for the associated tracking window. NOT NULL.
+P1226: Table 20: private.account_sessions
+P1227: Field Name
+P1228: Field Type
+P1229: Length / Precision / Scale
+P1230: Key
+P1231: Description and Validation Details
+P1232: user_id
+P1233: uuid
+P1234: N/A
+P1235: PK, FK
+P1236: Identifies the Auth account owning the scoped session. NOT NULL. References auth.users(id); ON DELETE CASCADE; ON UPDATE NO ACTION. Part of composite PK (user_id, session_scope); this column alone is not declared unique.
+P1237: session_id
+P1238: uuid
+P1239: N/A
+P1241: Identifies the accepted Auth session. NOT NULL. No foreign key is declared on this UUID column.
+P1242: session_created_at
+P1243: timestamptz
+P1244: N/A
+P1246: Records session creation time for replacement ordering. NOT NULL.
+P1247: session_scope
+P1248: text
+P1249: Not declared
+P1250: PK
+P1251: Separates dashboard and attendance sessions; CHECK limits values to dashboard or attendance. NOT NULL. Part of composite PK (user_id, session_scope); this column alone is not declared unique. CHECK: dashboard or attendance.
+P1252: Stores the active dashboard and attendance-scanner sessions. The composite primary key is user_id and session_scope.
+P1253: Table 21: private.admin_login_approvals         
+P1254: Records session-bound administrator login requests and approval decisions. Approval alone does not authorize the requesting browser; current device proof and fresh TOTP are also required for replacement.         
+P1255: Field Name
+P1256: Field Type
+P1257: Length / Precision / Scale
+P1258: Key
+P1259: Description and Validation Details
+P1260: id
+P1261: uuid
+P1262: N/A
+P1263: PK
+P1264: Identifies the approval request. NOT NULL. Default gen_random_uuid().
+P1265: user_id
+P1266: uuid
+P1267: N/A
+P1268: FK
+P1269: Identifies the administrator requesting access. NOT NULL. References auth.users(id); ON DELETE CASCADE; ON UPDATE NO ACTION.
+P1270: requesting_session_id
+P1271: uuid
+P1272: N/A
+P1273: FK
+P1274: Identifies the Auth session awaiting authorization. NOT NULL. References auth.sessions(id); ON DELETE CASCADE; ON UPDATE NO ACTION. Part of composite UQ (requesting_session_id, session_scope); the pair must be unique, not either column individually.
+P1275: approver_session_id
+P1276: uuid
+P1277: N/A
+P1278: FK
+P1279: Records the Auth session that decided the request. Deleting that session clears this attribution without deleting the request. Nullable at column level. References auth.sessions(id); ON DELETE SET NULL; ON UPDATE NO ACTION.
+P1280: session_scope
+P1281: text
+P1282: Not declared
+P1284: Separates dashboard login from attendance-scanner login. NOT NULL. CHECK dashboard or attendance. Part of composite UQ (requesting_session_id, session_scope); the pair must be unique, not either column individually.
+P1285: device_label
+P1286: text
+P1287: Not declared
+P1289: Describes the requesting browser for the approval notification. The request function limits the label to 180 characters; text has no declared character length. NOT NULL.
+P1290: status
+P1291: text
+P1292: Not declared
+P1294: Records the decision state. Expiration is calculated from timestamps and is not an additional stored status. NOT NULL. Default pending. CHECK pending, approved, denied, or cancelled.
+P1295: requested_at
+P1296: timestamptz
+P1297: N/A
+P1299: Records creation of the request. NOT NULL. Default now().
+P1300: expires_at
+P1301: timestamptz
+P1302: N/A
+P1304: Limits how long the pending request may be decided. NOT NULL. Default now() + interval 2 minutes.
+P1305: decided_at
+P1306: timestamptz
+P1307: N/A
+P1309: Records when approval or denial was recorded. Nullable at column level.
+P1310: approval_expires_at
+P1311: timestamptz
+P1312: N/A
+P1314: Retains the approval-validity boundary. A valid approval does not replace the current trusted-device and authorized-session checks. Nullable at column level.
+P1315: trusted_device_id
+P1316: uuid
+P1317: N/A
+P1319: Snapshots the trusted device being replaced. Deliberately not a foreign key: historical requests must survive replacement of the trusted row. Nullable at column level.
+P1320: Table 22: private.admin_trusted_devices         
+P1321: Stores one current trusted browser public key per administrator account. Browser trust is fixed at thirty days and is separate from normal account logout and phone-camera pairing.         
+P1322: Field Name
+P1323: Field Type
+P1324: Length / Precision / Scale
+P1325: Key
+P1326: Description and Validation Details
+P1327: user_id
+P1328: uuid
+P1329: N/A
+P1330: PK, FK
+P1331: Identifies the administrator. The primary key permits at most one trusted-browser row per administrator. NOT NULL. References auth.users(id); ON DELETE CASCADE; ON UPDATE NO ACTION.
+P1332: device_id
+P1333: uuid
+P1334: N/A
+P1336: Identifies the browser key in the application. It is not globally unique and is not a hardware identifier. NOT NULL.
+P1337: public_key
+P1338: jsonb
+P1339: Not declared
+P1341: Stores the ECDSA P-256 public JWK used to verify device signatures. The private key remains non-extractable in browser IndexedDB. NOT NULL.
+P1342: device_label
+P1343: text
+P1344: Not declared
+P1346: Stores the descriptive label of the trusted browser. NOT NULL.
+P1347: registered_at
+P1348: timestamptz
+P1349: N/A
+P1351: Records registration of the current trusted browser. NOT NULL. Default now().
+P1352: expires_at
+P1353: timestamptz
+P1354: N/A
+P1356: Records the trust expiration set thirty days after registration. Routine reuse does not extend this boundary. NOT NULL.
+P1357: last_seen_at
+P1358: timestamptz
+P1359: N/A
+P1361: Records recent browser activity maintained by the security workflow. It does not prove that a physical device is online. NOT NULL. Default now().
+P1362: Table 23: private.admin_device_sessions         
+P1363: Binds a candidate or authorized administrator Auth session to a browser key, signing challenge and application scope. Unverified candidates cannot access protected application data.         
+P1364: Field Name
+P1365: Field Type
+P1366: Length / Precision / Scale
+P1367: Key
+P1368: Description and Validation Details
+P1369: session_id
+P1370: uuid
+P1371: N/A
+P1372: PK, FK
+P1373: Identifies the Auth session being challenged or authorized. NOT NULL. References auth.sessions(id); ON DELETE CASCADE; ON UPDATE NO ACTION.
+P1374: user_id
+P1375: uuid
+P1376: N/A
+P1377: FK
+P1378: Identifies the administrator associated with the session. NOT NULL. References auth.users(id); ON DELETE CASCADE; ON UPDATE NO ACTION.
+P1379: device_id
+P1380: uuid
+P1381: N/A
+P1383: Identifies the candidate browser. No foreign key is declared because a candidate may not yet be trusted. NOT NULL.
+P1384: session_scope
+P1385: text
+P1386: Not declared
+P1388: Identifies the application scope being authorized. NOT NULL. CHECK dashboard or attendance.
+P1389: public_key
+P1390: jsonb
+P1391: Not declared
+P1393: Binds the challenge and authorized session to the submitted public key. NOT NULL.
+P1394: challenge
+P1395: text
+P1396: Not declared
+P1398: Stores the random session-bound signing message. Successful completion consumes the challenge. NOT NULL.
+P1399: challenge_expires_at
+P1400: timestamptz
+P1401: N/A
+P1403: Limits the challenge to a ten-minute verification window established by the creation function. NOT NULL.
+P1404: authorized_until
+P1405: timestamptz
+P1406: N/A
+P1408: Remains empty before authorization and cannot exceed the current trusted-device expiration after completion. Nullable at column level.
+P1409: Table 24: private.member_trusted_devices
+P1410: Stores one registered browser public key per member account; separate from administrator trust and attendance phone pairing.
+P1411: Field Name
+P1412: Field Type
+P1413: Length / Precision / Scale
+P1414: Key
+P1415: Description and Validation Details
+P1416: user_id
+P1417: uuid
+P1418: N/A
+P1419: PK, FK
+P1420: Identifies the member account. A trusted-device primary key permits at most one registered browser per account. Constraints: NOT NULL. References auth.users(id); ON DELETE CASCADE; ON UPDATE NO ACTION.
+P1421: device_id
+P1422: uuid
+P1423: N/A
+P1425: Identifies the browser key; no foreign key or hardware identity is implied. Constraints: NOT NULL.
+P1426: public_key
+P1427: jsonb
+P1428: Not declared
+P1430: Stores the public ECDSA P-256 JWK. The private signing key remains in browser IndexedDB. Constraints: NOT NULL.
+P1431: device_label
+P1432: text
+P1433: Not declared
+P1435: Stores a reported browser label, not verified hardware identity. Constraints: NOT NULL.
+P1436: registered_at
+P1437: timestamptz
+P1438: N/A
+P1440: Records browser enrollment time. Constraints: NOT NULL. Default now().
+P1441: last_seen_at
+P1442: timestamptz
+P1443: N/A
+P1445: Records the recent dashboard heartbeat used to select an available approving browser. Constraints: NOT NULL. Default now().
+P1447: Table 25: private.member_device_sessions
+P1448: Binds an Auth session to a browser signing challenge and authorization boundary.
+P1449: Field Name
+P1450: Field Type
+P1451: Length / Precision / Scale
+P1452: Key
+P1453: Description and Validation Details
+P1454: session_id
+P1455: uuid
+P1456: N/A
+P1457: PK, FK
+P1458: Identifies the Auth session awaiting or holding browser authorization. Constraints: NOT NULL. References auth.sessions(id); ON DELETE CASCADE; ON UPDATE NO ACTION.
+P1459: user_id
+P1460: uuid
+P1461: N/A
+P1462: FK
+P1463: Identifies the member account. A trusted-device primary key permits at most one registered browser per account. Constraints: NOT NULL. References auth.users(id); ON DELETE CASCADE; ON UPDATE NO ACTION.
+P1464: device_id
+P1465: uuid
+P1466: N/A
+P1468: Identifies the browser key; no foreign key or hardware identity is implied. Constraints: NOT NULL.
+P1469: public_key
+P1470: jsonb
+P1471: Not declared
+P1473: Stores the public ECDSA P-256 JWK. The private signing key remains in browser IndexedDB. Constraints: NOT NULL.
+P1474: challenge
+P1475: text
+P1476: Not declared
+P1478: Stores the session-bound signing message. Successful verification consumes it. Constraints: NOT NULL.
+P1479: challenge_expires_at
+P1480: timestamptz
+P1481: N/A
+P1483: Bounds the signing challenge; the creating function uses a ten-minute window. Constraints: NOT NULL.
+P1484: authorized_until
+P1485: timestamptz
+P1486: N/A
+P1488: Remains null before authorization and bounds the authorized member session. Constraints: Nullable at column level.
+P1489: Table 26: private.member_device_approvals
+P1490: Stores session-bound requests to replace a member browser, including approval, denial and consumption.
+P1491: Field Name
+P1492: Field Type
+P1493: Length / Precision / Scale
+P1494: Key
+P1495: Description and Validation Details
+P1496: id
+P1497: uuid
+P1498: N/A
+P1499: PK
+P1500: Identifies this browser-replacement approval request. Constraints: NOT NULL. Default gen_random_uuid().
+P1501: user_id
+P1502: uuid
+P1503: N/A
+P1504: FK
+P1505: Identifies the member account. A trusted-device primary key permits at most one registered browser per account. Constraints: NOT NULL. References auth.users(id); ON DELETE CASCADE; ON UPDATE NO ACTION.
+P1506: requesting_session_id
+P1507: uuid
+P1508: N/A
+P1509: FK, UQ
+P1510: Binds the request to one Auth session; this column must be unique. Constraints: NOT NULL. References auth.sessions(id); ON DELETE CASCADE; ON UPDATE NO ACTION.
+P1511: approver_session_id
+P1512: uuid
+P1513: N/A
+P1514: FK
+P1515: Records the deciding Auth session. Session deletion clears attribution while preserving the request. Constraints: Nullable at column level. References auth.sessions(id); ON DELETE SET NULL; ON UPDATE NO ACTION.
+P1516: device_id
+P1517: uuid
+P1518: N/A
+P1520: Identifies the browser key; no foreign key or hardware identity is implied. Constraints: NOT NULL.
+P1521: device_label
+P1522: text
+P1523: Not declared
+P1525: Stores a reported browser label, not verified hardware identity. Constraints: NOT NULL.
+P1526: status
+P1527: text
+P1528: Not declared
+P1530: Stores pending, approved, denied, or consumed. Expiration is derived from timestamps. Constraints: NOT NULL. Default 'pending'. CHECK pending, approved, denied, or consumed.
+P1531: requested_at
+P1532: timestamptz
+P1533: N/A
+P1535: Records request creation. Constraints: NOT NULL. Default now().
+P1536: expires_at
+P1537: timestamptz
+P1538: N/A
+P1540: Limits the approval request to two minutes by default. Constraints: NOT NULL. Default now()+interval '2 minutes'.
+P1541: decided_at
+P1542: timestamptz
+P1543: N/A
+P1545: Records the approval or denial time when present. Constraints: Nullable at column level.
+P1546: Forms
+P1547: The system uses registration, profile, renewal, member, inventory, sales, staff-account, and phone-pairing forms. Members submit online registration or renewal information and maintain their permitted profile details. Administrators review online requests, maintain products and stock, and manage staff and pairing access. Authorized staff use counter forms for walk-in registration, direct renewal, active-member plan change, and product purchases, and use Requests approval for online registration and renewal decisions. Attendance uses camera scanning under an authorized operator account. Completed payments and purchases are recorded as transactions; receipts are not provided to customers. Required fields, validation, and server-side role checks support consistent data entry.
+P1548: The Create Staff Account form collects first name, optional middle initial, and last name in separate inputs. It formats a supplied initial with a period and combines the parts into the existing full_name value; separate name columns are not introduced. The form also checks username and Gmail availability, phone format, password strength, and matching confirmation. Staff directory access and activation controls remain administrator-only. The Requests approval view separately presents pending online registration and renewal summaries for authorized staff and administrator decisions, with in-person payment confirmation before approval.
+P1549: Prototype
+P1551: The following figures present complete browser-interface captures for IronGrind, organized by access, administrator, staff, member, and session workflows. Each figure preserves the supplied screenshot and its layout. The supplied set includes full workspaces and focused interface details; each image is reproduced in full as supplied. The screenshots illustrate captured interface states; operational permissions follow the functional requirements, use cases, and workflow descriptions.
+P1552: Access and Registration
+P1554: Figure 6. Shared Sign-in Interface
+P1555: The shared sign-in page provides email and password inputs, Remember my login, password recovery, and online membership registration. The appearance control changes the displayed theme. Access after authentication depends on the account role and applicable browser approval.
+P1557: Figure 7. Password Recovery Request
+P1558: The password-recovery dialog collects the email linked to the account and provides Send Reset Link and Cancel actions. This capture shows the request form before the result message.
+P1560: Figure 8. Password Recovery Response
+P1561: The recovery dialog displays a conditional message advising the user to check the inbox and spam folder if an account uses the supplied email. This message avoids confirming whether the account exists; it does not establish delivery of a reset email.
+P1563: Figure 9. Online Membership Registration
+P1564: The complete supplied registration capture shows personal and emergency-contact details, plan and date choices, health declarations, fitness goals, agreements, signature, and portal credentials. Submission requests membership review rather than immediate membership activation or online payment.
+P1566: Figure 10. Application Receipt and Email Confirmation
+P1567: The receipt displays the submitted application reference, requested plan, amount, email, and Pending review status. Its instructions distinguish confirming the sign-in email from the subsequent staff or administrator membership decision.
+P1568: Administrator Interfaces
+P1569: The following supplied captures illustrate the administrator interfaces and their visible controls.
+P1571: Figure 11. Administrator Dashboard
+P1572: The dashboard brings together registration requests, membership and sales summary cards, low-stock alerts, and current-day attendance. These displayed values describe the captured state and are not measured system performance results.
+P1574: Figure 12. Administrator Registration Review
+P1575: The Approvals view expands a pending registration to show submitted details and signature with Reject and Approve & Create Account actions. The operator reviews the request and applicable in-person payment before completing the authorized decision.
+P1577: Figure 13. Active Membership Records
+P1578: The active-membership list provides search, plan filters, and individual Change Plan, Renew, and Show actions. The list supports membership administration within the permitted workflow.
+P1580: Figure 14. Expired Membership Records
+P1581: The Expired tab provides search and plan filters for lapsed memberships. The captured empty state indicates no matching records in this view, rather than an absence of expired memberships in every environment.
+P1583: Figure 15. Administrator Walk-in Registration
+P1584: The complete supplied Add New Member dialog collects separate name inputs, personal and emergency-contact details, plan information, declarations, signature, and portal credentials. The operator submits the completed walk-in registration using the available counter action.
+P1586: Figure 16. Administrator QR Attendance Workspace
+P1587: The attendance workspace provides the member QR scanning entry point, phone-connection status, paired-camera controls, date selection, and attendance log. The capture shows the workspace before a new scan result.
+P1589: Figure 17. Attendance Camera Selection
+P1590: Choose a Camera offers This device and Phone camera. The dialog states the pairing duration and setup-code time limit shown by the interface; selecting a source begins the corresponding camera workflow.
+P1592: Figure 18. Phone-Camera Connection and Pairing Management
+P1593: The connection dialog shows a setup QR, visibility control, scanner link, phone limit, paired phones, and pending QR reservations. End pairing and End QR manage distinct connection states, while closing the window is a separate action. The pictured setup code belongs to the captured session.
+P1595: Figure 19. Attendance Scanner Sign-in
+P1596: The scanner page requires operator username and password and offers installation of the attendance app. Authentication precedes scanning; this sign-in capture does not demonstrate camera permission or a completed physical scan.
+P1598: Figure 20. Administrator Inventory Catalog
+P1599: The inventory catalog displays product images, configured prices, sale units, stock quantities, and maintenance controls. Supplements and merchandise appear in their catalog groups. Inventory modification remains an administrator task.
+P1601: Figure 21. Inventory Stock Filter
+P1602: The stock-status filter offers All products, Low stock, Out of stock, and In stock. Selecting a status narrows the displayed catalog without changing the underlying stock.
+P1604: Figure 22. Membership Sales Monitoring
+P1605: The Membership sales tab shows overall income, membership totals, period controls, and transaction rows. The figures are captured sample records; they do not establish independently audited revenue.
+P1607: Figure 23. Product Sales Monitoring
+P1608: The Products sales tab shows daily product income, period selection, and sales records. The empty table in this capture is specific to the selected period.
+P1610: Figure 24. Administrator Product Sale Entry
+P1611: The New Sale dialog collects customer name, product, amount, and sale unit and displays the computed total and available stock. Complete submits the transaction; the capture itself does not show a successful stock deduction.
+P1613: Figure 25. Administrator Report Selection
+P1614: The Reports workspace groups membership, daily operations, payments, and sales reports. Area and period filters define the requested report selection before export or printing.
+P1616: Figure 26. Report Area Filter
+P1617: The report-area menu includes membership, member status, renewals, archives, attendance, inventory, payments, and sales. This supplied detail documents the available report categories.
+P1619: Figure 27. Report Period Filter
+P1620: The period menu offers Specific day, Date range, and Full year. The selected period determines the time scope of the requested report.
+P1622: Figure 28. Report Export and Printing Actions
+P1623: The supplied action detail shows Export PDFs as ZIP and Print selected. These controls describe output options and do not show a generated archive or completed print job.
+P1625: Figure 29. Staff Directory Search
+P1626: The staff directory supports searching by name, username, or email and provides Details and Deactivate actions. Its displayed account states support administrator account management.
+P1628: Figure 30. Staff Accounts in Light Appearance
+P1629: The light-theme capture shows the staff-account creation form and searchable directory alongside the account menu. Appearance choices affect presentation while the account-management task remains the same.
+P1631: Figure 31. Staff Account Creation in Dark Appearance
+P1632: The dark-theme Staff Accounts page shows separate name fields, assigned credentials, contact information, password confirmation, and the staff directory. Creating a staff account is distinct from registering a member.
+P1634: Figure 32. Forget Trusted Administrator Browser
+P1635: The confirmation explains that forgetting the browser revokes its administrator trust and ends its dashboard and scanner sessions. The destructive confirmation is separate from ordinary logout and requires verification again at a later sign-in.
+P1637: Figure 33. Administrator Activity Logs
+P1638: The activity viewer provides filters, readable event rows, timestamps, actor and category information, and expandable details. It supports reviewing recorded actions; opening an event does not execute that action.
+P1640: Figure 34. Activity Log Action Filter
+P1641: The action menu exposes event-specific choices, including account, attendance, browser approval, and session events. It narrows the displayed audit entries to the chosen action.
+P1643: Figure 35. Activity Log Category Filter
+P1644: The category menu groups membership, attendance, inventory, sales, accounts, security, sessions, phone pairings, and reports. These categories help locate relevant recorded events.
+P1646: Figure 36. Administrator Logout Confirmation
+P1647: The ordinary logout dialog explains that this browser stays trusted. Cancel returns to the session, while Log out confirms sign-out without using the separate forget-browser action.
+P1648: Staff Interfaces
+P1649: The following supplied captures illustrate the staff interfaces and their visible controls.
+P1651: Figure 37. Staff Dashboard and Attendance History
+P1652: The staff dashboard groups Attendance, Product sales, Membership, and Request approval tasks. The attendance view places check-in/check-out controls beside visit history, including the statuses visible in this capture.
+P1654: Figure 38. Staff QR Attendance Controls
+P1655: The attendance panel offers camera scanning and a manual lookup using member QR, name, or Gmail. An authorized attendance operation determines the applicable check-in or check-out state.
+P1657: Figure 39. Staff Attendance Lookup Detail
+P1658: This second supplied attendance view shows the member-lookup input and Find member action beneath camera scanning. It documents the highlighted input state without demonstrating a completed lookup or visit transaction.
+P1660: Figure 40. Staff Product-Sale Workspace
+P1661: The complete staff sales capture combines customer and product inputs, quantity and unit controls, recent own sales, and the permitted product catalog. Staff sales access does not grant inventory maintenance.
+P1663: Figure 41. Staff Product Selection
+P1664: The product menu lists merchandise and supplement choices with configured prices and units. The chosen product determines the applicable sale entry rather than a single unit shared by every item.
+P1666: Figure 42. Staff Walk-in Membership Services
+P1667: The Membership workspace separates Add Member, Renewal, and Change Plan. The add-member form collects personal and emergency-contact details, portal credentials, a standard plan, and signature before Create member & record payment.
+P1669: Figure 43. Staff Membership Plan Choices
+P1670: The supplied plan menu shows monthly, half-month, and walk-in options with their displayed prices and durations. These are captured choices rather than a guarantee that future plan configuration will remain identical.
+P1672: Figure 44. Staff Request Approval Workspace
+P1673: The request-review page displays pending online requests with available approval and rejection actions. Staff review membership requests through this workflow rather than activating them merely by opening the page.
+P1675: Figure 45. Staff Request Type Filter
+P1676: The request filter offers All requests, Registration, and Renewal. It separates the pending request types within the authorized review workspace.
+P1678: Figure 46. Staff Account Menu in Dark Appearance
+P1679: The staff account menu offers Light mode, Dark mode, and Logout. The selected dark appearance is a display preference.
+P1681: Figure 47. Staff Account Menu in Light Appearance
+P1682: The corresponding light-theme capture shows the same appearance and logout actions. These settings do not change the staff role or its permissions.
+P1683: Member Interfaces
+P1684: The following supplied captures illustrate the member interfaces and their visible controls.
+P1686: Figure 48. Member Welcome Dialog
+P1687: The welcome dialog introduces the member attendance workflow and instructs the member to show the personal QR at the gym for check-in and check-out. Got it dismisses the introductory dialog.
+P1689: Figure 49. Member Dashboard Header
+P1690: The member dashboard header identifies the signed-in member and provides Show QR Code. The displayed membership state belongs to the captured account.
+P1692: Figure 50. Member Attendance QR
+P1693: The personal QR dialog provides Close and Print actions for presenting the code at the gym. Authorized attendance scanning records the visit; displaying or printing the code alone does not check the member in.
+P1695: Figure 51. Membership Progress and Own Attendance
+P1696: The dashboard shows membership duration, remaining time, elapsed progress, and the member's own attendance panel. Membership progress represents elapsed plan time rather than physical fitness improvement.
+P1698: Figure 52. Member Renewal Request
+P1699: The renewal panel displays the member name, plan choice, and Submit Renewal Request. The on-screen explanation describes adding the approved duration after the current expiry for an active membership. Request submission is separate from approval and payment recording.
+P1701: Figure 53. Member In-store Product Catalog
+P1702: The supplied catalog presents supplements and merchandise with images, prices, units, and availability. It supports browsing products for gym purchases without showing an online checkout.
+P1704: Figure 54. Member Personal Information
+P1705: The Member Menu displays the member's own name, birth date, and related personal inputs. Its tabs separate personal details, emergency contact, health and fitness, login email, and password.
+P1707: Figure 55. Member Personal Information Continuation
+P1708: The supplied continuation shows age, sex, mobile contact, height, weight, and Save Information. This figure complements the preceding personal-information view and does not expose other members' profiles.
+P1710: Figure 56. Member Emergency Contact
+P1711: The Emergency Contact tab provides contact name, relationship, number, and Save Information. The member maintains the emergency contact associated with their own record.
+P1713: Figure 57. Member Health and Fitness Information
+P1714: The Health and Fitness tab shows goals and health-declaration selections with a save action. These entries record member-provided information rather than a medical diagnosis or measured fitness outcome.
+P1716: Figure 58. Member Login Email Update
+P1717: The Login Email tab displays the email input and Update Email. Updating authentication details is a separate account action from saving the personal-information form.
+P1719: Figure 59. Member Password Update
+P1720: The Change Password tab provides new-password and confirmation inputs and Update Password. The visible guidance describes the password requirements and matching confirmation.
+P1722: Figure 60. Member Logout Confirmation
+P1723: The member logout dialog offers Cancel and Log out. It confirms the session action before returning the user to the appropriate signed-out state.
+P1725: Figure 61. Member Browser Approval Request
+P1726: The Is this you? dialog reports a new browser request, browser details, and request time with Deny and Approve device. The member should approve only a sign-in they initiated; this capture shows a decision prompt rather than its result.
+P1728: Figure 62. Member Session Open on Another Device
+P1729: The sign-in capture displays a message that the member session is open on another device and directs the user to sign out there to continue. This documents the visible session-conflict response rather than a completed browser transfer.
+P1730: Gantt Chart
+P1732: Figure 63. Gantt Chart
+P1734: Figure 63 presents the original ten-week development schedule for IronGrind, from August 24 to October 28, 2026. The activity and date columns identify the work assigned to each scheduled week. As clarified by the proponents, Planning occupies Weeks 1-4 and consists of identifying a potential client, conducting the first client interview to identify problems and needs, project conceptualization, and drafting the proposal. Design occupies Weeks 5-8 and covers interface design, prototype development, client feedback, and refinement. Development occupies Weeks 9-10 and covers frontend, backend, database, API, and supporting work alongside the project chapters. The four planning labels reflect the activities reported by the proponents. The existing date ranges are retained as schedule assignments and do not independently establish the actual completion dates of those activities.
+P1735: Each colored bar locates an activity within its assigned planned week. The chart does not record actual completion, measured effort, evaluation outcomes, or production readiness. Its three phase groups organize the original schedule, while the Agile methodology describes how development and refinement can repeat within and beyond that plan. Later repository revisions and deployment evidence must be reported separately rather than retroactively treated as work completed within the original ten weeks.
+P1736: REFERENCES
+P1737: Pavlović, M. (2018, October 23). And from now on we are Agile ... (on enterprise or any other projects for that matter). LinkedIn. https://www.linkedin.com/pulse/from-now-we-agile-enterprise-any-other-projects-misa-pavlovic-

@@ -1,0 +1,228 @@
+ziT_7dvDv-scaexqrNtz-13 |  | source=5cs-BWKJdQqu4HmGMrxt-8 target= edge=1
+mj3aIECf7KphQ23-KkKo-90 |  | source=5cs-BWKJdQqu4HmGMrxt-1 target=5cs-BWKJdQqu4HmGMrxt-5 edge=1
+mj3aIECf7KphQ23-KkKo-91 |  Staff access  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-94 |  | source=5cs-BWKJdQqu4HmGMrxt-1 target=5cs-BWKJdQqu4HmGMrxt-4 edge=1
+mj3aIECf7KphQ23-KkKo-95 |  administrator access  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-1 | 1.0 | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-8 |  User Login  | source= target= edge=
+Smpb-SyaWDibA5T5j2HV-1 |  | source=5cs-BWKJdQqu4HmGMrxt-3 target=5cs-BWKJdQqu4HmGMrxt-1 edge=1
+Smpb-SyaWDibA5T5j2HV-2 |  Credentials / session  | source= target= edge=
+Smpb-SyaWDibA5T5j2HV-19 |  | source=5cs-BWKJdQqu4HmGMrxt-3 target=5cs-BWKJdQqu4HmGMrxt-17 edge=1
+Smpb-SyaWDibA5T5j2HV-20 |  Own attendance query  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-3 |  Member / Applicant  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-92 |  | source=5cs-BWKJdQqu4HmGMrxt-4 target=5cs-BWKJdQqu4HmGMrxt-1 edge=1
+mj3aIECf7KphQ23-KkKo-93 |  credentials / session  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-100 |  | source=5cs-BWKJdQqu4HmGMrxt-4 target=5cs-BWKJdQqu4HmGMrxt-11 edge=1
+mj3aIECf7KphQ23-KkKo-103 |  Review Decision  | source= target= edge=
+mWQ6yn1azbtR8AnNNisN-2 |  | source=5cs-BWKJdQqu4HmGMrxt-4 target=5cs-BWKJdQqu4HmGMrxt-24 edge=1
+mWQ6yn1azbtR8AnNNisN-5 |  Report type / period  | source= target= edge=
+mWQ6yn1azbtR8AnNNisN-7 |  | source=5cs-BWKJdQqu4HmGMrxt-4 target=5cs-BWKJdQqu4HmGMrxt-25 edge=1
+mWQ6yn1azbtR8AnNNisN-10 |  Activity filters / page query  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-4 |  Admin  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-88 |  | source=5cs-BWKJdQqu4HmGMrxt-5 target=5cs-BWKJdQqu4HmGMrxt-1 edge=1
+mj3aIECf7KphQ23-KkKo-89 |  credentials / session  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-96 |  | source=5cs-BWKJdQqu4HmGMrxt-5 target= edge=1
+mj3aIECf7KphQ23-KkKo-97 |  Review decision  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-5 |  Staff  | source= target= edge=
+ziT_7dvDv-scaexqrNtz-8 |  | source=5cs-BWKJdQqu4HmGMrxt-11 target=5cs-BWKJdQqu4HmGMrxt-35 edge=1
+ziT_7dvDv-scaexqrNtz-10 |  Role and active status  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-3 |  | source=5cs-BWKJdQqu4HmGMrxt-12 target=5cs-BWKJdQqu4HmGMrxt-37 edge=1
+mj3aIECf7KphQ23-KkKo-4 |  submitted Application  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-98 |  | source=5cs-BWKJdQqu4HmGMrxt-11 target=5cs-BWKJdQqu4HmGMrxt-5 edge=1
+mj3aIECf7KphQ23-KkKo-99 |  Limited request / result  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-102 |  | source=5cs-BWKJdQqu4HmGMrxt-11 target=5cs-BWKJdQqu4HmGMrxt-4 edge=1
+mj3aIECf7KphQ23-KkKo-104 |  Application / result  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-11 | 2.0 | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-12 |  Membership Application  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-107 |  | source=5cs-BWKJdQqu4HmGMrxt-13 target=5cs-BWKJdQqu4HmGMrxt-5 edge=1
+mj3aIECf7KphQ23-KkKo-108 |  Limited lookup; counter result  | source= target= edge=
+mWQ6yn1azbtR8AnNNisN-13 |  | source= target=5cs-BWKJdQqu4HmGMrxt-15 edge=1
+mWQ6yn1azbtR8AnNNisN-28 |  Activity logs  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-13 | 3.0 | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-14 |  User Management  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-39 |  | source=5cs-BWKJdQqu4HmGMrxt-15 target=5cs-BWKJdQqu4HmGMrxt-39 edge=1
+mj3aIECf7KphQ23-KkKo-40 |  Renewed Membership  | source= target= edge=
+mWQ6yn1azbtR8AnNNisN-14 |  | source=5cs-BWKJdQqu4HmGMrxt-15 target=5cs-BWKJdQqu4HmGMrxt-17 edge=1
+mWQ6yn1azbtR8AnNNisN-27 |  Activity logs  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-15 | 4.0 | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-16 |  Renewals  | source= target= edge=
+Smpb-SyaWDibA5T5j2HV-21 |  | source=5cs-BWKJdQqu4HmGMrxt-17 target=5cs-BWKJdQqu4HmGMrxt-3 edge=1
+Smpb-SyaWDibA5T5j2HV-22 |  own visit history  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-7 |  | source=5cs-BWKJdQqu4HmGMrxt-17 target=5cs-BWKJdQqu4HmGMrxt-55 edge=1
+mj3aIECf7KphQ23-KkKo-8 |  Visit and operator timestamp  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-16 |  | source=5cs-BWKJdQqu4HmGMrxt-18 target=5cs-BWKJdQqu4HmGMrxt-47 edge=1
+mj3aIECf7KphQ23-KkKo-17 |  Admin pairing settings  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-21 |  | source=5cs-BWKJdQqu4HmGMrxt-18 target=5cs-BWKJdQqu4HmGMrxt-51 edge=1
+mj3aIECf7KphQ23-KkKo-22 |  paired phone authorization  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-23 |  | source=5cs-BWKJdQqu4HmGMrxt-18 target=5cs-BWKJdQqu4HmGMrxt-53 edge=1
+mj3aIECf7KphQ23-KkKo-24 |  Paired device history  | source= target= edge=
+mWQ6yn1azbtR8AnNNisN-15 |  | source=5cs-BWKJdQqu4HmGMrxt-17 target=5cs-BWKJdQqu4HmGMrxt-19 edge=1
+mWQ6yn1azbtR8AnNNisN-26 |  Activity logs  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-17 | 5.0 | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-18 |  QR Attendance  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-78 |  | source=5cs-BWKJdQqu4HmGMrxt-19 target=5cs-BWKJdQqu4HmGMrxt-57 edge=1
+mj3aIECf7KphQ23-KkKo-79 |  Admin product / stock update  | source= target= edge=
+mWQ6yn1azbtR8AnNNisN-16 |  | source=5cs-BWKJdQqu4HmGMrxt-19 target=5cs-BWKJdQqu4HmGMrxt-21 edge=1
+mWQ6yn1azbtR8AnNNisN-25 |  Activity logs  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-19 | 6.0 | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-20 |  Products & Inventory  | source= target= edge=
+mWQ6yn1azbtR8AnNNisN-17 |  | source=5cs-BWKJdQqu4HmGMrxt-21 target=5cs-BWKJdQqu4HmGMrxt-23 edge=1
+mWQ6yn1azbtR8AnNNisN-24 |  Activity logs  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-21 | 7.0 | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-22 |  Sales  | source= target= edge=
+mWQ6yn1azbtR8AnNNisN-1 |  | source= target= edge=1
+mWQ6yn1azbtR8AnNNisN-4 |  Report preview / report  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-23 | 8.0 | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-24 |  Generate reports  | source= target= edge=
+mWQ6yn1azbtR8AnNNisN-6 |  | source=5cs-BWKJdQqu4HmGMrxt-25 target=5cs-BWKJdQqu4HmGMrxt-4 edge=1
+mWQ6yn1azbtR8AnNNisN-8 |  Filtered activity records  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-25 | 9.0 | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-26 |  Activity Logs  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-35 | D1 | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-36 |  profiles  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-37 | D2 | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-38 |  membership_applications  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-29 |  | source=5cs-BWKJdQqu4HmGMrxt-39 target=5cs-BWKJdQqu4HmGMrxt-12 edge=1
+mj3aIECf7KphQ23-KkKo-30 |  Approve member record  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-31 |  | source= target=5cs-BWKJdQqu4HmGMrxt-13 edge=1
+mj3aIECf7KphQ23-KkKo-32 |  Own edits / membership operation  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-39 | D3 | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-40 |  members  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-85 |  | source=5cs-BWKJdQqu4HmGMrxt-45 target=5cs-BWKJdQqu4HmGMrxt-23 edge=1
+mj3aIECf7KphQ23-KkKo-87 |  Membership history records  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-45 | D8 | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-46 |  membership_history  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-14 |  | source=5cs-BWKJdQqu4HmGMrxt-47 target=5cs-BWKJdQqu4HmGMrxt-18 edge=1
+mj3aIECf7KphQ23-KkKo-15 |  paired-phone policy  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-47 | D10 | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-48 |  mobile_attendance_pairing_policy  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-49 | D9 | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-50 |  activity_logs  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-51 | D11 | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-52 |  mobile_attendance_scan_sessions  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-53 | D12 | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-54 |  mobile_attendance_scan_events  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-5 |  | source=5cs-BWKJdQqu4HmGMrxt-55 target= edge=1
+mj3aIECf7KphQ23-KkKo-6 |  Open visit  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-9 |  | source=5cs-BWKJdQqu4HmGMrxt-55 target=5cs-BWKJdQqu4HmGMrxt-23 edge=1
+mj3aIECf7KphQ23-KkKo-10 |  Attendance reports record  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-55 | D4 | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-56 |  attendance  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-76 |  | source=5cs-BWKJdQqu4HmGMrxt-57 target=5cs-BWKJdQqu4HmGMrxt-20 edge=1
+mj3aIECf7KphQ23-KkKo-77 |  Permitted catalog / stock  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-57 | D5 | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-58 |  products  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-56 |  | source=5cs-BWKJdQqu4HmGMrxt-59 target= edge=1
+mj3aIECf7KphQ23-KkKo-57 |  Sales report record  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-59 | D6 | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-60 |  sales  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-61 | D7 | source= target= edge=
+mj3aIECf7KphQ23-KkKo-74 |  | source=5cs-BWKJdQqu4HmGMrxt-61 target= edge=1
+mj3aIECf7KphQ23-KkKo-75 |  sale item report records  | source= target= edge=
+5cs-BWKJdQqu4HmGMrxt-62 |  sale_items  | source= target= edge=
+Smpb-SyaWDibA5T5j2HV-3 |  | source=5cs-BWKJdQqu4HmGMrxt-8 target=5cs-BWKJdQqu4HmGMrxt-3 edge=1
+Smpb-SyaWDibA5T5j2HV-4 |  Own access result  | source= target= edge=
+Smpb-SyaWDibA5T5j2HV-5 |  | source=5cs-BWKJdQqu4HmGMrxt-3 target=5cs-BWKJdQqu4HmGMrxt-11 edge=1
+Smpb-SyaWDibA5T5j2HV-7 |  Registration details  | source= target= edge=
+Smpb-SyaWDibA5T5j2HV-8 |  | source=5cs-BWKJdQqu4HmGMrxt-12 target=5cs-BWKJdQqu4HmGMrxt-3 edge=1
+Smpb-SyaWDibA5T5j2HV-9 |  Application status  | source= target= edge=
+ziT_7dvDv-scaexqrNtz-5 |  | source=5cs-BWKJdQqu4HmGMrxt-13 target=5cs-BWKJdQqu4HmGMrxt-12 edge=1
+mWQ6yn1azbtR8AnNNisN-29 |  Own Profile  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-1 |  | source=5cs-BWKJdQqu4HmGMrxt-37 target=5cs-BWKJdQqu4HmGMrxt-12 edge=1
+mj3aIECf7KphQ23-KkKo-2 |  Application / review status  | source= target= edge=
+Smpb-SyaWDibA5T5j2HV-27 |  | source=5cs-BWKJdQqu4HmGMrxt-19 target=5cs-BWKJdQqu4HmGMrxt-3 edge=1
+Smpb-SyaWDibA5T5j2HV-28 |  active product catalog  | source= target= edge=
+Smpb-SyaWDibA5T5j2HV-23 |  | source=5cs-BWKJdQqu4HmGMrxt-3 target=5cs-BWKJdQqu4HmGMrxt-19 edge=1
+Smpb-SyaWDibA5T5j2HV-26 |  active catalog query  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-18 |  | source=5cs-BWKJdQqu4HmGMrxt-51 target= edge=1
+mj3aIECf7KphQ23-KkKo-19 |  paired device details  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-25 |  | source=5cs-BWKJdQqu4HmGMrxt-13 target=5cs-BWKJdQqu4HmGMrxt-45 edge=1
+mj3aIECf7KphQ23-KkKo-26 |  Renewal / plan change event  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-27 |  | source=5cs-BWKJdQqu4HmGMrxt-15 target=5cs-BWKJdQqu4HmGMrxt-45 edge=1
+mj3aIECf7KphQ23-KkKo-28 |  Renewal event  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-33 |  | source=5cs-BWKJdQqu4HmGMrxt-14 target=5cs-BWKJdQqu4HmGMrxt-39 edge=1
+mj3aIECf7KphQ23-KkKo-34 |  Own records / limited lookup  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-36 |  | source=5cs-BWKJdQqu4HmGMrxt-39 target=5cs-BWKJdQqu4HmGMrxt-15 edge=1
+mj3aIECf7KphQ23-KkKo-37 |  Current dates and status  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-44 |  | source=5cs-BWKJdQqu4HmGMrxt-39 target=5cs-BWKJdQqu4HmGMrxt-17 edge=1
+mj3aIECf7KphQ23-KkKo-45 |  Member and status  | source= target= edge=
+Smpb-SyaWDibA5T5j2HV-17 |  | source=5cs-BWKJdQqu4HmGMrxt-15 target=5cs-BWKJdQqu4HmGMrxt-3 edge=1
+Smpb-SyaWDibA5T5j2HV-18 |  own renewal status  | source= target= edge=
+Smpb-SyaWDibA5T5j2HV-15 |  | source=5cs-BWKJdQqu4HmGMrxt-3 target= edge=1
+Smpb-SyaWDibA5T5j2HV-16 |  Renewal Request  | source= target= edge=
+Smpb-SyaWDibA5T5j2HV-12 |  | source=5cs-BWKJdQqu4HmGMrxt-13 target=5cs-BWKJdQqu4HmGMrxt-3 edge=1
+Smpb-SyaWDibA5T5j2HV-14 |  Own personal details  | source= target= edge=
+Smpb-SyaWDibA5T5j2HV-10 |  | source=5cs-BWKJdQqu4HmGMrxt-3 target=5cs-BWKJdQqu4HmGMrxt-13 edge=1
+Smpb-SyaWDibA5T5j2HV-11 |  Own profile query / changes  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-11 |  | source=5cs-BWKJdQqu4HmGMrxt-37 target=5cs-BWKJdQqu4HmGMrxt-24 edge=1
+mj3aIECf7KphQ23-KkKo-12 |  Application report record  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-46 |  | source=5cs-BWKJdQqu4HmGMrxt-39 target=5cs-BWKJdQqu4HmGMrxt-23 edge=1
+mj3aIECf7KphQ23-KkKo-47 |  Member report records  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-48 |  | source=5cs-BWKJdQqu4HmGMrxt-59 target=5cs-BWKJdQqu4HmGMrxt-12 edge=1
+mj3aIECf7KphQ23-KkKo-49 |  Approve member record  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-52 |  | source=5cs-BWKJdQqu4HmGMrxt-13 target=5cs-BWKJdQqu4HmGMrxt-59 edge=1
+mj3aIECf7KphQ23-KkKo-53 |  Membership transaction  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-54 |  | source=5cs-BWKJdQqu4HmGMrxt-16 target=5cs-BWKJdQqu4HmGMrxt-59 edge=1
+mj3aIECf7KphQ23-KkKo-55 |  Membership transaction  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-58 |  | source=5cs-BWKJdQqu4HmGMrxt-11 target=5cs-BWKJdQqu4HmGMrxt-61 edge=1
+mj3aIECf7KphQ23-KkKo-59 |  Membership charge  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-60 |  | source=5cs-BWKJdQqu4HmGMrxt-13 target=5cs-BWKJdQqu4HmGMrxt-61 edge=1
+mj3aIECf7KphQ23-KkKo-63 |  Membership charge  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-66 |  | source=5cs-BWKJdQqu4HmGMrxt-21 target=5cs-BWKJdQqu4HmGMrxt-59 edge=1
+mj3aIECf7KphQ23-KkKo-68 |  Product transaction  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-67 |  | source=5cs-BWKJdQqu4HmGMrxt-59 target=5cs-BWKJdQqu4HmGMrxt-21 edge=1
+mj3aIECf7KphQ23-KkKo-69 |  Permitted transaction records  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-64 |  | source=5cs-BWKJdQqu4HmGMrxt-15 target=5cs-BWKJdQqu4HmGMrxt-61 edge=1
+mj3aIECf7KphQ23-KkKo-65 |  Membership charge  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-72 |  | source=5cs-BWKJdQqu4HmGMrxt-21 target=5cs-BWKJdQqu4HmGMrxt-61 edge=1
+mj3aIECf7KphQ23-KkKo-73 |  permitted line items  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-70 |  | source=5cs-BWKJdQqu4HmGMrxt-21 target=5cs-BWKJdQqu4HmGMrxt-61 edge=1
+mj3aIECf7KphQ23-KkKo-71 |  item quantities and amounts  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-80 |  | source=5cs-BWKJdQqu4HmGMrxt-57 target=5cs-BWKJdQqu4HmGMrxt-23 edge=1
+mj3aIECf7KphQ23-KkKo-81 |  Product report record  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-105 |  | source=5cs-BWKJdQqu4HmGMrxt-5 target=5cs-BWKJdQqu4HmGMrxt-13 edge=1
+mj3aIECf7KphQ23-KkKo-106 |  Walk in; Renewal; plan change  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-113 |  | source=5cs-BWKJdQqu4HmGMrxt-5 target=5cs-BWKJdQqu4HmGMrxt-15 edge=1
+mj3aIECf7KphQ23-KkKo-115 |  Review Decision  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-114 |  | source=5cs-BWKJdQqu4HmGMrxt-16 target=5cs-BWKJdQqu4HmGMrxt-5 edge=1
+mj3aIECf7KphQ23-KkKo-116 |  Limited request / result  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-117 |  | source=5cs-BWKJdQqu4HmGMrxt-4 target=5cs-BWKJdQqu4HmGMrxt-16 edge=1
+mj3aIECf7KphQ23-KkKo-118 |  Review Decision  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-120 |  | source=5cs-BWKJdQqu4HmGMrxt-15 target=5cs-BWKJdQqu4HmGMrxt-4 edge=1
+mj3aIECf7KphQ23-KkKo-121 |  Pending request / result  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-122 |  | source=5cs-BWKJdQqu4HmGMrxt-5 target=5cs-BWKJdQqu4HmGMrxt-17 edge=1
+mj3aIECf7KphQ23-KkKo-124 |  QR / permitted visit query  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-123 |  | source=5cs-BWKJdQqu4HmGMrxt-17 target=5cs-BWKJdQqu4HmGMrxt-5 edge=1
+mj3aIECf7KphQ23-KkKo-126 |  Permitted visits / scan result  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-110 |  | source=5cs-BWKJdQqu4HmGMrxt-13 target=5cs-BWKJdQqu4HmGMrxt-4 edge=1
+mj3aIECf7KphQ23-KkKo-112 |  Read-only profile; operation result  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-109 |  | source=5cs-BWKJdQqu4HmGMrxt-4 target=5cs-BWKJdQqu4HmGMrxt-13 edge=1
+mj3aIECf7KphQ23-KkKo-111 |  Profile query; counter / staff controls  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-127 |  | source=5cs-BWKJdQqu4HmGMrxt-4 target=5cs-BWKJdQqu4HmGMrxt-18 edge=1
+mj3aIECf7KphQ23-KkKo-129 |  Visits; pairing / controls  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-128 |  | source=5cs-BWKJdQqu4HmGMrxt-17 target=5cs-BWKJdQqu4HmGMrxt-4 edge=1
+mj3aIECf7KphQ23-KkKo-130 |  QR; visit query; pairing controls  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-132 |  | source= target=5cs-BWKJdQqu4HmGMrxt-4 edge=1
+mj3aIECf7KphQ23-KkKo-134 |  Product / stock changes  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-131 |  | source=5cs-BWKJdQqu4HmGMrxt-4 target=5cs-BWKJdQqu4HmGMrxt-20 edge=1
+mj3aIECf7KphQ23-KkKo-133 |  Catalog; stock / alerts  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-143 |  | source=5cs-BWKJdQqu4HmGMrxt-5 target=5cs-BWKJdQqu4HmGMrxt-21 edge=1
+mj3aIECf7KphQ23-KkKo-145 |  Sale details / own sales query  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-140 |  | source=5cs-BWKJdQqu4HmGMrxt-21 target=5cs-BWKJdQqu4HmGMrxt-4 edge=1
+mj3aIECf7KphQ23-KkKo-142 |  Sales details / transaction query  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-139 |  | source=5cs-BWKJdQqu4HmGMrxt-4 target=5cs-BWKJdQqu4HmGMrxt-21 edge=1
+mj3aIECf7KphQ23-KkKo-141 |  Transaction / result  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-137 |  | source=5cs-BWKJdQqu4HmGMrxt-19 target=5cs-BWKJdQqu4HmGMrxt-5 edge=1
+mj3aIECf7KphQ23-KkKo-138 |  Permitted product catalog  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-135 |  | source= target= edge=1
+mj3aIECf7KphQ23-KkKo-136 |  Sales catalog query  | source= target= edge=
+mj3aIECf7KphQ23-KkKo-144 |  | source=5cs-BWKJdQqu4HmGMrxt-21 target=5cs-BWKJdQqu4HmGMrxt-5 edge=1
+mj3aIECf7KphQ23-KkKo-146 |  sales result / own sales  | source= target= edge=
+mWQ6yn1azbtR8AnNNisN-11 |  | source= target=5cs-BWKJdQqu4HmGMrxt-11 edge=1
+mWQ6yn1azbtR8AnNNisN-31 |  Activity logs  | source= target= edge=
+mWQ6yn1azbtR8AnNNisN-12 |  | source= target=5cs-BWKJdQqu4HmGMrxt-13 edge=1
+mWQ6yn1azbtR8AnNNisN-30 |  Activity logs  | source= target= edge=
+mWQ6yn1azbtR8AnNNisN-18 |  | source=5cs-BWKJdQqu4HmGMrxt-23 target=5cs-BWKJdQqu4HmGMrxt-25 edge=1
+mWQ6yn1azbtR8AnNNisN-23 |  Activity logs  | source= target= edge=
+mWQ6yn1azbtR8AnNNisN-19 |  | source= target= edge=1
+mWQ6yn1azbtR8AnNNisN-21 |  Activity logs  | source= target= edge=
