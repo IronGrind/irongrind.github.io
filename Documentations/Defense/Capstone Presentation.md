@@ -568,3 +568,4 @@ Speaker notes: The single designated overall manuscript is now `Chapters 1-3 (MA
 ## Main manuscript wording correction
 
 Speaker notes: Seven wording-only corrections were applied directly to the single designated manuscript. The critical clarification is that website administrator trusted-browser replacement affects the dashboard, while the attendance scanner operates through its separate password-based session and handoff controls. Layout and diagram/table placement were preserved. No implementation or deployment changed.
+Speaker-note correction: Chapter 1 now names both administrators and authorized staff as attendance operators, consistent with the later chapter descriptions. No implementation or schema change.
