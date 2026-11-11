@@ -39,7 +39,7 @@ async function signInPhoneOperator(event) {
         if (activationError) throw new Error('Could not secure your sign-in session. Sign in again.');
         window.monitorAccountSession(phoneOperatorClient, async reason => {
             await changePhoneOperator(false);
-            setPhoneAttendanceStatus(reason === 'device' ? 'This browser’s administrator trust ended. Sign in and verify again.' : reason === 'expired' ? 'Your session ended. Sign in again to scan.' : 'Another attendance scanner signed in with this account. Sign in again to scan.', true);
+            setPhoneAttendanceStatus(reason === 'expired' ? 'Your session ended. Sign in again to scan.' : 'Another attendance scanner signed in with this account, or your account is inactive. Sign in again to scan.', true);
         }, 'current_attendance_session_is_active');
         const { data: profile, error: profileError } = await phoneOperatorClient.rpc('get_attendance_operator');
         if (profileError || !profile?.id) throw new Error('Active staff or admin account required.');
@@ -636,7 +636,7 @@ window.addEventListener('pagehide', () => {
 async function startPhoneAttendanceApp() {
     configurePhoneAppInstall();
     if ('serviceWorker' in navigator && window.isSecureContext) {
-    navigator.serviceWorker.register('attendance-phone-sw.js?v=20261108-reviewed').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
+    navigator.serviceWorker.register('attendance-phone-sw.js?v=20261111-password-scanner').catch(error => console.warn('Attendance app offline shell could not be registered:', error));
     }
     if (!window.ironGrindSupabase) {
         setPhoneAttendanceStatus('The attendance service could not load. Check your connection and reload.', true);

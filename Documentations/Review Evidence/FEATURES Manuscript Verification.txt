@@ -1,0 +1,8 @@
+﻿PASS: Word-refreshed manuscript adopted after prototype verification.
+PASS: body paragraph and table text outside contents unchanged; all 15 section page size, margins and page-number settings unchanged.
+PASS: rebuilt contents links resolve to bookmarks; updated subsection headings included.
+TOC entries: 38
+Word reported 172 pages. Final visual print-layout review remains separate.
+All 57 prototype images verified, including four same-aspect Word recompressions.
+Backup: 
+C:\Users\mycah\OneDrive\Desktop\CAPSTONE\v1\Documentations\Review Backups\toc-refresh-20261111-125519

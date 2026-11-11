@@ -1,5 +1,5 @@
 ﻿Prototype verification passed.
 57 supplied FEATURES screenshots reproduced in full.
-Figures 6-62: each caption and explanation appears once; screenshots match source bytes or verified same-aspect normalized appearance after Word compression (0 recompressed images).
+Figures 6-62: each caption and explanation appears once; screenshots match source bytes or verified same-aspect normalized appearance after Word compression (4 recompressed images).
 All 57 figures use full originals with no Word crop settings. Gantt is Figure 63; schedule content retained.
 All 57 picture placements resolve to embedded media; drawing identifiers are unique.
