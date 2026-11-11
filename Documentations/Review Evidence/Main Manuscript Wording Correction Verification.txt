@@ -1,0 +1,4 @@
+﻿PASS: seven wording corrections applied directly to the designated main manuscript.
+PASS: paragraph, table, drawing, image, margin, section, and page-layout properties were not edited.
+Backup: 
+C:\Users\mycah\OneDrive\Desktop\CAPSTONE\v1\Documentations\Review Backups\main-wording-before-correction-20261112-010228

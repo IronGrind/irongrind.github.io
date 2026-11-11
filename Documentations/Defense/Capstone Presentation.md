@@ -565,3 +565,6 @@ Speaker notes: Explain that a website browser-trust transfer and an attendance-s
 ## Main manuscript synchronization
 
 Speaker notes: The single designated overall manuscript is now `Chapters 1-3 (MAO NA JUD NI).docx`. It contains the verified Chapter 3 consistency corrections. The previous version is retained only as a review backup, not as an additional working manuscript. No implementation or deployment changed.
+## Main manuscript wording correction
+
+Speaker notes: Seven wording-only corrections were applied directly to the single designated manuscript. The critical clarification is that website administrator trusted-browser replacement affects the dashboard, while the attendance scanner operates through its separate password-based session and handoff controls. Layout and diagram/table placement were preserved. No implementation or deployment changed.
