@@ -595,3 +595,12 @@ Reports category separation: Reports are now viewed one category at a time—Mem
 Reports interaction stability: Removed report-card hover movement and kept the category area from collapsing when switching to a shorter group, to reduce apparent button movement and page scroll jumps. Data behavior is unchanged; browser interaction review remains pending.
 
 Cross-dashboard interaction stability: Admin and member loading buttons hold their original width while busy. Staff product/account cards no longer move on hover, and staff view changes no longer rely on browser scroll anchoring. The member renewal shortcut centers the form and avoids auto-opening/focusing the plan selector. These are presentation and navigation adjustments only; browser/device review remains pending.
+
+
+Admin dashboard sales overview: The dashboard replaces the small Today's Sales tile with a seven-day paid-sales trend. Today's total and paid transaction count sit below the chart. It reads existing sales records; no database or transaction workflow changed. Browser review and deployment remain pending.
+
+
+Sales trend percentage: The dashboard shows today's percentage change against yesterday. If yesterday has no paid sales, the comparison is labeled as not comparable or new sales rather than calculating from zero. Browser review remains pending.
+
+
+Sales trend period controls: Admins can switch between the last seven days, current month (daily bars), and current year (monthly bars). Today's paid sales, transaction count, and change versus yesterday remain below the chart. No schema change; browser review remains pending.

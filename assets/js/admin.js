@@ -56,6 +56,7 @@ let currentPlanFilter = 'all';
 let currentMemberTab = 'members';
 let currentApprovalType = 'registration';
 let currentSalesView = 'membership';
+let dashboardSalesPeriod = 'week';
 let currentSalesTransactionType = 'membership';
 let currentSalesSubType = 'all';
 let currentMembershipSalesPeriodMode = 'day';
@@ -499,9 +500,9 @@ function renderDashboard() {
     document.getElementById('statCheckins').textContent = todayAtt.length;
     document.getElementById('statInside').textContent = inside;
 
-    const todaySales = sales.filter(s => s.date === today && s.status === 'Paid');
-    const total = todaySales.reduce((sum, s) => sum + Number(s.total), 0);
-    document.getElementById('statSales').textContent = formatPeso(total);
+    const todaySales = sales.filter(s => String(s.status || '').toLowerCase() === 'paid' && (s.date ? String(s.date).slice(0, 10) : s.createdAt ? localDateStr(new Date(s.createdAt)) : '') === today);
+    const total = todaySales.reduce((sum, s) => sum + Number(s.total || 0), 0);
+    renderDashboardSalesTrend(today, total, todaySales.length);
 
     const low = products.filter(productIsLowStock);
     document.getElementById('statLowStock').textContent = low.length;
@@ -531,6 +532,69 @@ function renderDashboard() {
     document.getElementById('dashboardRegistrationNotice')?.classList.toggle('hidden', registrationCount === 0);
     const registrationNoticeText = document.getElementById('dashboardRegistrationNoticeText');
     if (registrationNoticeText) registrationNoticeText.textContent = `${registrationCount} ${registrationCount === 1 ? 'application is' : 'applications are'} waiting for approval.`;
+}
+
+function renderDashboardSalesTrend(today, todayTotal, todayCount) {
+    const container = document.getElementById('dashboardSalesTrend');
+    if (!container) return;
+    const [year, month] = today.split('-').map(Number);
+    const buckets = dashboardSalesPeriod === 'month'
+        ? Array.from({ length: new Date(Date.UTC(year, month, 0)).getUTCDate() }, (_, index) => {
+            const date = `${year}-${String(month).padStart(2, '0')}-${String(index + 1).padStart(2, '0')}`;
+            return { key: date, label: String(index + 1), title: date };
+        })
+        : dashboardSalesPeriod === 'year'
+            ? Array.from({ length: 12 }, (_, index) => {
+                const date = new Date(Date.UTC(year, index, 15));
+                return { key: `${year}-${String(index + 1).padStart(2, '0')}`, label: new Intl.DateTimeFormat('en', { month: 'short', timeZone: 'UTC' }).format(date), title: new Intl.DateTimeFormat('en', { month: 'long', year: 'numeric', timeZone: 'UTC' }).format(date) };
+            })
+            : Array.from({ length: 7 }, (_, index) => {
+                const date = addDays(today, index - 6);
+                return { key: date, label: new Intl.DateTimeFormat('en', { timeZone: 'UTC', weekday: 'short' }).format(new Date(`${date}T12:00:00Z`)), title: date };
+            });
+    const totals = new Map(buckets.map(bucket => [bucket.key, 0]));
+    sales.forEach(sale => {
+        if (String(sale.status || '').toLowerCase() !== 'paid') return;
+        const saleDay = sale.date ? String(sale.date).slice(0, 10) : sale.createdAt ? localDateStr(new Date(sale.createdAt)) : '';
+        const key = dashboardSalesPeriod === 'year' ? saleDay.slice(0, 7) : saleDay;
+        if (totals.has(key)) totals.set(key, totals.get(key) + Number(sale.total || 0));
+    });
+
+    const max = Math.max(1, ...totals.values());
+    const yesterday = addDays(today, -1);
+    const yesterdayTotal = sales.reduce((sum, sale) => {
+        const saleDay = sale.date ? String(sale.date).slice(0, 10) : sale.createdAt ? localDateStr(new Date(sale.createdAt)) : '';
+        return String(sale.status || '').toLowerCase() === 'paid' && saleDay === yesterday ? sum + Number(sale.total || 0) : sum;
+    }, 0);
+    const changePercent = yesterdayTotal > 0 ? ((todayTotal - yesterdayTotal) / yesterdayTotal) * 100 : null;
+    const changeLabel = changePercent === null
+        ? (todayTotal > 0 ? 'New sales' : 'No sales to compare')
+        : `${changePercent > 0 ? '+' : ''}${changePercent.toFixed(1)}% vs. yesterday`;
+    const changeClass = changePercent === null ? 'is-neutral' : changePercent > 0 ? 'is-up' : changePercent < 0 ? 'is-down' : 'is-neutral';
+    const chartWidth = Math.max(700, buckets.length * 28);
+    const left = 12;
+    const slot = (chartWidth - left * 2) / buckets.length;
+    const barWidth = Math.min(42, slot * 0.62);
+    const bars = buckets.map((bucket, index) => {
+        const amount = totals.get(bucket.key);
+        const height = amount > 0 ? Math.max(5, (amount / max) * 118) : 3;
+        const x = left + index * slot + (slot - barWidth) / 2;
+        const y = 142 - height;
+        const showLabel = dashboardSalesPeriod !== 'month' || index % 5 === 0 || index === buckets.length - 1;
+        const isToday = dashboardSalesPeriod === 'week' && bucket.key === today;
+        return `<g><title>${escapeHTML(bucket.title)}: ${escapeHTML(formatPeso(amount))}</title><rect class="sales-trend-bar${isToday ? ' is-today' : ''}" x="${x}" y="${y}" width="${barWidth}" height="${height}" rx="${Math.min(7, barWidth / 3)}"></rect>${showLabel ? `<text class="sales-trend-label" x="${x + barWidth / 2}" y="166" text-anchor="middle">${escapeHTML(bucket.label)}</text>` : ''}</g>`;
+    }).join('');
+    const hasSales = [...totals.values()].some(value => value > 0);
+    const rangeTitle = dashboardSalesPeriod === 'month' ? 'This month, by day' : dashboardSalesPeriod === 'year' ? 'This year, by month' : 'Last 7 days';
+    container.innerHTML = `<div class="dashboard-sales-periods" role="group" aria-label="Sales trend period">${[['week', '7 days'], ['month', 'This month'], ['year', 'This year']].map(([period, label]) => `<button type="button" class="${dashboardSalesPeriod === period ? 'active' : ''}" aria-pressed="${dashboardSalesPeriod === period}" onclick="setDashboardSalesPeriod('${period}')">${label}</button>`).join('')}</div><p class="dashboard-sales-range-title">${rangeTitle}</p><div class="dashboard-sales-chart-wrap"><svg class="dashboard-sales-chart" viewBox="0 0 ${chartWidth} 180" role="img" aria-label="${rangeTitle} paid sales. Hover over a bar to see its date and amount."><line class="sales-trend-grid" x1="0" y1="142" x2="${chartWidth}" y2="142"></line>${bars}</svg>${hasSales ? '' : '<p class="sales-trend-empty">No paid sales recorded for this period.</p>'}</div><div class="dashboard-sales-summary"><div><span>Today\'s Sales</span><strong>${escapeHTML(formatPeso(todayTotal))}</strong><small class="sales-trend-change ${changeClass}">${escapeHTML(changeLabel)}</small></div><div><span>Paid transactions today</span><strong>${todayCount}</strong></div></div>`;
+}
+
+function setDashboardSalesPeriod(period) {
+    if (!['week', 'month', 'year'].includes(period)) return;
+    dashboardSalesPeriod = period;
+    const today = todayStr();
+    const todaySales = sales.filter(sale => String(sale.status || '').toLowerCase() === 'paid' && (sale.date ? String(sale.date).slice(0, 10) : sale.createdAt ? localDateStr(new Date(sale.createdAt)) : '') === today);
+    renderDashboardSalesTrend(today, todaySales.reduce((sum, sale) => sum + Number(sale.total || 0), 0), todaySales.length);
 }
 
 /* ========== RENDER: MEMBERS ========== */

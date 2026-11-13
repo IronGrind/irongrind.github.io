@@ -97,7 +97,7 @@
                     <div><strong>Registration requests</strong><p id="dashboardRegistrationNoticeText"></p></div>
                     <button class="btn-primary" type="button" onclick="showAdminSection('membership'); switchMemberTab('approvals'); switchApprovalType('registration')">Review requests</button>
                 </div>
-                <div class="stats-grid">
+                <div class="stats-grid dashboard-overview-stats">
                     <div class="stat-card">
                         <div class="stat-label">Current Members</div>
                         <div class="stat-value" id="statTotalMembers">0</div>
@@ -109,16 +109,18 @@
                         <div class="stat-sub"><i class="fas fa-clock"></i> <span id="statInside">0</span> currently inside</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-label">Today's Sales</div>
-                        <div class="stat-value" id="statSales">₱0</div>
-                        <div class="stat-sub"><i class="fas fa-coins"></i> Completed transactions</div>
-                    </div>
-                    <div class="stat-card">
                         <div class="stat-label">Low Stock Items</div>
                         <div class="stat-value" id="statLowStock" style="color:#e74c3c;">0</div>
                         <div class="stat-sub danger"><i class="fas fa-exclamation-triangle"></i> Needs restocking</div>
                     </div>
                 </div>
+                <section class="panel dashboard-sales-panel" aria-labelledby="dashboardSalesTitle">
+                    <div class="panel-header">
+                        <div><h2 id="dashboardSalesTitle"><i class="fas fa-chart-line"></i> Sales Trend</h2><p class="dashboard-sales-subtitle">Paid sales over time</p></div>
+                        <button class="btn-sm" type="button" onclick="showAdminSection('sales')">View Sales</button>
+                    </div>
+                    <div id="dashboardSalesTrend"></div>
+                </section>
                 <div class="panel">
                     <div class="panel-header">
                         <h2><i class="fas fa-exclamation-triangle" style="color:#e74c3c;"></i> Low Stock Items</h2>
