@@ -637,3 +637,6 @@ Sales trend percentage placement: The comparison against yesterday now appears i
 
 
 Sales trend summary layout: The percentage value now appears prominently below the chart and above the separate Today's Sales and transaction-count cards. Comparison logic is unchanged; browser review remains pending.
+
+
+Sales trend percentage labels: Each chart bar displays its percentage change above the bar. Daily bars compare with the previous day; annual month bars compare with the previous month. The separate percentage callout was removed; Today's Sales and paid transaction count remain in the two cards below the chart. Browser review remains pending.

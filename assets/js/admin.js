@@ -576,19 +576,6 @@ function renderDashboardSalesTrend(today, todayTotal, todayCount) {
     });
 
     const max = Math.max(1, ...totals.values());
-    const yesterday = addDays(today, -1);
-    const yesterdayTotal = sales.reduce((sum, sale) => {
-        const saleDay = sale.date ? String(sale.date).slice(0, 10) : sale.createdAt ? localDateStr(new Date(sale.createdAt)) : '';
-        return String(sale.status || '').toLowerCase() === 'paid' && saleDay === yesterday ? sum + Number(sale.total || 0) : sum;
-    }, 0);
-    const changePercent = yesterdayTotal > 0 ? ((todayTotal - yesterdayTotal) / yesterdayTotal) * 100 : null;
-    const changeValue = changePercent === null
-        ? (todayTotal > 0 ? '—%' : '0.0%')
-        : `${changePercent > 0 ? '+' : ''}${changePercent.toFixed(1)}%`;
-    const changeNote = changePercent === null
-        ? (todayTotal > 0 ? 'New sales · yesterday had no paid sales' : 'No paid sales today or yesterday')
-        : 'vs. yesterday';
-    const changeClass = changePercent === null ? 'is-neutral' : changePercent > 0 ? 'is-up' : changePercent < 0 ? 'is-down' : 'is-neutral';
     const chartWidth = Math.max(700, buckets.length * 28);
     const left = 12;
     const slot = (chartWidth - left * 2) / buckets.length;
@@ -600,11 +587,22 @@ function renderDashboardSalesTrend(today, todayTotal, todayCount) {
         const y = 142 - height;
         const showLabel = dashboardSalesPeriod !== 'month' || index % 5 === 0 || index === buckets.length - 1;
         const isToday = dashboardSalesPeriod === 'week' && bucket.key === today;
-        return `<g><title>${escapeHTML(bucket.title)}: ${escapeHTML(formatPeso(amount))}</title><rect class="sales-trend-bar${isToday ? ' is-today' : ''}" x="${x}" y="${y}" width="${barWidth}" height="${height}" rx="${Math.min(7, barWidth / 3)}"></rect>${showLabel ? `<text class="sales-trend-label" x="${x + barWidth / 2}" y="166" text-anchor="middle">${escapeHTML(bucket.label)}</text>` : ''}</g>`;
+        const previousKey = dashboardSalesPeriod === 'year' ? addDays(`${bucket.key}-01`, -1).slice(0, 7) : addDays(bucket.key, -1);
+        const previousAmount = sales.reduce((sum, sale) => {
+            if (String(sale.status || '').toLowerCase() !== 'paid') return sum;
+            const saleDay = sale.date ? String(sale.date).slice(0, 10) : sale.createdAt ? localDateStr(new Date(sale.createdAt)) : '';
+            const saleKey = dashboardSalesPeriod === 'year' ? saleDay.slice(0, 7) : saleDay;
+            return saleKey === previousKey ? sum + Number(sale.total || 0) : sum;
+        }, 0);
+        const percent = previousAmount > 0 ? ((amount - previousAmount) / previousAmount) * 100 : null;
+        const percentLabel = percent === null ? (amount > 0 ? '—%' : '0.0%') : `${percent > 0 ? '+' : ''}${percent.toFixed(1)}%`;
+        const percentClass = percent === null ? 'is-neutral' : percent > 0 ? 'is-up' : percent < 0 ? 'is-down' : 'is-neutral';
+        const tooltip = `${bucket.title}: ${formatPeso(amount)} · ${percent === null && amount > 0 ? 'New sales; no previous baseline' : `${percentLabel} vs previous ${dashboardSalesPeriod === 'year' ? 'month' : 'day'}`}`;
+        return `<g><title>${escapeHTML(tooltip)}</title>${showLabel ? `<text class="sales-trend-percent ${percentClass}" x="${x + barWidth / 2}" y="${Math.max(13, y - 7)}" text-anchor="middle">${escapeHTML(percentLabel)}</text>` : ''}<rect class="sales-trend-bar${isToday ? ' is-today' : ''}" x="${x}" y="${y}" width="${barWidth}" height="${height}" rx="${Math.min(7, barWidth / 3)}"></rect>${showLabel ? `<text class="sales-trend-label" x="${x + barWidth / 2}" y="166" text-anchor="middle">${escapeHTML(bucket.label)}</text>` : ''}</g>`;
     }).join('');
     const hasSales = [...totals.values()].some(value => value > 0);
     const rangeTitle = dashboardSalesPeriod === 'month' ? 'This month, by day' : dashboardSalesPeriod === 'year' ? 'This year, by month' : 'Last 7 days';
-    container.innerHTML = `<div class="dashboard-sales-periods" role="group" aria-label="Sales trend period">${[['week', '7 days'], ['month', 'This month'], ['year', 'This year']].map(([period, label]) => `<button type="button" class="${dashboardSalesPeriod === period ? 'active' : ''}" aria-pressed="${dashboardSalesPeriod === period}" onclick="setDashboardSalesPeriod('${period}')">${label}</button>`).join('')}</div><p class="dashboard-sales-range-title">${rangeTitle}</p><div class="dashboard-sales-chart-wrap"><svg class="dashboard-sales-chart" viewBox="0 0 ${chartWidth} 180" role="img" aria-label="${rangeTitle} paid sales. Hover over a bar to see its date and amount."><line class="sales-trend-grid" x1="0" y1="142" x2="${chartWidth}" y2="142"></line>${bars}</svg>${hasSales ? '' : '<p class="sales-trend-empty">No paid sales recorded for this period.</p>'}</div><div class="dashboard-sales-change-wrap"><div class="dashboard-sales-change-box"><span>Change vs. yesterday</span><strong class="sales-trend-change ${changeClass}">${escapeHTML(changeValue)}</strong><small>${escapeHTML(changeNote)}</small></div></div><div class="dashboard-sales-summary"><div><span>Today\'s Sales</span><strong>${escapeHTML(formatPeso(todayTotal))}</strong></div><div><span>Paid transactions today</span><strong>${todayCount}</strong></div></div>`;
+    container.innerHTML = `<div class="dashboard-sales-periods" role="group" aria-label="Sales trend period">${[['week', '7 days'], ['month', 'This month'], ['year', 'This year']].map(([period, label]) => `<button type="button" class="${dashboardSalesPeriod === period ? 'active' : ''}" aria-pressed="${dashboardSalesPeriod === period}" onclick="setDashboardSalesPeriod('${period}')">${label}</button>`).join('')}</div><p class="dashboard-sales-range-title">${rangeTitle} · labels show change vs previous ${dashboardSalesPeriod === 'year' ? 'month' : 'day'}</p><div class="dashboard-sales-chart-wrap"><svg class="dashboard-sales-chart" viewBox="0 0 ${chartWidth} 180" role="img" aria-label="${rangeTitle} paid sales with percentage change labels above the bars."><line class="sales-trend-grid" x1="0" y1="142" x2="${chartWidth}" y2="142"></line>${bars}</svg>${hasSales ? '' : '<p class="sales-trend-empty">No paid sales recorded for this period.</p>'}</div><div class="dashboard-sales-summary"><div><span>Today\'s Sales</span><strong>${escapeHTML(formatPeso(todayTotal))}</strong></div><div><span>Paid transactions today</span><strong>${todayCount}</strong></div></div>`;
 }
 
 function setDashboardSalesPeriod(period) {

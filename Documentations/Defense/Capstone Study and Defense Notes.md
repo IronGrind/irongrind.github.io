@@ -760,3 +760,6 @@ Sales trend percentage placement - November 13, 2026: Moved the daily percentage
 
 
 Sales percentage summary layout correction - November 13, 2026: Repositioned the percentage comparison below the chart and above the two daily summary cards, and made the percentage value visually prominent. Today's sales and paid transaction count now appear in separate bordered cards beneath it. No calculation or data behavior changed. Validation: source inspection and git diff --check; browser review remains pending.
+
+
+Sales trend percentage labels correction - November 14, 2026: Updated the chart to show percentage change labels directly above the bars, matching the provided grouped-chart reference. Weekly and daily monthly bars compare with the previous day; annual monthly bars compare with the previous month. The separate percentage callout was removed. The first zero-baseline point is labeled New when current sales exist; otherwise it shows 0.0%. Today's sales and transaction-count cards remain below. Validation: source inspection and git diff --check; browser review remains pending.
