@@ -549,6 +549,14 @@ Speaker-note completion update: All 38 Word-derived contents entries were refres
 - ERD text identifies the checked-in migration baseline as 23 application tables, 235 fields, and 38 declared foreign keys; this is not represented as a live-database inspection.
 
 Speaker notes: Describe the figures as complementary views: Context identifies external exchanges; DFD follows logical inputs, processes, and stores; Use Case identifies role participation but does not grant every sub-action; ERD identifies declared storage relationships, not access rights; Agile shows a repeatable development cycle; Gantt is an original planned schedule rather than proof of completion. The revised text preserves verified-versus-pending distinctions. Document package checks found the five key explanatory anchors in both delivered documents. No implementation, schema, deployment, physical-device, or evaluation outcome changed.
+
+## ERD explanation correction — November 13, 2026
+
+- Figure 5 now defines PK, FK, UQ, and foreign-key connectors in plain language.
+- The explanation identifies the public schema as the core membership and operations record set and distinguishes the eleven private authentication and device-security tables.
+- The stated repository schema baseline remains 23 application tables, 235 fields, and 38 declared foreign keys: 12 public and 11 private.
+
+Speaker notes: This manuscript correction improves the reader explanation of the ERD. It does not modify the database, application behavior, schema migrations, or deployment state. The figures describe declared storage relationships. Role permissions and live production state must be evidenced separately.
 ## Slide 19 - Password recovery email
 - IronGrind dark and red branded recovery email draft
 - Secure reset link and copyable fallback link
