@@ -613,3 +613,15 @@ Inventory UI refinement: Category tabs separate All Products, Supplements, and M
 
 
 Inventory card alignment: Product cards reserve consistent space for two title lines and the price block, keeping price and stock details aligned when names wrap. Long names remain available on hover. Browser visual review remains pending.
+
+
+Merchandise inventory cards: Size/variant appears as a separate badge beside item type and stock status. Each size keeps its own stock quantity and existing Restock/Edit controls. Display-only; browser review remains pending.
+
+
+Sales trend comparison label: The percentage comparison stays visible when yesterday's sales baseline is zero. It shows 0.0% when both days are zero, or indicates new sales with no calculable percent when today's sales are positive. Browser review remains pending.
+
+
+Merchandise size stock overview: Same-name merchandise variants are grouped together. Each size row shows stock on hand, stock status, and its own Restock/Edit actions. Existing per-variant product records and quantities are unchanged. Browser review remains pending.
+
+
+Merchandise UI follow-up: Reverted the grouped size-row layout because its rows overlapped in the inventory grid. Merchandise is back to one card per variant, with size badges and per-variant stock/Restock/Edit controls. Data unchanged; visual review remains pending.

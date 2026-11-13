@@ -583,7 +583,7 @@ function renderDashboardSalesTrend(today, todayTotal, todayCount) {
     }, 0);
     const changePercent = yesterdayTotal > 0 ? ((todayTotal - yesterdayTotal) / yesterdayTotal) * 100 : null;
     const changeLabel = changePercent === null
-        ? (todayTotal > 0 ? 'New sales' : 'No sales to compare')
+        ? (todayTotal > 0 ? 'New sales · —% vs. yesterday' : '0.0% vs. yesterday')
         : `${changePercent > 0 ? '+' : ''}${changePercent.toFixed(1)}% vs. yesterday`;
     const changeClass = changePercent === null ? 'is-neutral' : changePercent > 0 ? 'is-up' : changePercent < 0 ? 'is-down' : 'is-neutral';
     const chartWidth = Math.max(700, buckets.length * 28);
@@ -2745,6 +2745,7 @@ function productCard(p) {
     const photo = catalogProductPhoto(p);
     const merchType = p.merchType || (p.size ? 'apparel' : 'other');
     const productType = supplement ? `${supplementTypeLabel(p.supplementType || 'other')} · ${supplementFormLabel(p.supplementForm || 'powder')}` : merchandiseTypeLabel(merchType);
+    const merchVariant = !supplement && p.size ? `Size ${p.size}` : '';
     const low = productIsLowStock(p);
     const stock = productStockInSaleUnits(p);
     const stockLabel = formatProductStock(p);
@@ -2756,8 +2757,8 @@ function productCard(p) {
     return `
         <div class="product-card inventory-product-card">
             ${photo ? `<div class="product-img-wrap"><img src="${escapeHTML(photo)}" alt="${escapeHTML(p.name)}" loading="lazy"></div>` : ''}
-            <div class="inventory-card-top"><span class="cat">${escapeHTML(productType)}</span><span class="inventory-status ${stock <= 0 ? 'out' : low ? 'low' : 'available'}">${stock <= 0 ? 'Out of stock' : low ? 'Low stock' : 'In stock'}</span></div>
-            <h4 title="${escapeHTML(`${p.name}${!supplement && p.size ? ` — ${p.size}` : ''}`)}">${escapeHTML(p.name)}${!supplement && p.size ? ' — ' + escapeHTML(p.size) : ''}</h4>
+            <div class="inventory-card-top"><span class="cat">${escapeHTML(productType)}</span>${merchVariant ? `<span class="inventory-variant-badge">${escapeHTML(merchVariant)}</span>` : ''}<span class="inventory-status ${stock <= 0 ? 'out' : low ? 'low' : 'available'}">${stock <= 0 ? 'Out of stock' : low ? 'Low stock' : 'In stock'}</span></div>
+            <h4 title="${escapeHTML(`${p.name}${merchVariant ? ` — ${merchVariant}` : ''}`)}">${escapeHTML(p.name)}</h4>
             <div class="inventory-price"><span class="inventory-field-label">Selling price</span><strong>${formatPeso(quote.amount)}</strong><span>per ${escapeHTML(String(quote.quantity))} ${escapeHTML(productSaleUnitLabel(p))}</span></div>
             <div class="inventory-stock-block"><span class="inventory-field-label">Stock on hand</span><strong>${escapeHTML(stockLabel)}</strong>${conversion ? `<span>${escapeHTML(conversion)}</span>` : ''}<small>Low-stock alert: ≤ ${escapeHTML(thresholdLabel)}</small></div>
             <div class="product-actions">

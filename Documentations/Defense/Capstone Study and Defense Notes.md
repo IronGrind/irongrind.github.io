@@ -736,3 +736,15 @@ Inventory category and stock visibility refinement - November 13, 2026: Added Al
 
 
 Inventory card alignment refinement - November 13, 2026: Set a consistent two-line title area and minimum price-block height so product names of different lengths no longer shift the price and stock details within a card row. Long names are visually clamped at two lines and remain available on hover. Presentation-only adjustment. Validation: source inspection and git diff --check; browser visual review remains pending.
+
+
+Merchandise inventory variant display - November 13, 2026: Merchandise cards now show the size/variant as a separate badge beside the merchandise type and stock status. The product name is displayed without repeating its size, and each variant continues to show its own stock and Restock/Edit controls. Display-only change; no inventory data changed. Validation: source inspection and git diff --check; browser review remains pending.
+
+
+Sales trend comparison label correction - November 13, 2026: Kept the percentage comparison visible when yesterday has zero paid sales. The dashboard shows 0.0% when both days have zero sales, or labels new sales and an unavailable percentage when today's sales are positive but yesterday's baseline is zero. This avoids implying a numeric growth rate from zero. Source review and git diff --check; browser review remains pending.
+
+
+Merchandise size stock overview - November 13, 2026: Merchandise inventory now groups same-name item variants together and lists each size with its own stock-on-hand quantity, status, Restock button, and Edit button. This is a display grouping over existing separate product records; it does not combine or change stock values. Validation: source inspection and git diff --check; browser review remains pending.
+
+
+Merchandise grouping rollback - November 13, 2026: Reverted the grouped size-row merchandise layout after visual review showed the rows colliding/overflowing in the inventory grid. Restored the prior one-card-per-variant presentation, retaining the earlier size badge, stock quantity, category tabs, and Restock/Edit controls. No product or stock data changed. Validation: git diff --check; browser visual review remains pending.

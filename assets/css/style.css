@@ -2231,6 +2231,7 @@ body.dashboard-body :is(.table-scroll, #attendanceLogTable, #dashboardAttendance
 .inventory-product-card > .product-img-wrap { margin-bottom:0; }
 .inventory-card-top { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:8px; }
 .inventory-product-card .cat { color:inherit; opacity:.7; font-size:.7rem; text-transform:none; }
+.inventory-variant-badge { display:inline-flex; align-items:center; border:1px solid #8b95a955; border-radius:999px; padding:4px 8px; color:#d7ddea; background:#252b35; font-size:.65rem; font-weight:700; white-space:nowrap; }
 .inventory-product-card h4 { min-height:2.9em; margin:0; line-height:1.45; overflow-wrap:anywhere; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; }
 .inventory-status { border:1px solid currentColor; border-radius:20px; padding:4px 8px; font-size:.65rem; font-weight:700; white-space:nowrap; }
 .inventory-status.available { color:#38b979; }
@@ -2253,6 +2254,7 @@ html[data-dashboard-theme="light"] body.admin-dashboard .inventory-category-tabs
 html[data-dashboard-theme="light"] body.admin-dashboard .inventory-category-tabs button.active { color:#8b0000; }
 html[data-dashboard-theme="light"] body.admin-dashboard .inventory-category-tabs button span { background:#edf0f4; }
 html[data-dashboard-theme="light"] body.admin-dashboard .inventory-category-section h3 { color:#586579; }
+html[data-dashboard-theme="light"] body.admin-dashboard .inventory-variant-badge { color:#354052; background:#eef1f5; border-color:#cbd3df; }
 html[data-dashboard-theme="light"] body.admin-dashboard .inventory-stock-block { background:#fff7f6; border-color:#e6cecc; border-left-color:#a71922; }
 @media(max-width:600px) { .inventory-toolbar { grid-template-columns:minmax(0,1fr); gap:0; } }
 .scanner-install-card p { margin:10px 0 0; font-size:.85rem; line-height:1.5; color:inherit; opacity:.75; }
