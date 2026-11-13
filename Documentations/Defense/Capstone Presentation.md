@@ -581,3 +581,5 @@ Speaker-note correction: Chapter 1 now names both administrators and authorized 
 ## Member plan-change request workflow
 
 Speaker notes: Members with active memberships can request a different standard plan from the dashboard. The request follows the existing walk-in payment process: the member pays at the gym, then staff or an administrator reviews it. Approval records the sale, membership history, and new plan dates. The local UI and migration are prepared; the linked database migration, browser review, and end-to-end approval have not yet been completed. Do not present the workflow as deployed.
+
+Deployment status follow-up: The plan-change migration was applied to the linked Supabase project on November 13, 2026. A subsequent Supabase CLI dry-run reported no pending migrations. This confirms migration state; it does not establish end-to-end browser or payment-review validation.
