@@ -423,7 +423,7 @@ function showAdminSection(section, event) {
         if (unlocked) renderStore();
     }
     if (section === 'membership') switchMemberTab(currentMemberTab);
-    if (section === 'attendance') renderAttendance();
+    if (section === 'attendance') { renderAttendance(); refreshAttendancePhoneSummary(); }
     if (section === 'sales') {
         switchSalesView(currentSalesView);
     }
@@ -582,9 +582,12 @@ function renderDashboardSalesTrend(today, todayTotal, todayCount) {
         return String(sale.status || '').toLowerCase() === 'paid' && saleDay === yesterday ? sum + Number(sale.total || 0) : sum;
     }, 0);
     const changePercent = yesterdayTotal > 0 ? ((todayTotal - yesterdayTotal) / yesterdayTotal) * 100 : null;
-    const changeLabel = changePercent === null
-        ? (todayTotal > 0 ? 'New sales · —% vs. yesterday' : '0.0% vs. yesterday')
-        : `${changePercent > 0 ? '+' : ''}${changePercent.toFixed(1)}% vs. yesterday`;
+    const changeValue = changePercent === null
+        ? (todayTotal > 0 ? '—%' : '0.0%')
+        : `${changePercent > 0 ? '+' : ''}${changePercent.toFixed(1)}%`;
+    const changeNote = changePercent === null
+        ? (todayTotal > 0 ? 'New sales · yesterday had no paid sales' : 'No paid sales today or yesterday')
+        : 'vs. yesterday';
     const changeClass = changePercent === null ? 'is-neutral' : changePercent > 0 ? 'is-up' : changePercent < 0 ? 'is-down' : 'is-neutral';
     const chartWidth = Math.max(700, buckets.length * 28);
     const left = 12;
@@ -601,7 +604,7 @@ function renderDashboardSalesTrend(today, todayTotal, todayCount) {
     }).join('');
     const hasSales = [...totals.values()].some(value => value > 0);
     const rangeTitle = dashboardSalesPeriod === 'month' ? 'This month, by day' : dashboardSalesPeriod === 'year' ? 'This year, by month' : 'Last 7 days';
-    container.innerHTML = `<div class="dashboard-sales-periods" role="group" aria-label="Sales trend period">${[['week', '7 days'], ['month', 'This month'], ['year', 'This year']].map(([period, label]) => `<button type="button" class="${dashboardSalesPeriod === period ? 'active' : ''}" aria-pressed="${dashboardSalesPeriod === period}" onclick="setDashboardSalesPeriod('${period}')">${label}</button>`).join('')}</div><p class="dashboard-sales-range-title">${rangeTitle}</p><div class="dashboard-sales-chart-wrap"><svg class="dashboard-sales-chart" viewBox="0 0 ${chartWidth} 180" role="img" aria-label="${rangeTitle} paid sales. Hover over a bar to see its date and amount."><line class="sales-trend-grid" x1="0" y1="142" x2="${chartWidth}" y2="142"></line>${bars}</svg>${hasSales ? '' : '<p class="sales-trend-empty">No paid sales recorded for this period.</p>'}</div><div class="dashboard-sales-summary"><div><span>Today\'s Sales</span><strong>${escapeHTML(formatPeso(todayTotal))}</strong><small class="sales-trend-change ${changeClass}">${escapeHTML(changeLabel)}</small></div><div><span>Paid transactions today</span><strong>${todayCount}</strong></div></div>`;
+    container.innerHTML = `<div class="dashboard-sales-periods" role="group" aria-label="Sales trend period">${[['week', '7 days'], ['month', 'This month'], ['year', 'This year']].map(([period, label]) => `<button type="button" class="${dashboardSalesPeriod === period ? 'active' : ''}" aria-pressed="${dashboardSalesPeriod === period}" onclick="setDashboardSalesPeriod('${period}')">${label}</button>`).join('')}</div><p class="dashboard-sales-range-title">${rangeTitle}</p><div class="dashboard-sales-chart-wrap"><svg class="dashboard-sales-chart" viewBox="0 0 ${chartWidth} 180" role="img" aria-label="${rangeTitle} paid sales. Hover over a bar to see its date and amount."><line class="sales-trend-grid" x1="0" y1="142" x2="${chartWidth}" y2="142"></line>${bars}</svg>${hasSales ? '' : '<p class="sales-trend-empty">No paid sales recorded for this period.</p>'}</div><div class="dashboard-sales-change-wrap"><div class="dashboard-sales-change-box"><span>Change vs. yesterday</span><strong class="sales-trend-change ${changeClass}">${escapeHTML(changeValue)}</strong><small>${escapeHTML(changeNote)}</small></div></div><div class="dashboard-sales-summary"><div><span>Today\'s Sales</span><strong>${escapeHTML(formatPeso(todayTotal))}</strong></div><div><span>Paid transactions today</span><strong>${todayCount}</strong></div></div>`;
 }
 
 function setDashboardSalesPeriod(period) {
@@ -2139,10 +2142,35 @@ function savePersistentMobileAttendanceSessions() {
 }
 
 function setAttendancePhoneStatus(message, connected = false) {
+    if (String(message).startsWith('Pairing QR ready.')) {
+        setPhonePairingModalStatus(message);
+        return;
+    }
     const status = document.getElementById('attendancePhoneStatus');
     if (!status) return;
     status.textContent = message;
     status.classList.toggle('connected', connected);
+}
+
+function setPhonePairingModalStatus(message) {
+    const status = document.getElementById('phonePairStatus');
+    if (status) status.textContent = message;
+}
+
+async function refreshAttendancePhoneSummary() {
+    const status = document.getElementById('attendancePhoneStatus');
+    if (!status || !window.ironGrindSupabase) return;
+    const { data, error } = await window.ironGrindSupabase.rpc('get_mobile_attendance_pairing_settings');
+    if (error) {
+        setAttendancePhoneStatus('Could not load paired phone status. Open Phone Camera to refresh the pairing list.');
+        return;
+    }
+    const count = Number(data?.paired_count);
+    if (!Number.isFinite(count) || count <= 0) {
+        setAttendancePhoneStatus('No phone camera paired.');
+        return;
+    }
+    setAttendancePhoneStatus(`${count} ${count === 1 ? 'phone camera is' : 'phone cameras are'} paired. Open Phone Camera to manage them.`, true);
 }
 
 async function refreshPairedAttendancePhones(force = false) {
@@ -2279,7 +2307,7 @@ async function refreshAttendancePhoneStatus(sessionId) {
         return;
     }
     if (!data?.paired) {
-        setAttendancePhoneStatus('Pairing QR ready. Waiting for a phone to connect…');
+    setPhonePairingModalStatus('Pairing QR ready. Waiting for a phone to connect…');
         return;
     }
     const pairedTime = data.paired_at
@@ -2345,7 +2373,7 @@ async function endMobileAttendanceSession(sessionId = activeMobileAttendanceSess
         clearInterval(mobileAttendancePollTimer);
         mobileAttendancePollTimer = null;
         mobileAttendancePollBusy.clear();
-        setAttendancePhoneStatus('No phone camera paired.');
+        refreshAttendancePhoneSummary();
     } else if (activeMobileAttendanceSessionId) {
         refreshAttendancePhoneStatus(activeMobileAttendanceSessionId);
     }

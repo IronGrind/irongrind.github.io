@@ -748,3 +748,15 @@ Merchandise size stock overview - November 13, 2026: Merchandise inventory now g
 
 
 Merchandise grouping rollback - November 13, 2026: Reverted the grouped size-row merchandise layout after visual review showed the rows colliding/overflowing in the inventory grid. Restored the prior one-card-per-variant presentation, retaining the earlier size badge, stock quantity, category tabs, and Restock/Edit controls. No product or stock data changed. Validation: git diff --check; browser visual review remains pending.
+
+
+Attendance paired-phone status correction - November 13, 2026: The Attendance page previously showed 'No phone camera paired' from only this browser's locally tracked scanner sessions, while the Phone Camera management dialog listed remote Supabase pairings. The page now reads the shared pairing settings count when opened, and refreshes that summary after a local pairing ends. This is a display/status source correction; pairing records and scanner access are unchanged. Validation: source inspection and git diff --check; live browser review remains pending.
+
+
+Phone-pairing status visibility refinement - November 13, 2026: The transient 'Pairing QR ready / waiting for a phone' message now updates only the Phone Camera pairing dialog. It no longer replaces the Attendance page's shared paired-phone summary after that dialog closes. Pairing status and device records are unchanged. Validation: source inspection and git diff --check; browser review remains pending.
+
+
+Sales trend percentage placement - November 13, 2026: Moved the daily percentage comparison into a bordered callout directly above the chart. Today's sales total and transaction count remain below the chart. Percentage logic and zero-baseline labels are unchanged. Presentation-only; browser review remains pending.
+
+
+Sales percentage summary layout correction - November 13, 2026: Repositioned the percentage comparison below the chart and above the two daily summary cards, and made the percentage value visually prominent. Today's sales and paid transaction count now appear in separate bordered cards beneath it. No calculation or data behavior changed. Validation: source inspection and git diff --check; browser review remains pending.

@@ -625,3 +625,15 @@ Merchandise size stock overview: Same-name merchandise variants are grouped toge
 
 
 Merchandise UI follow-up: Reverted the grouped size-row layout because its rows overlapped in the inventory grid. Merchandise is back to one card per variant, with size badges and per-variant stock/Restock/Edit controls. Data unchanged; visual review remains pending.
+
+
+Attendance phone status correction: The Attendance page now reads the Supabase paired-device count instead of relying only on sessions tracked in this browser. This keeps its message consistent with the Phone Camera pairing list; no pairing data or access behavior changed. Browser review remains pending.
+
+
+Phone pairing status visibility: 'Pairing QR ready' appears in the Phone Camera dialog while pairing is open, and no longer remains in the Attendance panel after the dialog closes. The page retains the paired-device summary. No pairing data changed; browser review remains pending.
+
+
+Sales trend percentage placement: The comparison against yesterday now appears in a small bordered box above the chart. Today's sales and paid transaction count remain below it. No calculation or data behavior changed; browser review remains pending.
+
+
+Sales trend summary layout: The percentage value now appears prominently below the chart and above the separate Today's Sales and transaction-count cards. Comparison logic is unchanged; browser review remains pending.
