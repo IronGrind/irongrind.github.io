@@ -667,3 +667,6 @@ Plan-change warning visibility: The Non-refundable badge is now visible on the c
 
 
 Plan-change confirmation: Before a request is sent, the member sees a non-refundable payment warning and confirms with 'I Agree & Submit'. Cancel submits nothing. Payment remains in person and changes require staff/admin approval. No schema change; browser review pending.
+
+
+Plan-change notice cleanup: Removed the duplicate inline refund warning. The section badge and required non-refundable confirmation dialog remain; Cancel still submits nothing.

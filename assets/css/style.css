@@ -2543,17 +2543,12 @@ html[data-dashboard-theme="light"] body.login-body .btn-register:hover { color: 
 .application-result-modal .application-result-icon { color:#d94b55; }
 html[data-dashboard-theme="light"] body.member-dashboard .member-application-result p,
 html[data-dashboard-theme="light"] body.login-body .application-result-modal p { color:#586579; }
-.member-plan-change-refund-notice { display:flex; align-items:flex-start; gap:10px; margin:12px 0 16px; padding:12px 14px; border:1px solid rgba(226,170,74,.35); border-radius:12px; color:#e9d3a5; background:rgba(137,92,23,.12); font-size:.82rem; line-height:1.5; }
-.member-plan-change-refund-notice > i { margin-top:2px; color:#e6ad48; }
-.member-plan-change-refund-notice p { margin:0; }
 .member-plan-refund-badge { flex:0 0 auto; padding:4px 8px; border:1px solid rgba(226,170,74,.42); border-radius:999px; color:#e9c77f; background:rgba(137,92,23,.14); font-size:.67rem; font-weight:700; }
 .member-plan-change-confirm { width:min(100%,480px); padding:10px; text-align:center; }
 .member-plan-change-confirm-icon { margin:0 auto 12px; color:#e6ad48; font-size:2rem; }
 .member-plan-change-confirm h2 { margin:0 0 10px; font-size:1.2rem; }
 .member-plan-change-confirm p { margin:0; color:#a4adc2; font-size:.9rem; line-height:1.6; }
 .member-plan-change-confirm-actions { display:flex; justify-content:center; gap:10px; margin-top:22px; }
-html[data-dashboard-theme="light"] body.member-dashboard .member-plan-change-refund-notice { color:#674f21; background:#fff8e8; border-color:#e8d4a5; }
-html[data-dashboard-theme="light"] body.member-dashboard .member-plan-change-refund-notice > i { color:#9b6a12; }
 html[data-dashboard-theme="light"] body.member-dashboard .member-plan-refund-badge { color:#795500; background:#fff5da; border-color:#e8d4a5; }
 html[data-dashboard-theme="light"] body.member-dashboard .member-plan-change-confirm p { color:#586579; }
 
