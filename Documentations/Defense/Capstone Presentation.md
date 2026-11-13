@@ -676,3 +676,7 @@ Member page scroll refinement: Expanding/collapsing Available at the Gym and oth
 
 
 Mobile scroll correction: The member disclosure handler now preserves document scroll on mobile and the inner dashboard scroller on larger layouts. Device/browser interaction review remains pending.
+
+Staff attendance scanner scope: Staff can still use their accounts and record attendance by searching member name or Gmail, then choosing the matching member. Removed QR scanning through the staff dashboard computer camera; QR scanning remains on the admin paired phone. No schema/ERD change. Source inspection only; browser review and deployment remain pending.
+
+Login keyboard flow: Press Enter after typing the email/username to move directly to the password field. Empty input still uses browser validation. No authentication or database behavior changed. Browser review and deployment remain pending.

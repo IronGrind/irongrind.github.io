@@ -799,3 +799,7 @@ Member disclosure scroll stability - November 14, 2026: Added scroll-position pr
 
 
 Member mobile disclosure scroll correction - November 14, 2026: Updated the disclosure-position handler to preserve the page scroll root on mobile layouts, where customer-main becomes overflow: visible; desktop/tablet layouts continue to preserve the inner customer-main scroller. This corrects the prior scroll preservation targeting the wrong element on mobile. Validation: source inspection and git diff --check; browser/device interaction review remains pending.
+
+Staff attendance scanner scope - November 14, 2026: Removed the staff dashboard's browser/webcam QR scanner and its direct QR/UUID attendance submission path. Staff accounts and their app access remain enabled; staff record visits by searching member name or Gmail and selecting the matching member. The admin paired-phone QR scanner is unchanged and remains the QR attendance workflow. No schema, ERD, or database change. Validation: source inspection and git diff --check; browser review and deployment remain pending.
+
+Login keyboard flow - November 14, 2026: Pressing Enter in the email/username field now moves focus to the password field when the identifier is non-empty, instead of submitting prematurely. Empty-field Enter retains normal browser validation. Login methods and authentication behavior are unchanged. Updated the auth script cache version. Validation: source inspection and git diff --check; browser review and deployment remain pending.

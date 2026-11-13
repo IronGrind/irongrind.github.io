@@ -56,6 +56,12 @@ const REMEMBERED_LOGIN_KEY = 'ig_remembered_login_identifier';
     });
 })();
 
+document.getElementById('loginEmail')?.addEventListener('keydown', event => {
+    if (event.key !== 'Enter' || !event.currentTarget.value.trim()) return;
+    event.preventDefault();
+    document.getElementById('loginPassword')?.focus();
+});
+
 (function showAuthRedirectMessage() {
     const params = new URLSearchParams(window.location.search);
     if (params.get('auth') === 'device') {

@@ -5,7 +5,6 @@ let staffBusy = false;
 let staffAttendanceRefreshing = false;
 let staffLoaderDelayComplete = false;
 let staffLoaderStartupComplete = false;
-let staffScanner;
 let pendingStaffScan = null;
 let staffProducts = [];
 let staffProductGroups = [];
@@ -526,21 +525,13 @@ function clearStaffAttendanceSelection() {
     staffSelectedAttendanceMember = null;
     staffAttendanceSearchRevision++;
     document.getElementById('staffAttendanceResults').replaceChildren();
-    const value = document.getElementById('staffIdentifier').value.trim();
-    document.getElementById('staffAttendanceSubmit').textContent = /^IRONGRIND\|/i.test(value) || /^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(value)
-        ? 'Record attendance' : 'Find member';
+    document.getElementById('staffAttendanceSubmit').textContent = 'Find member';
 }
 
 async function submitStaffAttendanceLookup(event) {
     event.preventDefault();
     if (staffBusy) return;
     const value = document.getElementById('staffIdentifier').value.trim();
-    if (staffSelectedAttendanceMember || /^IRONGRIND\|/i.test(value) || /^[0-9a-f]{8}-[0-9a-f-]{27}$/i.test(value)) {
-        const identifier = staffSelectedAttendanceMember?.id || value;
-        await recordStaffAttendance(identifier);
-        if (!pendingStaffScan) clearStaffAttendanceSelection();
-        return;
-    }
     const results = document.getElementById('staffAttendanceResults');
     if (value.length < 2 || value.length > 80) { results.textContent = 'Enter 2–80 characters to search.'; return; }
     const revision = ++staffAttendanceSearchRevision;
@@ -579,129 +570,6 @@ async function submitStaffAttendanceLookup(event) {
 document.getElementById('staffIdentifier').addEventListener('input', clearStaffAttendanceSelection);
 document.getElementById('staffScanForm').addEventListener('submit', submitStaffAttendanceLookup);
 document.getElementById('refreshStaffAttendance').onclick = () => refreshStaffAttendance().catch(error => { staffStatus.textContent = error.message; });
-function staffCameraErrorMessage(error) {
-    const detail = typeof error === 'string' ? error : error?.message || String(error || '');
-    const errorName = error?.name || detail.match(/\b(?:NotAllowedError|PermissionDeniedError|SecurityError|NotFoundError|DevicesNotFoundError|NotReadableError|TrackStartError|AbortError|OverconstrainedError|ConstraintNotSatisfiedError)\b/i)?.[0] || '';
-    const searchable = `${errorName} ${detail}`.toLowerCase();
-    if (['NotAllowedError', 'PermissionDeniedError', 'SecurityError'].includes(errorName) || /permission denied|permission dismissed|not allowed by system|permission policy/.test(searchable)) {
-        return 'Camera access is blocked. Allow camera access for this site in your browser and Windows privacy settings, then reload the page.';
-    }
-    if (['NotFoundError', 'DevicesNotFoundError'].includes(errorName) || /no camera|device not found|no video input/.test(searchable)) {
-        return 'No usable camera was found. Enable the laptop camera or search by member name or Gmail below.';
-    }
-    if (['NotReadableError', 'TrackStartError', 'AbortError'].includes(errorName) || /could not start video source|device in use|hardware error/.test(searchable)) {
-        return 'The camera may be in use by another app. Close apps such as Camera, Teams, or Zoom, then try again.';
-    }
-    if (['OverconstrainedError', 'ConstraintNotSatisfiedError'].includes(errorName) || /constraint.*not satisf|overconstrained/.test(searchable)) {
-        return 'The requested camera mode is unavailable. Check the laptop webcam or select another camera in the browser site settings.';
-    }
-    if (typeof Html5Qrcode === 'undefined') return 'The QR scanner could not load. Check the internet connection and reload this page.';
-    return `The camera could not start${errorName ? ` (${errorName})` : ''}. Check browser and Windows camera permissions, close other camera apps, then try again.`;
-}
-async function closeStaffCameraModal(stopCamera = true) {
-    const modal = document.getElementById('staffCameraModal');
-    modal?.classList.add('hidden');
-    const scanner = staffScanner;
-    staffScanner = null;
-    if (stopCamera && scanner) {
-        try { await scanner.stop(); } catch { /* The camera may not have started yet. */ }
-        try { scanner.clear(); } catch { /* The scanner surface may not be initialized. */ }
-    }
-    const processing = document.getElementById('staffScanProcessing');
-    if (processing) processing.hidden = true;
-}
-document.addEventListener('keydown', event => {
-    if (event.key === 'Escape' && !document.getElementById('staffCameraModal')?.classList.contains('hidden')) {
-        closeStaffCameraModal();
-    }
-});
-document.getElementById('startStaffCamera').onclick = async () => {
-    if (!staffUser || staffScanner || staffBusy) return;
-    const modal = document.getElementById('staffCameraModal');
-    const modalStatus = document.getElementById('staffCameraModalStatus');
-    const processing = document.getElementById('staffScanProcessing');
-    modal?.classList.remove('hidden');
-    if (processing) processing.hidden = true;
-    if (modalStatus) modalStatus.textContent = 'Starting camera…';
-    if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia) {
-        if (modalStatus) modalStatus.textContent = 'Camera scanning needs a secure HTTPS page (or localhost) and a browser with camera support.';
-        return;
-    }
-    if (typeof Html5Qrcode === 'undefined') {
-        if (modalStatus) modalStatus.textContent = staffCameraErrorMessage();
-        return;
-    }
-    const scanner = new Html5Qrcode('staffCameraReader');
-    staffScanner = scanner;
-    let permissionStream;
-    try {
-        // A laptop's built-in webcam is usually user-facing. Prefer the rear
-        // camera on phones and the front camera on computers, while keeping
-        // the preference ideal so browsers can fall back to available hardware.
-        const preferRearCamera = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent);
-        const facingMode = preferRearCamera ? 'environment' : 'user';
-        const config = { fps: 10, qrbox: { width: 240, height: 240 }, aspectRatio: 1 };
-        const onDecoded = async value => {
-            if (staffScanner !== scanner || staffBusy) return;
-            if (processing) processing.hidden = false;
-            if (modalStatus) modalStatus.textContent = 'QR detected. Recording attendance…';
-            staffBusy = true;
-            try { await scanner.stop(); } catch { /* Stop the stream before saving the attendance scan. */ }
-            staffScanner = null;
-            try { scanner.clear(); } catch { /* The scanner surface may already be cleared. */ }
-            staffBusy = false;
-            await recordStaffAttendance(value);
-            await closeStaffCameraModal(false);
-        };
-        // Match the admin scanner: ask the browser to open a camera first,
-        // then start the QR decoder with that exact device ID. This avoids
-        // differences between browser camera selection and library constraints.
-        permissionStream = await navigator.mediaDevices.getUserMedia({
-            audio: false,
-            video: { facingMode: { ideal: facingMode } }
-        });
-        if (staffScanner !== scanner) return;
-        const deviceId = permissionStream.getVideoTracks()[0]?.getSettings?.().deviceId;
-        permissionStream.getTracks().forEach(track => track.stop());
-        permissionStream = null;
-
-        let started = false;
-        let cameraError;
-        if (deviceId) {
-            try {
-                await scanner.start(deviceId, config, onDecoded, () => {});
-                started = true;
-            } catch (error) {
-                cameraError = error;
-                console.warn('Could not start the browser-selected staff camera; trying available cameras.', error);
-            }
-        }
-        if (!started) {
-            const cameras = await Html5Qrcode.getCameras();
-            const preferLabel = preferRearCamera ? /back|rear|environment/i : /front|user|integrated|built.?in|webcam/i;
-            const candidates = [...(Array.isArray(cameras) ? cameras : [])]
-                .sort((a, b) => Number(preferLabel.test(b.label || '')) - Number(preferLabel.test(a.label || '')));
-            if (!candidates.length) throw cameraError || new Error('No camera device is available to the browser.');
-            for (const camera of candidates) {
-                try {
-                    await scanner.start(camera.id, config, onDecoded, () => {});
-                    started = true;
-                    break;
-                } catch (error) { cameraError = error; }
-            }
-        }
-        if (!started) {
-            throw cameraError || new Error('The browser could not start any available camera.');
-        }
-        if (modalStatus) modalStatus.textContent = 'Camera is on. Point it at the member’s QR code.';
-    } catch (error) {
-        if (staffScanner === scanner) staffScanner = null;
-        try { await scanner.stop(); } catch { /* No active stream to stop. */ }
-        try { scanner.clear(); } catch { /* Scanner UI may not have initialized. */ }
-        console.warn('Staff QR camera could not start:', error);
-        if (modalStatus) modalStatus.textContent = staffCameraErrorMessage(error);
-    } finally { permissionStream?.getTracks().forEach(track => track.stop()); }
-};
 document.getElementById('staffLogout').onclick = async () => {
     try {
         const { error } = await staffClient.rpc('admin_log_session_event', { p_event: 'sign_out_requested' });
