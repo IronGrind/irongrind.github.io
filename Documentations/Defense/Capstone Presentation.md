@@ -670,3 +670,6 @@ Plan-change confirmation: Before a request is sent, the member sees a non-refund
 
 
 Plan-change notice cleanup: Removed the duplicate inline refund warning. The section badge and required non-refundable confirmation dialog remain; Cancel still submits nothing.
+
+
+Member page scroll refinement: Expanding/collapsing Available at the Gym and other member disclosure cards now preserves the clicked heading's position to reduce jumps toward the bottom. Browser interaction review remains pending.

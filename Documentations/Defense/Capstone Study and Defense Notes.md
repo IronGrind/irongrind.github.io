@@ -793,3 +793,6 @@ Plan-change submission acknowledgement - November 14, 2026: Clicking Submit Plan
 
 
 Plan-change duplicate notice cleanup - November 14, 2026: Removed the inline 'Please note' refund warning from the expanded plan-change form because the submit confirmation dialog already requires acknowledgement. The collapsed-section Non-refundable badge remains, as does the confirmation dialog with Continue and Cancel actions. No workflow or data behavior changed.
+
+
+Member disclosure scroll stability - November 14, 2026: Added scroll-position preservation for member collapsible sections such as Available at the Gym. When the section expands or collapses, the clicked summary heading is kept at its prior viewport position, and browser scroll anchoring is disabled on those sections. No membership or store behavior changed. Validation: source inspection and git diff --check; browser interaction review remains pending.
