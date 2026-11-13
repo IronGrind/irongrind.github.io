@@ -682,3 +682,5 @@ Staff attendance scanner scope: Staff can still use their accounts and record at
 Login keyboard flow: Press Enter after typing the email/username to move directly to the password field. Empty input still uses browser validation. No authentication or database behavior changed. Browser review and deployment remain pending.
 
 Member dashboard approval refresh: When staff/admin approves a member's renewal or plan change, the member dashboard now silently reloads the saved plan and membership dates, and updates its status/progress display. The existing approval popup remains. No schema/ERD change. Browser/end-to-end review and deployment remain pending.
+
+Manuscript alignment: Updated Scope and Delimitation and Functional Requirements for attendance roles and member trusted-browser approval. The DFD was left unchanged pending the new process-based diagrams. No application or schema change. Word XML and wording were checked; visual review remains pending.
