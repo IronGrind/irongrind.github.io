@@ -772,3 +772,6 @@ Percentage-change edge-case correction - November 14, 2026: Percentage change is
 
 
 Inventory supplement-form filter - November 14, 2026: Added a Supplement form selector, shown only when the Supplements category is selected. It filters products by the existing supplement_form value: powder, drinkable/liquid, capsule, tablet, or other. The current stock-status and search filters remain active together. This is a UI filter over existing product fields; no schema or product records changed. Validation: source inspection and git diff --check; browser review remains pending.
+
+
+Inventory supplement filter placement refinement - November 14, 2026: Moved the Supplement form selector into the existing search/filter toolbar so it aligns with Search inventory and Stock status. On narrow layouts, search takes a full row and the two filters sit together; on small screens controls stack. Filtering behavior is unchanged. Validation: source inspection and git diff --check; browser review remains pending.

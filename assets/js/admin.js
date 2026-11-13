@@ -2754,6 +2754,7 @@ function renderStore() {
     document.getElementById('inventorySuppCount').textContent = products.filter(p => p.category === 'Supplement').length;
     document.getElementById('inventoryMerchCount').textContent = products.filter(p => p.category === 'Merch').length;
     document.getElementById('inventorySupplementFormFilterWrap').hidden = inventoryCategoryFilter !== 'Supplement';
+    document.querySelector('.inventory-toolbar')?.classList.toggle('has-supplement-form-filter', inventoryCategoryFilter === 'Supplement');
     document.querySelectorAll('[data-inventory-category]').forEach(button => {
         const active = button.dataset.inventoryCategory === inventoryCategoryFilter;
         button.classList.toggle('active', active);

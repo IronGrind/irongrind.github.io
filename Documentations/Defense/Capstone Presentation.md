@@ -649,3 +649,6 @@ Percentage calculation note: Change is calculated against the previous day (or p
 
 
 Inventory supplement filter: When Supplements is selected, admins can filter by Powder, Drinkable/liquid, Capsule, Tablet, or Other. It uses the existing product form field and does not change product data or schema. Browser review remains pending.
+
+
+Inventory filter layout: The Supplement form selector now sits in the same toolbar as Search inventory and Stock status, with responsive wrapping. Filtering logic and product data are unchanged; browser review remains pending.

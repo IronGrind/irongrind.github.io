@@ -242,19 +242,19 @@
                             <button class="btn-sm" onclick="openAddProductModal()"><i class="fas fa-plus"></i> Add Product</button>
                         </div>
                         <div class="inventory-toolbar">
-                            <div class="form-group"><label for="inventorySearch">Search inventory</label><input id="inventorySearch" type="search" placeholder="Product, type, or size" oninput="renderStore()"></div>
+                            <div class="form-group inventory-search-control"><label for="inventorySearch">Search inventory</label><input id="inventorySearch" type="search" placeholder="Product, type, or size" oninput="renderStore()"></div>
                             <div class="form-group"><label for="inventoryStockFilter">Stock status</label><select id="inventoryStockFilter" onchange="renderStore()"><option value="all">All products</option><option value="low">Low stock</option><option value="out">Out of stock</option><option value="available">In stock</option></select></div>
+                            <div id="inventorySupplementFormFilterWrap" class="form-group inventory-supplement-filter" hidden>
+                                <label for="inventorySupplementFormFilter">Supplement form</label>
+                                <select id="inventorySupplementFormFilter" onchange="renderStore()">
+                                    <option value="all">All forms</option><option value="powder">Powder</option><option value="drinkable">Drinkable / liquid</option><option value="capsule">Capsule</option><option value="tablet">Tablet</option><option value="other">Other</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="inventory-category-tabs" role="group" aria-label="Inventory category">
                             <button type="button" class="active" data-inventory-category="all" aria-pressed="true" onclick="setInventoryCategory('all')">All Products <span id="inventoryAllCount">0</span></button>
                             <button type="button" data-inventory-category="Supplement" aria-pressed="false" onclick="setInventoryCategory('Supplement')">Supplements <span id="inventorySuppCount">0</span></button>
                             <button type="button" data-inventory-category="Merch" aria-pressed="false" onclick="setInventoryCategory('Merch')">Merchandise <span id="inventoryMerchCount">0</span></button>
-                        </div>
-                        <div id="inventorySupplementFormFilterWrap" class="inventory-supplement-filter" hidden>
-                            <label for="inventorySupplementFormFilter">Supplement form</label>
-                            <select id="inventorySupplementFormFilter" onchange="renderStore()">
-                                <option value="all">All forms</option><option value="powder">Powder</option><option value="drinkable">Drinkable / liquid</option><option value="capsule">Capsule</option><option value="tablet">Tablet</option><option value="other">Other</option>
-                            </select>
                         </div>
                         <p id="inventoryResultCount" class="inventory-result-count" role="status" aria-live="polite"></p>
                         <section id="inventorySupplementsSection" class="inventory-category-section" aria-label="Supplements">
