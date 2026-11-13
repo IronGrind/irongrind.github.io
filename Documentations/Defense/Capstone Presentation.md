@@ -655,3 +655,9 @@ Inventory filter layout: The Supplement form selector now sits in the same toolb
 
 
 Sales income summary consistency: Membership Income now shares the title and metric-card styling used by Daily Product Income. Plan breakdown data and product income data are unchanged. Browser review remains pending.
+
+
+Member application decision notices: Members get a popup when registration, renewal, or plan-change applications are approved or rejected. Online member sessions receive the review update; the submitting browser checks unresolved notices at next sign-in. Rejected registration is shown on the login page because rejected applicants cannot enter the member dashboard. Uses existing application status fields only; no schema/ERD change. Browser/end-to-end review pending.
+
+
+Plan-change policy notice: The member request form states that plan-change payments are non-refundable and asks members to confirm the plan and price before paying at the gym. No data model or approval workflow changed; browser review remains pending.

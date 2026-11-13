@@ -778,3 +778,9 @@ Inventory supplement filter placement refinement - November 14, 2026: Moved the 
 
 
 Sales income summary visual consistency - November 14, 2026: Updated Membership Income to use the same section heading and summary-card styles as Daily Product Income. Membership summary labels, amounts, and sale counts now use the shared dashboard card typography/background; removed the special red treatment from Overall Income. Made the membership summary container transparent in the light theme so it no longer creates a gray block behind the cards. Membership plan breakdown and product income metrics are unchanged. Validation: source inspection and git diff --check; browser review remains pending.
+
+
+Member application decision popups - November 14, 2026: Added in-app approval/rejection notices for registration, renewal, and plan-change applications. Online members receive a popup when the membership_applications Realtime update arrives. For offline requests, the submitting browser stores the application ID and checks its status at the member's next sign-in. Rejected registration applicants, who cannot enter the member dashboard, see a rejection popup during login instead of only an inline message; the notice is shown once per browser/application. Uses existing application status and review records; no schema, ERD, or database workflow change. Validation: source inspection and git diff --check; browser and end-to-end review remain pending.
+
+
+Member plan-change refund notice - November 14, 2026: Added a visible notice in the member plan-change request form stating that plan-change payments are non-refundable and asking members to verify the selected plan and price before submitting and paying at the gym. This clarifies the existing in-person payment workflow; no approval logic, schema, or ERD changed. Validation: source inspection and git diff --check; browser review remains pending.

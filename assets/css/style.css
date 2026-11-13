@@ -2543,6 +2543,11 @@ html[data-dashboard-theme="light"] body.login-body .btn-register:hover { color: 
 .application-result-modal .application-result-icon { color:#d94b55; }
 html[data-dashboard-theme="light"] body.member-dashboard .member-application-result p,
 html[data-dashboard-theme="light"] body.login-body .application-result-modal p { color:#586579; }
+.member-plan-change-refund-notice { display:flex; align-items:flex-start; gap:10px; margin:12px 0 16px; padding:12px 14px; border:1px solid rgba(226,170,74,.35); border-radius:12px; color:#e9d3a5; background:rgba(137,92,23,.12); font-size:.82rem; line-height:1.5; }
+.member-plan-change-refund-notice > i { margin-top:2px; color:#e6ad48; }
+.member-plan-change-refund-notice p { margin:0; }
+html[data-dashboard-theme="light"] body.member-dashboard .member-plan-change-refund-notice { color:#674f21; background:#fff8e8; border-color:#e8d4a5; }
+html[data-dashboard-theme="light"] body.member-dashboard .member-plan-change-refund-notice > i { color:#9b6a12; }
 
 /* Admin dashboard sales trend */
 body.admin-dashboard .dashboard-overview-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
