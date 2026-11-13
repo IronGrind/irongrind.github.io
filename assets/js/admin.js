@@ -445,10 +445,11 @@ function switchMemberTab(tab) {
 }
 
 function switchApprovalType(type) {
-    currentApprovalType = type === 'renewal' ? 'renewal' : 'registration';
+    currentApprovalType = ['renewal', 'plan_change'].includes(type) ? type : 'registration';
     document.querySelectorAll('[data-approval-type]').forEach(button => button.classList.toggle('active', button.dataset.approvalType === currentApprovalType));
     document.getElementById('registrationApprovalsList').classList.toggle('hidden', currentApprovalType !== 'registration');
     document.getElementById('renewalApprovalsList').classList.toggle('hidden', currentApprovalType !== 'renewal');
+    document.getElementById('planChangeApprovalsList').classList.toggle('hidden', currentApprovalType !== 'plan_change');
     renderApprovals(currentApprovalType);
 }
 
@@ -519,9 +520,10 @@ function renderDashboard() {
     const pending = pendingApprovals.filter(p => p.status === 'pending');
     document.getElementById('pendingBadge').textContent = pending.length;
     document.getElementById('approvalsCount').textContent = pending.length;
-    document.getElementById('registrationApprovalsCount').textContent = pending.filter(p => p.source !== 'dashboard-renewal').length;
+    document.getElementById('registrationApprovalsCount').textContent = pending.filter(p => p.source === 'supabase-registration').length;
     document.getElementById('renewalApprovalsCount').textContent = pending.filter(p => p.source === 'dashboard-renewal').length;
-    const registrationCount = pending.filter(p => p.source !== 'dashboard-renewal').length;
+    document.getElementById('planChangeApprovalsCount').textContent = pending.filter(p => p.source === 'dashboard-plan-change').length;
+    const registrationCount = pending.filter(p => p.source === 'supabase-registration').length;
     document.getElementById('dashboardRegistrationNotice')?.classList.toggle('hidden', registrationCount === 0);
     const registrationNoticeText = document.getElementById('dashboardRegistrationNoticeText');
     if (registrationNoticeText) registrationNoticeText.textContent = `${registrationCount} ${registrationCount === 1 ? 'application is' : 'applications are'} waiting for approval.`;
@@ -648,19 +650,23 @@ function viewMemberDetails(id) {
 /* ========== RENDER: APPROVALS ========== */
 function renderApprovals(type = currentApprovalType) {
     const isRenewal = type === 'renewal';
-    const el = document.getElementById(isRenewal ? 'renewalApprovalsList' : 'registrationApprovalsList');
+    const isPlanChange = type === 'plan_change';
+    const el = document.getElementById(isPlanChange ? 'planChangeApprovalsList' : isRenewal ? 'renewalApprovalsList' : 'registrationApprovalsList');
     const allPending = pendingApprovals.filter(p => p.status === 'pending');
-    const registrations = allPending.filter(p => p.source !== 'dashboard-renewal');
+    const registrations = allPending.filter(p => !['dashboard-renewal', 'dashboard-plan-change'].includes(p.source));
     const renewals = allPending.filter(p => p.source === 'dashboard-renewal');
+    const planChanges = allPending.filter(p => p.source === 'dashboard-plan-change');
     document.getElementById('approvalsCount').textContent = allPending.length;
     document.getElementById('registrationApprovalsCount').textContent = registrations.length;
     document.getElementById('renewalApprovalsCount').textContent = renewals.length;
-    const pending = isRenewal ? renewals : registrations;
+    document.getElementById('planChangeApprovalsCount').textContent = planChanges.length;
+    const pending = isPlanChange ? planChanges : isRenewal ? renewals : registrations;
 
     if (pending.length === 0) {
         el.innerHTML = isRenewal
             ? '<div class="empty-state">No pending renewal requests.</div>'
-            : '<div class="empty-state">No pending new registrations.</div>';
+            : isPlanChange ? '<div class="empty-state">No pending plan-change requests.</div>'
+                : '<div class="empty-state">No pending new registrations.</div>';
         return;
     }
 
@@ -732,7 +738,7 @@ function completeApproval(id) {
 
     if (p.supabaseRecord) {
         if (p.source === 'dashboard-renewal') completeSupabaseRenewalApproval(p);
-        else completeSupabaseRegistrationApproval(p);
+        completeSupabaseRequestApproval(p);
         return;
     }
 
@@ -917,7 +923,7 @@ async function loadSupabaseMembershipData() {
             username: row.username,
             submittedAt: row.submitted_at || row.created_at,
             status: row.status,
-            source: row.application_type === 'renewal' ? 'dashboard-renewal' : 'supabase-registration',
+            source: row.application_type === 'renewal' ? 'dashboard-renewal' : row.application_type === 'plan_change' ? 'dashboard-plan-change' : 'supabase-registration',
             memberId: row.member_id || null,
             supabaseRecord: row
         }));

@@ -577,3 +577,7 @@ Speaker notes: The single designated overall manuscript is now `Chapters 1-3 (MA
 
 Speaker notes: Seven wording-only corrections were applied directly to the single designated manuscript. The critical clarification is that website administrator trusted-browser replacement affects the dashboard, while the attendance scanner operates through its separate password-based session and handoff controls. Layout and diagram/table placement were preserved. No implementation or deployment changed.
 Speaker-note correction: Chapter 1 now names both administrators and authorized staff as attendance operators, consistent with the later chapter descriptions. No implementation or schema change.
+
+## Member plan-change request workflow
+
+Speaker notes: Members with active memberships can request a different standard plan from the dashboard. The request follows the existing walk-in payment process: the member pays at the gym, then staff or an administrator reviews it. Approval records the sale, membership history, and new plan dates. The local UI and migration are prepared; the linked database migration, browser review, and end-to-end approval have not yet been completed. Do not present the workflow as deployed.

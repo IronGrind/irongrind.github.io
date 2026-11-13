@@ -747,10 +747,13 @@ async function loadStaffRequests() {
         for (const request of data || []) {
             const card = document.createElement('article'); card.className = 'staff-request-card';
             card.dataset.searchText = `${request.full_name} ${request.plan}`.toLowerCase();
-            card.dataset.requestType = request.application_type === 'renewal' ? 'renewal' : 'registration';
+            card.dataset.requestType = request.application_type;
             const heading = document.createElement('h3'); heading.textContent = request.full_name;
             const details = document.createElement('p');
-            details.textContent = `${request.application_type === 'renewal' ? 'Renewal' : 'Registration'} · ${request.plan} · ${formatStaffPeso(request.plan_price)}`;
+            const requestLabel = request.application_type === 'plan_change'
+                ? 'Plan change'
+                : request.application_type === 'renewal' ? 'Renewal' : 'Registration';
+            details.textContent = `${requestLabel} · ${request.plan} · ${formatStaffPeso(request.plan_price)}`;
             const date = document.createElement('small'); date.textContent = `Submitted ${new Date(request.submitted_at).toLocaleString('en-PH', { timeZone: 'Asia/Manila' })}`;
             const actions = document.createElement('div'); actions.className = 'staff-form-actions';
             for (const [decision, label] of [['approved', 'Approve'], ['rejected', 'Reject']]) {

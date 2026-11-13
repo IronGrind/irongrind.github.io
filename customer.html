@@ -75,6 +75,22 @@
             </div>
         </details>
 
+        <details class="membership-form-card member-collapsible" id="member-plan-change-request">
+            <summary class="member-collapse-summary"><span><i class="fas fa-arrows-rotate"></i> Change Membership Plan</span><i class="fas fa-chevron-down collapse-chevron" aria-hidden="true"></i></summary>
+            <div class="member-collapse-content">
+            <p class="member-form-help">Choose a different plan, then pay at the gym. Staff or an administrator will review the request before your membership is changed.</p>
+            <form id="planChangeForm">
+                <div class="form-group"><label for="planChangeMemberName">Full Name</label><input type="text" id="planChangeMemberName" readonly required></div>
+                <div class="form-group">
+                    <label for="planChangePlan">New Membership Plan</label>
+                    <select id="planChangePlan"><option value="Monthly|800">Monthly â€” â‚±800</option><option value="Half Month|400">Half Month â€” â‚±400</option><option value="Walk-in|80">Walk-in â€” â‚±80</option></select>
+                </div>
+                <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Submit Plan Change Request</button>
+                <p id="planChangeFormStatus" role="status" aria-live="polite" style="min-height:1.25em; margin:10px 0 0; font-size:13px;"></p>
+            </form>
+            </div>
+        </details>
+
         <dialog class="member-settings-dialog" id="memberSettingsDialog" aria-labelledby="memberSettingsTitle" onclick="if(event.target===this) closeMemberSettings()">
             <div class="member-settings-heading">
                 <h2 id="memberSettingsTitle"><i class="fas fa-bars" aria-hidden="true"></i> Member Menu</h2>

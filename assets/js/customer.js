@@ -8,6 +8,7 @@ let supabaseMember = null;
 let supabaseAttendance = null;
 let supabaseProducts = null;
 let memberHasPendingRenewal = false;
+let memberHasPendingPlanChange = false;
 let customerAttendanceChannel = null;
 let customerRenewalChannel = null;
 (function guardCustomer() {
@@ -31,6 +32,7 @@ function updateCustomerName(name, updateSettingsField = false) {
     document.getElementById('currentUserName').textContent = fullName;
     document.getElementById('heroName').textContent = firstName + '!';
     document.getElementById('mfName').value = fullName;
+    document.getElementById('planChangeMemberName').value = fullName;
     if (updateSettingsField) populateSettingsNameFields(fullName);
 }
 
@@ -172,6 +174,14 @@ function toast(msg, type = '') {
 }
 function renewalFormMessage(message, type = '') {
     const status = document.getElementById('renewalFormStatus');
+    if (status) {
+        status.textContent = message;
+        status.style.color = type === 'error' ? '#ff7777' : type === 'success' ? '#69d899' : '#b8c0cc';
+    }
+    if (message) toast(message, type);
+}
+function planChangeFormMessage(message, type = '') {
+    const status = document.getElementById('planChangeFormStatus');
     if (status) {
         status.textContent = message;
         status.style.color = type === 'error' ? '#ff7777' : type === 'success' ? '#69d899' : '#b8c0cc';
@@ -427,6 +437,10 @@ function renderMembershipProgress() {
             <div class="progress-alert notice">
                 <i class="fas fa-clock"></i>
                 Your renewal request is being reviewed. Check back here for your updated membership.
+            </div>` : memberHasPendingPlanChange ? `
+            <div class="progress-alert notice">
+                <i class="fas fa-clock"></i>
+                Your plan change request is waiting for gym approval. Pay at the gym if you have not yet done so.
             </div>` : expired ? `
             <div class="progress-alert">
                 <i class="fas fa-exclamation-triangle"></i>
@@ -785,6 +799,60 @@ async function submitMembershipForm(event) {
     }
 }
 
+async function submitPlanChangeRequest(event) {
+    event.preventDefault();
+    const form = event.currentTarget || document.getElementById('planChangeForm');
+    const submitButton = form?.querySelector('button[type="submit"]');
+    if (submitButton?.disabled) return;
+    const originalButtonHTML = submitButton?.innerHTML;
+    if (submitButton) {
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+    }
+    planChangeFormMessage('', '');
+    try {
+        const client = window.ironGrindSupabase;
+        if (!client) throw new Error('The plan-change request service did not load. Refresh and try again.');
+        const { data: authData, error: authError } = await client.auth.getUser();
+        const user = authData?.user;
+        if (authError || !user) throw new Error('Your sign-in session has expired. Sign in again, then retry.');
+        if (!supabaseMember) await loadSupabaseMember();
+        const member = supabaseMember;
+        if (!member || !isUUID(member.id) || member.authUserId !== user.id) throw new Error('We could not find a membership linked to this login. Contact the gym admin for help.');
+        if (member.status !== 'active') throw new Error('Your membership must be active before you can request a plan change. Request renewal instead.');
+        if (memberHasPendingPlanChange) throw new Error('You already have a plan change request waiting for staff or administrator approval.');
+        const [plan, planPriceText] = document.getElementById('planChangePlan').value.split('|');
+        const planPrice = Number(planPriceText);
+        if (member.plan === plan && Number(member.planPrice) === planPrice) throw new Error('Choose a different plan from your current membership.');
+
+        const { data: existing, error: lookupError } = await client.from('membership_applications').select('id')
+            .eq('auth_user_id', user.id).eq('application_type', 'plan_change').eq('status', 'pending').limit(1).maybeSingle();
+        if (lookupError) throw new Error('We could not check your plan-change status right now. Please try again or contact the gym.');
+        if (existing) throw new Error('You already have a plan change request waiting for staff or administrator approval.');
+
+        const estimatedEndDate = addDays(todayStr(), plan === 'Monthly' ? 30 : plan === 'Half Month' ? 15 : 1);
+        const { error: insertError } = await client.from('membership_applications').insert({
+            auth_user_id: user.id, member_id: member.id, application_type: 'plan_change',
+            full_name: member.name, email: member.email || user.email, username: member.username || session.username,
+            mobile: member.contact || null, plan, plan_price: planPrice, start_date: todayStr(), end_date: estimatedEndDate,
+            fitness_goals: member.fitnessGoals || [], health_conditions: member.healthConditions || [],
+            other_medical_conditions: member.otherMedicalConditions || '', status: 'pending', submitted_at: new Date().toISOString()
+        });
+        if (insertError) throw new Error(insertError.message || 'The plan change request could not be submitted.');
+        memberHasPendingPlanChange = true;
+        planChangeFormMessage('Plan change request submitted. Pay at the gym, then wait for staff or administrator approval.', 'success');
+        renderMembershipProgress();
+    } catch (error) {
+        console.error('Plan change request failed:', error);
+        planChangeFormMessage(error?.message || 'The plan change request could not be submitted. Please try again.', 'error');
+    } finally {
+        if (submitButton) {
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalButtonHTML;
+        }
+    }
+}
+
 async function submitMemberSettings(event) {
     event.preventDefault();
     const form = event.currentTarget;
@@ -1029,6 +1097,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
     document.getElementById('membershipForm')?.addEventListener('submit', submitMembershipForm);
+    document.getElementById('planChangeForm')?.addEventListener('submit', submitPlanChangeRequest);
     document.getElementById('memberSettingsForm')?.addEventListener('submit', submitMemberSettings);
     document.getElementById('memberEmailForm')?.addEventListener('submit', submitMemberEmail);
     document.getElementById('memberPasswordForm')?.addEventListener('submit', submitMemberPassword);
@@ -1125,11 +1194,14 @@ async function loadSupabaseMember() {
             }
         });
 
-    const [attendanceResult, productsResult, renewalResult] = await Promise.all([
+    const [attendanceResult, productsResult, renewalResult, planChangeResult] = await Promise.all([
         client.from('attendance').select('*').eq('member_id', row.id).order('time_in', { ascending: false }),
         client.from('products').select('*').eq('is_active', true).order('name'),
         client.from('membership_applications').select('id')
             .eq('auth_user_id', user.id).eq('application_type', 'renewal').eq('status', 'pending')
+            .limit(1).maybeSingle(),
+        client.from('membership_applications').select('id')
+            .eq('auth_user_id', user.id).eq('application_type', 'plan_change').eq('status', 'pending')
             .limit(1).maybeSingle()
     ]);
     if (attendanceResult.error) {
@@ -1158,6 +1230,12 @@ async function loadSupabaseMember() {
     } else {
         memberHasPendingRenewal = Boolean(renewalResult.data);
     }
+    if (planChangeResult.error) {
+        console.error('Could not load pending plan-change status:', planChangeResult.error);
+        memberHasPendingPlanChange = false;
+    } else {
+        memberHasPendingPlanChange = Boolean(planChangeResult.data);
+    }
     if (customerRenewalChannel) client.removeChannel(customerRenewalChannel);
     customerRenewalChannel = client.channel(`customer-renewal-${row.id}`)
         .on('postgres_changes', {
@@ -1166,14 +1244,16 @@ async function loadSupabaseMember() {
             table: 'membership_applications',
             filter: `auth_user_id=eq.${user.id}`
         }, async () => {
-            const { data, error: refreshError } = await client.from('membership_applications').select('id')
-                .eq('auth_user_id', user.id).eq('application_type', 'renewal').eq('status', 'pending')
-                .limit(1).maybeSingle();
-            if (refreshError) {
-                console.error('Could not refresh pending renewal status:', refreshError);
+            const [renewalRefresh, planChangeRefresh] = await Promise.all([
+                client.from('membership_applications').select('id').eq('auth_user_id', user.id).eq('application_type', 'renewal').eq('status', 'pending').limit(1).maybeSingle(),
+                client.from('membership_applications').select('id').eq('auth_user_id', user.id).eq('application_type', 'plan_change').eq('status', 'pending').limit(1).maybeSingle()
+            ]);
+            if (renewalRefresh.error || planChangeRefresh.error) {
+                console.error('Could not refresh pending membership-request status:', renewalRefresh.error || planChangeRefresh.error);
                 return;
             }
-            memberHasPendingRenewal = Boolean(data);
+            memberHasPendingRenewal = Boolean(renewalRefresh.data);
+            memberHasPendingPlanChange = Boolean(planChangeRefresh.data);
             renderRenewalEligibility(supabaseMember);
             updateMemberStatus();
             renderMembershipProgress();
