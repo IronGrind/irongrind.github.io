@@ -612,7 +612,14 @@ async function loadStaffRequests() {
         const { data, error } = await staffClient.rpc('staff_pending_membership_requests');
         if (error) throw error;
         list.replaceChildren();
-        for (const request of data || []) {
+        const newestFirst = [...(data || [])].sort((a, b) => {
+            const submittedAt = value => {
+                const parsed = Date.parse(value || '');
+                return Number.isFinite(parsed) ? parsed : 0;
+            };
+            return submittedAt(b.submitted_at) - submittedAt(a.submitted_at);
+        });
+        for (const request of newestFirst) {
             const card = document.createElement('article'); card.className = 'staff-request-card';
             card.dataset.searchText = `${request.full_name} ${request.plan}`.toLowerCase();
             card.dataset.requestType = request.application_type;

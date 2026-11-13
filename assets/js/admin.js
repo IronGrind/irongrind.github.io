@@ -736,14 +736,22 @@ function viewMemberDetails(id) {
 }
 
 /* ========== RENDER: APPROVALS ========== */
+function compareApplicationsNewestFirst(a, b) {
+    const timestamp = value => {
+        const parsed = Date.parse(value || '');
+        return Number.isFinite(parsed) ? parsed : 0;
+    };
+    return timestamp(b.submittedAt) - timestamp(a.submittedAt);
+}
+
 function renderApprovals(type = currentApprovalType) {
     const isRenewal = type === 'renewal';
     const isPlanChange = type === 'plan_change';
     const el = document.getElementById(isPlanChange ? 'planChangeApprovalsList' : isRenewal ? 'renewalApprovalsList' : 'registrationApprovalsList');
     const allPending = pendingApprovals.filter(p => p.status === 'pending');
-    const registrations = allPending.filter(p => !['dashboard-renewal', 'dashboard-plan-change'].includes(p.source));
-    const renewals = allPending.filter(p => p.source === 'dashboard-renewal');
-    const planChanges = allPending.filter(p => p.source === 'dashboard-plan-change');
+    const registrations = allPending.filter(p => !['dashboard-renewal', 'dashboard-plan-change'].includes(p.source)).sort(compareApplicationsNewestFirst);
+    const renewals = allPending.filter(p => p.source === 'dashboard-renewal').sort(compareApplicationsNewestFirst);
+    const planChanges = allPending.filter(p => p.source === 'dashboard-plan-change').sort(compareApplicationsNewestFirst);
     document.getElementById('approvalsCount').textContent = allPending.length;
     document.getElementById('registrationApprovalsCount').textContent = registrations.length;
     document.getElementById('renewalApprovalsCount').textContent = renewals.length;

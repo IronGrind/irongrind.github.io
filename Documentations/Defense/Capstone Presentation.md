@@ -684,3 +684,9 @@ Login keyboard flow: Press Enter after typing the email/username to move directl
 Member dashboard approval refresh: When staff/admin approves a member's renewal or plan change, the member dashboard now silently reloads the saved plan and membership dates, and updates its status/progress display. The existing approval popup remains. No schema/ERD change. Browser/end-to-end review and deployment remain pending.
 
 Manuscript alignment: Updated Scope and Delimitation and Functional Requirements for attendance roles and member trusted-browser approval. The DFD was left unchanged pending the new process-based diagrams. No application or schema change. Word XML and wording were checked; visual review remains pending.
+
+
+GitHub Pages Jekyll build: Fixed a pre-existing invalid UTF-8 em dash in Capstone Study and Defense Notes.md. Strict UTF-8 decoding now passes locally. No app/database change; GitHub Pages must rebuild from a new pushed commit to confirm the fix.
+
+
+Approval request ordering: Registration, Renewal, and Change Plan request lists on admin and staff dashboards now show the newest submissions first. Existing review workflow and database remain unchanged. Browser review and deployment pending.
