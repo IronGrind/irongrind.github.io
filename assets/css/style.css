@@ -2546,8 +2546,10 @@ html[data-dashboard-theme="light"] body.login-body .application-result-modal p {
 .member-plan-change-refund-notice { display:flex; align-items:flex-start; gap:10px; margin:12px 0 16px; padding:12px 14px; border:1px solid rgba(226,170,74,.35); border-radius:12px; color:#e9d3a5; background:rgba(137,92,23,.12); font-size:.82rem; line-height:1.5; }
 .member-plan-change-refund-notice > i { margin-top:2px; color:#e6ad48; }
 .member-plan-change-refund-notice p { margin:0; }
+.member-plan-refund-badge { flex:0 0 auto; padding:4px 8px; border:1px solid rgba(226,170,74,.42); border-radius:999px; color:#e9c77f; background:rgba(137,92,23,.14); font-size:.67rem; font-weight:700; }
 html[data-dashboard-theme="light"] body.member-dashboard .member-plan-change-refund-notice { color:#674f21; background:#fff8e8; border-color:#e8d4a5; }
 html[data-dashboard-theme="light"] body.member-dashboard .member-plan-change-refund-notice > i { color:#9b6a12; }
+html[data-dashboard-theme="light"] body.member-dashboard .member-plan-refund-badge { color:#795500; background:#fff5da; border-color:#e8d4a5; }
 
 /* Admin dashboard sales trend */
 body.admin-dashboard .dashboard-overview-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }

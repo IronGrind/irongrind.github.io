@@ -784,3 +784,6 @@ Member application decision popups - November 14, 2026: Added in-app approval/re
 
 
 Member plan-change refund notice - November 14, 2026: Added a visible notice in the member plan-change request form stating that plan-change payments are non-refundable and asking members to verify the selected plan and price before submitting and paying at the gym. This clarifies the existing in-person payment workflow; no approval logic, schema, or ERD changed. Validation: source inspection and git diff --check; browser review remains pending.
+
+
+Plan-change refund warning visibility - November 14, 2026: Added a visible Non-refundable badge to the collapsed Change Membership Plan header, while retaining the full explanation inside the expanded form. This keeps the policy visible before members open or submit the request. No workflow or data model change. Validation: source inspection and git diff --check; browser review remains pending.

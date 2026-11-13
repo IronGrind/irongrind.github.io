@@ -661,3 +661,6 @@ Member application decision notices: Members get a popup when registration, rene
 
 
 Plan-change policy notice: The member request form states that plan-change payments are non-refundable and asks members to confirm the plan and price before paying at the gym. No data model or approval workflow changed; browser review remains pending.
+
+
+Plan-change warning visibility: The Non-refundable badge is now visible on the collapsed member plan-change section; the full policy reminder remains inside the form. No workflow/data change; browser review pending.
