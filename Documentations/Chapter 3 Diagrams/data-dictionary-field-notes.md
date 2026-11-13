@@ -83,7 +83,7 @@ Field descriptions retained from the detailed Chapter 3 dictionary before conver
 | created_at | Records when the database record was created. |
 | auth_user_id | Links the record to a managed Supabase Auth account. |
 | member_id | Identifies the member related to this operational record. |
-| application_type | Distinguishes an initial registration application from a membership renewal request. |
+| application_type | Identifies an initial registration, member renewal, or active-member plan-change request; CHECK permits `registration`, `renewal`, or `plan_change`. |
 | submitted_at | Records the submission timestamp associated with an application. |
 | email | Stores the email address associated with the account or submitted record. |
 | username | Retains a legacy username value on older application records. Current member registration uses email and does not collect a username. |

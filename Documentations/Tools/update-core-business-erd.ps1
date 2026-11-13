@@ -17,7 +17,7 @@ Check 'public.members' 'height_unit' 'members_height_unit_check' 'CHECK: cm, in,
 Check 'public.members' 'paid' 'members_paid_check' 'CHECK: at least 0.'
 Check 'public.members' 'status' 'members_status_check' 'CHECK: active, expired, suspended, or inactive.'
 Check 'public.membership_applications' 'age' 'membership_applications_age_check' 'CHECK: 1-120 when not NULL.'
-Check 'public.membership_applications' 'application_type' 'membership_applications_application_type_check' 'CHECK: registration or renewal.'
+Check 'public.membership_applications' 'application_type' 'membership_applications_application_type_check' 'CHECK: registration, renewal, or plan_change.'
 Check 'public.membership_applications' 'height_unit' 'membership_applications_height_unit_check' 'CHECK: cm, in, or ft when not NULL.'
 Check 'public.membership_applications' 'plan_price' 'membership_applications_plan_price_check' 'CHECK: at least 0.'
 Check 'public.membership_applications' 'status' 'membership_applications_status_check' 'CHECK: pending, approved, or rejected.'

@@ -50,7 +50,7 @@ The retained sales.receipt_number column is an internal transaction reference. I
 | `created_at` | `timestamptz` | NOT NULL |
 | `auth_user_id` | `uuid` | Foreign key: `auth.users(id)`; ON DELETE CASCADE; Nullable |
 | `member_id` | `uuid` | Foreign key: `public.members(id)`; ON DELETE SET NULL; Nullable |
-| `application_type` | `varchar(20)` | NOT NULL |
+| `application_type` | `varchar(20)` | NOT NULL; CHECK: `registration`, `renewal`, or `plan_change` |
 | `submitted_at` | `timestamptz` | NOT NULL |
 | `email` | `varchar(254)` | Nullable |
 | `username` | `varchar(30)` | Nullable |
