@@ -11,6 +11,7 @@ let memberHasPendingRenewal = false;
 let memberHasPendingPlanChange = false;
 let customerAttendanceChannel = null;
 let customerRenewalChannel = null;
+let memberApplicationNoticeShown = false;
 (function guardCustomer() {
     session = JSON.parse(
         localStorage.getItem('irongrind_session') ||
@@ -122,6 +123,62 @@ function loadDB(key) {
     catch { return []; }
 }
 function saveDB(key, data) { localStorage.setItem('ig_' + key, JSON.stringify(data)); }
+
+function rememberMemberApplicationNotification(applicationId, userId) {
+    if (!applicationId || !userId) return;
+    const key = 'ig_member_application_notifications_pending';
+    try {
+        const pending = JSON.parse(localStorage.getItem(key) || '[]').filter(item => item?.id !== applicationId);
+        pending.push({ id: applicationId, userId });
+        localStorage.setItem(key, JSON.stringify(pending));
+    } catch (error) { console.warn('Could not save the application notification reference:', error); }
+}
+
+function memberApplicationNoticeSeen(userId, applicationId) {
+    const key = `ig_member_application_notifications_seen_${userId}`;
+    try {
+        const seen = JSON.parse(localStorage.getItem(key) || '[]');
+        if (seen.includes(applicationId)) return true;
+        seen.push(applicationId);
+        localStorage.setItem(key, JSON.stringify(seen.slice(-100)));
+    } catch {}
+    return false;
+}
+
+function showMemberApplicationResult(application, userId) {
+    if (!application?.id || !['approved', 'rejected'].includes(application.status) || memberApplicationNoticeSeen(userId, application.id)) return;
+    memberApplicationNoticeShown = true;
+    const pendingKey = 'ig_member_application_notifications_pending';
+    try {
+        const pending = JSON.parse(localStorage.getItem(pendingKey) || '[]').filter(item => item?.id !== application.id);
+        localStorage.setItem(pendingKey, JSON.stringify(pending));
+    } catch {}
+    const type = application.application_type === 'renewal' ? 'renewal request'
+        : application.application_type === 'plan_change' ? 'plan change request' : 'membership application';
+    const approved = application.status === 'approved';
+    const plan = application.plan ? ` for ${escapeHTML(application.plan)}` : '';
+    openModal(`<section class="member-application-result ${approved ? 'approved' : 'rejected'}" role="dialog" aria-modal="true" aria-labelledby="memberApplicationResultTitle">
+        <div class="member-application-result-icon"><i class="fas ${approved ? 'fa-circle-check' : 'fa-circle-xmark'}" aria-hidden="true"></i></div>
+        <h2 id="memberApplicationResultTitle">${approved ? 'Application approved' : 'Application not approved'}</h2>
+        <p>${approved ? `Your ${type}${plan} has been approved.` : `Your ${type}${plan} was not approved. Please contact gym staff if you need more information.`}</p>
+        ${approved && application.application_type === 'registration' ? '<p>Your membership is now available in your account.</p>' : ''}
+        <div class="onboarding-actions"><button class="btn-primary" type="button" onclick="closeModal()">Got it</button></div>
+    </section>`);
+}
+
+async function checkMemberApplicationNotifications(client, userId) {
+    let pending = [];
+    try { pending = JSON.parse(localStorage.getItem('ig_member_application_notifications_pending') || '[]'); }
+    catch { return; }
+    const ids = pending.filter(item => item?.userId === userId).map(item => item.id);
+    if (!ids.length) return;
+    const { data, error } = await client.from('membership_applications')
+        .select('id, application_type, status, plan')
+        .eq('auth_user_id', userId).in('id', ids);
+    if (error) { console.error('Could not check reviewed application notices:', error); return; }
+    const reviewed = (data || []).find(application => ['approved', 'rejected'].includes(application.status));
+    if (reviewed) showMemberApplicationResult(reviewed, userId);
+}
 
 function saveExpiredMembershipSnapshot(member, renewed = false) {
     if (!member?.expiry || member.expiry >= todayStr()) return;
@@ -279,7 +336,7 @@ function memberTourStorageKey() {
 
 function showMemberWelcome() {
     const storageKey = memberTourStorageKey();
-    if (!storageKey || memberTourActive) return;
+    if (!storageKey || memberTourActive || memberApplicationNoticeShown) return;
     let alreadySeen = false;
     try {
         const legacyKey = `ig_member_tour_seen_${String(session?.username || 'member').toLowerCase()}`;
@@ -765,7 +822,7 @@ async function submitMembershipForm(event) {
 
         const submittedAt = new Date().toISOString();
         const estimatedEndDate = addDays(todayStr(), plan === 'Monthly' ? 30 : plan === 'Half Month' ? 15 : 1);
-        const { error: insertError } = await client.from('membership_applications').insert({
+        const { data: insertedApplication, error: insertError } = await client.from('membership_applications').insert({
             auth_user_id: user.id,
             member_id: member.id,
             application_type: 'renewal',
@@ -782,13 +839,14 @@ async function submitMembershipForm(event) {
             other_medical_conditions: member.otherMedicalConditions || '',
             status: 'pending',
             submitted_at: submittedAt
-        });
+        }).select('id').single();
         if (insertError) {
             console.error('Supabase renewal request failed:', insertError);
             renewalFormMessage(getRenewalSubmissionErrorMessage(insertError), 'error');
             return;
         }
 
+        rememberMemberApplicationNotification(insertedApplication?.id, user.id);
         renewalFormMessage('Renewal request submitted for staff or administrator approval.', 'success');
         memberHasPendingRenewal = true;
         renderRenewalEligibility(member);
@@ -840,14 +898,15 @@ async function submitPlanChangeRequest(event) {
         if (existing) throw new Error('You already have a plan change request waiting for staff or administrator approval.');
 
         const estimatedEndDate = addDays(todayStr(), plan === 'Monthly' ? 30 : plan === 'Half Month' ? 15 : 1);
-        const { error: insertError } = await client.from('membership_applications').insert({
+        const { data: insertedApplication, error: insertError } = await client.from('membership_applications').insert({
             auth_user_id: user.id, member_id: member.id, application_type: 'plan_change',
             full_name: member.name, email: member.email || user.email, username: member.username || session.username,
             mobile: member.contact || null, plan, plan_price: planPrice, start_date: todayStr(), end_date: estimatedEndDate,
             fitness_goals: member.fitnessGoals || [], health_conditions: member.healthConditions || [],
             other_medical_conditions: member.otherMedicalConditions || '', status: 'pending', submitted_at: new Date().toISOString()
-        });
+        }).select('id').single();
         if (insertError) throw new Error(insertError.message || 'The plan change request could not be submitted.');
+        rememberMemberApplicationNotification(insertedApplication?.id, user.id);
         memberHasPendingPlanChange = true;
         planChangeFormMessage('Plan change request submitted. Pay at the gym, then wait for staff or administrator approval.', 'success');
         renderMembershipProgress();
@@ -1259,7 +1318,11 @@ async function loadSupabaseMember() {
             schema: 'public',
             table: 'membership_applications',
             filter: `auth_user_id=eq.${user.id}`
-        }, async () => {
+        }, async payload => {
+            const application = payload?.new;
+            if (application?.id && ['approved', 'rejected'].includes(application.status)) {
+                showMemberApplicationResult(application, user.id);
+            }
             const [renewalRefresh, planChangeRefresh] = await Promise.all([
                 client.from('membership_applications').select('id').eq('auth_user_id', user.id).eq('application_type', 'renewal').eq('status', 'pending').limit(1).maybeSingle(),
                 client.from('membership_applications').select('id').eq('auth_user_id', user.id).eq('application_type', 'plan_change').eq('status', 'pending').limit(1).maybeSingle()
@@ -1278,6 +1341,7 @@ async function loadSupabaseMember() {
     renderRenewalEligibility(supabaseMember);
     updateMemberStatus();
     renderMembershipProgress();
+    await checkMemberApplicationNotifications(client, user.id);
 }
 
 function mapCustomerAttendanceRecord(record) {

@@ -325,6 +325,12 @@ async function insertSupabaseApplication(draft) {
         return false;
     }
     app.id = data.id;
+    try {
+        const pendingKey = 'ig_member_application_notifications_pending';
+        const pending = JSON.parse(localStorage.getItem(pendingKey) || '[]').filter(item => item?.id !== data.id);
+        pending.push({ id: data.id, userId });
+        localStorage.setItem(pendingKey, JSON.stringify(pending));
+    } catch (storageError) { console.warn('Could not save application result notice reference:', storageError); }
     localStorage.removeItem('ig_registration_draft');
     return true;
 }
