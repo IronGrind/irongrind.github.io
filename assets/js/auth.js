@@ -12,6 +12,28 @@ function showError(message) {
     document.getElementById('loginError').classList.remove('hidden');
 }
 
+function showRejectedApplicationPopup(application, userId) {
+    if (!application?.id || !userId) return false;
+    const key = `ig_member_application_notifications_seen_${userId}`;
+    try {
+        const seen = JSON.parse(localStorage.getItem(key) || '[]');
+        if (seen.includes(application.id)) return false;
+        seen.push(application.id);
+        localStorage.setItem(key, JSON.stringify(seen.slice(-100)));
+    } catch {}
+    const overlay = document.createElement('div');
+    overlay.className = 'modal-overlay application-result-overlay';
+    overlay.setAttribute('role', 'dialog');
+    overlay.setAttribute('aria-modal', 'true');
+    overlay.setAttribute('aria-labelledby', 'applicationResultTitle');
+    overlay.innerHTML = `<div class="modal-content application-result-modal"><div class="application-result-icon rejected"><i class="fas fa-circle-xmark" aria-hidden="true"></i></div><h2 id="applicationResultTitle">Application not approved</h2><p>Your membership application was not approved. Please contact gym staff if you need more information.</p><div class="modal-actions"><button type="button" class="btn-primary">Got it</button></div></div>`;
+    overlay.querySelector('button')?.addEventListener('click', () => overlay.remove());
+    overlay.addEventListener('click', event => { if (event.target === overlay) overlay.remove(); });
+    document.body.append(overlay);
+    overlay.querySelector('button')?.focus();
+    return true;
+}
+
 function hideError() {
     document.getElementById('loginError').classList.add('hidden');
 }
@@ -289,7 +311,7 @@ async function handleLogin(event) {
                 if (!member) {
                     const { data: application, error: applicationError } = await supabaseClient
                         .from('membership_applications')
-                        .select('status')
+                        .select('id, status, application_type, plan')
                         .eq('auth_user_id', data.user.id)
                         .order('submitted_at', { ascending: false })
                         .limit(1)
@@ -299,6 +321,7 @@ async function handleLogin(event) {
                         showError('We could not check your application status. Please contact the gym admin.');
                         return;
                     }
+                    if (application?.status === 'rejected' && showRejectedApplicationPopup(application, data.user.id)) return;
                     showError(application?.status === 'rejected'
                         ? 'Your application was not approved. Please contact the gym admin.'
                         : application

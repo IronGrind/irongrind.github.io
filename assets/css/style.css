@@ -2529,6 +2529,21 @@ html[data-dashboard-theme="light"] body.login-body .btn-register:hover { color: 
 .staff-name-fields { display:grid; grid-template-columns:minmax(0,1fr) minmax(100px,.65fr) minmax(0,1fr); gap:14px; }
 @media (max-width:560px) { .staff-name-fields { grid-template-columns:minmax(0,1fr); } }
 
+/* Member application review notices */
+.member-application-result { width:min(100%,460px); padding:12px; text-align:center; }
+.member-application-result-icon, .application-result-icon { margin:0 auto 12px; font-size:2.2rem; }
+.member-application-result.approved .member-application-result-icon,
+.application-result-icon.approved { color:#2ecc71; }
+.member-application-result.rejected .member-application-result-icon,
+.application-result-icon.rejected { color:#d94b55; }
+.member-application-result h2, .application-result-modal h2 { margin:0 0 10px; font-size:1.25rem; }
+.member-application-result p, .application-result-modal p { margin:0 0 12px; color:#a4adc2; line-height:1.55; }
+.member-application-result .onboarding-actions { justify-content:center; margin-top:20px; }
+.application-result-modal { text-align:center; }
+.application-result-modal .application-result-icon { color:#d94b55; }
+html[data-dashboard-theme="light"] body.member-dashboard .member-application-result p,
+html[data-dashboard-theme="light"] body.login-body .application-result-modal p { color:#586579; }
+
 /* Admin dashboard sales trend */
 body.admin-dashboard .dashboard-overview-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
 .dashboard-sales-panel { min-width: 0; }
