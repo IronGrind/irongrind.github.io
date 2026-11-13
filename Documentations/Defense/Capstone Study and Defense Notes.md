@@ -775,3 +775,6 @@ Inventory supplement-form filter - November 14, 2026: Added a Supplement form se
 
 
 Inventory supplement filter placement refinement - November 14, 2026: Moved the Supplement form selector into the existing search/filter toolbar so it aligns with Search inventory and Stock status. On narrow layouts, search takes a full row and the two filters sit together; on small screens controls stack. Filtering behavior is unchanged. Validation: source inspection and git diff --check; browser review remains pending.
+
+
+Sales income summary visual consistency - November 14, 2026: Updated Membership Income to use the same section heading and summary-card styles as Daily Product Income. Membership summary labels, amounts, and sale counts now use the shared dashboard card typography/background; removed the special red treatment from Overall Income. Made the membership summary container transparent in the light theme so it no longer creates a gray block behind the cards. Membership plan breakdown and product income metrics are unchanged. Validation: source inspection and git diff --check; browser review remains pending.

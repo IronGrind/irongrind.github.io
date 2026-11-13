@@ -1260,6 +1260,7 @@ html[data-admin-theme="light"] body.admin-dashboard .stat-label,
 html[data-admin-theme="light"] body.admin-dashboard .stat-sub { color: #68758a; }
 html[data-admin-theme="light"] body.admin-dashboard .membership-income-card.overall { background: #fff0f0; border-color: #e6bcbc; }
 html[data-admin-theme="light"] body.admin-dashboard .membership-income-card.overall strong { color: #8b0000; }
+html[data-admin-theme="light"] body.admin-dashboard #membershipSalesSummary { background:transparent !important; border:0 !important; }
 html[data-admin-theme="light"] body.admin-dashboard .sales-subfilter { color: #596579; background: #fff; border-color: #d5dbe5; }
 html[data-admin-theme="light"] body.admin-dashboard .sales-subfilter.active { color: #7d0909; background: #fff0f0; border-color: #c98282; }
 html[data-admin-theme="light"] body.admin-dashboard .form-group input,

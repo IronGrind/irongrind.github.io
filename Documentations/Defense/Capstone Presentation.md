@@ -652,3 +652,6 @@ Inventory supplement filter: When Supplements is selected, admins can filter by 
 
 
 Inventory filter layout: The Supplement form selector now sits in the same toolbar as Search inventory and Stock status, with responsive wrapping. Filtering logic and product data are unchanged; browser review remains pending.
+
+
+Sales income summary consistency: Membership Income now shares the title and metric-card styling used by Daily Product Income. Plan breakdown data and product income data are unchanged. Browser review remains pending.

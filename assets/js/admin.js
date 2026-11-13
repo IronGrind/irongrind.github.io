@@ -3548,7 +3548,7 @@ function renderSales() {
         const selectedPeriod = getMembershipSalesPeriod();
         const summary = getMembershipIncomeBreakdown(selectedPeriod);
         membershipSummaryEl.classList.remove('hidden');
-        membershipSummaryEl.innerHTML = `<div class="membership-sales-summary-heading"><div><h3>Membership income</h3><p>Paid membership transactions for the selected period</p></div>
+        membershipSummaryEl.innerHTML = `<div class="panel-header membership-sales-summary-heading"><div><h2><i class="fas fa-id-card"></i> Membership Income</h2><p>Paid membership transactions for the selected period</p></div>
             <div class="membership-sales-period-controls">
                 <label>Period<select id="membershipSalesPeriodMode"><option value="day" ${currentMembershipSalesPeriodMode === 'day' ? 'selected' : ''}>Specific day</option><option value="range" ${currentMembershipSalesPeriodMode === 'range' ? 'selected' : ''}>Date range</option><option value="year" ${currentMembershipSalesPeriodMode === 'year' ? 'selected' : ''}>Full year</option></select></label>
                 <label data-membership-sales-period="day" ${currentMembershipSalesPeriodMode !== 'day' ? 'hidden' : ''}>Day<input id="membershipSalesDay" type="date" value="${currentMembershipSalesDay}"></label>
@@ -3556,8 +3556,8 @@ function renderSales() {
                 <label data-membership-sales-period="range" ${currentMembershipSalesPeriodMode !== 'range' ? 'hidden' : ''}>To<input id="membershipSalesTo" type="date" value="${currentMembershipSalesTo}"></label>
                 <label data-membership-sales-period="year" ${currentMembershipSalesPeriodMode !== 'year' ? 'hidden' : ''}>Year<input id="membershipSalesYear" type="number" min="2000" max="2100" step="1" value="${currentMembershipSalesYear}"></label>
             </div></div>
-            <div class="membership-income-cards"><article class="membership-income-card overall"><span>Overall income</span><strong>${formatPeso(summary.totalIncome)}</strong><small>${summary.totalCount} paid sales</small></article>
-                ${summary.rows.map(row => `<article class="membership-income-card"><span>${escapeHTML(row.label)}</span><strong>${formatPeso(row.income)}</strong><small>${row.count} paid sales</small></article>`).join('')}</div>`;
+            <div class="stats-grid walkin-sales-summary membership-income-cards"><article class="stat-card"><div class="stat-label">Overall Income</div><div class="stat-value">${formatPeso(summary.totalIncome)}</div><div class="stat-sub">${summary.totalCount} paid sales</div></article>
+                ${summary.rows.map(row => `<article class="stat-card"><div class="stat-label">${escapeHTML(row.label)}</div><div class="stat-value">${formatPeso(row.income)}</div><div class="stat-sub">${row.count} paid sales</div></article>`).join('')}</div>`;
         document.getElementById('membershipSalesPeriodMode').addEventListener('change', event => updateMembershipSalesPeriod('mode', event.target.value));
         document.getElementById('membershipSalesDay').addEventListener('change', event => updateMembershipSalesPeriod('day', event.target.value));
         document.getElementById('membershipSalesFrom').addEventListener('change', event => updateMembershipSalesPeriod('from', event.target.value));
