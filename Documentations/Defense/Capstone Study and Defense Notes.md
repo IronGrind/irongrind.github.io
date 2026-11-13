@@ -763,3 +763,9 @@ Sales percentage summary layout correction - November 13, 2026: Repositioned the
 
 
 Sales trend percentage labels correction - November 14, 2026: Updated the chart to show percentage change labels directly above the bars, matching the provided grouped-chart reference. Weekly and daily monthly bars compare with the previous day; annual monthly bars compare with the previous month. The separate percentage callout was removed. The first zero-baseline point is labeled New when current sales exist; otherwise it shows 0.0%. Today's sales and transaction-count cards remain below. Validation: source inspection and git diff --check; browser review remains pending.
+
+
+Sales trend zero-baseline label clarification - November 14, 2026: For a bar with positive sales and a zero previous-period baseline, the visible chart label is —% because a percentage cannot be computed from zero; its tooltip identifies new sales and the missing baseline. When both periods have zero sales, the label is 0.0%.
+
+
+Percentage-change edge-case correction - November 14, 2026: Percentage change is calculated as (current period sales - previous period sales) / previous period sales × 100. When the previous period is zero, the rate is undefined regardless of current sales, so the chart now displays —% and the tooltip explains the missing baseline. This replaces the earlier zero-over-zero label. Validation: source inspection and git diff --check; browser review remains pending.

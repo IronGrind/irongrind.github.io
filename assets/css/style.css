@@ -2226,6 +2226,10 @@ body.dashboard-body :is(.table-scroll, #attendanceLogTable, #dashboardAttendance
 .inventory-category-tabs button span { min-width:22px; padding:2px 6px; border-radius:999px; background:#252b35; color:inherit; font-size:.72rem; text-align:center; }
 .inventory-category-section[hidden] { display:none; }
 .inventory-category-section h3 { margin:16px 0 12px; color:#8b95a9; font-size:.9rem; font-weight:600; }
+.inventory-supplement-filter { display:grid; grid-template-columns:minmax(0,280px); gap:6px; margin:10px 0; }
+.inventory-supplement-filter[hidden] { display:none; }
+.inventory-supplement-filter label { color:#8b95a9; font-size:.76rem; font-weight:600; }
+.inventory-supplement-filter select { width:100%; }
 .inventory-result-count { font-size:.8rem; opacity:.7; margin-bottom:20px; }
 .inventory-product-card { display:flex; flex-direction:column; gap:14px; }
 .inventory-product-card > .product-img-wrap { margin-bottom:0; }
@@ -2254,6 +2258,7 @@ html[data-dashboard-theme="light"] body.admin-dashboard .inventory-category-tabs
 html[data-dashboard-theme="light"] body.admin-dashboard .inventory-category-tabs button.active { color:#8b0000; }
 html[data-dashboard-theme="light"] body.admin-dashboard .inventory-category-tabs button span { background:#edf0f4; }
 html[data-dashboard-theme="light"] body.admin-dashboard .inventory-category-section h3 { color:#586579; }
+html[data-dashboard-theme="light"] body.admin-dashboard .inventory-supplement-filter label { color:#586579; }
 html[data-dashboard-theme="light"] body.admin-dashboard .inventory-variant-badge { color:#354052; background:#eef1f5; border-color:#cbd3df; }
 html[data-dashboard-theme="light"] body.admin-dashboard .inventory-stock-block { background:#fff7f6; border-color:#e6cecc; border-left-color:#a71922; }
 @media(max-width:600px) { .inventory-toolbar { grid-template-columns:minmax(0,1fr); gap:0; } }

@@ -58,6 +58,7 @@ let currentApprovalType = 'registration';
 let currentSalesView = 'membership';
 let dashboardSalesPeriod = 'week';
 let inventoryCategoryFilter = 'all';
+let inventorySupplementFormFilter = 'all';
 let currentSalesTransactionType = 'membership';
 let currentSalesSubType = 'all';
 let currentMembershipSalesPeriodMode = 'day';
@@ -543,6 +544,9 @@ function openLowStockInventory(productId) {
     if (search) search.value = product.name;
     const filter = document.getElementById('inventoryStockFilter');
     if (filter) filter.value = 'all';
+    inventorySupplementFormFilter = 'all';
+    const supplementFormFilter = document.getElementById('inventorySupplementFormFilter');
+    if (supplementFormFilter) supplementFormFilter.value = 'all';
     showAdminSection('store');
     const unlocked = Boolean(adminStoreUnlockKey() && localStorage.getItem(adminStoreUnlockKey()) === 'true');
     if (unlocked) renderStore();
@@ -595,9 +599,9 @@ function renderDashboardSalesTrend(today, todayTotal, todayCount) {
             return saleKey === previousKey ? sum + Number(sale.total || 0) : sum;
         }, 0);
         const percent = previousAmount > 0 ? ((amount - previousAmount) / previousAmount) * 100 : null;
-        const percentLabel = percent === null ? (amount > 0 ? '—%' : '0.0%') : `${percent > 0 ? '+' : ''}${percent.toFixed(1)}%`;
+        const percentLabel = percent === null ? '—%' : `${percent > 0 ? '+' : ''}${percent.toFixed(1)}%`;
         const percentClass = percent === null ? 'is-neutral' : percent > 0 ? 'is-up' : percent < 0 ? 'is-down' : 'is-neutral';
-        const tooltip = `${bucket.title}: ${formatPeso(amount)} · ${percent === null && amount > 0 ? 'New sales; no previous baseline' : `${percentLabel} vs previous ${dashboardSalesPeriod === 'year' ? 'month' : 'day'}`}`;
+        const tooltip = `${bucket.title}: ${formatPeso(amount)} · ${percent === null ? `${amount > 0 ? 'New sales' : 'No sales'}; percentage change is undefined without a previous sales baseline` : `${percentLabel} vs previous ${dashboardSalesPeriod === 'year' ? 'month' : 'day'}`}`;
         return `<g><title>${escapeHTML(tooltip)}</title>${showLabel ? `<text class="sales-trend-percent ${percentClass}" x="${x + barWidth / 2}" y="${Math.max(13, y - 7)}" text-anchor="middle">${escapeHTML(percentLabel)}</text>` : ''}<rect class="sales-trend-bar${isToday ? ' is-today' : ''}" x="${x}" y="${y}" width="${barWidth}" height="${height}" rx="${Math.min(7, barWidth / 3)}"></rect>${showLabel ? `<text class="sales-trend-label" x="${x + barWidth / 2}" y="166" text-anchor="middle">${escapeHTML(bucket.label)}</text>` : ''}</g>`;
     }).join('');
     const hasSales = [...totals.values()].some(value => value > 0);
@@ -2735,9 +2739,11 @@ async function unlockStore() {
 function renderStore() {
     const query = (document.getElementById('inventorySearch')?.value || '').trim().toLowerCase();
     const status = document.getElementById('inventoryStockFilter')?.value || 'all';
+    inventorySupplementFormFilter = document.getElementById('inventorySupplementFormFilter')?.value || inventorySupplementFormFilter;
     const visible = products.filter(p => {
         const stock = productStockInSaleUnits(p);
         return (inventoryCategoryFilter === 'all' || p.category === inventoryCategoryFilter)
+            && (inventoryCategoryFilter !== 'Supplement' || inventorySupplementFormFilter === 'all' || (p.supplementForm || 'powder') === inventorySupplementFormFilter)
             && `${p.name} ${p.size || ''} ${productClassification(p)}`.toLowerCase().includes(query)
             && (status === 'all' || (status === 'low' && stock > 0 && productIsLowStock(p))
                 || (status === 'out' && stock <= 0) || (status === 'available' && stock > 0));
@@ -2747,6 +2753,7 @@ function renderStore() {
     document.getElementById('inventoryAllCount').textContent = products.length;
     document.getElementById('inventorySuppCount').textContent = products.filter(p => p.category === 'Supplement').length;
     document.getElementById('inventoryMerchCount').textContent = products.filter(p => p.category === 'Merch').length;
+    document.getElementById('inventorySupplementFormFilterWrap').hidden = inventoryCategoryFilter !== 'Supplement';
     document.querySelectorAll('[data-inventory-category]').forEach(button => {
         const active = button.dataset.inventoryCategory === inventoryCategoryFilter;
         button.classList.toggle('active', active);

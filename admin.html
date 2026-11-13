@@ -250,6 +250,12 @@
                             <button type="button" data-inventory-category="Supplement" aria-pressed="false" onclick="setInventoryCategory('Supplement')">Supplements <span id="inventorySuppCount">0</span></button>
                             <button type="button" data-inventory-category="Merch" aria-pressed="false" onclick="setInventoryCategory('Merch')">Merchandise <span id="inventoryMerchCount">0</span></button>
                         </div>
+                        <div id="inventorySupplementFormFilterWrap" class="inventory-supplement-filter" hidden>
+                            <label for="inventorySupplementFormFilter">Supplement form</label>
+                            <select id="inventorySupplementFormFilter" onchange="renderStore()">
+                                <option value="all">All forms</option><option value="powder">Powder</option><option value="drinkable">Drinkable / liquid</option><option value="capsule">Capsule</option><option value="tablet">Tablet</option><option value="other">Other</option>
+                            </select>
+                        </div>
                         <p id="inventoryResultCount" class="inventory-result-count" role="status" aria-live="polite"></p>
                         <section id="inventorySupplementsSection" class="inventory-category-section" aria-label="Supplements">
                             <h3>Supplements</h3><div class="product-grid" id="supplementsGrid"></div>

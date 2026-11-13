@@ -640,3 +640,9 @@ Sales trend summary layout: The percentage value now appears prominently below t
 
 
 Sales trend percentage labels: Each chart bar displays its percentage change above the bar. Daily bars compare with the previous day; annual month bars compare with the previous month. The separate percentage callout was removed; Today's Sales and paid transaction count remain in the two cards below the chart. Browser review remains pending.
+
+
+Chart label detail: If current sales are positive but the previous baseline is zero, the bar shows —% and its tooltip explains new sales/no baseline. If both periods are zero, it shows 0.0%.
+
+
+Percentage calculation note: Change is calculated against the previous day (or previous month in yearly view). When the previous sales amount is zero, percentage change is undefined; the chart displays —% rather than 0.0%.
