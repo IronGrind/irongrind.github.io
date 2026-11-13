@@ -646,3 +646,6 @@ Chart label detail: If current sales are positive but the previous baseline is z
 
 
 Percentage calculation note: Change is calculated against the previous day (or previous month in yearly view). When the previous sales amount is zero, percentage change is undefined; the chart displays —% rather than 0.0%.
+
+
+Inventory supplement filter: When Supplements is selected, admins can filter by Powder, Drinkable/liquid, Capsule, Tablet, or Other. It uses the existing product form field and does not change product data or schema. Browser review remains pending.

@@ -769,3 +769,6 @@ Sales trend zero-baseline label clarification - November 14, 2026: For a bar wit
 
 
 Percentage-change edge-case correction - November 14, 2026: Percentage change is calculated as (current period sales - previous period sales) / previous period sales × 100. When the previous period is zero, the rate is undefined regardless of current sales, so the chart now displays —% and the tooltip explains the missing baseline. This replaces the earlier zero-over-zero label. Validation: source inspection and git diff --check; browser review remains pending.
+
+
+Inventory supplement-form filter - November 14, 2026: Added a Supplement form selector, shown only when the Supplements category is selected. It filters products by the existing supplement_form value: powder, drinkable/liquid, capsule, tablet, or other. The current stock-status and search filters remain active together. This is a UI filter over existing product fields; no schema or product records changed. Validation: source inspection and git diff --check; browser review remains pending.
