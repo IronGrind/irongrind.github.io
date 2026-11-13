@@ -796,3 +796,6 @@ Plan-change duplicate notice cleanup - November 14, 2026: Removed the inline 'Pl
 
 
 Member disclosure scroll stability - November 14, 2026: Added scroll-position preservation for member collapsible sections such as Available at the Gym. When the section expands or collapses, the clicked summary heading is kept at its prior viewport position, and browser scroll anchoring is disabled on those sections. No membership or store behavior changed. Validation: source inspection and git diff --check; browser interaction review remains pending.
+
+
+Member mobile disclosure scroll correction - November 14, 2026: Updated the disclosure-position handler to preserve the page scroll root on mobile layouts, where customer-main becomes overflow: visible; desktop/tablet layouts continue to preserve the inner customer-main scroller. This corrects the prior scroll preservation targeting the wrong element on mobile. Validation: source inspection and git diff --check; browser/device interaction review remains pending.

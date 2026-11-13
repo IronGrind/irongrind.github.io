@@ -673,3 +673,6 @@ Plan-change notice cleanup: Removed the duplicate inline refund warning. The sec
 
 
 Member page scroll refinement: Expanding/collapsing Available at the Gym and other member disclosure cards now preserves the clicked heading's position to reduce jumps toward the bottom. Browser interaction review remains pending.
+
+
+Mobile scroll correction: The member disclosure handler now preserves document scroll on mobile and the inner dashboard scroller on larger layouts. Device/browser interaction review remains pending.

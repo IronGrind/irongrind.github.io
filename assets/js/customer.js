@@ -1178,8 +1178,11 @@ document.addEventListener('DOMContentLoaded', () => {
     document.addEventListener('click', event => {
         const summary = event.target.closest('summary');
         const disclosure = summary?.parentElement;
-        const scroller = document.querySelector('.customer-main');
-        if (!summary || !disclosure?.matches('details.member-collapsible') || !scroller) return;
+        const mainScroller = document.querySelector('.customer-main');
+        if (!summary || !disclosure?.matches('details.member-collapsible') || !mainScroller) return;
+        const mainOverflow = window.getComputedStyle(mainScroller).overflowY;
+        const scroller = mainOverflow === 'visible' ? document.scrollingElement : mainScroller;
+        if (!scroller) return;
         const initialTop = summary.getBoundingClientRect().top;
         window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
             const delta = summary.getBoundingClientRect().top - initialTop;
