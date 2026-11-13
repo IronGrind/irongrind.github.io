@@ -12,6 +12,7 @@ let memberHasPendingPlanChange = false;
 let customerAttendanceChannel = null;
 let customerRenewalChannel = null;
 let memberApplicationNoticeShown = false;
+let planChangeSubmissionConfirmed = false;
 (function guardCustomer() {
     session = JSON.parse(
         localStorage.getItem('irongrind_session') ||
@@ -250,6 +251,21 @@ function planChangeFormMessage(message, type = '') {
         status.style.color = type === 'error' ? '#ff7777' : type === 'success' ? '#69d899' : '#b8c0cc';
     }
     if (message) toast(message, type);
+}
+
+function showPlanChangeSubmissionWarning() {
+    openModal(`<section class="member-plan-change-confirm" role="dialog" aria-modal="true" aria-labelledby="planChangeConfirmTitle">
+        <div class="member-plan-change-confirm-icon"><i class="fas fa-circle-exclamation" aria-hidden="true"></i></div>
+        <h2 id="planChangeConfirmTitle">Confirm your plan change</h2>
+        <p>Plan-change payments are non-refundable. Please make sure the selected plan and price are correct before continuing. You will pay at the gym, and the request takes effect only after staff or administrator approval.</p>
+        <div class="member-plan-change-confirm-actions"><button class="btn-sm" type="button" onclick="closeModal()">Cancel</button><button class="btn-primary" type="button" onclick="agreeAndSubmitPlanChange()">I Agree &amp; Submit</button></div>
+    </section>`);
+}
+
+function agreeAndSubmitPlanChange() {
+    planChangeSubmissionConfirmed = true;
+    closeModal();
+    document.getElementById('planChangeForm')?.requestSubmit();
 }
 function openMemberSettings() {
     const dialog = document.getElementById('memberSettingsDialog');
@@ -867,6 +883,11 @@ async function submitMembershipForm(event) {
 
 async function submitPlanChangeRequest(event) {
     event.preventDefault();
+    if (!planChangeSubmissionConfirmed) {
+        showPlanChangeSubmissionWarning();
+        return;
+    }
+    planChangeSubmissionConfirmed = false;
     const form = event.currentTarget || document.getElementById('planChangeForm');
     const submitButton = form?.querySelector('button[type="submit"]');
     if (submitButton?.disabled) return;

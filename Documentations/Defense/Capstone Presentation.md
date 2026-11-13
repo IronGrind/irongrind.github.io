@@ -664,3 +664,6 @@ Plan-change policy notice: The member request form states that plan-change payme
 
 
 Plan-change warning visibility: The Non-refundable badge is now visible on the collapsed member plan-change section; the full policy reminder remains inside the form. No workflow/data change; browser review pending.
+
+
+Plan-change confirmation: Before a request is sent, the member sees a non-refundable payment warning and confirms with 'I Agree & Submit'. Cancel submits nothing. Payment remains in person and changes require staff/admin approval. No schema change; browser review pending.

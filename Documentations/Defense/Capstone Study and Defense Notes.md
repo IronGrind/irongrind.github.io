@@ -787,3 +787,6 @@ Member plan-change refund notice - November 14, 2026: Added a visible notice in 
 
 
 Plan-change refund warning visibility - November 14, 2026: Added a visible Non-refundable badge to the collapsed Change Membership Plan header, while retaining the full explanation inside the expanded form. This keeps the policy visible before members open or submit the request. No workflow or data model change. Validation: source inspection and git diff --check; browser review remains pending.
+
+
+Plan-change submission acknowledgement - November 14, 2026: Clicking Submit Plan Change Request now opens a confirmation dialog stating that payments are non-refundable, asking the member to verify the selected plan/price, and noting that the request takes effect only after gym payment and staff/admin approval. The request is submitted only after the member chooses 'I Agree & Submit'; Cancel returns without submitting. No schema or approval logic changed. Validation: source inspection and git diff --check; browser review remains pending.
