@@ -1176,6 +1176,17 @@ function populateMemberSettings(member) {
 document.addEventListener('DOMContentLoaded', () => {
     window.startMemberDeviceApprovalNotifications?.(window.ironGrindSupabase);
     document.addEventListener('click', event => {
+        const summary = event.target.closest('summary');
+        const disclosure = summary?.parentElement;
+        const scroller = document.querySelector('.customer-main');
+        if (!summary || !disclosure?.matches('details.member-collapsible') || !scroller) return;
+        const initialTop = summary.getBoundingClientRect().top;
+        window.requestAnimationFrame(() => window.requestAnimationFrame(() => {
+            const delta = summary.getBoundingClientRect().top - initialTop;
+            if (Math.abs(delta) > 1) scroller.scrollTop += delta;
+        }));
+    }, true);
+    document.addEventListener('click', event => {
         if (!event.target.closest('.member-account-menu-wrap')) closeMemberAccountMenu();
     });
     document.addEventListener('keydown', event => {
