@@ -3594,6 +3594,7 @@ function renderReports() {
         <div class="report-category-tabs" aria-label="Report categories">
             ${groups.map((group, index) => `<button class="report-category-button${index === 0 ? ' active' : ''}" type="button" data-report-category="${group.id}" aria-pressed="${index === 0 ? 'true' : 'false'}" onclick="selectReportCategory('${group.id}')"><span>${group.name}</span><small>${group.reports.length}</small></button>`).join('')}
         </div>
+        <div class="report-groups-stage" id="reportGroupsStage">
         ${groups.map(group => `
             <section class="report-group" id="report-group-${group.id}" data-report-group="${group.id}" aria-label="${group.name} reports" ${group.id === 'membership' ? '' : 'hidden'}>
                 <div class="report-group-heading">
@@ -3616,6 +3617,7 @@ function renderReports() {
                 </div>
             </section>
         `).join('')}
+        </div>
     `;
     const today = localDateStr();
     document.getElementById('reportsDay').value = today;
@@ -3627,6 +3629,9 @@ function renderReports() {
 }
 
 function selectReportCategory(category) {
+    const stage = document.getElementById('reportGroupsStage');
+    const currentHeight = stage?.getBoundingClientRect().height || 0;
+    if (stage) stage.style.minHeight = `${currentHeight}px`;
     document.querySelectorAll('[data-report-category]').forEach(button => {
         const selected = button.dataset.reportCategory === category;
         button.classList.toggle('active', selected);
@@ -3634,6 +3639,9 @@ function selectReportCategory(category) {
     });
     document.querySelectorAll('[data-report-group]').forEach(group => {
         group.hidden = group.dataset.reportGroup !== category;
+    });
+    if (stage) requestAnimationFrame(() => {
+        stage.style.minHeight = `${Math.max(currentHeight, stage.scrollHeight)}px`;
     });
 }
 

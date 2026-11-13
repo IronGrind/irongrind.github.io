@@ -589,3 +589,7 @@ ERD and manuscript accuracy update: Figure 5's table-and-relationship drawing re
 Reports dashboard usability update: The Reports page adds selected-period summary cards for recorded sales, attendance records, and memberships started, with current active members labeled as a snapshot. Export scope and report period are now clearly distinguished, and report cards show descriptions with direct Preview and Download PDF actions. The summaries use existing records; no schema or transaction behavior changed. Browser review and deployment remain pending.
 
 Reports UI refinement: The report overview now keeps only Total Sales and Attendance Records. Member Archives and Product Archives have separate report cards and exports; Member Archives includes expired memberships and previous plan changes. No schema or transaction behavior changed. Browser review and deployment remain pending.
+
+Reports category separation: Reports are now viewed one category at a time—Membership, Operations, Payments & Sales, or Archives—to reduce visual mixing. Archive reports are separated into Member Archives and Product Archives. The overview keeps only Total Sales and Attendance Records. No data or database behavior changed; browser review and deployment remain pending.
+
+Reports interaction stability: Removed report-card hover movement and kept the category area from collapsing when switching to a shorter group, to reduce apparent button movement and page scroll jumps. Data behavior is unchanged; browser interaction review remains pending.
