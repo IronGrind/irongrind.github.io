@@ -604,3 +604,12 @@ Sales trend percentage: The dashboard shows today's percentage change against ye
 
 
 Sales trend period controls: Admins can switch between the last seven days, current month (daily bars), and current year (monthly bars). Today's paid sales, transaction count, and change versus yesterday remain below the chart. No schema change; browser review remains pending.
+
+
+Low-stock dashboard action: Each low-stock row displays its stock on hand and a Manage button. The button opens inventory with that product searched; existing inventory unlock and Restock/Edit controls remain in effect. Browser review remains pending.
+
+
+Inventory UI refinement: Category tabs separate All Products, Supplements, and Merchandise and display product counts. Search and stock-status filtering remain available. Stock-on-hand is more prominent in product cards; existing Restock and Edit controls remain. No schema change; browser review remains pending.
+
+
+Inventory card alignment: Product cards reserve consistent space for two title lines and the price block, keeping price and stock details aligned when names wrap. Long names remain available on hover. Browser visual review remains pending.

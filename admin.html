@@ -245,11 +245,18 @@
                             <div class="form-group"><label for="inventorySearch">Search inventory</label><input id="inventorySearch" type="search" placeholder="Product, type, or size" oninput="renderStore()"></div>
                             <div class="form-group"><label for="inventoryStockFilter">Stock status</label><select id="inventoryStockFilter" onchange="renderStore()"><option value="all">All products</option><option value="low">Low stock</option><option value="out">Out of stock</option><option value="available">In stock</option></select></div>
                         </div>
+                        <div class="inventory-category-tabs" role="group" aria-label="Inventory category">
+                            <button type="button" class="active" data-inventory-category="all" aria-pressed="true" onclick="setInventoryCategory('all')">All Products <span id="inventoryAllCount">0</span></button>
+                            <button type="button" data-inventory-category="Supplement" aria-pressed="false" onclick="setInventoryCategory('Supplement')">Supplements <span id="inventorySuppCount">0</span></button>
+                            <button type="button" data-inventory-category="Merch" aria-pressed="false" onclick="setInventoryCategory('Merch')">Merchandise <span id="inventoryMerchCount">0</span></button>
+                        </div>
                         <p id="inventoryResultCount" class="inventory-result-count" role="status" aria-live="polite"></p>
-                        <h3 style="font-size:0.9rem; font-weight:600; margin-bottom:12px; color:#8b95a9;">Supplements</h3>
-                        <div class="product-grid" id="supplementsGrid"></div>
-                        <h3 style="font-size:0.9rem; font-weight:600; margin:24px 0 12px; color:#8b95a9;">Gym Merchandise</h3>
-                        <div class="product-grid" id="merchGrid"></div>
+                        <section id="inventorySupplementsSection" class="inventory-category-section" aria-label="Supplements">
+                            <h3>Supplements</h3><div class="product-grid" id="supplementsGrid"></div>
+                        </section>
+                        <section id="inventoryMerchSection" class="inventory-category-section" aria-label="Gym Merchandise">
+                            <h3>Gym Merchandise</h3><div class="product-grid" id="merchGrid"></div>
+                        </section>
                     </div>
                 </div>
             </div>

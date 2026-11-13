@@ -727,3 +727,12 @@ Dashboard sales percentage refinement - November 13, 2026: Added today's paid-sa
 
 
 Dashboard sales trend period controls - November 13, 2026: Added 7-day, current-month, and current-year views to the admin sales trend. The month view groups paid sales by day and the year view by month. Today's paid-sales amount, transaction count, and comparison with yesterday remain visible below the chart. Uses existing sales data only; no schema change. Validation: source inspection and git diff --check; browser review remains pending.
+
+
+Admin dashboard low-stock action - November 13, 2026: Low-stock rows show the current stock quantity and now include a Manage action. It opens the protected inventory section with the product search prefilled, so the administrator can use the existing Restock or Edit controls after unlocking inventory. Existing store access controls remain in force. Validation: source inspection and git diff --check; browser review remains pending.
+
+
+Inventory category and stock visibility refinement - November 13, 2026: Added All Products, Supplements, and Merchandise category tabs with product counts. Selecting a category shows only that product group while existing name/type search and stock-status filters continue to apply. Made stock-on-hand quantity more prominent in each product card; Restock and Edit actions remain available. No data model or inventory workflow changed. Validation: source inspection and git diff --check; browser review remains pending.
+
+
+Inventory card alignment refinement - November 13, 2026: Set a consistent two-line title area and minimum price-block height so product names of different lengths no longer shift the price and stock details within a card row. Long names are visually clamped at two lines and remain available on hover. Presentation-only adjustment. Validation: source inspection and git diff --check; browser visual review remains pending.

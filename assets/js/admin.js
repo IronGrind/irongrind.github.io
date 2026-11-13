@@ -57,6 +57,7 @@ let currentMemberTab = 'members';
 let currentApprovalType = 'registration';
 let currentSalesView = 'membership';
 let dashboardSalesPeriod = 'week';
+let inventoryCategoryFilter = 'all';
 let currentSalesTransactionType = 'membership';
 let currentSalesSubType = 'all';
 let currentMembershipSalesPeriodMode = 'day';
@@ -520,7 +521,7 @@ function renderDashboard() {
 
     const lowList = document.getElementById('lowStockList');
     if (low.length === 0) lowList.innerHTML = '<div class="empty-state">All items are well-stocked.</div>';
-    else lowList.innerHTML = low.map(p => `<div class="low-stock-item" role="status" aria-label="Low stock: ${escapeHTML(p.name)}, ${escapeHTML(formatProductStock(p))} remaining"><div class="low-stock-info"><span class="name">${escapeHTML(p.name)}${p.category === 'Merch' && p.size ? ' — ' + escapeHTML(p.size) : ''}</span><span class="low-stock-badge"><i class="fas fa-triangle-exclamation" aria-hidden="true"></i> LOW STOCK</span></div><span class="qty"><strong>${escapeHTML(formatProductStock(p))}</strong><small>remaining</small></span></div>`).join('');
+    else lowList.innerHTML = low.map(p => `<div class="low-stock-item" aria-label="Low stock: ${escapeHTML(p.name)}, ${escapeHTML(formatProductStock(p))} remaining"><div class="low-stock-info"><span class="name">${escapeHTML(p.name)}${p.category === 'Merch' && p.size ? ' — ' + escapeHTML(p.size) : ''}</span><span class="low-stock-badge"><i class="fas fa-triangle-exclamation" aria-hidden="true"></i> LOW STOCK</span></div><span class="qty"><strong>${escapeHTML(formatProductStock(p))}</strong><small>remaining</small></span><button class="btn-sm low-stock-manage" type="button" onclick="openLowStockInventory('${escapeHTML(p.id)}')"><i class="fas fa-pen-to-square" aria-hidden="true"></i> Manage</button></div>`).join('');
 
     const pending = pendingApprovals.filter(p => p.status === 'pending');
     document.getElementById('pendingBadge').textContent = pending.length;
@@ -532,6 +533,20 @@ function renderDashboard() {
     document.getElementById('dashboardRegistrationNotice')?.classList.toggle('hidden', registrationCount === 0);
     const registrationNoticeText = document.getElementById('dashboardRegistrationNoticeText');
     if (registrationNoticeText) registrationNoticeText.textContent = `${registrationCount} ${registrationCount === 1 ? 'application is' : 'applications are'} waiting for approval.`;
+}
+
+function openLowStockInventory(productId) {
+    const product = products.find(item => String(item.id) === String(productId));
+    if (!product) return;
+    inventoryCategoryFilter = product.category === 'Supplement' || product.category === 'Merch' ? product.category : 'all';
+    const search = document.getElementById('inventorySearch');
+    if (search) search.value = product.name;
+    const filter = document.getElementById('inventoryStockFilter');
+    if (filter) filter.value = 'all';
+    showAdminSection('store');
+    const unlocked = Boolean(adminStoreUnlockKey() && localStorage.getItem(adminStoreUnlockKey()) === 'true');
+    if (unlocked) renderStore();
+    document.getElementById('inventorySearch')?.focus({ preventScroll: true });
 }
 
 function renderDashboardSalesTrend(today, todayTotal, todayCount) {
@@ -2696,16 +2711,33 @@ function renderStore() {
     const status = document.getElementById('inventoryStockFilter')?.value || 'all';
     const visible = products.filter(p => {
         const stock = productStockInSaleUnits(p);
-        return `${p.name} ${p.size || ''} ${productClassification(p)}`.toLowerCase().includes(query)
+        return (inventoryCategoryFilter === 'all' || p.category === inventoryCategoryFilter)
+            && `${p.name} ${p.size || ''} ${productClassification(p)}`.toLowerCase().includes(query)
             && (status === 'all' || (status === 'low' && stock > 0 && productIsLowStock(p))
                 || (status === 'out' && stock <= 0) || (status === 'available' && stock > 0));
     });
     const count = document.getElementById('inventoryResultCount');
     if (count) count.textContent = `${visible.length} of ${products.length} products`;
+    document.getElementById('inventoryAllCount').textContent = products.length;
+    document.getElementById('inventorySuppCount').textContent = products.filter(p => p.category === 'Supplement').length;
+    document.getElementById('inventoryMerchCount').textContent = products.filter(p => p.category === 'Merch').length;
+    document.querySelectorAll('[data-inventory-category]').forEach(button => {
+        const active = button.dataset.inventoryCategory === inventoryCategoryFilter;
+        button.classList.toggle('active', active);
+        button.setAttribute('aria-pressed', String(active));
+    });
     const supp = visible.filter(p => p.category === 'Supplement');
     const merch = visible.filter(p => p.category === 'Merch');
     document.getElementById('supplementsGrid').innerHTML = supp.map(productCard).join('') || '<div class="empty-state">No supplements.</div>';
     document.getElementById('merchGrid').innerHTML = merch.map(productCard).join('') || '<div class="empty-state">No merchandise.</div>';
+    document.getElementById('inventorySupplementsSection').hidden = inventoryCategoryFilter === 'Merch';
+    document.getElementById('inventoryMerchSection').hidden = inventoryCategoryFilter === 'Supplement';
+}
+
+function setInventoryCategory(category) {
+    if (!['all', 'Supplement', 'Merch'].includes(category)) return;
+    inventoryCategoryFilter = category;
+    renderStore();
 }
 
 function productCard(p) {
@@ -2725,7 +2757,7 @@ function productCard(p) {
         <div class="product-card inventory-product-card">
             ${photo ? `<div class="product-img-wrap"><img src="${escapeHTML(photo)}" alt="${escapeHTML(p.name)}" loading="lazy"></div>` : ''}
             <div class="inventory-card-top"><span class="cat">${escapeHTML(productType)}</span><span class="inventory-status ${stock <= 0 ? 'out' : low ? 'low' : 'available'}">${stock <= 0 ? 'Out of stock' : low ? 'Low stock' : 'In stock'}</span></div>
-            <h4>${escapeHTML(p.name)}${!supplement && p.size ? ' — ' + escapeHTML(p.size) : ''}</h4>
+            <h4 title="${escapeHTML(`${p.name}${!supplement && p.size ? ` — ${p.size}` : ''}`)}">${escapeHTML(p.name)}${!supplement && p.size ? ' — ' + escapeHTML(p.size) : ''}</h4>
             <div class="inventory-price"><span class="inventory-field-label">Selling price</span><strong>${formatPeso(quote.amount)}</strong><span>per ${escapeHTML(String(quote.quantity))} ${escapeHTML(productSaleUnitLabel(p))}</span></div>
             <div class="inventory-stock-block"><span class="inventory-field-label">Stock on hand</span><strong>${escapeHTML(stockLabel)}</strong>${conversion ? `<span>${escapeHTML(conversion)}</span>` : ''}<small>Low-stock alert: ≤ ${escapeHTML(thresholdLabel)}</small></div>
             <div class="product-actions">
