@@ -158,9 +158,26 @@ body.admin-dashboard .admin-section { min-height: 100%; flex-shrink: 0; }
 .report-export-controls [hidden] { display: none !important; }
 .report-card-actions { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
 .reports-content { display: flex; flex-direction: column; gap: 24px; margin-top: 4px; }
-.reports-toolbar { display: flex; align-items: center; justify-content: flex-start; gap: 20px; padding: 16px 18px; border: 1px solid rgba(190,201,220,.12); border-radius: 16px; background: #15181e; }
-.reports-toolbar > .report-export-controls { width: 100%; justify-content: flex-start; }
+.reports-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 20px; padding: 16px 18px; border: 1px solid rgba(190,201,220,.12); border-radius: 16px; background: #15181e; }
+.reports-toolbar-copy { min-width: 190px; }
+.reports-toolbar-copy strong { color: #f1f3f7; font-size: .88rem; }
+.reports-toolbar-copy p { max-width: 320px; margin-top: 4px; color: #8b95a9; font-size: .72rem; line-height: 1.45; }
+.reports-toolbar > .report-export-controls { width: auto; flex: 1 1 auto; justify-content: flex-start; }
+.reports-summary-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 205px), 1fr)); gap: 12px; }
+.report-summary-card { display: grid; gap: 8px; min-width: 0; padding: 16px 18px; border: 1px solid rgba(190,201,220,.12); border-radius: 15px; background: #15181e; }
+.report-summary-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; color: #a4adc2; font-size: .75rem; }
+.report-summary-heading i { color: #c34b4b; }
+.report-summary-card > strong { color: #f1f3f7; font-size: clamp(1.2rem, 2vw, 1.65rem); line-height: 1.15; overflow-wrap: anywhere; }
+.report-summary-card > small { color: #737d91; font-size: .68rem; }
+.report-summary-sales { border-color: rgba(195,75,75,.3); background: linear-gradient(135deg, rgba(120,0,0,.17), #15181e 70%); }
+.report-category-tabs { display: flex; gap: 8px; padding: 0 0 2px; overflow-x: auto; scrollbar-width: thin; }
+.report-category-button { display: inline-flex; align-items: center; justify-content: center; gap: 9px; flex: 0 0 auto; min-height: 42px; padding: 8px 14px; border: 1px solid rgba(190,201,220,.13); border-radius: 11px; background: #15181e; color: #9aa5b8; font: inherit; font-size: .78rem; font-weight: 650; cursor: pointer; transition: border-color .16s ease, color .16s ease, background .16s ease; }
+.report-category-button:hover { border-color: rgba(195,75,75,.4); color: #f1f3f7; }
+.report-category-button.active { border-color: rgba(195,75,75,.55); background: rgba(120,0,0,.2); color: #fff; }
+.report-category-button small { display: grid; place-items: center; min-width: 21px; height: 21px; padding: 0 5px; border-radius: 999px; background: rgba(255,255,255,.08); color: inherit; font-size: .65rem; }
+.report-category-button.active small { background: #8b0000; }
 .report-group { display: flex; flex-direction: column; gap: 12px; }
+.report-group[hidden] { display: none !important; }
 .report-group-heading { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; padding-bottom: 9px; border-bottom: 1px solid #282828; }
 .report-group-heading h3 { color: #f1f3f7; font-size: .95rem; font-weight: 700; }
 .report-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 12px; }
@@ -168,7 +185,10 @@ body.admin-dashboard .admin-section { min-height: 100%; flex-shrink: 0; }
 .report-card:hover { transform: translateY(-2px); border-color: rgba(195,75,75,.42); background: rgba(19,23,31,.9); }
 .report-card-icon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: rgba(120,0,0,.18); color: #c34b4b; }
 .report-card-copy h4 { color: #f1f3f7; font-size: .9rem; font-weight: 650; }
+.report-card-copy p { margin-top: 5px; color: #8b95a9; font-size: .74rem; line-height: 1.45; }
 .report-card-actions { grid-column: 1 / -1; margin-top: 2px; }
+.report-card-actions .btn-sm, .report-card-actions .btn-primary { min-height: 36px; justify-content: center; padding: 7px 12px; border-radius: 9px; font-size: .73rem; }
+.report-card-actions .btn-primary { background: #780000; }
 .report-actions-menu { position: relative; display: inline-flex; }
 .report-actions-menu-popover { position: absolute; z-index: 20; right: 0; bottom: calc(100% + 7px); width: max-content; min-width: 190px; padding: 5px; border: 1px solid rgba(190,201,220,.16); border-radius: 10px; background: #171b23; box-shadow: 0 10px 24px rgba(0,0,0,.35); }
 .report-actions-menu-popover[hidden] { display: none; }
@@ -272,6 +292,7 @@ body.admin-dashboard .admin-section { min-height: 100%; flex-shrink: 0; }
 .progress-alert .btn-sm { margin-left: auto; white-space: nowrap; }
 @media (max-width: 760px) {
     .reports-toolbar { align-items: stretch; flex-direction: column; }
+    .reports-toolbar > .report-export-controls { width: 100%; }
     .report-export-controls { justify-content: flex-start; }
     .transaction-filter-row { align-items: flex-start; flex-direction: column; }
     #salesTransactionsPanel { min-height: 620px; }
@@ -1259,6 +1280,15 @@ html[data-admin-theme="light"] body.admin-dashboard .report-card { background: #
 html[data-admin-theme="light"] body.admin-dashboard .staff-account-name,
 html[data-admin-theme="light"] body.admin-dashboard .member-detail-field strong,
 html[data-admin-theme="light"] body.admin-dashboard .report-card-copy h4 { color: #293447; }
+html[data-admin-theme="light"] body.admin-dashboard .reports-toolbar,
+html[data-admin-theme="light"] body.admin-dashboard .report-summary-card { background: #fff; border-color: #dce1e9; }
+html[data-admin-theme="light"] body.admin-dashboard .reports-toolbar-copy strong,
+html[data-admin-theme="light"] body.admin-dashboard .report-summary-card > strong { color: #293447; }
+html[data-admin-theme="light"] body.admin-dashboard .reports-toolbar-copy p,
+html[data-admin-theme="light"] body.admin-dashboard .report-summary-heading,
+html[data-admin-theme="light"] body.admin-dashboard .report-summary-card > small { color: #68758a; }
+html[data-admin-theme="light"] body.admin-dashboard .report-summary-sales { background: linear-gradient(135deg, #fff0f0, #fff 75%); border-color: #ead1d1; }
+html[data-admin-theme="light"] body.admin-dashboard .report-card-copy p { color: #68758a; }
 html[data-admin-theme="light"] body.admin-dashboard .staff-account-meta,
 html[data-admin-theme="light"] body.admin-dashboard .member-detail-field span,
 html[data-admin-theme="light"] body.admin-dashboard .report-card-copy p { color: #68758a; }

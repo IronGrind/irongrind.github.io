@@ -3530,26 +3530,36 @@ function captureExpiredMemberships() {
 function renderReports() {
     const groups = [
         {
+            id: 'membership',
             name: 'Membership',
             reports: [
-                { id: 'membership', name: 'Membership Report', icon: 'fa-id-card' },
-                { id: 'member-status', name: 'Member Status', icon: 'fa-user-check' },
-                { id: 'renewals', name: 'Renewal Report', icon: 'fa-rotate' },
-                { id: 'archives', name: 'Archives', icon: 'fa-box-archive' }
+                { id: 'membership', name: 'Membership Report', description: 'Memberships started and recorded membership income.', icon: 'fa-id-card' },
+                { id: 'member-status', name: 'Member Status', description: 'Current active, expired, and inactive membership snapshot.', icon: 'fa-user-check' },
+                { id: 'renewals', name: 'Renewal Report', description: 'Renewal requests and their recorded payment details.', icon: 'fa-rotate' }
             ]
         },
         {
-            name: 'Daily Operations',
+            id: 'operations',
+            name: 'Operations',
             reports: [
-                { id: 'attendance', name: 'Attendance Report', icon: 'fa-clipboard-user' },
-                { id: 'inventory', name: 'Inventory Report', icon: 'fa-boxes-stacked' }
+                { id: 'attendance', name: 'Attendance Report', description: 'Member attendance records for the selected period.', icon: 'fa-clipboard-user' },
+                { id: 'inventory', name: 'Inventory Report', description: 'Current product stock and price snapshot.', icon: 'fa-boxes-stacked' }
             ]
         },
         {
+            id: 'payments',
             name: 'Payments & Sales',
             reports: [
-                { id: 'payment', name: 'Payment Report', icon: 'fa-money-bill-wave' },
-                { id: 'sales', name: 'Sales Report', icon: 'fa-coins' }
+                { id: 'payment', name: 'Payment Report', description: 'Recorded payment transactions for the selected period.', icon: 'fa-money-bill-wave' },
+                { id: 'sales', name: 'Sales Report', description: 'Sales transactions and totals for the selected period.', icon: 'fa-coins' }
+            ]
+        },
+        {
+            id: 'archives',
+            name: 'Archives',
+            reports: [
+                { id: 'member-archives', name: 'Member Archives', description: 'Expired memberships and previous membership plans.', icon: 'fa-user-clock' },
+                { id: 'product-archives', name: 'Product Archives', description: 'Products removed from the active inventory.', icon: 'fa-box-archive' }
             ]
         }
     ];
@@ -3557,15 +3567,19 @@ function renderReports() {
     grid.className = 'reports-content';
     grid.innerHTML = `
         <div class="reports-toolbar">
+            <div class="reports-toolbar-copy">
+                <strong>Report filters</strong>
+                <p>Date selection updates the summary, report previews, and exports. Status and inventory reports show current snapshots.</p>
+            </div>
             <div class="report-export-controls">
-                <label>Area<select id="reportsExportArea" onchange="updateReportExportAction()"><option value="all">All report areas</option><option value="membership">Membership</option><option value="member-status">Member Status</option><option value="renewals">Renewals</option><option value="archives">Archives</option><option value="attendance">Attendance</option><option value="inventory">Inventory</option><option value="payment">Payments</option><option value="sales">Sales</option></select></label>
-                <label>Period<select id="reportsPeriodMode" onchange="updateReportPeriodControls()"><option value="day">Specific day</option><option value="range">Date range</option><option value="year">Full year</option></select></label>
-                <label data-report-period="day">Day<input id="reportsDay" type="date"></label>
-                <label data-report-period="range" hidden>From<input id="reportsFrom" type="date"></label>
-                <label data-report-period="range" hidden>To<input id="reportsTo" type="date"></label>
-                <label data-report-period="year" hidden>Year<input id="reportsYear" type="number" min="2000" max="2100" step="1"></label>
+                <label>Export scope<select id="reportsExportArea" onchange="updateReportExportAction()"><option value="all">All reports</option><option value="membership">Membership</option><option value="member-status">Member Status</option><option value="renewals">Renewals</option><option value="member-archives">Member Archives</option><option value="product-archives">Product Archives</option><option value="attendance">Attendance</option><option value="inventory">Inventory</option><option value="payment">Payments</option><option value="sales">Sales</option></select></label>
+                <label>Report period<select id="reportsPeriodMode" onchange="updateReportPeriodControls()"><option value="day">Specific day</option><option value="range">Date range</option><option value="year">Full year</option></select></label>
+                <label data-report-period="day">Day<input id="reportsDay" type="date" onchange="refreshReportSummary()"></label>
+                <label data-report-period="range">From<input id="reportsFrom" type="date" onchange="refreshReportSummary()"></label>
+                <label data-report-period="range">Through<input id="reportsTo" type="date" onchange="refreshReportSummary()"></label>
+                <label data-report-period="year">Year<input id="reportsYear" type="number" min="2000" max="2100" step="1" onchange="refreshReportSummary()"></label>
                 <div class="report-actions-menu">
-                    <button class="report-icon-btn" type="button" onclick="toggleReportActionsMenu(this)" aria-label="Report actions" title="Report actions" aria-expanded="false"><i class="fas fa-bars" aria-hidden="true"></i></button>
+                    <button class="btn-sm report-actions-trigger" type="button" onclick="toggleReportActionsMenu(this)" aria-label="Export and print" title="Export and print" aria-expanded="false"><i class="fas fa-file-export" aria-hidden="true"></i> Export</button>
                     <div class="report-actions-menu-popover" role="menu" hidden>
                         <button id="reportsExportMenuItem" type="button" role="menuitem" onclick="closeReportActionsMenus(); exportAllReports()"><i class="fas fa-file-pdf" aria-hidden="true"></i> Export as PDF</button>
                         <button type="button" role="menuitem" onclick="closeReportActionsMenus(); printSelectedReport()"><i class="fas fa-print" aria-hidden="true"></i> Print selected</button>
@@ -3573,8 +3587,15 @@ function renderReports() {
                 </div>
             </div>
         </div>
+        <section class="reports-summary-grid" aria-label="Report summary" aria-live="polite">
+            <article class="report-summary-card report-summary-sales"><div class="report-summary-heading"><span>Total sales</span><i class="fas fa-coins" aria-hidden="true"></i></div><strong id="reportsSummarySales">--</strong><small id="reportsSummarySalesCount">-- recorded transactions</small></article>
+            <article class="report-summary-card"><div class="report-summary-heading"><span>Attendance records</span><i class="fas fa-clipboard-user" aria-hidden="true"></i></div><strong id="reportsSummaryAttendance">--</strong><small>For the selected period</small></article>
+        </section>
+        <div class="report-category-tabs" aria-label="Report categories">
+            ${groups.map((group, index) => `<button class="report-category-button${index === 0 ? ' active' : ''}" type="button" data-report-category="${group.id}" aria-pressed="${index === 0 ? 'true' : 'false'}" onclick="selectReportCategory('${group.id}')"><span>${group.name}</span><small>${group.reports.length}</small></button>`).join('')}
+        </div>
         ${groups.map(group => `
-            <section class="report-group" aria-label="${group.name} reports">
+            <section class="report-group" id="report-group-${group.id}" data-report-group="${group.id}" aria-label="${group.name} reports" ${group.id === 'membership' ? '' : 'hidden'}>
                 <div class="report-group-heading">
                     <h3>${group.name}</h3>
                 </div>
@@ -3584,9 +3605,11 @@ function renderReports() {
                             <div class="report-card-icon"><i class="fas ${report.icon}" aria-hidden="true"></i></div>
                             <div class="report-card-copy">
                                 <h4>${report.name}</h4>
+                                <p>${report.description}</p>
                             </div>
                             <div class="report-card-actions" aria-label="${report.name} actions">
-                                <button class="report-icon-btn" type="button" onclick="viewReportPDF('${report.id}')" aria-label="Preview ${report.name}" title="Preview"><i class="fas fa-eye" aria-hidden="true"></i></button>
+                                <button class="btn-sm" type="button" onclick="viewReportPDF('${report.id}')"><i class="fas fa-eye" aria-hidden="true"></i> Preview</button>
+                                <button class="btn-primary" type="button" onclick="downloadReportPDF('${report.id}')"><i class="fas fa-download" aria-hidden="true"></i> Download PDF</button>
                             </div>
                         </article>
                     `).join('')}
@@ -3603,9 +3626,39 @@ function renderReports() {
     updateReportExportAction();
 }
 
+function selectReportCategory(category) {
+    document.querySelectorAll('[data-report-category]').forEach(button => {
+        const selected = button.dataset.reportCategory === category;
+        button.classList.toggle('active', selected);
+        button.setAttribute('aria-pressed', String(selected));
+    });
+    document.querySelectorAll('[data-report-group]').forEach(group => {
+        group.hidden = group.dataset.reportGroup !== category;
+    });
+}
+
 function updateReportPeriodControls() {
     const mode = document.getElementById('reportsPeriodMode')?.value || 'day';
     document.querySelectorAll('[data-report-period]').forEach(label => { label.hidden = label.dataset.reportPeriod !== mode; });
+    refreshReportSummary();
+}
+
+function refreshReportSummary() {
+    const salesValue = document.getElementById('reportsSummarySales');
+    if (!salesValue) return;
+    try {
+        const period = getSelectedReportPeriod();
+        const periodSales = sales.filter(sale => reportDateMatchesPeriod(sale.date || sale.createdAt, period));
+        const salesTotal = periodSales.reduce((sum, sale) => sum + (Number(sale.total) || 0), 0);
+        const visits = attendance.filter(record => reportDateMatchesPeriod(record.date, period)).length;
+        salesValue.textContent = new Intl.NumberFormat('en-PH', { style: 'currency', currency: 'PHP' }).format(salesTotal);
+        document.getElementById('reportsSummarySalesCount').textContent = `${periodSales.length} recorded ${periodSales.length === 1 ? 'transaction' : 'transactions'}`;
+        document.getElementById('reportsSummaryAttendance').textContent = visits.toLocaleString('en-PH');
+    } catch (error) {
+        salesValue.textContent = '—';
+        document.getElementById('reportsSummarySalesCount').textContent = error.message;
+        document.getElementById('reportsSummaryAttendance').textContent = '—';
+    }
 }
 
 function updateReportExportAction() {
@@ -3710,6 +3763,29 @@ function getRenewalReportRows() {
     );
     return [...approvedPortalRenewals, ...otherRenewalSales]
         .sort((a, b) => String(b.date || '').localeCompare(String(a.date || '')));
+}
+
+function getArchiveReportRows(type, period) {
+    if (type !== 'product-archives') captureExpiredMemberships();
+    const rows = [];
+    if (['archives', 'member-archives'].includes(type)) {
+        membershipArchives.filter(isMembershipArchiveReady).forEach(record => rows.push({
+            kind: 'expired-membership', member: record.memberName, plan: record.plan || '-',
+            previousExpiry: '-', archivedAt: record.expiry || '-', date: record.archivedAt || record.expiry
+        }));
+        planArchives.forEach(record => rows.push({
+            kind: 'plan-change', member: record.memberName,
+            plan: `${record.previousPlan || '-'} to ${record.newPlan || '-'}`,
+            previousExpiry: record.previousExpiry || '-', archivedAt: record.changedAt || '-', date: record.changedAt
+        }));
+    }
+    if (['archives', 'product-archives'].includes(type)) {
+        archivedProducts.forEach(product => rows.push({
+            kind: 'product', product: product.name, category: product.category || '-', size: product.size || '-',
+            price: Number(product.price) || 0, archivedAt: product.archivedAt || '-', date: product.archivedAt
+        }));
+    }
+    return period ? rows.filter(row => reportDateMatchesPeriod(row.date, period)) : rows;
 }
 
 function groupAttendanceByMonth(records) {
@@ -3872,7 +3948,7 @@ function printReportPDF(type, inAppPreview = false) {
         return;
     }
 
-    const reportNames = { membership: 'Membership', 'member-status': 'Member Status', archives: 'Archives', payment: 'Payment', attendance: 'Attendance', renewals: 'Membership Renewal', inventory: 'Inventory', sales: 'Sales' };
+    const reportNames = { membership: 'Membership', 'member-status': 'Member Status', 'member-archives': 'Member Archives', 'product-archives': 'Product Archives', payment: 'Payment', attendance: 'Attendance', renewals: 'Membership Renewal', inventory: 'Inventory', sales: 'Sales' };
     const reportTitle = `${reportNames[type] || 'Gym'} Report`;
     let columns = [];
     let rows = [];
@@ -3891,6 +3967,20 @@ function printReportPDF(type, inAppPreview = false) {
             cells: [member.name, member.registrationSource || 'Not recorded', member.plan || '—', member.expiry || '—'],
             status: getMemberActivityStatus(member)
         }));
+    } else if (type === 'member-archives') {
+        columns = ['Record Type', 'Member', 'Plan / Change', 'Previous Expiry', 'Archived / Changed'];
+        rows = getArchiveReportRows(type).map(record => ({
+            cells: [record.kind === 'plan-change' ? 'Plan change' : 'Expired membership', record.member, record.plan, record.previousExpiry, record.archivedAt],
+            date: record.date
+        }));
+        dateForRow = row => row.date;
+    } else if (type === 'product-archives') {
+        columns = ['Product', 'Category', 'Size', 'Price', 'Archived'];
+        rows = getArchiveReportRows(type).map(record => ({
+            cells: [record.product, record.category, record.size, formatPeso(record.price), record.archivedAt],
+            date: record.date
+        }));
+        dateForRow = row => row.date;
     } else if (type === 'archives') {
         captureExpiredMemberships();
         columns = ['Record Type', 'Member / Product', 'Category / Details', 'Plan / Details', 'Previous Plan', 'New Plan', 'Started', 'Expired / Archived', 'New Expiry', 'Fee', 'New Fee', 'Recorded'];
@@ -3908,6 +3998,8 @@ function printReportPDF(type, inAppPreview = false) {
                 date: product.archivedAt
             }))
         ];
+        if (type === 'member-archives') rows = rows.filter(row => row.cells[0] !== 'Archived product');
+        if (type === 'product-archives') rows = rows.filter(row => row.cells[0] === 'Archived product');
         dateForRow = row => row.date;
     } else if (type === 'payment' || type === 'sales') {
         columns = ['Transaction reference', 'Customer', 'Total', 'Date', 'Status'];
@@ -3942,7 +4034,7 @@ function printReportPDF(type, inAppPreview = false) {
 
     // Keep status and inventory reports as current snapshots. Dated reports
     // follow the period selected in the Reports toolbar.
-    if (['membership', 'archives', 'payment', 'sales', 'renewals', 'attendance'].includes(type)) {
+    if (['membership', 'archives', 'member-archives', 'product-archives', 'payment', 'sales', 'renewals', 'attendance'].includes(type)) {
         rows = rows.filter(row => reportDateMatchesPeriod(dateForRow(row), selectedPeriod));
     }
 
@@ -4043,6 +4135,8 @@ function createMonthlyReportPDF(type, period) {
     const reportNames = {
         membership: 'Membership Report',
         'member-status': 'Member Status Report',
+        'member-archives': 'Member Archives Report',
+        'product-archives': 'Product Archives Report',
         archives: 'Archives Report',
         payment: 'Payment Report',
         attendance: 'Attendance Report',
@@ -4069,6 +4163,17 @@ function createMonthlyReportPDF(type, period) {
             member.plan || '-',
             member.expiry || '-'
         ])));
+    } else if (type === 'member-archives' || type === 'product-archives') {
+        const archiveRows = getArchiveReportRows(type, period);
+        if (type === 'member-archives') {
+            sections.push(rowsFor(['Record Type', 'Member', 'Plan / Change', 'Previous Expiry', 'Archived / Changed'], archiveRows.map(record => [
+                record.kind === 'plan-change' ? 'Plan change' : 'Expired membership', record.member, record.plan, record.previousExpiry, record.archivedAt
+            ])));
+        } else {
+            sections.push(rowsFor(['Product', 'Category', 'Size', 'Price', 'Archived'], archiveRows.map(record => [
+                record.product, record.category, record.size, `PHP ${record.price.toFixed(2)}`, record.archivedAt
+            ])));
+        }
     } else if (type === 'archives') {
         captureExpiredMemberships();
         const archivedRows = [
@@ -4108,7 +4213,7 @@ function createMonthlyReportPDF(type, period) {
         ])));
     }
 
-    const doc = new JsPDF({ orientation: ['archives', 'payment', 'sales', 'renewals'].includes(type) ? 'landscape' : 'portrait', unit: 'pt', format: 'a4' });
+    const doc = new JsPDF({ orientation: ['archives', 'member-archives', 'product-archives', 'payment', 'sales', 'renewals'].includes(type) ? 'landscape' : 'portrait', unit: 'pt', format: 'a4' });
     const reportTitle = reportNames[type] || 'Iron Grind Report';
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(16);
@@ -4185,12 +4290,13 @@ async function exportAllReports() {
         toast(`Could not load ${missingTools.join(' and ')}. Reload the page and try again.`, 'error');
         return;
     }
-    const allTypes = ['membership', 'member-status', 'archives', 'payment', 'attendance', 'renewals', 'inventory', 'sales'];
+    const allTypes = ['membership', 'member-status', 'member-archives', 'product-archives', 'payment', 'attendance', 'renewals', 'inventory', 'sales'];
     const types = selectedArea === 'all' ? allTypes : allTypes.includes(selectedArea) ? [selectedArea] : [];
     const names = {
         membership: 'Membership Report',
         'member-status': 'Member Status Report',
-        archives: 'Archives Report',
+        'member-archives': 'Member Archives Report',
+        'product-archives': 'Product Archives Report',
         payment: 'Payment Report',
         attendance: 'Attendance Report',
         renewals: 'Membership Renewal Report',
@@ -4240,7 +4346,8 @@ async function downloadReportPDF(type) {
     const names = {
         membership: 'Membership Report',
         'member-status': 'Member Status Report',
-        archives: 'Archives Report',
+        'member-archives': 'Member Archives Report',
+        'product-archives': 'Product Archives Report',
         payment: 'Payment Report',
         attendance: 'Attendance Report',
         renewals: 'Membership Renewal Report',
