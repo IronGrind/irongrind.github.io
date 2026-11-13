@@ -1358,9 +1358,12 @@ async function loadSupabaseMember() {
             if (application?.id && ['approved', 'rejected'].includes(application.status)) {
                 showMemberApplicationResult(application, user.id);
             }
-            const [renewalRefresh, planChangeRefresh] = await Promise.all([
+            const shouldRefreshMembership = application?.status === 'approved'
+                && ['renewal', 'plan_change'].includes(application.application_type);
+            const [renewalRefresh, planChangeRefresh, membershipRefresh] = await Promise.all([
                 client.from('membership_applications').select('id').eq('auth_user_id', user.id).eq('application_type', 'renewal').eq('status', 'pending').limit(1).maybeSingle(),
-                client.from('membership_applications').select('id').eq('auth_user_id', user.id).eq('application_type', 'plan_change').eq('status', 'pending').limit(1).maybeSingle()
+                client.from('membership_applications').select('id').eq('auth_user_id', user.id).eq('application_type', 'plan_change').eq('status', 'pending').limit(1).maybeSingle(),
+                shouldRefreshMembership ? refreshCustomerMembership(client, row.id) : Promise.resolve(true)
             ]);
             if (renewalRefresh.error || planChangeRefresh.error) {
                 console.error('Could not refresh pending membership-request status:', renewalRefresh.error || planChangeRefresh.error);
@@ -1377,6 +1380,26 @@ async function loadSupabaseMember() {
     updateMemberStatus();
     renderMembershipProgress();
     await checkMemberApplicationNotifications(client, user.id);
+}
+
+async function refreshCustomerMembership(client, memberId) {
+    const { data, error } = await client.from('members')
+        .select('plan, plan_price, start_date, end_date, expiry_date, status, paid')
+        .eq('id', memberId)
+        .maybeSingle();
+    if (error || !data) {
+        console.error('Could not refresh approved membership details:', error || 'Member record not found.');
+        return false;
+    }
+    Object.assign(supabaseMember, {
+        plan: data.plan,
+        planPrice: Number(data.plan_price) || 0,
+        startDate: data.start_date,
+        expiry: data.expiry_date || data.end_date,
+        status: data.status,
+        paid: typeof data.paid === 'boolean' ? data.paid : Number(data.paid) > 0
+    });
+    return true;
 }
 
 function mapCustomerAttendanceRecord(record) {
