@@ -308,6 +308,9 @@ function openModal(html) {
 async function runWithButtonLoading(button, action, loadingLabel = 'Working…') {
     if (!button || button.disabled) return;
     const originalHTML = button.innerHTML;
+    const originalWidth = button.style.width;
+    const renderedWidth = Math.ceil(button.getBoundingClientRect().width);
+    if (renderedWidth > 0) button.style.width = `${renderedWidth}px`;
     button.disabled = true;
     button.classList.add('is-loading');
     button.setAttribute('aria-busy', 'true');
@@ -322,6 +325,7 @@ async function runWithButtonLoading(button, action, loadingLabel = 'Working…')
         button.classList.remove('is-loading');
         button.removeAttribute('aria-busy');
         button.innerHTML = originalHTML;
+        button.style.width = originalWidth;
     }
 }
 function closeModal(preservePhoneCameraAuthorization = false) {

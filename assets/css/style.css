@@ -227,8 +227,8 @@ body.admin-dashboard .admin-section { min-height: 100%; flex-shrink: 0; }
 .staff-form-footer .activity-help { min-width: 0; margin: 0; color: #8b95a9; font-size: .78rem; line-height: 1.45; }
 .staff-account-list { display: grid; gap: 10px; }
 .staff-detail-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-.staff-account-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 16px; border: 1px solid rgba(190,201,220,.12); border-radius: 14px; background: #15181e; transition: border-color .16s ease, transform .16s ease; }
-.staff-account-card:hover { transform: translateY(-1px); border-color: rgba(195,75,75,.35); }
+.staff-account-card { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 14px; align-items: center; padding: 16px; border: 1px solid rgba(190,201,220,.12); border-radius: 14px; background: #15181e; transition: border-color .16s ease; }
+.staff-account-card:hover { border-color: rgba(195,75,75,.35); }
 .staff-account-name { font-weight: 700; color: #f1f3f7; }
 .staff-account-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; color: #8b95a9; font-size: .76rem; }
 .staff-account-actions { display: flex; gap: 7px; flex-wrap: wrap; justify-content: flex-end; }

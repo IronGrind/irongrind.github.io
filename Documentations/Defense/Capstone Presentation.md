@@ -593,3 +593,5 @@ Reports UI refinement: The report overview now keeps only Total Sales and Attend
 Reports category separation: Reports are now viewed one category at a time—Membership, Operations, Payments & Sales, or Archives—to reduce visual mixing. Archive reports are separated into Member Archives and Product Archives. The overview keeps only Total Sales and Attendance Records. No data or database behavior changed; browser review and deployment remain pending.
 
 Reports interaction stability: Removed report-card hover movement and kept the category area from collapsing when switching to a shorter group, to reduce apparent button movement and page scroll jumps. Data behavior is unchanged; browser interaction review remains pending.
+
+Cross-dashboard interaction stability: Admin and member loading buttons hold their original width while busy. Staff product/account cards no longer move on hover, and staff view changes no longer rely on browser scroll anchoring. The member renewal shortcut centers the form and avoids auto-opening/focusing the plan selector. These are presentation and navigation adjustments only; browser/device review remains pending.

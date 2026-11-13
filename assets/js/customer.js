@@ -180,6 +180,12 @@ function renewalFormMessage(message, type = '') {
     }
     if (message) toast(message, type);
 }
+function preserveActionButtonWidth(button) {
+    const originalWidth = button?.style.width || '';
+    const renderedWidth = Math.ceil(button?.getBoundingClientRect().width || 0);
+    if (button && renderedWidth > 0) button.style.width = `${renderedWidth}px`;
+    return () => { if (button) button.style.width = originalWidth; };
+}
 function planChangeFormMessage(message, type = '') {
     const status = document.getElementById('planChangeFormStatus');
     if (status) {
@@ -459,8 +465,8 @@ function renderMembershipProgress() {
 function openMemberRenewalForm() {
     const form = document.getElementById('member-request');
     if (form) form.open = true;
-    form?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    window.setTimeout(() => document.getElementById('mfPlan')?.focus(), 250);
+    form?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    window.setTimeout(() => form?.querySelector('summary')?.focus({ preventScroll: true }), 250);
 }
 
 // ===== ATTENDANCE HISTORY =====
@@ -697,6 +703,7 @@ async function submitMembershipForm(event) {
     const submitButton = form?.querySelector('button[type="submit"]');
     if (submitButton?.disabled) return;
     const originalButtonHTML = submitButton?.innerHTML;
+    const restoreButtonWidth = preserveActionButtonWidth(submitButton);
     if (submitButton) {
         submitButton.disabled = true;
         submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
@@ -796,6 +803,7 @@ async function submitMembershipForm(event) {
             submitButton.disabled = false;
             submitButton.innerHTML = originalButtonHTML;
         }
+        restoreButtonWidth();
     }
 }
 
@@ -805,6 +813,7 @@ async function submitPlanChangeRequest(event) {
     const submitButton = form?.querySelector('button[type="submit"]');
     if (submitButton?.disabled) return;
     const originalButtonHTML = submitButton?.innerHTML;
+    const restoreButtonWidth = preserveActionButtonWidth(submitButton);
     if (submitButton) {
         submitButton.disabled = true;
         submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
@@ -850,6 +859,7 @@ async function submitPlanChangeRequest(event) {
             submitButton.disabled = false;
             submitButton.innerHTML = originalButtonHTML;
         }
+        restoreButtonWidth();
     }
 }
 
@@ -859,6 +869,7 @@ async function submitMemberSettings(event) {
     const submitButton = form.querySelector('button[type="submit"]');
     if (submitButton?.disabled) return;
     const originalButtonHTML = submitButton?.innerHTML;
+    const restoreButtonWidth = preserveActionButtonWidth(submitButton);
     if (submitButton) {
         submitButton.disabled = true;
         submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
@@ -972,6 +983,7 @@ async function submitMemberSettings(event) {
             submitButton.disabled = false;
             submitButton.innerHTML = originalButtonHTML;
         }
+        restoreButtonWidth();
     }
 }
 
@@ -980,6 +992,7 @@ async function submitMemberEmail(event) {
     const form = event.currentTarget;
     const button = form.querySelector('button[type="submit"]');
     const originalButtonHTML = button.innerHTML;
+    const restoreButtonWidth = preserveActionButtonWidth(button);
     button.disabled = true;
     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
     setSettingsStatus('memberEmailStatus', '');
@@ -1003,6 +1016,7 @@ async function submitMemberEmail(event) {
     } finally {
         button.disabled = false;
         button.innerHTML = originalButtonHTML;
+        restoreButtonWidth();
     }
 }
 
@@ -1022,6 +1036,7 @@ async function submitMemberPassword(event) {
         setSettingsStatus('memberPasswordStatus', 'The passwords do not match.', 'error');
         return;
     }
+    const restoreButtonWidth = preserveActionButtonWidth(button);
     button.disabled = true;
     button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Updating...';
     try {
@@ -1037,6 +1052,7 @@ async function submitMemberPassword(event) {
     } finally {
         button.disabled = false;
         button.innerHTML = originalButtonHTML;
+        restoreButtonWidth();
     }
 }
 

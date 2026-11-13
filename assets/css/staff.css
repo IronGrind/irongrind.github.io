@@ -1,4 +1,4 @@
-.staff-main { padding: 12px 0; }
+.staff-main { padding: 12px 0; overflow-anchor: none; }
 .staff-heading { display: flex; justify-content: space-between; align-items: center; gap: 20px; padding: 12px 0 4px; }
 .staff-heading h1 { font-size: clamp(1.5rem, 3vw, 2rem); letter-spacing: -.6px; margin: 4px 0 8px; }
 .staff-heading p, .staff-help { color: #a4adc2; font-size: .88rem; line-height: 1.65; }
@@ -146,10 +146,10 @@ html[data-dashboard-theme="light"] body.staff-dashboard .staff-registration-form
 .staff-catalog-controls .form-group input,.staff-catalog-controls .form-group select { width:100%; min-height:44px; }
 .staff-available-toggle { display:flex; align-items:center; gap:9px; min-height:44px; padding:0 13px; border:1px solid #343944; border-radius:11px; color:#d5dce8; background:#15181e; font-size:.82rem; font-weight:650; cursor:pointer; }
 .staff-available-toggle input { width:18px; height:18px; margin:0; accent-color:#a90000; }
-.staff-product-card { position: relative; overflow: hidden; transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease; }
+.staff-product-card { position: relative; overflow: hidden; transition: border-color .18s ease, box-shadow .18s ease; }
 .staff-product-card::before { content: ""; position: absolute; inset: 0 0 auto; height: 3px; background: #42bd83; opacity: .9; }
 .staff-product-card.is-unavailable::before { background: #cc5656; }
-.staff-product-card:hover { transform: translateY(-2px); border-color: #596171; box-shadow: 0 10px 24px rgba(0,0,0,.16); }
+.staff-product-card:hover { border-color: #596171; box-shadow: 0 10px 24px rgba(0,0,0,.16); }
 .staff-stock-badge { display: inline-flex; align-items: center; gap: 5px; }
 .staff-stock-badge.available::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
 .staff-stock-badge.unavailable::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
